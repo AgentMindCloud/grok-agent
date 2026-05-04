@@ -62,7 +62,15 @@ cd templates\finance\x-money-vision-analyzer
 .\launcher.ps1
 ```
 
-The launcher ships in Slot 5 / P35 and follows Tool #1 + Tool #2's pattern: Python 3.12+ resolution, idempotent dependency install, AppData + SQLite init via `data.store.init_db()`, then headless Streamlit on `http://localhost:8504`.
+The launcher does six things in order: shows the disclaimer banner; resolves Python 3.12+ (`python` then `py -3`); runs `python -m pip install --quiet -r requirements.txt` (skip with `-SkipDeps`); creates `$env:LOCALAPPDATA\grok-agent\x-money-vision-analyzer\` AND the `receipts/` subfolder if missing; calls `data.store.init_db()` to create the SQLite schema (idempotent — safe on every launch); then runs `streamlit run app.py` headless on port 8504 and opens the URL in your default browser (skip with `-NoBrowser`).
+
+Optional flags:
+
+```powershell
+.\launcher.ps1 -Port 8765 -SkipDeps -NoBrowser
+```
+
+Chrome only, per the manifest's `windows.chrome_only: true`.
 
 ### Option C — direct Streamlit (developers only)
 
@@ -155,10 +163,10 @@ This is **Slot 1 of 6** — manifest + folder + README. The remaining slots popu
 | Slot | Files | Status |
 |---|---|---|
 | 1 — Manifest + README | `grok-agent.yaml`, `README.md` | ✅ this prompt (P31) |
-| 2 — Streamlit app skeleton (6 tabs) | `app.py`, `requirements.txt` | ⏭️ P32 |
-| 3 — Grok prompts | `prompts/system.md`, `prompts/user_templates.md` | ⏭️ P33 |
-| 4 — Data layer + APIs + `data/import_receipts.py` | `data/__init__.py`, `data/store.py`, `data/api_clients.py`, `data/import_receipts.py` | ⏭️ P34 |
-| 5 — Launcher + Streamlit Cloud config | `launcher.ps1`, `.streamlit/config.toml` | ⏭️ P35 |
+| 2 — Streamlit app skeleton (6 tabs) | `app.py`, `requirements.txt` | ✅ P32 |
+| 3 — Grok prompts | `prompts/system.md`, `prompts/user_templates.md` | ✅ P33 |
+| 4 — Data layer + APIs + `data/import_receipts.py` | `data/__init__.py`, `data/store.py`, `data/api_clients.py`, `data/import_receipts.py` | ✅ P34 |
+| 5 — Launcher + Streamlit Cloud config | `launcher.ps1`, `.streamlit/config.toml` | ✅ this prompt (P35) |
 | 6 — Smoke test + `grok install this` readiness | `smoke_test.ps1` | ⏭️ P36 |
 
 ---

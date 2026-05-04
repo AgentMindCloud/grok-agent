@@ -1,0 +1,69 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — Streamlit configuration for the
+# X Money Vision Analyzer.
+#
+# Streamlit Cloud reads this file directly on deploy; locally,
+# `streamlit run app.py` reads it from the working directory. Values
+# below intentionally match the repo-root .streamlit/config.toml (P16),
+# Tool #1's per-tool override (P23), and Tool #2's per-tool override
+# (P29) so all four X Money tools share the same brand and privacy
+# posture. Port 8504 leaves 8501 free for Tool #1, 8502 for Tool #2,
+# and 8503 reserved for Tool #3.
+#
+# Streamlit Cloud deploy URL target (planned): xmoney-vision.streamlit.app
+
+# ---------------------------------------------------------------------
+# [theme] — cinnabar (#FF6B00) on midnight (#0E1117), parchment text.
+# ---------------------------------------------------------------------
+[theme]
+base = "dark"
+primaryColor             = "#FF6B00"
+backgroundColor          = "#0E1117"
+secondaryBackgroundColor = "#1A1F2E"
+textColor                = "#F5F5DC"
+font                     = "monospace"
+
+# ---------------------------------------------------------------------
+# [server] — Streamlit Cloud-friendly defaults; safe locally.
+# ---------------------------------------------------------------------
+[server]
+headless             = true
+enableCORS           = false
+enableXsrfProtection = true
+fileWatcherType      = "auto"
+runOnSave            = false
+maxUploadSize        = 50          # MiB — receipts can be large multi-page PDF statements
+port                 = 8504
+
+# ---------------------------------------------------------------------
+# [browser] — no telemetry, ever (Constitution Article VII).
+# ---------------------------------------------------------------------
+[browser]
+gatherUsageStats = false
+serverAddress    = "localhost"
+serverPort       = 8504
+
+# ---------------------------------------------------------------------
+# [client] — calmer chrome for a finance UI; surface errors visibly.
+# ---------------------------------------------------------------------
+[client]
+toolbarMode      = "minimal"
+showErrorDetails = true
+
+# ---------------------------------------------------------------------
+# [runner] — fast reruns + free per-rerun memory on Cloud free tier.
+# ---------------------------------------------------------------------
+[runner]
+magicEnabled = true
+fastReruns   = true
+postScriptGC = true
+
+# ---------------------------------------------------------------------
+# [logger] — readable, not chatty.
+# ---------------------------------------------------------------------
+[logger]
+level         = "info"
+messageFormat = "%(asctime)s %(levelname)s %(message)s"

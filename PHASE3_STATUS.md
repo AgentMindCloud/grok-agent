@@ -19,14 +19,16 @@ This document is the single source of truth for **what is actually on disk** in 
 | Counter | Value |
 |---|---|
 | Templates planned | **20** |
-| Templates fully complete (Slot 1 + Slot 2) | **7** |
-| Templates with Slot 1 only (manifest + system prompt) | **2** |
+| Templates fully complete (Slot 1 + Slot 2) | **8** |
+| Templates with Slot 1 only (manifest + system prompt) | **1** |
 | Templates with P12 starter manifest only (no system prompt, no runner) | **2** |
 | Templates entirely missing (not started) | **9** |
 | Total subfolders under `templates/creator/` | **11** |
 | `templates/creator/` directories that exist but are empty / stub-only | **0** |
 
-Phase-3 completion against the 20-template target: **35% fully complete · 10% Slot 1 only · 10% starter-manifest only · 45% missing.**
+Phase-3 completion against the 20-template target: **40% fully complete · 5% Slot 1 only · 10% starter-manifest only · 45% missing.**
+
+> Updated 2026-05-04 (post-P81): `comment-engagement-booster` advanced from "Slot 1 only" to "fully complete". Suite count moved from 7/20 → 8/20.
 
 ---
 
@@ -50,16 +52,16 @@ The canonical Recipe-B build order from `docs/PARAMETERIZED_RECIPES.md` (easiest
 | 12 | `cross-platform-reposter` | ✓ | ✓ | ✓ | ✓ | ✓ (2) | **fully complete** |
 | 13 | `content-calendar-builder` | ✗ | ✗ | ✗ | ✗ | ✗ | **missing** |
 | 14 | `ab-test-suggester` | ✓ | ✓ | ✓ | ✓ | ✓ (2) | **fully complete** |
-| 15 | `comment-engagement-booster` | ✓ | ✓ | ✗ | ✗ | ✗ | **Slot 1 only** |
+| 15 | `comment-engagement-booster` | ✓ | ✓ | ✓ | ✓ | ✓ (2) | **fully complete** |
 | 16 | `hashtag-strategy-advisor` | ✓ | ✓ | ✗ | ✗ | ✗ | **Slot 1 only** |
 | 17 | `growth-experiment-runner` | ✗ | ✗ | ✗ | ✗ | ✗ | **missing** |
 | 18 | `competitor-watch` | ✓ | ✓ | ✓ | ✓ | ✓ (2) | **fully complete** |
 | 19 | `content-recycler` | ✓ | ✓ | ✓ | ✓ | ✓ (2) | **fully complete** |
 | 20 | `brand-voice-trainer` | ✓ | ✓ | ✓ | ✓ | ✓ (2) | **fully complete** |
 
-### Fully complete (7 templates)
+### Fully complete (8 templates)
 
-These 7 templates have all 5 deliverables on disk: `grok-agent.yaml` + `prompts/system.md` + `run.py` + `README.md` + `examples/` (2 example outputs each):
+These 8 templates have all 5 deliverables on disk: `grok-agent.yaml` + `prompts/system.md` + `run.py` + `README.md` + `examples/` (2 example outputs each):
 
 1. `follower-quality-analyzer`
 2. `niche-influencer-finder`
@@ -68,13 +70,13 @@ These 7 templates have all 5 deliverables on disk: `grok-agent.yaml` + `prompts/
 5. `competitor-watch`
 6. `content-recycler`
 7. `brand-voice-trainer`
+8. `comment-engagement-booster` *(advanced from Slot 1 only in P81)*
 
-### Slot 1 only (2 templates)
+### Slot 1 only (1 template)
 
-These have `grok-agent.yaml` + `prompts/system.md` but no runner / README / examples:
+This has `grok-agent.yaml` + `prompts/system.md` but no runner / README / examples:
 
-1. `comment-engagement-booster`
-2. `hashtag-strategy-advisor`
+1. `hashtag-strategy-advisor`
 
 ### Starter-manifest only (2 templates)
 
@@ -107,7 +109,7 @@ Exactly **11** subfolders are present (corrected from prior reports of "20 done"
 templates/creator/
 ├── ab-test-suggester/                 ✅ fully complete
 ├── brand-voice-trainer/               ✅ fully complete
-├── comment-engagement-booster/        ⚠️  Slot 1 only
+├── comment-engagement-booster/        ✅ fully complete (advanced in P81)
 ├── competitor-watch/                  ✅ fully complete
 ├── content-idea-generator/            ⚠️  P12 starter manifest only
 ├── content-recycler/                  ✅ fully complete
@@ -202,16 +204,16 @@ Phase 3 (Creator Distribution Flywheel) target: 50 prompts
    - 5 program-setup prompts (P43–P47 in canonical plan, but the orchestrator's actual numbering shifted)
    - 5 program-launch prompts (P88–P92)
 
-Current state on `main`:
-   - Templates fully complete:        [ 7/20]   35%
-   - Templates Slot-1 only:           [ 2/20]   10%
+Current state on `main` (post-P81):
+   - Templates fully complete:        [ 8/20]   40%
+   - Templates Slot-1 only:           [ 1/20]    5%
    - Templates starter-manifest only: [ 2/20]   10%
    - Templates missing:               [ 9/20]   45%
 
    - Program-setup prompts:           [ 0/ 5]    0%
    - Program-launch prompts:          [ 0/ 5]    0%
 
-   Total Phase-3 prompts shipped:    [16/50]   ~32% complete
+   Total Phase-3 prompts shipped:    [17/50]   ~34% complete
 ```
 
 ---

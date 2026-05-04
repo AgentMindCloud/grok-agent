@@ -216,3 +216,25 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+# ======================
+# Custom additions for Grok Agent OS
+# ======================
+
+# Windows-specific files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Extra secrets protection (very important)
+secrets/
+xai_api_key.txt
+*.env
+.env.*
+
+# Streamlit (already partially covered, but reinforce)
+.streamlit/secrets.toml
+
+# Project-specific
+logs/
+tmp/
+temp/

@@ -1,0 +1,129 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — local-first content recycler for X
+# creators. Reads an old X post (URL or pasted text) and emits 2-3
+# recycled variants tuned to a target format (tweet / thread / carousel /
+# newsletter / all) under a chosen recycle angle (update / expand /
+# threadify / repurpose / auto). 4 canonical Recycle Score metrics,
+# stale-rehash paradox detection, "originally posted on <date>"
+# timestamp preserved on every variant. Drafts only — never auto-publishes.
+
+version: "2.15"
+kind: "creator-template"
+name: "content-recycler"
+description: "Local-first content recycler for X creators — turns an old X post into 2-3 recycled variants under a chosen angle (update / expand / threadify / repurpose / auto) and target format (tweet / thread / carousel / newsletter / all) with 4 canonical Recycle Score metrics (Freshness lift / Format fit / Engagement potential / Differentiation), stale-rehash paradox detection, and >= 3 cross-template bridges. Recycles only the creator's own content. Drafts only — never auto-publishes. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Content Recycler"
+  tagline: "Compound your back catalog without copy-pasting yourself."
+  categories: ["creator", "content", "recycling"]
+  tags: ["creator-template", "cli-only", "drafts-only", "no-autopublish"]
+  created: "2026-05-04"
+  updated: "2026-05-04"
+
+install:
+  one_click: true
+  install_command: "grok-agent install content-recycler"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  appdata_folder: "grok-agent/content-recycler"
+  cache_folder: "grok-agent/content-recycler/cache"
+  log_folder: "grok-agent/content-recycler/logs"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.5
+  max_tokens: 3072
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+
+tools:
+  - name: "generate_recycled_variants"
+    type: "local_function"
+    description: "Produce a 6-section structured content-recycle report (or 7-section when red-flag count > 3 OR target_format='all') with 2-3 recycled variants tuned to the chosen target format, 4-row Recycle Score table per variant, recycle-angle explanation, engagement prediction, suggested visuals, stale-rehash paradox detection, and >= 3 cross-template bridges. Drafts only — never auto-publishes anywhere."
+    module: "content_recycler.run"
+    function: "generate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          x_handle:
+            type: "string"
+            description: "Creator's X handle (with or without @). Must be the creator's own — recycling another account's content is refused."
+          old_post_url_or_text:
+            type: "string"
+            description: "Either an x.com / twitter.com URL pointing to the source post, OR the literal post text. Required unless --demo is passed."
+          recycle_angle:
+            type: "string"
+            enum: ["update", "expand", "threadify", "repurpose", "auto"]
+            default: "auto"
+            description: "How to refresh the source: update (new data/numbers), expand (add depth), threadify (single -> thread), repurpose (format-shift), auto (runner picks)."
+          target_format:
+            type: "string"
+            enum: ["tweet", "thread", "carousel", "newsletter", "all"]
+            default: "thread"
+            description: "Where the recycled variants are aimed. 'all' generates one variant per format (4 total)."
+          original_post_date:
+            type: "string"
+            description: "Optional ISO date (YYYY-MM-DD) of the original post; preserved verbatim in the attribution stamp on every variant. Defaults to '(date unknown)' when omitted."
+        required: ["x_handle"]
+
+constitution:
+  rules:
+    - "Drafts only. The runner never publishes a variant. Constitution Article II's `publish_to_x` consent gate covers every output."
+    - "Recycle only the creator's own content. The runner refuses to adapt a post the creator did not author — recycling another account's content is impersonation by another name."
+    - "Preserve the 'originally posted on <date>' attribution stamp on every variant. The runner never strips it; the creator may strip it manually before posting."
+    - "Surface the stale-rehash paradox in BOTH the variant card AND the Red Flags section whenever Format fit > 70 AND Freshness lift < 35 (the variant is well-formatted but adds no new value vs the original — that is a re-publish, not a recycle)."
+    - "Every monetization-related recommendation (cross-platform paid-tier funnel, sponsored-content recycle) carries the Article V.1 'Not financial advice' banner verbatim."
+    - "Every analysis links to >= 3 cross-template bridges so the creator can act on the findings without leaving Grok Agent OS."
+  hard_refusals:
+    - "recycle a post the creator did not author (refuse on a handle mismatch)"
+    - "auto-publish a variant to any platform without an explicit consent gate"
+    - "strip the 'originally posted on <date>' attribution stamp from any variant"
+    - "claim a recycled variant is original content"
+    - "fabricate updated data, statistics, or quotes the source did not contain — when angle=update and runner has no fresh data, mark the placeholder explicitly"
+    - "scrape authenticated X content to seed the recycle"
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 90
+  scanner_severity_floor: "warn"
+  forbidden_actions:
+    - scrape_authenticated_x_content
+    - impersonate_user_identity
+    - bypass_safety_scanner
+    - exfiltrate_user_data
+  cost_limits:
+    usd_per_session_max: 0.30
+    usd_per_day_max: 1.00
+    tokens_per_session_max: 60000
+    api_calls_per_session_max: 80
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "any export of the variant set to a path outside the agent AppData folder"
+      - "any future-version auto-publish (currently disabled in v1)"
+    timeout_seconds: 60
+  disclaimers:
+    not_financial_advice: true
+    not_tax_advice: false
+    real_world_action_consent: false
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+      - "requests ^2.31"

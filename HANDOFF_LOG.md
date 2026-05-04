@@ -66,6 +66,7 @@
 | P66 | Phase 3 | Follower Quality Analyzer runner + README + examples | templates/creator/follower-quality-analyzer/run.py, README.md, examples/ | Deterministic offline runner matching P44–P64 quality bar + P65 system prompt schema + 4 canonical metrics + bot-engagement paradox surfacing + cross-template bridges + aggregate-only privacy | ✅ done |
 | P67 | Phase 3 | Niche Influencer Finder manifest + system prompt | templates/creator/niche-influencer-finder/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + influencer scoring + cross-template bridges | ✅ done |
 | P68 | Phase 3 | Niche Influencer Finder runner + README + examples | templates/creator/niche-influencer-finder/run.py, README.md, examples/ | Deterministic offline runner matching P44–P66 quality bar + P67 system prompt schema + 4 canonical match metrics with weighted formula + engagement-pod paradox surfacing + cross-template bridges | ✅ done |
+| P69 | Phase 3 | Competitor Watch manifest + system prompt | templates/creator/competitor-watch/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + competitor scoring + cross-template bridges | ✅ done |
 
 <!--
 ====================================================================

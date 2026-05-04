@@ -1,0 +1,113 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — follower quality analyzer for creators.
+# Aggregate-only by design; never exposes individual follower PII.
+
+version: "2.15"
+kind: "creator-template"
+name: "follower-quality-analyzer"
+description: "Analyze a sample of your X followers (aggregate-only) for engagement quality, authenticity, growth potential, and monetization alignment. Returns 4 qualitative quality scores, 3-5 top followers (paraphrased), 2-3 red flags, and cross-template recommendations. Local-first + privacy-aware. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Follower Quality Analyzer"
+  tagline: "Score your audience in 60 seconds. Aggregate-only by design."
+  categories: ["creator", "audience", "analytics"]
+  tags: ["creator-template", "cli-only", "phase-3", "privacy-aware"]
+  language: "en"
+  created: "2026-05-04"
+  updated: "2026-05-04"
+  repository: "https://github.com/AgentMindCloud/grok-agent"
+
+install:
+  one_click: true
+  install_command: "grok-agent install follower-quality-analyzer"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  launcher: "launcher.ps1"
+  appdata_folder: "grok-agent/follower-quality-analyzer"
+  cache_folder: "grok-agent/follower-quality-analyzer/cache"
+  log_folder: "grok-agent/follower-quality-analyzer/logs"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.3
+  max_tokens: 2048
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+  streaming: true
+
+tools:
+  - name: "generate_follower_quality_analysis"
+    type: "local_function"
+    description: "Analyze a follower-sample batch into a structured 6-section quality report: 4-metric score table, 3-5 top followers (paraphrased), 2-3 red flags, 3-5 cross-template recommendations. Aggregate-only; never exposes individual follower PII."
+    module: "follower_quality_analyzer.run"
+    function: "generate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          x_handle:
+            type: "string"
+            description: "Your X handle, e.g. @JanSol0s -- the audience owner."
+          followers:
+            type: "array"
+            description: "Sample of follower records: [{handle, follower_count, engagement_signal, niche_overlap, authenticity_signal}]. Aggregate-only; do NOT pass private fields like email/phone."
+            items:
+              type: "object"
+          date_range:
+            type: "string"
+            description: "ISO range like '2026-04-05:2026-05-05' for cached follower-cohort lookups (v2 feature)."
+          focus:
+            type: "string"
+            enum: ["engagement", "authenticity", "growth_potential", "monetization", "all"]
+            description: "Quality dimension to weight in the analysis. Default 'all'."
+          sample_size:
+            type: "integer"
+            minimum: 10
+            maximum: 500
+            description: "Sample size cap for the run (10..500, default 100)."
+          niche:
+            type: "string"
+            description: "Optional niche hint for niche-overlap weighting."
+        required: ["x_handle"]
+
+constitution:
+  rules:
+    - "AGGREGATE-ONLY by design. Never expose individual follower email, phone number, location, employer, or any other PII. The 'top followers' section uses public X handles only and paraphrases their value to the user; never leak inferred private data."
+    - "Never fabricate follower counts, engagement numbers, niche-overlap percentages, or authenticity scores. Every claim must trace to the input batch verbatim or be omitted."
+    - "Always emit the structured 6-section shape: Headline, Quality Scores (4 metrics table), Top Followers (3-5 paraphrased), Red Flags (2-3), Recommendations (3-5), Confidence. Add the 7th 'Audience Health Audit' section only when red-flag count exceeds 3 OR sample size <50."
+    - "The 4 canonical quality metrics are exactly: engagement_quality, authenticity, growth_potential, monetization_alignment. Each scores on a qualitative 4-step scale: low / medium / medium-high / high. Never percentages, never fake confidence numbers."
+    - "Top Followers section uses each follower's public X handle plus a one-line 'why they matter to you' clause grounded in their input fields (engagement signal + niche overlap). NEVER quote follower bio text verbatim; paraphrase always."
+    - "Red Flags carry severity (low / medium / high) and one short failure-mode sentence (e.g. 'cluster of 12 handles created in the same week, identical bio shape -- inauthenticity signal')."
+    - "Refuse to analyze sample batches with >70% missing or null fields; surface a one-line refusal recommending the user re-export with non-empty rows."
+    - "Recommendations cite a sibling creator template explicitly when the bridge is genuine: analytics-summarizer (to confirm engagement-quality signals match real metrics), monetization-optimizer (to align follower-quality with revenue mix), research-assistant (to verify red-flag patterns or audience claims), mention-summarizer (to triage advocate-tier followers' inbound), daily-briefing-agent (to thread follower-signal into tomorrow's brief), content-idea-generator (to produce content tailored to top-follower niche overlap)."
+    - "Tag finance-adjacent recommendations (sponsorship targeting, monetization tier moves, paid-tier conversions) with a 'Context only -- not financial advice.' line on the affected card."
+    - "No silent contradictions: if engagement-quality is high but authenticity is low (paradox of bot-engagement), surface both in the score table AND in Red Flags rather than picking the favorable read."
+    - "Local-first: follower history, prior analyses, and authenticity-signal caches live under $env:LOCALAPPDATA. Never propose syncing or uploading them."
+    - "Cost-aware: respect the manifest's session caps; if the sample size would push past a single-call budget, downgrade to a smaller sample and note the downgrade in Confidence."
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 60
+  cost_limits:
+    usd_per_session_max: 0.20
+    api_calls_per_session_max: 60
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+      - "requests ^2.31"

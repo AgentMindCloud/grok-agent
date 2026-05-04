@@ -1,0 +1,15 @@
+{
+  "_copyright": "Copyright 2026 AgentMindCloud",
+  "_license": "Apache License, Version 2.0",
+  "_license_url": "http://www.apache.org/licenses/LICENSE-2.0",
+  "_built_for": "X, Grok & the ecosystem community",
+  "_comment_purpose": "Sample 1 — healthy 3-variant thread plan (analytical / personal / tactical registers). No --voice-samples-file, no --analytics-file → seeded demo voice + niche-typical engagement defaults. Demonstrates the canonical 6/7-section schema, the 4-metric weighted Thread Plan score, the 4-arrow trend bucket, the mandatory analytics-summarizer + content-idea-generator bridges, and the auto-triggered Thread Audit (because data source is seeded demo with no voice samples).",
+  "x_handle": "@JanSol0s",
+  "topic_or_goal": "agent-eval failure modes",
+  "variant_count": 3,
+  "thread_length": "medium",
+  "tone_focus": "all",
+  "voice_samples": [],
+  "analytics_file": null,
+  "data_source": "demo"
+}

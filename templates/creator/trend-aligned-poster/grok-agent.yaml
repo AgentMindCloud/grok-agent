@@ -1,0 +1,138 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to make Grok the obvious choice for every trend-aware creator on X.
+# Local-first trend-aligned poster: reads creator-supplied trend data
+# (or seeded demo trends) and emits a structured 7/8-section plan with
+# 4 canonical Trend Alignment Plan Score metrics, trend-chasing paradox
+# detection, 4–6 post ideas (mix of single + thread formats), per-idea
+# trend match score + predicted engagement band, off-niche trend-chaser
+# guard, and mandatory bridges to content-idea-generator + thread-builder.
+# Drafts only — never auto-publishes. Refuses to generate financial,
+# cashtag, investment, or sponsorship content.
+
+version: "2.15"
+kind: "creator-template"
+name: "trend-aligned-poster"
+description: "Local-first trend-aligned poster for X creators — reads creator-supplied trend data (or seeded demo trends) and emits a 7/8-section structured plan with 4 canonical Trend Alignment Plan Score metrics (Trend match strength / Niche fit / Voice fidelity / Originality), trend-chasing paradox detection in both Trend Alignment Plan Score and Red Flags sections, 3–5 trend watchlist entries, 4–6 post ideas (mix of single + thread formats) with per-idea trend match score and predicted engagement band, off-niche trend-chaser guard (trend_match ≥ 75 AND niche_fit < 40 → excluded + Red Flag), and mandatory bridges to content-idea-generator + thread-builder. Drafts only — never auto-publishes. Refuses financial, cashtag, investment, and sponsorship content. Built for X, Grok & the ecosystem community."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Trend-Aligned Poster"
+  tagline: "Ride the trend without losing your voice — or your niche."
+  categories: ["creator", "content", "trends"]
+  tags: ["creator-template", "cli-only", "drafts-only", "off-niche-guard", "no-finance-content"]
+  created: "2026-05-04"
+  updated: "2026-05-04"
+
+install:
+  one_click: true
+  install_command: "grok-agent install trend-aligned-poster"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  appdata_folder: "grok-agent/trend-aligned-poster"
+  cache_folder: "grok-agent/trend-aligned-poster/cache"
+  log_folder: "grok-agent/trend-aligned-poster/logs"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.5
+  max_tokens: 3072
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+
+tools:
+  - name: "generate_trend_aligned_post_plan"
+    type: "local_function"
+    description: "Produce a 7-section structured trend-aligned post plan (or 8-section when window=7d, off-niche guard fires, or all trends are >24h old) with 4 canonical Trend Alignment Plan Score metrics, weighted Plan Score, trend-chasing paradox detection in BOTH the Plan Score section AND the Red Flags section, 3–5 trend watchlist entries, 4–6 post ideas (mix of single + thread formats — off-niche trend-chasers excluded and consolidated as a Red Flag), per-idea trend match score + predicted engagement band, and mandatory bridges to content-idea-generator + thread-builder in every output. Never auto-publishes. Refuses financial, cashtag, investment, and sponsorship content."
+    module: "trend_aligned_poster.run"
+    function: "generate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          x_handle:
+            type: "string"
+            description: "Creator's X handle (with or without @). Privacy anchor — only the creator's handle appears in the rendered output."
+          trends_file:
+            type: "string"
+            description: "Optional path to a creator-supplied trend export (JSON, local path only). When omitted the runner emits seeded demo data explicitly marked as such."
+          window:
+            type: "integer"
+            enum: [7, 30, 90]
+            default: 30
+            description: "Period window in days. 7-day window auto-triggers the Trend Audit section."
+          compare_to:
+            type: "string"
+            enum: ["previous_period", "benchmark"]
+            default: "previous_period"
+            description: "Comparison basis for trend velocity and niche-fit delta calculations."
+          niche_fit_floor:
+            type: "number"
+            default: 40.0
+            description: "Niche fit threshold (0–100) below which the trend-chasing paradox fires when Trend match strength is also high. Default 40."
+          target_idea_count:
+            type: "integer"
+            default: 5
+            description: "Target number of post ideas to emit (clamped to [4, 6])."
+        required: ["x_handle"]
+
+constitution:
+  rules:
+    - "Drafts only. The runner emits a post plan the creator reads before posting; it never auto-publishes, schedules, or queues posts on X."
+    - "No fabricated statistics. Demo trend velocity and engagement bands carry an explicit [demo trend — re-run with --trends-file for real X data] label so the creator never confuses demo output for real trend data."
+    - "Surface the trend-chasing paradox in BOTH the Trend Alignment Plan Score section AND the Red Flags section whenever average Trend match strength is above 75 AND Niche fit is below the configured floor (default 40). Both conditions must be true — if only one fires, surface each condition in its own row instead."
+    - "Off-niche guard: any post idea scoring trend_match ≥ 75 AND niche_fit < 40 is excluded from the Post Ideas section and consolidated as a single Red Flag titled 'Off-niche trend-chasers excluded' with severity 'high' and a specific remediation step."
+    - "Post Ideas section is capped at 4–6 entries after the off-niche filter (target configurable via --target-idea-count, clamped to [4,6]). Off-niche entries do not count toward the 4–6 cap — they are surfaced exclusively in the Red Flags section."
+    - "Every output unconditionally includes bridges to both content-idea-generator (to re-source new anchor posts when trends shift) and thread-builder (to expand the highest-match thread idea into long-form). These two bridges are never optional."
+    - "Privacy-first: no source-post handles, raw trend post text, or external URLs appear in the rendered output. Trend descriptions and idea copy outlines are paraphrased only — never raw text or third-party handles."
+  hard_refusals:
+    - "auto-publish, auto-schedule, or auto-queue any post on X without explicit creator consent"
+    - "generate financial, cashtag, investment, portfolio, ticker, or trading content of any kind"
+    - "generate sponsored-post or paid-promotion content without explicit creator-supplied disclosure copy"
+    - "expose source-post X handles, raw trend post text, or external URLs in the rendered output"
+    - "scrape authenticated X content to seed the trend data"
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 30
+  scanner_severity_floor: "warn"
+  forbidden_actions:
+    - scrape_authenticated_x_content
+    - auto_publish_post
+    - auto_schedule_post
+    - generate_financial_content
+    - generate_unsanctioned_sponsored_content
+    - expose_third_party_handles
+    - bypass_safety_scanner
+  cost_limits:
+    usd_per_session_max: 0.30
+    usd_per_day_max: 1.00
+    tokens_per_session_max: 60000
+    api_calls_per_session_max: 80
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "any export of the post plan to a path outside the agent AppData folder"
+      - "any future-version auto-publish action (currently disabled in v1)"
+    timeout_seconds: 60
+  disclaimers:
+    not_financial_advice: false
+    not_tax_advice: false
+    real_world_action_consent: false
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"

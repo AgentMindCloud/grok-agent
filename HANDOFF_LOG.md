@@ -109,6 +109,7 @@
 | P90 | Phase 3 | Mention Summarizer runner + README + examples | run.py, README.md, examples/ (3 pairs) | Matches P85 exactly; new phrasing + troll guard + bridges | ✅ done |
 | P91 | Phase 3 | DM Triager manifest + system prompt | grok-agent.yaml, prompts/system.md | Matches P83/P85/P87/P89 v2.15 shape; new phrasing + bridges | ✅ done |
 | P92 | Phase 3 | DM Triager runner + README + examples | run.py, README.md, examples/ (3 pairs) | Matches P91 exactly; new phrasing + spam guard + bridges | ✅ done |
+| P93 | Phase 3 | Trend-Aligned Poster manifest + system prompt | grok-agent.yaml, prompts/system.md | Matches P83/P85/P87/P89/P91 v2.15 shape; new phrasing + bridges | ✅ done |
 
 <!--
 ====================================================================

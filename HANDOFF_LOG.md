@@ -83,6 +83,7 @@
 | P60 | Phase 3 | Thread Builder runner + README + examples | templates/creator/thread-builder/run.py, README.md, examples/ | Deterministic offline runner matching P44–P58 quality bar + P59 system prompt schema + 8-angle parent-arc + angle-spanning hooks | ✅ done |
 | P61 | Phase 3 | DM Triager manifest + system prompt | templates/creator/dm-triager/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + priority scoring + policy refusal + cross-template bridges | ✅ done |
 | P62 | Phase 3 | DM Triager runner + README + examples | templates/creator/dm-triager/run.py, README.md, examples/ | Deterministic offline runner matching P44–P60 quality bar + P61 system prompt schema + privacy-paranoid paraphrase/redaction + ≤400-char DM replies + cross-template bridges | ✅ done |
+| P63 | Phase 3 | Quote Tweet Suggestor manifest + system prompt | templates/creator/quote-tweet-suggestor/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + 8-angle distinctness + cross-template bridges | ✅ done |
 
 <!--
 ====================================================================

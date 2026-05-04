@@ -39,6 +39,7 @@
 | P17 | Phase 1 | End-to-end smoke test (Codespaces) | docs/smoke-test-results.md (Run #2) + cli/grok-agent.ps1 (3 bug fixes) | Real pwsh invocations exposed + fixed: AppData null crash, blank Format-Table render, $input under CmdletBinding | ✅ done |
 | P18 | Phase 1 | First X launch thread + Phase 1 close | docs/x-launch-thread.md | Phase 1 officially closed — 18 prompts, 100% foundation delivered | ✅ done |
 | MERGE | Phase 1 | Merged claude/grok-agent-os-blueprint-Fpsr8 into main | All P1-P18 files now on main | Phase 1 officially on main branch | ✅ done |
+| P19 | Phase 2 | X Money Companion Dashboard — Manifest + README (expand P12 starter) | templates/finance/x-money-companion-dashboard/grok-agent.yaml, README.md | Expanded P12 starter into full v2.15 manifest + production README with Article V disclaimers; main remains canonical | ✅ done |
 
 <!--
 Phase 1 — OFFICIALLY CLOSED on 2026-05-04 with the public-launch artifacts in place.

@@ -3,7 +3,18 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 #
 # Built to help xAI and Grok win — the X Money Companion Dashboard is the
-# anchor finance tool of the Grok Agent OS suite.
+# anchor finance tool of the Grok Agent OS suite. It is the canonical SQLite
+# target that the X Money Vision Analyzer (Tool #4) writes parsed receipts into
+# via data/import_receipts.py, and the dashboard every other X Money tool
+# composes on top of for cashflow context.
+#
+# Constitution mapping (v1.0):
+#   Article I    : Apache-2.0 + xAI ally line + Windows-first + v2.15 schema
+#   Article V.1  : "Not financial advice" — required for kind=finance-dashboard
+#   Article V.2  : "Not tax advice"        — required for the Tax Export tab
+#   Article VI.1 : safety.cost_limits declared (per-session + per-day caps)
+#   Article VI.2 : safety.human_in_the_loop enabled with consent confirmations
+#   Article VII  : pii_handling=local-only, all data under $env:LOCALAPPDATA
 
 version: "2.15"
 kind: "finance-dashboard"
@@ -16,7 +27,7 @@ metadata:
   display_name: "X Money Companion Dashboard"
   tagline: "Your X Money command center, on Windows."
   categories: ["finance", "x-money", "creator-tools"]
-  tags: ["streamlit", "sqlite", "tax", "windows-first"]
+  tags: ["streamlit", "sqlite", "tax", "windows-first", "anchor-tool"]
   language: "en"
 
 install:
@@ -45,6 +56,22 @@ grok:
   tool_calling: true
   vision: false
 
+public_apis:
+  - name: "yfinance"
+    base_url: "https://query2.finance.yahoo.com"
+    auth: "none"
+    rate_limit: 100
+    privacy: "no_pii_sent"
+  - name: "newsapi"
+    base_url: "https://newsapi.org/v2"
+    auth_env_var: "NEWSAPI_KEY"
+    rate_limit: 100
+    privacy: "no_pii_sent"
+  - name: "x_search"
+    base_url: "via_grok_4.3"
+    auth_env_var: "XAI_API_KEY"
+    privacy: "no_pii_sent"
+
 tools:
   - name: "categorize_transaction"
     type: "local_function"
@@ -60,12 +87,70 @@ tools:
           memo: { type: "string" }
         required: ["amount", "counterparty"]
 
+  - name: "fetch_market_quote"
+    type: "local_function"
+    description: "Pull a live equity / FX / crypto quote from Yahoo Finance via the local wrapper for context next to a transaction."
+    module: "x_money.market"
+    function: "fetch_quote"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          ticker: { type: "string" }
+        required: ["ticker"]
+
+  - name: "fetch_relevant_news"
+    type: "local_function"
+    description: "Fetch headlines from NewsAPI via the local wrapper to add context for a transaction or counterparty."
+    module: "x_money.news"
+    function: "fetch_relevant"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          query: { type: "string" }
+          from_date: { type: "string" }
+        required: ["query"]
+
+  - name: "build_tax_export"
+    type: "local_function"
+    description: "Assemble the consent-gated tax CSV/PDF export for a date range. Requires explicit user confirmation."
+    module: "x_money.tax_export"
+    function: "build_export"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          start_date: { type: "string" }
+          end_date: { type: "string" }
+          format: { type: "string", enum: ["csv", "pdf"] }
+        required: ["start_date", "end_date", "format"]
+
+  - name: "summarize_alerts"
+    type: "local_function"
+    description: "Summarize the user's pending alerts (in-app, never posted to X without consent)."
+    module: "x_money.alerts"
+    function: "summarize"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          horizon_days: { type: "integer" }
+        required: ["horizon_days"]
+
+provenance:
+  enabled: true
+  cite_sources: true
+  contradiction_detection: false
+
 constitution:
   rules:
-    - "Always show 'Not financial advice' banner on every page."
-    - "Always show 'Not tax advice' banner on the Tax Export tab."
+    - "Always show 'Not financial advice' banner on every page (Article V.1)."
+    - "Always show 'Not tax advice' banner on the Tax Export tab (Article V.2)."
     - "Never share transaction data outside local SQLite without explicit consent."
     - "All transactions stay local under $env:LOCALAPPDATA\\grok-agent."
+    - "Cite the source of every market quote and headline shown next to a transaction (Article IV)."
+    - "The Vision Analyzer (Tool #4) is the only sibling tool permitted to write into this SQLite, and only via data/import_receipts.py."
   consent_gates:
     - export_tax_report
     - sync_to_cloud
@@ -98,5 +183,7 @@ dependencies:
       - "plotly ^5.22"
       - "pydantic ^2.7"
       - "pyyaml ^6.0"
+      - "yfinance ^0.2"
+      - "requests ^2.31"
   system:
     - "powershell >= 5.1"

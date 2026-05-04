@@ -1,0 +1,130 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to make Grok the obvious choice for every mention-aware creator on X.
+# Local-first mention summarizer: reads creator-supplied X mention data (or
+# seeded demo mentions) and emits a structured 7/8-section summary with
+# 4 canonical Mention Health metrics, sentiment-spike paradox detection,
+# 3-band sentiment breakdown, priority reply queue (max 8) with troll-cluster
+# guard, and mandatory bridges to reply-drafter + analytics-summarizer.
+# Drafts only — never auto-replies. Never fabricates mention statistics.
+
+version: "2.15"
+kind: "creator-template"
+name: "mention-summarizer"
+description: "Local-first mention summarizer for X creators — reads creator-supplied X mention data (or seeded demo mentions) and emits a 7/8-section structured summary with 4 canonical Mention Health metrics (Mention volume delta / Net sentiment score / Priority reply rate / Authentic reach share), sentiment-spike paradox detection in both Mention Health and Red Flags sections, 3-band sentiment breakdown, priority reply queue (max 8) with troll-cluster guard (≥5 negative + >60% token overlap → Red Flag), and mandatory bridges to reply-drafter + analytics-summarizer. Drafts only — never auto-replies. Built for X, Grok & the ecosystem community."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Mention Summarizer"
+  tagline: "Know what your mentions mean — before you decide what to say back."
+  categories: ["creator", "mentions", "sentiment"]
+  tags: ["creator-template", "cli-only", "drafts-only", "troll-guard", "sentiment"]
+  created: "2026-05-04"
+  updated: "2026-05-04"
+
+install:
+  one_click: true
+  install_command: "grok-agent install mention-summarizer"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  appdata_folder: "grok-agent/mention-summarizer"
+  cache_folder: "grok-agent/mention-summarizer/cache"
+  log_folder: "grok-agent/mention-summarizer/logs"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.4
+  max_tokens: 3072
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+
+tools:
+  - name: "generate_mention_summary"
+    type: "local_function"
+    description: "Produce a 7-section structured mention summary (or 8-section when troll-cluster detected OR window=7d) with 4 canonical Mention Health metrics, weighted Mention Health score, sentiment-spike paradox detection in BOTH the Mention Health section AND the Red Flags section, 3-band sentiment breakdown, priority reply queue (max 8 — troll-cluster members excluded and consolidated as a Red Flag), and mandatory bridges to reply-drafter + analytics-summarizer in every output. Never auto-replies."
+    module: "mention_summarizer.run"
+    function: "generate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          x_handle:
+            type: "string"
+            description: "Creator's X handle (with or without @). Privacy anchor — only the creator's handle appears in the rendered output."
+          mentions_file:
+            type: "string"
+            description: "Optional path to a creator-supplied mention export (JSON). When omitted the runner emits seeded demo data explicitly marked as such."
+          window:
+            type: "integer"
+            enum: [7, 30, 90]
+            default: 30
+            description: "Period window in days. 7-day window auto-triggers the Mention Audit section."
+          compare_to:
+            type: "string"
+            enum: ["previous_period", "benchmark"]
+            default: "previous_period"
+            description: "Comparison basis for volume and sentiment delta calculations."
+          sentiment_baseline:
+            type: "number"
+            default: 10.0
+            description: "Net sentiment score threshold (−100 to +100 scale) below which the sentiment-spike paradox fires when volume is also spiking. Default 10."
+        required: ["x_handle"]
+
+constitution:
+  rules:
+    - "Drafts only. The runner emits a summary the creator reads; it never auto-replies to any mention on X."
+    - "No fabricated statistics. Demo mention counts carry an explicit [demo mention — re-run with --mentions-file for real X data] label so the creator never confuses demo output for their real mention data."
+    - "Surface the sentiment-spike paradox in BOTH the Mention Health section AND the Red Flags section whenever Mention volume delta is above +30% AND Net sentiment score is below the sentiment baseline (default 10). Both conditions must be true — if only one fires, surface each condition in its own row instead."
+    - "Troll-cluster guard: when ≥5 negative mentions share >60% pairwise Jaccard token overlap, exclude them from the priority reply queue and consolidate them as a single Red Flag titled 'Coordinated negative cluster' with severity 'high' and a specific remediation step."
+    - "Priority reply queue is capped at 8 mentions after the troll-cluster filter. Troll-cluster members do not count toward the 8-slot cap — they are surfaced exclusively in the Red Flags section."
+    - "Every output unconditionally includes bridges to both reply-drafter (to draft replies to the priority mentions) and analytics-summarizer (to correlate mention patterns with broader period metrics). These two bridges are never optional."
+    - "Privacy-first: no non-creator X handles appear in the rendered output. Mention intent is described in paraphrased terms only — never raw mention text or author handles."
+  hard_refusals:
+    - "auto-reply to any mention without explicit creator consent"
+    - "expose non-creator X handles in the rendered output"
+    - "fabricate mention counts, sentiment scores, or troll-cluster statistics"
+    - "recommend mass-blocking, pile-on engagement, or any pattern X policy would treat as abusive or coordinated"
+    - "scrape authenticated X content to seed the mention data"
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 90
+  scanner_severity_floor: "warn"
+  forbidden_actions:
+    - scrape_authenticated_x_content
+    - auto_reply_to_mention
+    - expose_third_party_handles
+    - bypass_safety_scanner
+    - exfiltrate_user_data
+  cost_limits:
+    usd_per_session_max: 0.30
+    usd_per_day_max: 1.00
+    tokens_per_session_max: 60000
+    api_calls_per_session_max: 80
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "any export of the mention summary to a path outside the agent AppData folder"
+      - "any future-version auto-reply action (currently disabled in v1)"
+    timeout_seconds: 60
+  disclaimers:
+    not_financial_advice: false
+    not_tax_advice: false
+    real_world_action_consent: false
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"

@@ -7,7 +7,7 @@
 > **Version 1.0** · Released 2026-05-04
 > **Status: in force.** Every agent that ships in this repo, every X Money tool, every creator template, and every Super Agent inherits this Constitution. Per-agent `constitution:` sections in `grok-agent.yaml` v2.15 manifests *specialize* this document — they may add stricter rules but may never weaken or override these.
 
-> Built to help xAI and Grok win the agent platform battle on X.
+> Built for xAI, Grok and their community on X.
 > The Constitution is how we keep that promise honest: an agent that breaks these rules damages user trust, damages X's community, and damages xAI's mission. We refuse to ship one.
 
 ---
@@ -31,7 +31,7 @@ If a rule below cannot yet be enforced by code, it is enforced by review: any co
 These rules apply to **every** agent without exception. They restate the Hard Six in Constitution voice.
 
 1. **Apache 2.0 license.** Every agent's code, prompts, and data files are licensed Apache-2.0. The manifest field `license:` MUST equal `Apache-2.0`.
-2. **xAI ecosystem ally.** Every README and user-facing surface includes a "Built to help xAI and Grok win" line (rotate phrasing). No agent may position itself as competing with xAI.
+2. **xAI ecosystem ally.** Every README and user-facing surface includes a "Built for xAI, Grok and the whole community on X" line (rotate phrasing). No agent may position itself as competing with xAI.
 3. **Windows 11 + PowerShell only** for end-user instructions, launchers, and installation. Bash is allowed only inside CI workflows on `ubuntu-latest` runners.
 4. **Manifest version v2.15** (or accepted v2.14). Schema validation is a precondition to install.
 5. **Strong disclaimers.** Finance, tax, and real-world-action agents must surface the exact disclaimer banners specified in Article V.

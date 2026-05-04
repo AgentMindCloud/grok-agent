@@ -68,6 +68,7 @@
 | P68 | Phase 3 | Niche Influencer Finder runner + README + examples | templates/creator/niche-influencer-finder/run.py, README.md, examples/ | Deterministic offline runner matching P44–P66 quality bar + P67 system prompt schema + 4 canonical match metrics with weighted formula + engagement-pod paradox surfacing + cross-template bridges | ✅ done |
 | P69 | Phase 3 | Competitor Watch manifest + system prompt | templates/creator/competitor-watch/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + competitor scoring + cross-template bridges | ✅ done |
 | P70 | Phase 3 | Competitor Watch runner + README + examples | templates/creator/competitor-watch/run.py, README.md, examples/ | Deterministic offline runner matching P44–P68 quality bar + P69 system prompt schema + 4 canonical Watch Score metrics with weighted formula + cadence-fatigue paradox surfacing + cross-template bridges + PII protection | ✅ done |
+| P71 | Phase 3 | Cross-Platform Reposter manifest + system prompt | templates/creator/cross-platform-reposter/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + platform adaptation + cross-template bridges | ✅ done |
 
 <!--
 ====================================================================

@@ -66,6 +66,7 @@
 | P43 | Phase 3 | Content Idea Generator — Manifest + system prompt (Recipe B Slot 1) | templates/creator/content-idea-generator/grok-agent.yaml, prompts/system.md | Phase 1 P12 starter upgraded to production-grade Recipe B Slot 1: added constitution.rules (5 rules — no fabrication, distinct angles, no endorsement, no engagement-bait, finance-adjacent tag), tightened metadata + cost limits ($0.15 / 50 calls per session); new prompts/system.md (~60 lines) with 8 hard rules, 8 angle types, idea-card output schema, confidence line; 0 scanner findings on templates/creator/ scan-all (2/2 manifests clean); v2.15 schema validator green | ✅ done |
 | P44 | Phase 3 | Content Idea Generator runner + README + examples | templates/creator/content-idea-generator/run.py, README.md, examples/ | Self-contained demo runner with niche-aware ideas; Windows-native CLI; 2 example outputs | ✅ done |
 | P45 | Phase 3 | Reply Drafter manifest + system prompt | templates/creator/reply-drafter/grok-agent.yaml, prompts/system.md | v2.15 manifest + high-quality offline system prompt matching P44 quality bar | ✅ done |
+| P46 | Phase 3 | Reply Drafter runner + README + examples | templates/creator/reply-drafter/run.py, README.md, examples/ | Deterministic offline runner matching P44 quality bar + P45 system prompt | ✅ done |
 
 <!--
 ====================================================================

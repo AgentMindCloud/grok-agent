@@ -26,6 +26,7 @@
 | P4 | Phase 1 | Create v2.15 unified manifest schema | spec/v2.15/grok-agent.yaml | Full schema with public_api, windows, multi_agent, constitution, backwards compat | ✅ done |
 | P5 | Phase 1 | Create PowerShell CLI | cli/grok-agent.ps1 | Full CLI with install/new/validate/list/run + grok install this + schema validation | ✅ done |
 | P6 | Phase 1 | Create Python fallback validator | cli/grok-agent.py | Pydantic v2 validator callable from PowerShell CLI | ✅ done |
+| P7 | Phase 1 | Create safety system | safety/scanner.py, safety/constitution.md | Scanner + Constitution enforcing Hard Six + disclaimers | ✅ done |
 
 <!--
 Add new rows above this line as prompts complete.

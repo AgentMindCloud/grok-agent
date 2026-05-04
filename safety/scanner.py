@@ -1,0 +1,640 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+"""
+Grok Agent OS — Safety Scanner.
+
+Built to help xAI and Grok win the agent platform battle on X.
+
+Layered safety enforcement on top of the v2.15 schema validator:
+the schema (cli/grok-agent.py) checks STRUCTURE; this scanner checks the
+Agent Constitution (safety/constitution.md) — the rules about what an agent
+is allowed to *do*.
+
+Severity model:
+    info  — recommended-but-not-required (exit 0)
+    warn  — should-fix (exit 0; non-blocking)
+    error — Constitution violation; install / merge blocked (exit 1)
+
+Usage:
+    python safety/scanner.py scan path/to/grok-agent.yaml
+    python safety/scanner.py scan path/to/agent-folder
+    python safety/scanner.py scan-all templates/
+    python safety/scanner.py scan path/to/manifest.yaml --json
+    python safety/scanner.py scan path/to/manifest.yaml --severity-floor warn
+
+Designed to be callable from cli/grok-agent.ps1 (pre-install) and from
+.github/workflows/validate.yml (CI). The `--json` flag emits one JSON
+object per line so PowerShell + GH Actions can parse findings easily.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from dataclasses import dataclass, field, asdict
+from pathlib import Path
+from typing import Any, Callable, Dict, List, Optional
+
+try:
+    import yaml  # type: ignore[import-untyped]
+except ImportError:
+    sys.stderr.write(
+        "ERROR: pyyaml is required. Install with:\n"
+        "    python -m pip install pyyaml\n"
+    )
+    sys.exit(69)
+
+
+# ============================================================================
+# Constants
+# ============================================================================
+
+VERSION = "0.1.0"
+TAGLINE = "Built to help xAI and Grok win."
+CONSTITUTION_VERSION = "1.0"
+
+SEVERITIES = ("info", "warn", "error")
+SEVERITY_RANK = {"info": 0, "warn": 1, "error": 2}
+
+# Kinds that should declare not_financial_advice
+FINANCE_KINDS = {
+    "finance-dashboard",
+    "alpha-engine",
+    "creator-payout-optimizer",
+}
+
+# Kinds that may need tax disclaimers
+TAX_KINDS = {
+    "finance-dashboard",
+    "creator-payout-optimizer",
+}
+
+# Mandatory consent gates per the Constitution (Article II)
+MANDATORY_CONSENT_GATES_FOR_REAL_WORLD = {
+    "publish_to_x",
+    "send_dm",
+    "move_funds",
+    "pay_real_money",
+    "modify_local_files_outside_appdata",
+}
+
+
+# ============================================================================
+# Finding model
+# ============================================================================
+
+
+@dataclass
+class Finding:
+    severity: str  # 'info' | 'warn' | 'error'
+    code: str
+    message: str
+    location: str = ""  # e.g. "windows.requires_admin"
+    article: str = ""  # which Constitution article (e.g. "I.1", "V.1")
+
+    def __post_init__(self) -> None:
+        if self.severity not in SEVERITIES:
+            raise ValueError(f"Bad severity: {self.severity}")
+
+    def to_line(self) -> str:
+        sev = self.severity.upper().ljust(5)
+        loc = f" ({self.location})" if self.location else ""
+        art = f" [Const. Art. {self.article}]" if self.article else ""
+        return f"  {sev} {self.code}: {self.message}{loc}{art}"
+
+    def to_json(self) -> Dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass
+class ScanResult:
+    manifest_path: str
+    findings: List[Finding] = field(default_factory=list)
+
+    @property
+    def max_severity(self) -> str:
+        if not self.findings:
+            return "info"
+        return max(self.findings, key=lambda f: SEVERITY_RANK[f.severity]).severity
+
+    @property
+    def has_errors(self) -> bool:
+        return any(f.severity == "error" for f in self.findings)
+
+    def filter_by_floor(self, floor: str) -> List[Finding]:
+        threshold = SEVERITY_RANK[floor]
+        return [f for f in self.findings if SEVERITY_RANK[f.severity] >= threshold]
+
+
+# ============================================================================
+# Check framework — each check is a function that returns a list[Finding]
+# ============================================================================
+
+
+CheckFn = Callable[[Dict[str, Any]], List[Finding]]
+CHECKS: Dict[str, CheckFn] = {}
+
+
+def register(name: str) -> Callable[[CheckFn], CheckFn]:
+    def deco(fn: CheckFn) -> CheckFn:
+        CHECKS[name] = fn
+        return fn
+    return deco
+
+
+def _get(d: Dict[str, Any], dotted: str, default: Any = None) -> Any:
+    """Safely traverse a nested dict by dotted path."""
+    cur: Any = d
+    for part in dotted.split("."):
+        if not isinstance(cur, dict):
+            return default
+        cur = cur.get(part)
+        if cur is None:
+            return default
+    return cur
+
+
+# ============================================================================
+# Checks — Article I: Universal Rules
+# ============================================================================
+
+
+@register("I.1-license")
+def check_license(m: Dict[str, Any]) -> List[Finding]:
+    lic = m.get("license")
+    if lic is None:
+        return [Finding("error", "LIC-001", "license is required and must be 'Apache-2.0'", "license", "I.1")]
+    if lic != "Apache-2.0":
+        return [Finding("error", "LIC-002", f"license must be 'Apache-2.0', got '{lic}'", "license", "I.1")]
+    return []
+
+
+@register("I.3-windows-requires-admin")
+def check_no_admin(m: Dict[str, Any]) -> List[Finding]:
+    if _get(m, "windows.requires_admin", False):
+        return [Finding(
+            "error", "WIN-001",
+            "windows.requires_admin must be false — agents must run without admin",
+            "windows.requires_admin", "I.3",
+        )]
+    return []
+
+
+@register("I.4-version")
+def check_version(m: Dict[str, Any]) -> List[Finding]:
+    v = m.get("version")
+    if v not in ("2.14", "2.15"):
+        return [Finding("error", "VER-001", f"version must be '2.14' or '2.15', got {v!r}", "version", "I.4")]
+    if v == "2.14":
+        return [Finding("info", "VER-002", "version is v2.14 — accepted, but consider upgrading to v2.15", "version", "I.4")]
+    return []
+
+
+# ============================================================================
+# Checks — Article II: Consent Gates
+# ============================================================================
+
+
+@register("II.posts-consent")
+def check_posts_require_consent(m: Dict[str, Any]) -> List[Finding]:
+    rt = m.get("real_time_x") or {}
+    if rt.get("posts") and not rt.get("consent_required", True):
+        return [Finding(
+            "error", "CG-001",
+            "real_time_x.posts=true requires real_time_x.consent_required=true",
+            "real_time_x.consent_required", "II",
+        )]
+    return []
+
+
+@register("II.publish-gate")
+def check_publish_consent_gate(m: Dict[str, Any]) -> List[Finding]:
+    rt = m.get("real_time_x") or {}
+    gates = _get(m, "constitution.consent_gates", []) or []
+    if rt.get("posts") and "publish_to_x" not in gates:
+        return [Finding(
+            "error", "CG-002",
+            "real_time_x.posts=true requires 'publish_to_x' in constitution.consent_gates",
+            "constitution.consent_gates", "II",
+        )]
+    return []
+
+
+# ============================================================================
+# Checks — Article III: Hard Refusals
+# ============================================================================
+
+
+_HARD_REFUSAL_BLACKLIST = {
+    "scrape_authenticated_x_content",
+    "impersonate_user_identity",
+    "bypass_safety_scanner",
+    "exfiltrate_user_data",
+}
+
+
+@register("III.no-forbidden-actions-flipped")
+def check_forbidden_not_silently_allowed(m: Dict[str, Any]) -> List[Finding]:
+    """If a manifest enumerates `safety.forbidden_actions`, none of the
+    constitution.consent_gates may overlap (you can't 'unblock' a refusal
+    via a consent gate)."""
+    findings: List[Finding] = []
+    forbidden = set(_get(m, "safety.forbidden_actions", []) or [])
+    gates = set(_get(m, "constitution.consent_gates", []) or [])
+    overlap = forbidden & gates
+    for action in overlap:
+        findings.append(Finding(
+            "error", "HR-001",
+            f"action '{action}' is in safety.forbidden_actions AND constitution.consent_gates — "
+            f"a forbidden action cannot be re-enabled via consent",
+            "constitution.consent_gates", "III",
+        ))
+    return findings
+
+
+# ============================================================================
+# Checks — Article IV: Provenance & Truth
+# ============================================================================
+
+
+@register("IV.super-agent-provenance")
+def check_super_agent_provenance(m: Dict[str, Any]) -> List[Finding]:
+    if m.get("kind") != "super-agent":
+        return []
+    if not _get(m, "provenance.enabled", False):
+        return [Finding(
+            "error", "PRV-001",
+            "kind='super-agent' requires provenance.enabled=true",
+            "provenance.enabled", "IV",
+        )]
+    return []
+
+
+@register("IV.super-agent-constitution")
+def check_super_agent_constitution(m: Dict[str, Any]) -> List[Finding]:
+    if m.get("kind") != "super-agent":
+        return []
+    if not m.get("constitution"):
+        return [Finding(
+            "error", "PRV-002",
+            "kind='super-agent' requires a constitution: section",
+            "constitution", "IV",
+        )]
+    rules = _get(m, "constitution.rules", []) or []
+    if not rules:
+        return [Finding(
+            "error", "PRV-003",
+            "constitution.rules must contain at least one rule",
+            "constitution.rules", "IV",
+        )]
+    return []
+
+
+# ============================================================================
+# Checks — Article V: Disclaimers
+# ============================================================================
+
+
+@register("V.1-finance-disclaimer")
+def check_finance_disclaimer(m: Dict[str, Any]) -> List[Finding]:
+    kind = m.get("kind")
+    if kind not in FINANCE_KINDS:
+        return []
+    if not _get(m, "safety.disclaimers.not_financial_advice", False):
+        return [Finding(
+            "error", "DSC-001",
+            f"kind='{kind}' requires safety.disclaimers.not_financial_advice=true",
+            "safety.disclaimers.not_financial_advice", "V.1",
+        )]
+    return []
+
+
+@register("V.2-tax-disclaimer")
+def check_tax_disclaimer(m: Dict[str, Any]) -> List[Finding]:
+    kind = m.get("kind")
+    if kind not in TAX_KINDS:
+        return []
+    if not _get(m, "safety.disclaimers.not_tax_advice", False):
+        return [Finding(
+            "warn", "DSC-002",
+            f"kind='{kind}' should set safety.disclaimers.not_tax_advice=true if tax export is shipped",
+            "safety.disclaimers.not_tax_advice", "V.2",
+        )]
+    return []
+
+
+@register("V.3-real-world-action-disclaimer")
+def check_real_world_disclaimer(m: Dict[str, Any]) -> List[Finding]:
+    """Agents that take real-world actions must disclose it."""
+    gates = set(_get(m, "constitution.consent_gates", []) or [])
+    has_real_world = bool(gates & MANDATORY_CONSENT_GATES_FOR_REAL_WORLD)
+    if not has_real_world:
+        return []
+    if not _get(m, "safety.disclaimers.real_world_action_consent", False):
+        return [Finding(
+            "warn", "DSC-003",
+            "agent declares real-world consent gates; "
+            "set safety.disclaimers.real_world_action_consent=true",
+            "safety.disclaimers.real_world_action_consent", "V.3",
+        )]
+    return []
+
+
+# ============================================================================
+# Checks — Article VI: Cost Limits & HITL
+# ============================================================================
+
+
+@register("VI.1-cost-limits-for-finance-and-super-agent")
+def check_cost_limits(m: Dict[str, Any]) -> List[Finding]:
+    kind = m.get("kind")
+    needs_cost = (kind in FINANCE_KINDS) or (kind == "super-agent")
+    if not needs_cost:
+        return []
+    cl = _get(m, "safety.cost_limits")
+    if cl is None:
+        return [Finding(
+            "warn", "COST-001",
+            f"kind='{kind}' should declare safety.cost_limits (usd_per_session_max etc.)",
+            "safety.cost_limits", "VI.1",
+        )]
+    return []
+
+
+@register("VI.2-hitl-for-consent-gated-agents")
+def check_hitl_when_consent_gates_declared(m: Dict[str, Any]) -> List[Finding]:
+    gates = _get(m, "constitution.consent_gates", []) or []
+    if not gates:
+        return []
+    hitl = _get(m, "safety.human_in_the_loop")
+    if hitl is None:
+        return [Finding(
+            "warn", "HITL-001",
+            "agent declares consent_gates; safety.human_in_the_loop should be configured",
+            "safety.human_in_the_loop", "VI.2",
+        )]
+    if hitl.get("enabled") is False:
+        return [Finding(
+            "error", "HITL-002",
+            "consent_gates declared but human_in_the_loop.enabled=false",
+            "safety.human_in_the_loop.enabled", "VI.2",
+        )]
+    return []
+
+
+# ============================================================================
+# Checks — Article VII: Local-First & Privacy-First
+# ============================================================================
+
+
+@register("VII.pii-default")
+def check_pii_local_only(m: Dict[str, Any]) -> List[Finding]:
+    kind = m.get("kind")
+    pii = _get(m, "safety.pii_handling", "local-only")
+    if pii == "none" and kind in (FINANCE_KINDS | {"vision-analyzer", "super-agent"}):
+        return [Finding(
+            "warn", "PII-001",
+            f"safety.pii_handling='none' is permissive for kind='{kind}'; consider 'local-only' or 'redacted-cloud'",
+            "safety.pii_handling", "VII",
+        )]
+    return []
+
+
+# ============================================================================
+# Checks — Article I.2: xAI ecosystem positioning
+# ============================================================================
+
+
+_FORBIDDEN_POSITIONING_TERMS = (
+    "compete with xai",
+    "replace xai",
+    "alternative to grok",
+    "replacement for grok",
+    "anti-xai",
+)
+
+
+@register("I.2-xai-positioning")
+def check_xai_positioning(m: Dict[str, Any]) -> List[Finding]:
+    findings: List[Finding] = []
+    desc = (m.get("description") or "").lower()
+    tagline = (_get(m, "metadata.tagline") or "").lower()
+    blob = desc + " | " + tagline
+    for term in _FORBIDDEN_POSITIONING_TERMS:
+        if term in blob:
+            findings.append(Finding(
+                "error", "POS-001",
+                f"description / metadata.tagline contains forbidden positioning '{term}' — "
+                f"agents must position as ecosystem allies, never competitors",
+                "description", "I.2",
+            ))
+    return findings
+
+
+# ============================================================================
+# Scan driver
+# ============================================================================
+
+
+def load_manifest(path: Path) -> Dict[str, Any]:
+    if path.is_dir():
+        candidate = path / "grok-agent.yaml"
+        if not candidate.is_file():
+            raise FileNotFoundError(f"No grok-agent.yaml in folder: {path}")
+        path = candidate
+    if not path.is_file():
+        raise FileNotFoundError(f"Manifest not found: {path}")
+    text = path.read_text(encoding="utf-8-sig")
+    data = yaml.safe_load(text)
+    if not isinstance(data, dict):
+        raise ValueError(
+            f"Manifest must be a YAML mapping, got {type(data).__name__}"
+        )
+    return data
+
+
+def scan_manifest(path: Path) -> ScanResult:
+    data = load_manifest(path)
+    result = ScanResult(manifest_path=str(path))
+    for name, fn in CHECKS.items():
+        try:
+            findings = fn(data)
+        except Exception as e:  # check itself broke — never block on that
+            findings = [Finding(
+                "warn", "INT-001",
+                f"check '{name}' raised: {e}", name, "VIII",
+            )]
+        result.findings.extend(findings)
+    return result
+
+
+def find_manifests(root: Path) -> List[Path]:
+    """Return every grok-agent.yaml under `root` (recursive)."""
+    if root.is_file():
+        return [root]
+    return sorted(root.rglob("grok-agent.yaml"))
+
+
+# ============================================================================
+# CLI
+# ============================================================================
+
+
+def _print_text_report(result: ScanResult, severity_floor: str) -> None:
+    visible = result.filter_by_floor(severity_floor)
+    sys.stdout.write(f"-> Scanning: {result.manifest_path}\n")
+    if not visible:
+        sys.stdout.write(
+            f"OK No findings at or above '{severity_floor}'. "
+            f"({len(result.findings)} info-level checks ran cleanly.)\n"
+        )
+        return
+    counts = {s: 0 for s in SEVERITIES}
+    for f in visible:
+        counts[f.severity] += 1
+        sys.stdout.write(f.to_line() + "\n")
+    summary = ", ".join(f"{counts[s]} {s}" for s in SEVERITIES if counts[s])
+    sys.stdout.write(f"-- {summary}\n")
+
+
+def _print_json_report(result: ScanResult, severity_floor: str) -> None:
+    visible = result.filter_by_floor(severity_floor)
+    payload = {
+        "manifest_path": result.manifest_path,
+        "max_severity": result.max_severity,
+        "has_errors": result.has_errors,
+        "findings": [f.to_json() for f in visible],
+        "constitution_version": CONSTITUTION_VERSION,
+        "scanner_version": VERSION,
+    }
+    sys.stdout.write(json.dumps(payload) + "\n")
+
+
+def cmd_scan(args: argparse.Namespace) -> int:
+    raw = Path(args.path).expanduser()
+    try:
+        result = scan_manifest(raw)
+    except FileNotFoundError as e:
+        sys.stderr.write(f"X  {e}\n")
+        return 66
+    except Exception as e:
+        sys.stderr.write(f"X  Failed to load manifest: {e}\n")
+        return 65
+
+    if args.json:
+        _print_json_report(result, args.severity_floor)
+    else:
+        _print_text_report(result, args.severity_floor)
+
+    return 1 if result.has_errors else 0
+
+
+def cmd_scan_all(args: argparse.Namespace) -> int:
+    root = Path(args.root).expanduser()
+    if not root.exists():
+        sys.stderr.write(f"X  Root not found: {root}\n")
+        return 66
+    paths = find_manifests(root)
+    if not paths:
+        sys.stderr.write(f"!! No grok-agent.yaml files under {root}\n")
+        return 0
+    any_errors = False
+    if not args.json:
+        sys.stdout.write(f"-> Scanning {len(paths)} manifest(s) under {root}\n\n")
+    for p in paths:
+        try:
+            result = scan_manifest(p)
+        except Exception as e:
+            sys.stderr.write(f"X  {p}: failed to load: {e}\n")
+            any_errors = True
+            continue
+        any_errors = any_errors or result.has_errors
+        if args.json:
+            _print_json_report(result, args.severity_floor)
+        else:
+            _print_text_report(result, args.severity_floor)
+            sys.stdout.write("\n")
+    return 1 if any_errors else 0
+
+
+def cmd_info(_args: argparse.Namespace) -> int:
+    sys.stdout.write(
+        f"safety/scanner.py v{VERSION}\n"
+        f"Constitution: v{CONSTITUTION_VERSION} (safety/constitution.md)\n"
+        f"Checks registered: {len(CHECKS)}\n"
+    )
+    for name in sorted(CHECKS):
+        sys.stdout.write(f"  - {name}\n")
+    sys.stdout.write(f"{TAGLINE}\n")
+    return 0
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="grok-safety-scanner",
+        description=(
+            f"Grok Agent OS — Safety Scanner. Enforces Constitution v{CONSTITUTION_VERSION}. "
+            f"{TAGLINE}"
+        ),
+        epilog=(
+            "Examples:\n"
+            "  python safety/scanner.py scan path/to/grok-agent.yaml\n"
+            "  python safety/scanner.py scan path/to/agent-folder --json\n"
+            "  python safety/scanner.py scan-all templates/\n"
+            "  python safety/scanner.py info\n"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"safety/scanner.py {VERSION} (Constitution v{CONSTITUTION_VERSION})",
+    )
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    p_scan = sub.add_parser("scan", help="Scan a single manifest.")
+    p_scan.add_argument("path", help="Path to grok-agent.yaml or agent folder.")
+    p_scan.add_argument("--json", action="store_true", help="Emit JSON instead of text.")
+    p_scan.add_argument(
+        "--severity-floor",
+        choices=SEVERITIES,
+        default="info",
+        help="Hide findings below this severity (default: info).",
+    )
+    p_scan.set_defaults(func=cmd_scan)
+
+    p_all = sub.add_parser(
+        "scan-all", help="Recursively scan every grok-agent.yaml under a root."
+    )
+    p_all.add_argument("root", help="Root directory to scan (e.g. templates/).")
+    p_all.add_argument("--json", action="store_true", help="Emit JSON per manifest.")
+    p_all.add_argument(
+        "--severity-floor",
+        choices=SEVERITIES,
+        default="info",
+        help="Hide findings below this severity (default: info).",
+    )
+    p_all.set_defaults(func=cmd_scan_all)
+
+    p_info = sub.add_parser("info", help="Print version + check list and exit.")
+    p_info.set_defaults(func=cmd_info)
+
+    return parser
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    return int(args.func(args))
+
+
+if __name__ == "__main__":
+    sys.exit(main())

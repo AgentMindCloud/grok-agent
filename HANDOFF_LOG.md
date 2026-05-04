@@ -56,6 +56,46 @@
 | P33 | Phase 2 | X Money Vision Analyzer — Grok prompts | prompts/system.md, prompts/user_templates.md | Vision-focused system prompt + 10 templates with Article III contradiction detection and cross-tool import safety | ✅ done |
 | P34 | Phase 2 | X Money Vision Analyzer — Data layer + API clients | data/store.py, data/api_clients.py, data/import_receipts.py | Vision-specific SQLite + cross-tool import writer into Tool #1 with full provenance | ✅ done |
 | P35 | Phase 2 | X Money Vision Analyzer — Launcher + Cloud config | launcher.ps1, .streamlit/config.toml, README.md | One-click Windows launcher (port 8504) + Streamlit Cloud ready; Tool #4 complete | ✅ done |
+| P36 | Phase 2 | X Money Vision Analyzer — Final smoke test + Tool #4 complete | smoke_test.ps1, README.md, HANDOFF_LOG.md | Tool #4 fully validated and ready for "grok install this"; next: Tool #3 (Creator Payout Optimizer) | ✅ done |
+
+<!--
+Tool #4 — X Money Vision Analyzer — OFFICIALLY COMPLETE on 2026-05-04
+6 prompts (P31–P36) executed via Recipe A, 6 deliverables shipped end-to-end:
+  - manifest + README (P31)        — v2.15 kind=vision-analyzer, grok.vision=true,
+                                     pii_handling=redacted-cloud, scanner-clean
+  - 6-tab Streamlit skeleton (P32) — Drop Files / Parsed Preview / Validate /
+                                     Import to Tool #1 / History / Settings
+  - Grok prompts (P33)             — 49-line system + 9 templates, 4 JSON-only
+                                     extraction schemas, Article III + cross-tool
+                                     write rule emphasized
+  - data layer + APIs (P34)        — SQLite (5 tables incl. contradictions JSON +
+                                     import_log) + Grok vision stub + the
+                                     cross-tool import_receipts.py writer that
+                                     opens Tool #1's SQLite directly
+  - launcher + Cloud config (P35)  — port=8504 (completes per-tool 8501/8502/
+                                     8503-planned/8504 sequence; all 4 tools coexist)
+  - smoke test + readiness (P36)   — 17/17 checks PASS (2 more than Tool #2's 15:
+                                     +cross-tool-write-rule-language, +PII redaction
+                                     posture); CROSS-TOOL WRITE PROVEN end-to-end
+                                     via tx_id created + dedup verified + cleanup
+
+Phase 2 build order continues: x-creator-payout-optimizer (Tool #3, P37–P42) is
+NEXT and LAST in the X Money suite. Per CLAUDE.md §6 the canonical build order is
+Tool #1 -> Tool #2 -> Tool #4 -> Tool #3 — Tool #3 ships last so it can read from
+both Tool #1 (transactions) and Tool #4 (parsed receipts) at install time.
+
+Cross-tool integration map (verified end-to-end as of P36):
+  Tool #4 -> Tool #1   (writes parsed receipts via import_receipts.py;
+                        PROVEN in P34 round-trip + P36 smoke test #14)
+  Tool #2 -> Tool #1   (reads transactions read-only;
+                        PROVEN in P28 round-trip + P30 smoke test #13)
+  Tool #3 -> Tool #1+#4 (reads both; ships in P37–P42)
+
+All four ports allocated and side-by-side-coexistence safe:
+  Tool #1 = 8501  /  Tool #2 = 8502  /  Tool #3 = 8503 (planned)  /  Tool #4 = 8504
+
+Add new rows above this line as prompts complete.
+-->
 
 <!--
 Tool #2 — X Smart Cashtag Alpha Engine — OFFICIALLY COMPLETE on 2026-05-04

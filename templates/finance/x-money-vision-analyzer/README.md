@@ -156,9 +156,41 @@ Both must return zero `error`-level findings before this agent is allowed to ins
 
 ---
 
+## Smoke test & `grok install this` readiness
+
+Before this analyzer goes near a real receipt, every commit must pass the offline smoke test:
+
+```powershell
+.\smoke_test.ps1
+```
+
+The script runs 17 checks — file presence, Python interpreter, schema validation, Constitution scanner, Apache 2.0 headers, Article V.1+V.2 disclaimers, Article III contradiction-flagging language, **cross-tool write rule language presence in system.md + manifest** (Tool #4 specific), **PII redaction posture verification** (`pii_handling: "redacted-cloud"` + `grok_vision.privacy` mentions redaction — Tool #4 specific), manifest-tool importability, SQLite `parse_receipt` round-trip + line items, `validate_extraction` contradictions, `categorize_parsed_receipt`, **CROSS-TOOL WRITE PROOF** (writes a real row into Tool #1's SQLite, verifies idempotent dedup on re-call, cleans up the test row), Grok vision stub honesty (`provenance.stub: True`), `launcher.ps1` parse, and `.streamlit/config.toml` shape with `port=8504` verified — and prints **`Tool #4 - X Money Vision Analyzer: PASS`** when every check lands green. Exit code is `0` on PASS, `1` on FAIL. Add `-Json` for machine-readable output suitable for CI.
+
+```powershell
+.\smoke_test.ps1 -Json | Out-File smoke.json
+```
+
+### `grok install this` (X-native shorthand)
+
+Once the smoke test is green, this analyzer is ready for the X-native installation primitive. In a tweet or DM that mentions `@grok`, you can write:
+
+```
+grok install this
+```
+
+…with the analyzer's manifest URL or template name attached. The Grok Agent OS orchestra resolves that to the equivalent local CLI flow:
+
+```powershell
+grok-agent install x-money-vision-analyzer
+```
+
+…which runs the same Pydantic deep validator + Constitution scanner before writing any files. Both routes refuse to install if the smoke test would fail.
+
+---
+
 ## Build slots (Recipe A)
 
-This is **Slot 1 of 6** — manifest + folder + README. The remaining slots populate this folder over P32–P36:
+All 6 slots are shipped on `main`; Tool #4 is **COMPLETE**:
 
 | Slot | Files | Status |
 |---|---|---|
@@ -166,8 +198,8 @@ This is **Slot 1 of 6** — manifest + folder + README. The remaining slots popu
 | 2 — Streamlit app skeleton (6 tabs) | `app.py`, `requirements.txt` | ✅ P32 |
 | 3 — Grok prompts | `prompts/system.md`, `prompts/user_templates.md` | ✅ P33 |
 | 4 — Data layer + APIs + `data/import_receipts.py` | `data/__init__.py`, `data/store.py`, `data/api_clients.py`, `data/import_receipts.py` | ✅ P34 |
-| 5 — Launcher + Streamlit Cloud config | `launcher.ps1`, `.streamlit/config.toml` | ✅ this prompt (P35) |
-| 6 — Smoke test + `grok install this` readiness | `smoke_test.ps1` | ⏭️ P36 |
+| 5 — Launcher + Streamlit Cloud config | `launcher.ps1`, `.streamlit/config.toml` | ✅ P35 |
+| 6 — Smoke test + `grok install this` readiness | `smoke_test.ps1` (17 checks); README Smoke-test section | ✅ this prompt (P36) |
 
 ---
 

@@ -37,11 +37,21 @@
 | P15 | Phase 1 | Create ROADMAP.md | ROADMAP.md | Full public phase-by-phase summary matching master plan | ✅ done |
 | P16 | Phase 1 | Add Streamlit defaults | .streamlit/config.toml | Cloud-ready defaults for all future Streamlit tools | ✅ done |
 | P17 | Phase 1 | End-to-end smoke test (Codespaces) | docs/smoke-test-results.md (Run #2) + cli/grok-agent.ps1 (3 bug fixes) | Real pwsh invocations exposed + fixed: AppData null crash, blank Format-Table render, $input under CmdletBinding | ✅ done |
+| P18 | Phase 1 | First X launch thread + Phase 1 close | docs/x-launch-thread.md | Phase 1 officially closed — 18 prompts, 100% foundation delivered | ✅ done |
 
 <!--
-Phase 1 — final polish (P15–P18). 14 executed prompts produced all 18 deliverables in the original
-CLAUDE.md §6 plan; the orchestrator is using P15–P18 to add public-roadmap, Streamlit defaults, and
-final polish layers on top of the smoke-tested foundation. Phase 2 (X Money tools, P19–P42) follows.
+Phase 1 — OFFICIALLY CLOSED on 2026-05-04 with the public-launch artifacts in place.
+18 prompts executed, 18 deliverables in the CLAUDE.md §6 plan all present and verified
+(both the Python and PowerShell layers smoke-tested end-to-end via real pwsh; Constitution
+scanner clean on all 8 starter templates; CI workflow gates schema + Constitution on every PR;
+3 PowerShell defects surfaced and fixed in P17 before close).
+
+Phase 2 (X Money Tools Suite, P19–P42, 24 prompts via Recipe A x4 tools) follows.
+Build order: x-money-companion-dashboard → x-smart-cashtag-alpha-engine →
+x-money-vision-analyzer → x-creator-payout-optimizer (so #4's importer can target #1's SQLite).
+
+Add new rows above this line as prompts complete.
+Format reference: | P{N} | Phase {N} | {short title} | {files touched} | {key decisions in 1 line} | ✅ done |
 
 Add new rows above this line as prompts complete.
 Format reference: | P{N} | Phase {N} | {short title} | {files touched} | {key decisions in 1 line} | ✅ done |

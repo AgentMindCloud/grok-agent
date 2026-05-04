@@ -1,0 +1,44 @@
+{
+  "_copyright": "Copyright 2026 AgentMindCloud",
+  "_license": "Apache License, Version 2.0",
+  "_license_url": "http://www.apache.org/licenses/LICENSE-2.0",
+  "_built_for": "X, Grok & the ecosystem community",
+  "_comment_purpose": "Sample 3 — 7-day window case. Auto-triggers the optional Period Audit section because 7d windows are dominated by single-day variance. Demonstrates the runner's directional-only stance for short windows and the explicit 'widen to 30d' remediation.",
+  "x_handle": "@JanSol0s",
+  "time_range": "7d",
+  "compare_to": "previous_period",
+  "metric_focus": "engagement",
+  "data_source": "demo",
+  "current_period": {
+    "impressions": 38000,
+    "engagements": 1100,
+    "follower_delta_pct": 0.4,
+    "posts_per_week": 6
+  },
+  "previous_period": {
+    "impressions": 41000,
+    "engagements": 1280,
+    "follower_delta_pct": 0.6,
+    "posts_per_week": 5
+  },
+  "top_content": [
+    {
+      "archetype_label": "Mid-week long-form thread on infra tooling",
+      "format": "thread",
+      "impression_share_pct": 42,
+      "engagement_rate_pct": 3.1
+    },
+    {
+      "archetype_label": "Quote-tweet rally on a niche launch",
+      "format": "quote-tweet",
+      "impression_share_pct": 18,
+      "engagement_rate_pct": 2.7
+    },
+    {
+      "archetype_label": "Numbers post (small sample, single-day spike)",
+      "format": "single-post",
+      "impression_share_pct": 11,
+      "engagement_rate_pct": 4.0
+    }
+  ]
+}

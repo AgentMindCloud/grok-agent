@@ -94,8 +94,24 @@ $Script:RepoRoot   = Split-Path -Parent $Script:ScriptRoot
 $Script:SpecPath   = Join-Path $Script:RepoRoot 'spec\v2.15\grok-agent.yaml'
 $Script:PyFallback = Join-Path $Script:ScriptRoot 'grok-agent.py'
 
-# Windows AppData paths (local-first, no admin required)
-$Script:AppDataRoot = Join-Path $env:LOCALAPPDATA 'grok-agent'
+# Windows AppData paths (local-first, no admin required).
+# The Hard Six target is Windows 11 — $env:LOCALAPPDATA is always set there.
+# A fallback chain keeps the script loadable on non-Windows pwsh (CI / dev)
+# so `help` and `validate` still work; commands that genuinely need a real
+# Windows AppData (install / list / run) still operate against the resolved
+# path, just with a fallback root.
+if ($env:LOCALAPPDATA) {
+    $Script:AppDataRoot = Join-Path $env:LOCALAPPDATA 'grok-agent'
+}
+elseif ($env:USERPROFILE) {
+    $Script:AppDataRoot = Join-Path $env:USERPROFILE 'AppData\Local\grok-agent'
+}
+elseif ($env:HOME) {
+    $Script:AppDataRoot = Join-Path $env:HOME '.grok-agent'
+}
+else {
+    $Script:AppDataRoot = '/tmp/grok-agent-fallback'
+}
 $Script:AgentsRoot  = Join-Path $Script:AppDataRoot 'agents'
 $Script:LogsRoot    = Join-Path $Script:AppDataRoot 'logs'
 $Script:CacheRoot   = Join-Path $Script:AppDataRoot 'cache'
@@ -406,9 +422,25 @@ function Invoke-Install {
     $sourceFolder = $null
 
     if ($FromStdin) {
-        Write-Step 'Reading manifest from stdin (paste YAML, then press Ctrl-Z then Enter)...'
+        Write-Step 'Reading manifest from stdin...'
+        # Two pathways:
+        #   1. Stdin is redirected (PS pipeline OR OS-level pipe) —
+        #      pwsh detects this via [Console]::IsInputRedirected, and
+        #      [Console]::In.ReadToEnd() returns the full input cleanly.
+        #   2. Interactive paste — prompt the user, then read until EOF
+        #      (Ctrl-Z + Enter on Windows, Ctrl-D on PS Core / Linux).
+        # We deliberately do NOT use the $input automatic variable: under
+        # [CmdletBinding()] its enumeration semantics are unreliable and
+        # can block on TTY when no pipeline is actually feeding the script.
+        if (-not [Console]::IsInputRedirected) {
+            Write-Info 'Paste your YAML, then press Ctrl-Z + Enter (Windows) or Ctrl-D (PS Core / Linux):'
+        }
         $manifestText = [Console]::In.ReadToEnd()
-        $sourceLabel  = '<stdin>'
+        if ([string]::IsNullOrWhiteSpace($manifestText)) {
+            Write-Err2 'No manifest text received on stdin.'
+            exit 64
+        }
+        $sourceLabel = '<stdin>'
     }
     elseif (-not [string]::IsNullOrWhiteSpace($Yaml)) {
         $manifestText = $Yaml
@@ -596,7 +628,17 @@ function Invoke-List {
 
     Write-Host ('  Installed agents ({0}):' -f $entries.Count) -ForegroundColor White
     Write-Host ''
-    $entries | Sort-Object Name | Format-Table -AutoSize -Property Name, Kind, Version, Description
+    # Format-Table doesn't render reliably in non-TTY pwsh; format manually.
+    $fmt = '  {0,-32}  {1,-26}  {2,-7}  {3}'
+    Write-Host ($fmt -f 'NAME', 'KIND', 'VERSION', 'DESCRIPTION') -ForegroundColor White
+    Write-Host ($fmt -f ('-' * 32), ('-' * 26), ('-' * 7), ('-' * 30)) -ForegroundColor DarkGray
+    foreach ($e in ($entries | Sort-Object Name)) {
+        $desc = if ($e.Description) {
+            $d = [string]$e.Description
+            if ($d.Length -gt 80) { $d.Substring(0, 80) + '...' } else { $d }
+        } else { '' }
+        Write-Host ($fmt -f $e.Name, $e.Kind, $e.Version, $desc)
+    }
     Write-Host ''
     Write-Info ('Root: {0}' -f $Script:AgentsRoot)
 }

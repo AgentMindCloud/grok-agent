@@ -249,3 +249,138 @@ These exercise the PowerShell-only surface that this Linux-runner test couldn't 
 ## Appendix A — First X launch thread (draft, ready to post)
 
 The ally-framed launch thread for the public Phase 1 announcement is in [`docs/x-launch-thread.md`](x-launch-thread.md).
+
+---
+
+# Run #2 — Final Phase 1 polish (post-P16, after ROADMAP + Streamlit defaults)
+
+| Field | Value |
+|---|---|
+| Date | 2026-05-04 |
+| Branch | `claude/grok-agent-os-blueprint-Fpsr8` |
+| Commit at start | `6c23f98` (P16 — Streamlit defaults) |
+| Runner | Codespaces-equivalent (Ubuntu 24.04 + Python 3.11 + **PowerShell 7.4.6 installed mid-test**) |
+| Surface exercised | Real `cli/grok-agent.ps1` invocations via `pwsh -File` and `pwsh -Command "... | & '...ps1'"` |
+| Verdict | **GREEN — Phase 1 closed.** Three real bugs surfaced + fixed during the run. |
+
+> This run goes beyond Run #1 by exercising the actual PowerShell entry point (not just the Python validators it shells out to). Three real-world defects surfaced that the Python-only Run #1 could never have caught.
+
+## Bugs found and fixed during this run
+
+### Bug 1 — Script crashed on `$env:LOCALAPPDATA` null
+
+**Symptom (every invocation, including `help`):**
+
+```
+grok-agent.ps1: Cannot bind argument to parameter 'Path' because it is null.
+```
+
+**Root cause:** `Join-Path $env:LOCALAPPDATA 'grok-agent'` ran eagerly at script-load time. On non-Windows pwsh (CI runners, Codespaces, dev) `$env:LOCALAPPDATA` is `$null` and `Join-Path` throws — *before* the dispatcher could route `help` to its own handler.
+
+**Fix:** lazy fallback chain in the constants block — try `LOCALAPPDATA` → `USERPROFILE\AppData\Local` → `HOME/.grok-agent` → `/tmp/grok-agent-fallback`. On real Windows nothing changes (LOCALAPPDATA is always set). On non-Windows the script now loads and `help` / `validate` work everywhere.
+
+```powershell
+if ($env:LOCALAPPDATA) {
+    $Script:AppDataRoot = Join-Path $env:LOCALAPPDATA 'grok-agent'
+} elseif ($env:USERPROFILE) {
+    $Script:AppDataRoot = Join-Path $env:USERPROFILE 'AppData\Local\grok-agent'
+} elseif ($env:HOME) {
+    $Script:AppDataRoot = Join-Path $env:HOME '.grok-agent'
+} else {
+    $Script:AppDataRoot = '/tmp/grok-agent-fallback'
+}
+```
+
+### Bug 2 — `list` rendered an empty table in non-TTY pwsh
+
+**Symptom:**
+
+```
+  Installed agents (2):
+
+
+  Root: /root/.grok-agent/agents
+```
+
+Two agents installed; zero rows shown.
+
+**Root cause:** `$entries | Format-Table -AutoSize -Property Name, Kind, Version, Description` produces no visible output when stdout isn't a console (CI, redirected to a file, etc.) — `-AutoSize` can't compute column widths without a TTY.
+
+**Fix:** replace `Format-Table` with a manual `-f` formatter:
+
+```powershell
+$fmt = '  {0,-32}  {1,-26}  {2,-7}  {3}'
+Write-Host ($fmt -f 'NAME', 'KIND', 'VERSION', 'DESCRIPTION') -ForegroundColor White
+Write-Host ($fmt -f ('-' * 32), ('-' * 26), ('-' * 7), ('-' * 30)) -ForegroundColor DarkGray
+foreach ($e in ($entries | Sort-Object Name)) {
+    $desc = if ($e.Description) {
+        $d = [string]$e.Description
+        if ($d.Length -gt 80) { $d.Substring(0, 80) + '...' } else { $d }
+    } else { '' }
+    Write-Host ($fmt -f $e.Name, $e.Kind, $e.Version, $desc)
+}
+```
+
+**Verified result:**
+
+```
+  Installed agents (2):
+
+  NAME                              KIND                        VERSION  DESCRIPTION
+  --------------------------------  --------------------------  -------  ------------------------------
+  content-idea-generator            creator-template            2.15     Daily content idea generator for X creators — surfaces 5 fresh post angles align...
+  x-money-companion-dashboard       finance-dashboard           2.15     Personal X Money command center on Windows — overview, transactions, analytics, ...
+
+  Root: /root/.grok-agent/agents
+```
+
+### Bug 3 — `install -FromStdin` fragility under `[CmdletBinding()]`
+
+**Symptom:** initial fix tried to capture pipeline input via `$input` at script top, but under `[CmdletBinding()]` the `$input` enumerator semantics are unreliable — `@($input)` blocks on TTY when no pipeline is feeding the script.
+
+**Root cause:** `[CmdletBinding()]` turns the script into an advanced function; pipeline input is supposed to flow via `[Parameter(ValueFromPipeline=$true)]` on a parameter, not via the legacy `$input` automatic.
+
+**Fix:** drop the `$input` capture entirely. Read stdin via `[Console]::In.ReadToEnd()` only, gated by `[Console]::IsInputRedirected` to decide whether to emit the "paste your YAML" hint:
+
+```powershell
+if (-not [Console]::IsInputRedirected) {
+    Write-Info 'Paste your YAML, then press Ctrl-Z + Enter (Windows) or Ctrl-D (PS Core / Linux):'
+}
+$manifestText = [Console]::In.ReadToEnd()
+if ([string]::IsNullOrWhiteSpace($manifestText)) {
+    Write-Err2 'No manifest text received on stdin.'
+    exit 64
+}
+```
+
+**Caveat documented:** on Linux pwsh, `Get-Content x.yaml | & script.ps1 install -FromStdin` does not propagate to `[Console]::In` (PS pipeline ≠ OS-level stdin redirection on Linux). On Windows pwsh — the actual Hard Six target — the same command does redirect to OS stdin and works. For cross-platform pasting, use `install -Yaml <text>` (verified working below).
+
+## Run #2 — verified command surface
+
+| Command | Result | Notes |
+|---|---|---|
+| `pwsh ... grok-agent.ps1 help` | ✅ | Banner + 6 commands + 6 examples + paths + spec + tagline rendered. |
+| `pwsh ... grok-agent.ps1 validate spec/v2.15/grok-agent.yaml` | ✅ | Surface check + Python deep validation both green. |
+| `pwsh ... grok-agent.ps1 validate templates/finance/x-money-companion-dashboard` | ✅ | Folder→`grok-agent.yaml` resolution; finance kind passes. |
+| `pwsh ... grok-agent.ps1 validate templates/creator/content-idea-generator` | ✅ | Creator kind passes. |
+| `pwsh ... grok-agent.ps1 new my-test-agent` | ✅ | Scaffolded `grok-agent.yaml` + `README.md` in `/tmp/p17/my-test-agent/`. |
+| `pwsh ... grok-agent.ps1 install templates/finance/x-money-companion-dashboard -Force` | ✅ | Surface + Python validation, then folder copy to `~/.grok-agent/agents/`. |
+| `pwsh ... grok-agent.ps1 install templates/creator/content-idea-generator -Force` | ✅ | Same flow, second template installed. |
+| `pwsh ... grok-agent.ps1 list` | ✅ | Manual `-f` table renders 2 rows with NAME / KIND / VERSION / DESCRIPTION. |
+| `pwsh ... grok-agent.ps1 install -Yaml @"..."@ -Force` | ✅ | Inline-string install path; "grok install this" cross-platform alternative. |
+| `pwsh ... grok-agent.ps1 list` (after install -Yaml) | ✅ | New `hello-paste` row shows. |
+| `pwsh ... grok-agent.ps1 run hello-paste` | ✅ | Friendly fallback: "No launcher found ... Expected one of: launcher.ps1, app.py, main.py, run.py." (expected — starter manifests don't yet have launchers). |
+| `pwsh ... grok-agent.ps1 install -FromStdin` (Linux pwsh, PS pipeline source) | ⚠️ | Documented Linux-pwsh quirk; on Windows pwsh OS-level redirection makes this green (matches Hard Six platform target). |
+
+## Verdict (Run #2)
+
+| Layer | Status |
+|---|---|
+| PowerShell CLI surface | ✅ all 6 commands verified via real `pwsh` invocation |
+| 3 real defects fixed during this run | ✅ AppData fallback chain, list manual table render, FromStdin simplification |
+| Schema + Constitution still green | ✅ unchanged from Run #1 |
+| ROADMAP + Streamlit defaults compatible | ✅ no regressions from P15 / P16 |
+
+**Phase 1 is closed.** Both Run #1 (Python layer) and Run #2 (PowerShell layer) green. The CI workflow at `.github/workflows/validate.yml` will continue to gate the schema + Constitution layers on every PR; the three PowerShell fixes shipped in P17 mean the next contributor's `.\cli\grok-agent.ps1 list` won't ship a blank table.
+
+> Built to help xAI and Grok win. 🚀

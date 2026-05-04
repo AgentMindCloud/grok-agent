@@ -79,6 +79,7 @@
 | P56 | Phase 3 | Analytics Summarizer runner + README + examples | templates/creator/analytics-summarizer/run.py, README.md, examples/ | Deterministic offline runner matching P44–P54 quality bar + P55 system prompt schema + 4-row metric table | ✅ done |
 | P57 | Phase 3 | Monetization Optimizer manifest + system prompt | templates/creator/monetization-optimizer/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + X Money tool bridges + finance disclaimers | ✅ done |
 | P58 | Phase 3 | Monetization Optimizer runner + README + examples | templates/creator/monetization-optimizer/run.py, README.md, examples/ | Deterministic offline runner matching P44–P56 quality bar + P57 system prompt schema + mandatory V.1/V.2 disclaimers on every money/tax card | ✅ done |
+| P59 | Phase 3 | Thread Builder manifest + system prompt | templates/creator/thread-builder/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + 8-angle distinctness + cross-template bridges | ✅ done |
 
 <!--
 ====================================================================

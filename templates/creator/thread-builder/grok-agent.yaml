@@ -1,0 +1,109 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — X thread builder for creators.
+
+version: "2.15"
+kind: "creator-template"
+name: "thread-builder"
+description: "Turn a topic into a high-performing X thread outline with hook variants, full per-tweet drafts under 280 chars each, optional Grok Imagine visual prompts, engagement tips, and cross-template bridges. Local-first. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Thread Builder"
+  tagline: "Topic in, thread out -- under 60 seconds, ready to ship."
+  categories: ["creator", "content", "thread"]
+  tags: ["creator-template", "cli-only", "phase-3"]
+  language: "en"
+  created: "2026-05-04"
+  updated: "2026-05-04"
+  repository: "https://github.com/AgentMindCloud/grok-agent"
+
+install:
+  one_click: true
+  install_command: "grok-agent install thread-builder"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  launcher: "launcher.ps1"
+  appdata_folder: "grok-agent/thread-builder"
+  cache_folder: "grok-agent/thread-builder/cache"
+  log_folder: "grok-agent/thread-builder/logs"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.7
+  max_tokens: 2560
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+  streaming: true
+
+tools:
+  - name: "generate_thread_outline"
+    type: "local_function"
+    description: "Turn a topic + tone into a structured X thread: hook variants, full per-tweet drafts within 280-char limit, optional Grok Imagine visual prompts on key tweets, qualitative engagement prediction, and concrete cross-template bridges to the rest of the creator suite."
+    module: "thread_builder.run"
+    function: "generate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          x_handle:
+            type: "string"
+            description: "Your X handle, e.g. @JanSol0s -- anchors voice on every draft."
+          topic:
+            type: "string"
+            description: "The thread topic in plain language (e.g. 'how I shipped my first Grok agent in a week')."
+          thread_length:
+            type: "string"
+            enum: ["short", "standard", "long", "auto"]
+            description: "short=4-5 tweets, standard=6-8, long=9-12, auto picks based on topic depth. Default 'standard'."
+          tone:
+            type: "string"
+            enum: ["punchy", "thoughtful", "data-led", "warm"]
+            description: "Voice flavor (default punchy)."
+          include_visuals:
+            type: "boolean"
+            description: "If true, attach a Grok Imagine prompt to the hook + every 3rd tweet. Default false."
+          niche:
+            type: "string"
+            description: "Optional niche hint (e.g. 'AI agents on X') for cross-template bridge ideation."
+        required: ["x_handle", "topic"]
+
+constitution:
+  rules:
+    - "Never fabricate stats, quotes, claims, or named-source citations inside thread drafts. If a number isn't supplied by the user or the runner's context, use a qualitative phrase ('growing chatter', 'early signal') instead of inventing a percentage."
+    - "Always emit the structured 6-section shape: Headline, Hook Variants (2-3), Thread Outline, Full Drafts (per-tweet with char count), Engagement Tips (3-5), Cross-Template Bridges (3-5). Add the 7th 'A/B Variants' section only when the user explicitly requests alternate hooks."
+    - "Strict char limit: every tweet draft <=280 chars. Count characters before emission; if over, tighten -- never split into multiple posts within one slot. Show the character count next to every draft."
+    - "8-angle distinctness for the overall thread arc: the thread's overall angle is one of the canonical 8 (contrarian / data-led / story-led / list-led / prediction / comparison / how-to / hot-take). The Headline declares which angle the thread takes; tweets within the thread can use sub-angles but must serve the parent."
+    - "Hook Variants: emit 2-3 alternate openers using *different* angles when possible -- e.g. one contrarian, one data-led, one story-led. Each labeled with its angle and char count."
+    - "Visual prompts only when include_visuals=true. When on, attach a one-line Grok Imagine prompt (cinnabar-and-parchment / Windows 11 desktop vibe) to the hook + every 3rd tweet. Never auto-generate visuals when the flag is off."
+    - "Engagement prediction is qualitative only -- one label per tweet from low / medium / medium-high / high, plus one composite label for the whole thread. Never percentages, never fake confidence numbers."
+    - "Refuse to draft engagement-bait that violates X policy (false outrage, hate, harassment, doxxing, ratio-bait). Refuse in one line and explain why; do not produce drafts."
+    - "Tag finance-adjacent threads (cashtags, tokens, earnings, P&L, taxes, specific buy/sell language) with a 'Context only -- not financial advice.' line on the affected tweet draft."
+    - "Cross-Template Bridges section MUST cite at least 3 sibling templates by name when a genuine bridge exists: content-idea-generator, reply-drafter, mention-summarizer, trend-aligned-poster, daily-briefing-agent, research-assistant, analytics-summarizer, monetization-optimizer. Don't shoehorn bridges that don't fit."
+    - "Topic refusal: if the topic is too vague to outline a thread (e.g. 'something interesting'), ask exactly one clarifying question and skip the structured sections."
+    - "Local-first: thread history, prior outlines, and topic caches live under $env:LOCALAPPDATA. Never propose syncing or uploading them."
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 60
+  cost_limits:
+    usd_per_session_max: 0.20
+    api_calls_per_session_max: 60
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+      - "requests ^2.31"

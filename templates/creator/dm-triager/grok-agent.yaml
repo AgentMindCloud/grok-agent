@@ -1,0 +1,133 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to make Grok the obvious choice for every DM-overwhelmed creator on X.
+# Local-first DM triager: reads creator-supplied X DM data (or seeded demo
+# DMs) and emits a structured 7/8-section triage report with 4 canonical
+# Triage Health metrics, opportunity-flood paradox detection, 4-bucket
+# distribution (Urgent / Opportunity / Routine / Spam), suggested-action
+# queue (max 6) with spam-burst guard, and mandatory bridges to
+# reply-drafter + mention-summarizer.
+# Drafts only — never auto-replies. Never stores DM content outside the
+# user's local Windows machine.
+
+version: "2.15"
+kind: "creator-template"
+name: "dm-triager"
+description: "Local-first DM triager for X creators — reads creator-supplied X DM data (or seeded demo DMs) and emits a 7/8-section structured triage report with 4 canonical Triage Health metrics (Triage urgency rate / Opportunity ratio / Spam pressure / Authentic sender share), opportunity-flood paradox detection in both Triage Health and Red Flags sections, 4-bucket distribution (Urgent / Opportunity / Routine / Spam), suggested-action queue (max 6) with spam-burst guard (≥5 spam DMs + >60% token overlap → Red Flag), and mandatory bridges to reply-drafter + mention-summarizer. Drafts only — never auto-replies. DM content never leaves the local Windows machine. Built for X, Grok & the ecosystem community."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "DM Triager"
+  tagline: "Sort the inbox before it sorts your day."
+  categories: ["creator", "dms", "triage"]
+  tags: ["creator-template", "cli-only", "drafts-only", "spam-guard", "triage", "privacy-first"]
+  created: "2026-05-04"
+  updated: "2026-05-04"
+
+install:
+  one_click: true
+  install_command: "grok-agent install dm-triager"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  appdata_folder: "grok-agent/dm-triager"
+  cache_folder: "grok-agent/dm-triager/cache"
+  log_folder: "grok-agent/dm-triager/logs"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.4
+  max_tokens: 3072
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+
+tools:
+  - name: "generate_dm_triage"
+    type: "local_function"
+    description: "Produce a 7-section structured DM triage report (or 8-section when spam-burst detected OR window=7d) with 4 canonical Triage Health metrics, weighted Triage Health score, opportunity-flood paradox detection in BOTH the Triage Health section AND the Red Flags section, 4-bucket distribution (Urgent / Opportunity / Routine / Spam), suggested-action queue (max 6 — spam-burst members excluded and consolidated as a Red Flag), and mandatory bridges to reply-drafter + mention-summarizer in every output. Never auto-replies. DM content never leaves the local Windows machine."
+    module: "dm_triager.run"
+    function: "generate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          x_handle:
+            type: "string"
+            description: "Creator's X handle (with or without @). Privacy anchor — only the creator's handle appears in the rendered output."
+          dms_file:
+            type: "string"
+            description: "Optional path to a creator-supplied DM export (JSON, local path only). When omitted the runner emits seeded demo data explicitly marked as such. The path is read locally; DM content never leaves the user's Windows machine."
+          window:
+            type: "integer"
+            enum: [7, 30, 90]
+            default: 30
+            description: "Period window in days. 7-day window auto-triggers the DM Audit section."
+          compare_to:
+            type: "string"
+            enum: ["previous_period", "benchmark"]
+            default: "previous_period"
+            description: "Comparison basis for bucket-share and authenticity delta calculations."
+          opportunity_authenticity_floor:
+            type: "number"
+            default: 60.0
+            description: "Authentic sender share threshold (0–100) below which the opportunity-flood paradox fires when Opportunity ratio is also elevated. Default 60."
+        required: ["x_handle"]
+
+constitution:
+  rules:
+    - "Drafts only. The runner emits a triage report the creator reads; it never auto-replies, blocks, or mutes any DM on X."
+    - "No fabricated statistics. Demo DM counts carry an explicit [demo DM — re-run with --dms-file for real X data] label so the creator never confuses demo output for their real DM inbox."
+    - "Surface the opportunity-flood paradox in BOTH the Triage Health section AND the Red Flags section whenever Opportunity ratio is above 30% AND Authentic sender share is below the configured floor (default 60). Both conditions must be true — if only one fires, surface each condition in its own row instead."
+    - "Spam-burst guard: when ≥5 DMs in the Spam bucket share >60% pairwise Jaccard token overlap, exclude them from the suggested-action queue and consolidate them as a single Red Flag titled 'Coordinated spam burst' with severity 'high' and a specific remediation step."
+    - "Suggested-action queue is capped at 6 items after the spam-burst filter. Spam-burst members do not count toward the 6-slot cap — they are surfaced exclusively in the Red Flags section."
+    - "Every output unconditionally includes bridges to both reply-drafter (to draft replies to Urgent and Opportunity DMs) and mention-summarizer (to confirm whether DM patterns mirror public mention patterns). These two bridges are never optional."
+    - "Privacy-first: no sender X handles, raw DM text, attachment URLs, or external links appear in the rendered output. DM content is paraphrased into intent labels only and never written to disk outside the agent's AppData folder."
+  hard_refusals:
+    - "auto-reply, mute, block, or report any DM without explicit creator consent"
+    - "expose sender X handles, raw DM text, or external URLs in the rendered output"
+    - "fabricate DM counts, bucket distribution, or spam-burst statistics"
+    - "store DM content outside the user's local Windows machine ($env:LOCALAPPDATA)"
+    - "scrape authenticated X DM content"
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 30
+  scanner_severity_floor: "warn"
+  forbidden_actions:
+    - scrape_authenticated_x_content
+    - auto_reply_to_dm
+    - auto_block_or_mute_sender
+    - expose_third_party_handles
+    - exfiltrate_dm_content
+    - bypass_safety_scanner
+  cost_limits:
+    usd_per_session_max: 0.30
+    usd_per_day_max: 1.00
+    tokens_per_session_max: 60000
+    api_calls_per_session_max: 80
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "any export of the triage report to a path outside the agent AppData folder"
+      - "any future-version auto-reply, mute, or block action (currently disabled in v1)"
+    timeout_seconds: 60
+  disclaimers:
+    not_financial_advice: false
+    not_tax_advice: false
+    real_world_action_consent: false
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"

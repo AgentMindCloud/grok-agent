@@ -107,6 +107,7 @@
 | P84 | Phase 3 | Analytics Summarizer runner + README + examples | templates/creator/analytics-summarizer/run.py, README.md, examples/ (3 input.json + output.md pairs) | Matches merged P83 exactly; new "Built for X, Grok & the ecosystem community" phrasing used throughout README + runner banner + examples (per session-explicit override of CLAUDE.md Hard Rule #2 for this template only); 3 demo modes (paradox / healthy / 7d-audit) + JSON metrics-file path; deterministic; brings creator suite from 9/20 to 10/20 fully complete | ✅ done |
 | P85 | Phase 3 | Mention Summarizer manifest + system prompt | templates/creator/mention-summarizer/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + 4 canonical Mention Health metrics + sentiment-spike paradox + troll-cluster guard (Jaccard BFS) + max-8 priority queue + cross-template bridges (reply-drafter + analytics-summarizer mandatory) | ✅ done |
 | P90 | Phase 3 | Mention Summarizer runner + README + examples | run.py, README.md, examples/ (3 pairs) | Matches P85 exactly; new phrasing + troll guard + bridges | ✅ done |
+| P91 | Phase 3 | DM Triager manifest + system prompt | grok-agent.yaml, prompts/system.md | Matches P83/P85/P87/P89 v2.15 shape; new phrasing + bridges | ✅ done |
 
 <!--
 ====================================================================

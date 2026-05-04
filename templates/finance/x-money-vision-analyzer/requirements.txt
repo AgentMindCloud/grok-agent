@@ -1,0 +1,14 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Pinned to match templates/finance/x-money-vision-analyzer/grok-agent.yaml
+# dependencies.python.packages. The Grok 4.3 vision client + the cross-tool
+# importer (data/import_receipts.py) ship in Slot 4 / P34.
+
+streamlit>=1.33,<2.0
+pandas>=2.2,<3.0
+pillow>=10.3,<11.0          # image handling for receipt thumbnails + vision input
+pydantic>=2.7,<3.0
+pyyaml>=6.0,<7.0
+requests>=2.31,<3.0         # for the Grok 4.3 vision REST call

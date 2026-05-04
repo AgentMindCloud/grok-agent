@@ -68,6 +68,7 @@
 | P45 | Phase 3 | Reply Drafter manifest + system prompt | templates/creator/reply-drafter/grok-agent.yaml, prompts/system.md | v2.15 manifest + high-quality offline system prompt matching P44 quality bar | ✅ done |
 | P46 | Phase 3 | Reply Drafter runner + README + examples | templates/creator/reply-drafter/run.py, README.md, examples/ | Deterministic offline runner matching P44 quality bar + P45 system prompt | ✅ done |
 | P47 | Phase 3 | Mention Summarizer manifest + system prompt | templates/creator/mention-summarizer/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching P45 quality bar | ✅ done |
+| P48 | Phase 3 | Mention Summarizer runner + README + examples | templates/creator/mention-summarizer/run.py, README.md, examples/ | Deterministic offline runner matching P44/P46 quality bar + P47 system prompt schema | ✅ done |
 
 <!--
 ====================================================================

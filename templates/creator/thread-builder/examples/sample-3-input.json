@@ -1,0 +1,15 @@
+{
+  "_copyright": "Copyright 2026 AgentMindCloud",
+  "_license": "Apache License, Version 2.0",
+  "_license_url": "http://www.apache.org/licenses/LICENSE-2.0",
+  "_built_for": "X, Grok & the ecosystem community",
+  "_comment_purpose": "Sample 3 — 5-variant cap (analytical / personal / tactical / narrative + 1 repeat) → Thread Audit auto-triggered because variant_count == 5. Demonstrates: (a) the variant cap of 5 is honoured, (b) all 4 canonical tone registers are surfaced, (c) the Hook Variations section grows to 6 alternates, (d) the Variant-count cognitive-load Red Flag fires.",
+  "x_handle": "@habitstacker",
+  "topic_or_goal": "weekly maker rituals",
+  "variant_count": 5,
+  "thread_length": "medium",
+  "tone_focus": "all",
+  "voice_samples": [],
+  "analytics_file": null,
+  "data_source": "demo"
+}

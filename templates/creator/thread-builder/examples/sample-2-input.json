@@ -1,0 +1,18 @@
+{
+  "_copyright": "Copyright 2026 AgentMindCloud",
+  "_license": "Apache License, Version 2.0",
+  "_license_url": "http://www.apache.org/licenses/LICENSE-2.0",
+  "_built_for": "X, Grok & the ecosystem community",
+  "_comment_purpose": "Sample 2 — hook-without-payoff paradox firing. Variant 1 (analytical) is rigged with Hook 88 + Arc 42 so the runner surfaces the paradox in BOTH the Thread Plan Performance section AND the Red Flags section. Demonstrates the strict paradox rule from the P87 system prompt + the constitution.",
+  "x_handle": "@JanSol0s",
+  "topic_or_goal": "creator burnout patterns",
+  "variant_count": 3,
+  "thread_length": "medium",
+  "tone_focus": "all",
+  "voice_samples": [],
+  "analytics_file": null,
+  "data_source": "demo",
+  "score_overrides": {
+    "1": {"hook": 88, "arc": 42, "voice": 64}
+  }
+}

@@ -35,6 +35,7 @@
 | P13 | Phase 1 | Write premium root README | README.md | Full public-facing README with Super Agents vision + roadmap | ✅ done |
 | P14 | Phase 1 | End-to-end smoke test + Phase 1 close | docs/smoke-test-results.md + docs/x-launch-thread.md | All commands green; 8 templates validated; ready for Phase 2 | ✅ done |
 | P15 | Phase 1 | Create ROADMAP.md | ROADMAP.md | Full public phase-by-phase summary matching master plan | ✅ done |
+| P16 | Phase 1 | Add Streamlit defaults | .streamlit/config.toml | Cloud-ready defaults for all future Streamlit tools | ✅ done |
 
 <!--
 Phase 1 — final polish (P15–P18). 14 executed prompts produced all 18 deliverables in the original

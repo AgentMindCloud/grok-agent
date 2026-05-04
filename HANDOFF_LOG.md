@@ -67,7 +67,7 @@
 | P44 | Phase 3 | Content Idea Generator runner + README + examples | (none yet) | Slot 2 deliverables not yet built (run.py, README.md, examples/) | ⏭️ skipped |
 | P45 | Phase 3 | Reply Drafter manifest + system prompt | templates/creator/reply-drafter/grok-agent.yaml | P12 starter manifest exists; prompts/system.md NOT yet written — Slot 1 partial | ⚠️ partial |
 | P46 | Phase 3 | Reply Drafter runner + README + examples | (none yet) | Slot 2 deliverables not yet built (run.py, README.md, examples/) | ⏭️ skipped |
-| P47 | Phase 3 | Analytics Summarizer manifest + system prompt | (none yet) | Template not yet started | ⏭️ skipped |
+| P47 | Phase 3 | Analytics Summarizer manifest + system prompt — first build (renumbered to P83 in actual ship order) | (placeholder; see P83) | Original P47 slot reserved for analytics-summarizer Slot 1; actually shipped as P83 below in commit history-friendly numbering | ⏭️ skipped |
 | P48 | Phase 3 | Analytics Summarizer runner + README + examples | (none yet) | Template not yet started | ⏭️ skipped |
 | P49 | Phase 3 | Monetization Optimizer manifest + system prompt | (none yet) | Template not yet started | ⏭️ skipped |
 | P50 | Phase 3 | Monetization Optimizer runner + README + examples | (none yet) | Template not yet started | ⏭️ skipped |
@@ -103,6 +103,7 @@
 | P80 | Phase 3 | Hashtag Strategy Advisor manifest + system prompt | templates/creator/hashtag-strategy-advisor/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + hashtag scoring + cross-template bridges | ✅ done |
 | P81 | Phase 3 | Comment Engagement Booster runner + README + examples | templates/creator/comment-engagement-booster/run.py, README.md, examples/ | Deterministic offline runner matching P44–P78 quality bar + P79 system prompt schema + 4 canonical Comment Plan Score metrics with weighted formula + hook-without-substance paradox surfacing + 240-char comment-length cap + anti-spam token-overlap guard (>60% blocked) + cross-template bridges; brings creator suite from 7/20 to 8/20 fully complete | ✅ done |
 | P82 | Phase 3 | Hashtag Strategy Advisor runner + README + examples | templates/creator/hashtag-strategy-advisor/run.py, README.md, examples/ | Deterministic offline runner matching P44–P81 quality bar + P80 system prompt schema + 4 canonical Hashtag Plan Score metrics with weighted formula + reach-without-relevance paradox surfacing + 5-category mix + platform-specific ship caps (X 0-2, LinkedIn 0-3) + honest trending check + engagement-bait blocklist (enforced library + output) + branded-tag-too-early warning + cross-template bridges; brings creator suite from 8/20 to 9/20 fully complete | ✅ done |
+| P83 | Phase 3 | Analytics Summarizer manifest + system prompt | templates/creator/analytics-summarizer/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + 4 canonical Period Performance metrics + vanity-metric paradox + 5-arrow trend vocabulary + paraphrased top-content archetypes + cross-template bridges (12 bridges including the entire creator suite + research-assistant); the highest-leverage missing template per PHASE3_STATUS.md, now Slot 1 complete on disk. Slot 2 still to build. | ✅ done |
 
 <!--
 ====================================================================

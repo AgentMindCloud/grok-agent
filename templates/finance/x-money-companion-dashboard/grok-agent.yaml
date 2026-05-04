@@ -1,0 +1,102 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — the X Money Companion Dashboard is the
+# anchor finance tool of the Grok Agent OS suite.
+
+version: "2.15"
+kind: "finance-dashboard"
+name: "x-money-companion-dashboard"
+description: "Personal X Money command center on Windows — overview, transactions, analytics, Grok insights, tax export, and alerts. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "X Money Companion Dashboard"
+  tagline: "Your X Money command center, on Windows."
+  categories: ["finance", "x-money", "creator-tools"]
+  tags: ["streamlit", "sqlite", "tax", "windows-first"]
+  language: "en"
+
+install:
+  one_click: true
+  install_command: "grok-agent install x-money-companion-dashboard"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  launcher: "launcher.ps1"
+  appdata_folder: "grok-agent/x-money-companion-dashboard"
+  log_folder: "grok-agent/x-money-companion-dashboard/logs"
+  cache_folder: "grok-agent/x-money-companion-dashboard/cache"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.3
+  max_tokens: 4096
+  system_prompt_file: "prompts/system.md"
+  user_template_file: "prompts/user_templates.md"
+  tool_calling: true
+  vision: false
+
+tools:
+  - name: "categorize_transaction"
+    type: "local_function"
+    description: "Categorize an X Money transaction using Grok 4.3."
+    module: "x_money.categorize"
+    function: "categorize"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          amount: { type: "number" }
+          counterparty: { type: "string" }
+          memo: { type: "string" }
+        required: ["amount", "counterparty"]
+
+constitution:
+  rules:
+    - "Always show 'Not financial advice' banner on every page."
+    - "Always show 'Not tax advice' banner on the Tax Export tab."
+    - "Never share transaction data outside local SQLite without explicit consent."
+    - "All transactions stay local under $env:LOCALAPPDATA\\grok-agent."
+  consent_gates:
+    - export_tax_report
+    - sync_to_cloud
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 365
+  scanner_severity_floor: "warn"
+  disclaimers:
+    not_financial_advice: true
+    not_tax_advice: true
+  cost_limits:
+    usd_per_session_max: 0.50
+    usd_per_day_max: 2.00
+    api_calls_per_session_max: 200
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "export_tax_report"
+      - "sync_to_cloud"
+      - "any cost above $0.10"
+    timeout_seconds: 60
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "streamlit ^1.33"
+      - "pandas ^2.2"
+      - "plotly ^5.22"
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+  system:
+    - "powershell >= 5.1"

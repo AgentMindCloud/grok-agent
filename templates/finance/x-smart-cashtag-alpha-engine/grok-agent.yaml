@@ -1,0 +1,108 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — the X Smart Cashtag Alpha Engine surfaces
+# Grok-powered narrative momentum and contradiction-flagged alpha across the
+# X cashtag stream.
+
+version: "2.15"
+kind: "alpha-engine"
+name: "x-smart-cashtag-alpha-engine"
+description: "Real-time cashtag intelligence on X — narrative momentum, contradictions across sources, and Grok-powered alpha signals with full provenance. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "X Smart Cashtag Alpha Engine"
+  tagline: "Cashtag-aware market intelligence for X."
+  categories: ["finance", "x-money", "alpha"]
+  tags: ["streamlit", "sqlite", "real-time-x", "windows-first"]
+
+install:
+  one_click: true
+  install_command: "grok-agent install x-smart-cashtag-alpha-engine"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+
+windows:
+  launcher: "launcher.ps1"
+  appdata_folder: "grok-agent/x-smart-cashtag-alpha-engine"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.4
+  max_tokens: 4096
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+  vision: false
+
+public_apis:
+  - name: "yfinance"
+    base_url: "https://query2.finance.yahoo.com"
+    auth: "none"
+    rate_limit: 100
+    privacy: "no_pii_sent"
+  - name: "coingecko"
+    base_url: "https://api.coingecko.com/api/v3"
+    auth: "none"
+    rate_limit: 30
+    privacy: "no_pii_sent"
+  - name: "x_search"
+    base_url: "via_grok_4.3"
+    auth_env_var: "XAI_API_KEY"
+    privacy: "no_pii_sent"
+
+real_time_x:
+  enabled: true
+  consent_required: true
+  triggers:
+    - cashtag_change
+    - schedule
+  schedule_cron: "0 9,17 * * 1-5"
+  cashtag_threshold_pct: 5.0
+  watched_cashtags: ["$XAI", "$X"]
+  posts: false
+  reply_only: true
+  max_posts_per_day: 0
+
+provenance:
+  enabled: true
+  cite_sources: true
+  contradiction_detection: true
+
+constitution:
+  rules:
+    - "Always show 'Not financial advice' banner on every page."
+    - "Cite the source for every signal — never aggregate without provenance."
+    - "Flag contradictions across sources; never silently resolve them."
+    - "All cashtag history stays local under $env:LOCALAPPDATA\\grok-agent."
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 180
+  scanner_severity_floor: "warn"
+  disclaimers:
+    not_financial_advice: true
+  cost_limits:
+    usd_per_session_max: 1.00
+    usd_per_day_max: 5.00
+    api_calls_per_session_max: 500
+  human_in_the_loop:
+    enabled: true
+    timeout_seconds: 60
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "streamlit ^1.33"
+      - "pandas ^2.2"
+      - "plotly ^5.22"
+      - "yfinance ^0.2"
+      - "requests ^2.31"
+      - "pydantic ^2.7"

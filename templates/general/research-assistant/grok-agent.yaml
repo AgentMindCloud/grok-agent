@@ -1,0 +1,83 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — citations-first research helper that
+# searches Semantic Scholar + government data + news and returns
+# Grok-synthesized answers with provenance.
+
+version: "2.15"
+kind: "agent"
+name: "research-assistant"
+description: "Cross-source research helper — searches Semantic Scholar + government data + news and returns Grok-synthesized answers with full citations and contradiction flags. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Research Assistant"
+  tagline: "Citations-first research, Grok-synthesized."
+  categories: ["general", "research"]
+  tags: ["academic", "news", "memory", "windows-first"]
+
+install:
+  one_click: true
+  install_command: "grok-agent install research-assistant"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+
+windows:
+  appdata_folder: "grok-agent/research-assistant"
+  min_powershell_version: "5.1"
+  requires_admin: false
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.3
+  max_tokens: 4096
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+
+public_apis:
+  - name: "semantic_scholar"
+    base_url: "https://api.semanticscholar.org/graph/v1"
+    auth: "none"
+    rate_limit: 100
+    privacy: "no_pii_sent"
+  - name: "data_gov"
+    base_url: "https://api.data.gov"
+    auth_env_var: "DATA_GOV_KEY"
+    privacy: "no_pii_sent"
+  - name: "newsapi"
+    base_url: "https://newsapi.org/v2"
+    auth_env_var: "NEWSAPI_KEY"
+    free_tier_quota: "100/day"
+    privacy: "no_pii_sent"
+
+memory:
+  enabled: true
+  provider: "sqlite"
+  episodic: true
+  semantic: true
+  retention_days: 365
+  encryption_at_rest: true
+
+provenance:
+  enabled: true
+  cite_sources: true
+  contradiction_detection: true
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 365
+  cost_limits:
+    usd_per_session_max: 0.50
+    api_calls_per_session_max: 200
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+      - "requests ^2.31"

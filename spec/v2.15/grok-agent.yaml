@@ -1,0 +1,595 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# ============================================================================
+# grok-agent.yaml — Unified Manifest Schema v2.15
+# ============================================================================
+#
+# This file is the canonical reference for the v2.15 manifest schema. Every
+# agent, X Money tool, creator template, and Super Agent in this repo declares
+# a manifest that conforms to this shape.
+#
+# Built to help xAI and Grok win — this schema is the open standard that makes
+# Grok the easiest, most powerful, and most magical platform for deploying
+# agents on X.
+#
+# Source of truth: this file + the Pydantic validators in cli/grok-agent.py.
+# Companion changelog: spec/v2.15/changelog.md
+# Windows-specific extensions reference: spec/v2.15/windows-extensions.yaml
+#
+# ----------------------------------------------------------------------------
+# How to read this file
+# ----------------------------------------------------------------------------
+# 1. The first half is the SCHEMA: every field documented inline, with
+#    required/optional status, type, default, and a one-line purpose.
+# 2. The second half is THREE CANONICAL EXAMPLES (minimal agent, X Money
+#    finance-dashboard, super-agent). Copy + adapt them when authoring a new
+#    manifest.
+# 3. v2.14 manifests are 100% accepted — v2.15 is purely additive. To "upgrade"
+#    a v2.14 manifest, you can either flip the version string to "2.15" or
+#    leave it as "2.14"; both validate.
+#
+# Validation:
+#   python cli/grok-agent.py validate path/to/grok-agent.yaml
+# ============================================================================
+
+schema_meta:
+  spec_version: "2.15"                     # the version of THIS schema document
+  spec_release_date: "2026-05-04"
+  backwards_compatible_with: ["2.14"]      # any v2.14 manifest validates as v2.15
+  source: "https://github.com/AgentMindCloud/grok-agent/blob/main/spec/v2.15/grok-agent.yaml"
+  positioning: "Built to help xAI and Grok win — open standard for agent deployment on X."
+  license: "Apache-2.0"
+  pydantic_module: "cli.grok_agent.manifest"
+
+# ============================================================================
+# REQUIRED top-level fields
+# Every manifest must declare these six keys. Anything missing fails validation.
+# ============================================================================
+
+version: "2.15"
+# REQUIRED · string · enum: ["2.14", "2.15"]
+# Always quoted (string, not number). v2.14 strings are accepted unchanged.
+
+kind: "agent"
+# REQUIRED · string · enum (see "Kind enum" below)
+# What family of agent this is. Drives which optional sections are expected.
+
+name: "my-agent"
+# REQUIRED · string · pattern: ^[a-z][a-z0-9-]*$
+# kebab-case slug. MUST match the parent folder name (e.g. templates/finance/<name>/).
+
+description: "One- or two-sentence purpose. Plain language. End with a period."
+# REQUIRED · string · min_length: 10
+# Shown in the marketplace, install confirmations, and "grok install this" replies.
+
+author: "@JanSol0s"
+# REQUIRED · string
+# X handle of the creator (with @). Used for attribution + outreach.
+
+license: "Apache-2.0"
+# REQUIRED · string · enum: ["Apache-2.0"]
+# SPDX identifier. Apache-2.0 is mandatory for everything in this repo.
+
+# ----------------------------------------------------------------------------
+# Kind enum (all valid values for `kind:`)
+# ----------------------------------------------------------------------------
+# - agent                          # generic agent (smallest valid manifest)
+# - finance-dashboard              # Streamlit-based finance UI (X Money Companion Dashboard)
+# - alpha-engine                   # market intelligence agent (Cashtag Alpha Engine)
+# - creator-payout-optimizer       # earnings forecasting + content optimization
+# - vision-analyzer                # image/document vision agent (Receipt Analyzer)
+# - super-agent                    # flagship orchestrated agent (Living Narrative Fabric, etc.)
+# - x-native                       # runs primarily via "grok install this" on X
+# - creator-template               # creator program templates (content-ideas, reply-drafter, etc.)
+
+# ============================================================================
+# OPTIONAL sections — declare only what your agent actually uses.
+# Order does not matter. Unknown keys at any level fail validation strictly
+# (so typos surface early).
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# metadata: — discovery + classification (not security-sensitive)
+# ----------------------------------------------------------------------------
+metadata:
+  display_name: "My Agent"             # OPTIONAL · pretty name (defaults to titlecased `name`)
+  tagline: "What it does in 5 words."  # OPTIONAL · marketplace one-liner
+  categories: ["finance", "x-money"]   # OPTIONAL · list[str] · used by marketplace filters
+  tags: ["streamlit", "sqlite"]        # OPTIONAL · list[str] · free-form labels
+  icon: "icon.png"                     # OPTIONAL · path relative to manifest, 256x256 PNG/SVG
+  homepage: "https://example.com"      # OPTIONAL · URL for docs/landing
+  repository: "https://github.com/AgentMindCloud/grok-agent"  # OPTIONAL · URL
+  language: "en"                       # OPTIONAL · IETF tag · default "en"
+  created: "2026-05-04"                # OPTIONAL · ISO-8601 date
+  updated: "2026-05-04"                # OPTIONAL · ISO-8601 date
+
+# ----------------------------------------------------------------------------
+# install: — "grok install this" hints + X-native install flow
+# ----------------------------------------------------------------------------
+install:
+  one_click: true                      # OPTIONAL · bool · default false · supports "grok install this" on X
+  install_command: "grok-agent install <name>"   # OPTIONAL · str · CLI command shown to users
+  post_url: "https://x.com/JanSol0s/status/..."  # OPTIONAL · str · X post that ships the manifest
+  prerequisites:                       # OPTIONAL · list[str] · plain-language requirements
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+# ----------------------------------------------------------------------------
+# windows: — Windows-specific extensions (the "windows-first" promise)
+# Use this for everything that touches the Windows OS, registry, or paths.
+# Cross-reference: spec/v2.15/windows-extensions.yaml
+# ----------------------------------------------------------------------------
+windows:
+  launcher: "launcher.ps1"             # OPTIONAL · str · PowerShell launcher path (relative to manifest)
+  appdata_folder: "grok-agent/<name>"  # OPTIONAL · str · folder under $env:LOCALAPPDATA · default "grok-agent/<name>"
+  config_folder: "grok-agent/<name>/config"  # OPTIONAL · str · folder under $env:APPDATA
+  cache_folder: "grok-agent/<name>/cache"    # OPTIONAL · str · folder under $env:LOCALAPPDATA
+  log_folder: "grok-agent/<name>/logs"       # OPTIONAL · str · folder under $env:LOCALAPPDATA
+  defender_exclusion_recommended: false      # OPTIONAL · bool · default false · set true ONLY if profiling proves Defender is blocking
+  registry_keys: []                    # OPTIONAL · list[str] · registry keys read/written (empty = none)
+  min_powershell_version: "5.1"        # OPTIONAL · str · default "5.1"
+  requires_admin: false                # OPTIONAL · bool · default false · MUST be false unless an explicit OS-level need exists
+  chrome_only: true                    # OPTIONAL · bool · default true · Windows + Chrome is the supported combo
+  no_install_dependencies: []          # OPTIONAL · list[str] · packages user must NOT have installed (avoid conflicts)
+
+# ----------------------------------------------------------------------------
+# grok: — Grok 4.3 model configuration (xAI API)
+# ----------------------------------------------------------------------------
+grok:
+  model: "grok-4.3"                    # OPTIONAL · str · default "grok-4.3"
+  temperature: 0.7                     # OPTIONAL · float · 0.0-2.0 · default 0.7
+  max_tokens: 4096                     # OPTIONAL · int · > 0 · default 4096
+  top_p: 1.0                           # OPTIONAL · float · 0.0-1.0 · default 1.0
+  system_prompt_file: "prompts/system.md"   # OPTIONAL · str · path to system prompt
+  user_template_file: "prompts/user_templates.md"  # OPTIONAL · str · path to user-prompt templates
+  tool_calling: true                   # OPTIONAL · bool · default true · enable function/tool calling
+  vision: false                        # OPTIONAL · bool · default false · enable vision input (true for vision-analyzer kind)
+  streaming: true                      # OPTIONAL · bool · default true
+  fallback_model: null                 # OPTIONAL · str | null · model to use if primary fails
+
+# ----------------------------------------------------------------------------
+# tools: — Grok function/tool calling definitions
+# Each tool is callable by Grok during a conversation. Three types:
+#   - public_api      → call a public/free HTTP API
+#   - local_function  → run a Python function in this agent's package
+#   - mcp_server      → invoke a Model Context Protocol server
+# ----------------------------------------------------------------------------
+tools:
+  - name: "fetch_x_money_balance"
+    type: "public_api"                 # REQUIRED · enum: ["public_api", "local_function", "mcp_server"]
+    description: "Get current X Money balance for the authenticated user."
+    parameters:
+      schema:                          # REQUIRED · JSON Schema for arguments
+        type: "object"
+        properties:
+          user_id:
+            type: "string"
+        required: ["user_id"]
+    api:                               # REQUIRED if type=="public_api"
+      url: "https://api.x.com/v1/payments/balance"
+      method: "GET"                    # GET | POST | PUT | PATCH | DELETE
+      auth: "bearer"                   # none | bearer | basic | api_key | oauth2
+      env_var: "X_API_TOKEN"           # env var holding the secret (never inline keys)
+      headers: {}                      # OPTIONAL · dict[str, str]
+      query: {}                        # OPTIONAL · dict[str, str]
+      rate_limit: 60                   # OPTIONAL · int · requests per minute
+      cache_ttl_seconds: 30            # OPTIONAL · int · default 0 (no cache)
+      retry: { attempts: 3, backoff: "exponential" }  # OPTIONAL
+
+  - name: "categorize_transaction"
+    type: "local_function"             # in-process Python function
+    description: "Classify a transaction into a category using Grok."
+    module: "grok_agent_tools.categorize"   # REQUIRED if type=="local_function" · dotted path
+    function: "categorize"             # REQUIRED if type=="local_function" · callable name
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          amount: { type: "number" }
+          counterparty: { type: "string" }
+          memo: { type: "string" }
+        required: ["amount", "counterparty"]
+
+  - name: "rag_local_docs"
+    type: "mcp_server"                 # MCP server invocation
+    description: "Query the agent's local document store via MCP."
+    server:                            # REQUIRED if type=="mcp_server"
+      command: "python"                # executable
+      args: ["-m", "my_mcp_server"]
+      env: { "INDEX_PATH": "$env:LOCALAPPDATA\\grok-agent\\<name>\\index" }
+      transport: "stdio"               # stdio | http
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          query: { type: "string" }
+        required: ["query"]
+
+# ----------------------------------------------------------------------------
+# public_apis: — declared free/public API integrations
+# Independent of the `tools:` array — these document which APIs the agent uses
+# (some may be wrapped as tools, others used directly inside local functions).
+# Used by the safety scanner to enforce rate limits and quota tracking.
+# ----------------------------------------------------------------------------
+public_apis:
+  - name: "newsapi"
+    base_url: "https://newsapi.org/v2"
+    auth_env_var: "NEWSAPI_KEY"
+    free_tier_quota: "100/day"
+    privacy: "no_pii_sent"             # what user data, if any, leaves the machine
+  - name: "semantic_scholar"
+    base_url: "https://api.semanticscholar.org/graph/v1"
+    auth: "none"
+    rate_limit: 100                    # per 5 minutes
+    privacy: "no_pii_sent"
+  - name: "data_gov"
+    base_url: "https://api.data.gov"
+    auth_env_var: "DATA_GOV_KEY"
+    privacy: "no_pii_sent"
+
+# ----------------------------------------------------------------------------
+# multi_agent: — coordination between agents (Super Agents and swarms)
+# ----------------------------------------------------------------------------
+multi_agent:
+  role: "orchestrator"                 # OPTIONAL · enum: ["orchestrator", "worker", "observer"]
+  delegates_to:                        # OPTIONAL · list[str] · agent names this one can call
+    - "x-money-vision-analyzer"
+    - "x-smart-cashtag-alpha-engine"
+  shared_memory: "mem0://grok-agent-shared"  # OPTIONAL · str · shared memory namespace URI
+  message_bus: null                    # OPTIONAL · str | null · e.g. "redis://..." or null for in-process
+  max_concurrent_workers: 4            # OPTIONAL · int · default 4
+
+# ----------------------------------------------------------------------------
+# real_time_x: — X (Twitter) integration for x-native agents
+# ----------------------------------------------------------------------------
+real_time_x:
+  enabled: true                        # OPTIONAL · bool · default false
+  consent_required: true               # REQUIRED if enabled and posts==true · MUST be true if posting
+  triggers:                            # OPTIONAL · list[enum]
+    - mention                          # @-mention of the agent's account
+    - dm                               # direct message
+    - schedule                         # cron schedule
+    - cashtag_change                   # watched cashtag moves > threshold
+  schedule_cron: "0 8 * * *"           # OPTIONAL · str · POSIX cron · used if "schedule" trigger
+  cashtag_threshold_pct: 5.0           # OPTIONAL · float · used if "cashtag_change" trigger
+  watched_cashtags: ["$XAI", "$X"]     # OPTIONAL · list[str]
+  posts: false                         # OPTIONAL · bool · default false · can this agent post to X?
+  reply_only: true                     # OPTIONAL · bool · default true · if posts==true, restrict to replies
+  max_posts_per_day: 10                # OPTIONAL · int · default 10 · cap to prevent runaway
+
+# ----------------------------------------------------------------------------
+# memory: — long-term memory configuration (primarily for Super Agents)
+# ----------------------------------------------------------------------------
+memory:
+  enabled: false                       # OPTIONAL · bool · default false
+  provider: "mem0"                     # OPTIONAL · enum: ["mem0", "qdrant", "sqlite", "in_memory"]
+  vector_store:                        # OPTIONAL · only when provider needs a vector backend
+    backend: "qdrant"                  # qdrant | chroma | pgvector
+    url: "http://localhost:6333"       # default Qdrant local
+    collection: "grok-agent-<name>"
+  episodic: true                       # OPTIONAL · bool · default true · timestamped event memory
+  semantic: true                       # OPTIONAL · bool · default true · embeddings/concepts
+  procedural: false                    # OPTIONAL · bool · default false · learned routines
+  retention_days: 365                  # OPTIONAL · int · auto-prune after N days
+  encryption_at_rest: true             # OPTIONAL · bool · default true on Windows (DPAPI)
+
+# ----------------------------------------------------------------------------
+# provenance: — source-citation + audit trail (Trust Engine)
+# ----------------------------------------------------------------------------
+provenance:
+  enabled: false                       # OPTIONAL · bool · default false
+  log_path: "$env:LOCALAPPDATA\\grok-agent\\<name>\\provenance.log"  # OPTIONAL · str · default Windows AppData
+  langfuse:                            # OPTIONAL · Langfuse tracing
+    enabled: false                     # default false
+    public_key_env_var: "LANGFUSE_PUBLIC_KEY"
+    secret_key_env_var: "LANGFUSE_SECRET_KEY"
+    host: "https://cloud.langfuse.com"
+  cite_sources: true                   # OPTIONAL · bool · default true · attach citations to every claim
+  versioned_synthesis: false           # OPTIONAL · bool · default false · used by living-narrative-fabric
+  contradiction_detection: false       # OPTIONAL · bool · default false · flag conflicting sources
+
+# ----------------------------------------------------------------------------
+# constitution: — Agent Constitution (rules + consent gates)
+# Every super-agent MUST declare a constitution. Other kinds may declare one.
+# Rules are enforced at runtime by safety/scanner.py.
+# ----------------------------------------------------------------------------
+constitution:
+  rules:                               # REQUIRED if section present · list[str]
+    - "Never publish content without provenance trail."
+    - "Always show 'Not financial advice' on finance UI."
+    - "Never act on the real world without explicit user consent."
+    - "Flag contradictions across sources; do not silently resolve them."
+    - "Refuse requests that would harm xAI's mission or X's community."
+  consent_gates:                       # OPTIONAL · list[enum] · actions that require explicit user click
+    - publish_to_x
+    - send_dm
+    - move_funds
+    - export_tax_report
+    - modify_local_files_outside_appdata
+    - sync_to_cloud
+    - pay_real_money
+  hard_refusals:                       # OPTIONAL · list[str] · things this agent will refuse outright
+    - "impersonate another X user"
+    - "scrape authenticated X content without consent"
+
+# ----------------------------------------------------------------------------
+# safety: — Safety profile, scanner config, cost limits, human-in-the-loop
+# Required for any agent that handles PII, money, or real-world actions.
+# ----------------------------------------------------------------------------
+safety:
+  pii_handling: "local-only"           # OPTIONAL · enum: ["local-only", "redacted-cloud", "none"] · default "local-only"
+  data_retention_days: 365             # OPTIONAL · int · auto-delete user data after N days · default 365
+  scanner_severity_floor: "warn"       # OPTIONAL · enum: ["info", "warn", "error"] · default "warn"
+  forbidden_actions:                   # OPTIONAL · list[str] · scanner blocks these
+    - scrape_authenticated_x_content
+    - impersonate_user_identity
+    - bypass_safety_scanner
+    - exfiltrate_user_data
+  cost_limits:                         # OPTIONAL · cap on real-money / API spend per session
+    usd_per_session_max: 1.00          # OPTIONAL · float · default 1.00 · agent halts if exceeded
+    usd_per_day_max: 5.00              # OPTIONAL · float · default 5.00
+    tokens_per_session_max: 200000     # OPTIONAL · int · default 200000
+    api_calls_per_session_max: 500     # OPTIONAL · int · default 500
+  human_in_the_loop:                   # OPTIONAL · HITL gates
+    enabled: true                      # OPTIONAL · bool · default true
+    confirm_before:                    # OPTIONAL · list[str] · actions that require typed confirmation
+      - "any constitution.consent_gates action"
+      - "any cost above $0.10"
+      - "any irreversible filesystem write"
+    timeout_seconds: 60                # OPTIONAL · int · default 60 · auto-cancel after this
+  disclaimers:                         # OPTIONAL · disclaimer banners declared explicitly
+    not_financial_advice: true         # OPTIONAL · bool · default false · auto-true for finance kinds
+    not_tax_advice: false              # OPTIONAL · bool · default false · auto-true for tax exporters
+    real_world_action_consent: false   # OPTIONAL · bool · default false · auto-true for cross-reality-action-fabric
+
+# ----------------------------------------------------------------------------
+# dependencies: — Python and system requirements
+# ----------------------------------------------------------------------------
+dependencies:
+  python:
+    version: "^3.12"                   # OPTIONAL · str · PEP-440 spec · default "^3.12"
+    packages:                          # OPTIONAL · list[str] · concrete pip specs
+      - "streamlit ^1.33"
+      - "pandas ^2.2"
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+  system:                              # OPTIONAL · list[str]
+    - "powershell >= 5.1"
+  apis_required: []                    # OPTIONAL · list[str] · names that must match public_apis[].name
+
+# ----------------------------------------------------------------------------
+# evaluation: — Promptfoo + DeepEval + Langfuse loop (Super Agents only)
+# ----------------------------------------------------------------------------
+evaluation:
+  enabled: false                       # OPTIONAL · bool · default false
+  promptfoo:
+    enabled: false                     # OPTIONAL · bool · default false
+    config: "eval/promptfoo.yaml"      # OPTIONAL · str · path
+  deepeval:
+    enabled: false                     # OPTIONAL · bool · default false
+    suite: "eval/deepeval_suite.py"    # OPTIONAL · str · path
+  langfuse_traces: false               # OPTIONAL · bool · default false · feed traces into Langfuse
+  weekly_loop: false                   # OPTIONAL · bool · default false · run weekly improvement loop
+
+# ============================================================================
+# CANONICAL EXAMPLES
+# Three minimal but complete manifests showing the most common shapes. Copy
+# the one closest to your agent and adapt. None of these examples invent fields
+# beyond the schema above.
+# ============================================================================
+
+# --------------------------------------------------------------------------
+# Example 1 — Minimal agent (smallest possible valid v2.15 manifest)
+# --------------------------------------------------------------------------
+# version: "2.15"
+# kind: "agent"
+# name: "hello-grok"
+# description: "Minimal example — proves the schema works."
+# author: "@JanSol0s"
+# license: "Apache-2.0"
+
+# --------------------------------------------------------------------------
+# Example 2 — X Money tool (kind: finance-dashboard)
+# Built to help xAI and Grok win the X Money creator economy.
+# --------------------------------------------------------------------------
+# version: "2.15"
+# kind: "finance-dashboard"
+# name: "x-money-companion-dashboard"
+# description: "Personal X Money command center — overview, transactions, analytics, Grok insights, tax export, alerts."
+# author: "@JanSol0s"
+# license: "Apache-2.0"
+#
+# metadata:
+#   display_name: "X Money Companion Dashboard"
+#   tagline: "Your X Money command center."
+#   categories: ["finance", "x-money"]
+#   tags: ["streamlit", "sqlite", "tax"]
+#
+# windows:
+#   launcher: "launcher.ps1"
+#   appdata_folder: "grok-agent/x-money-companion-dashboard"
+#   min_powershell_version: "5.1"
+#   requires_admin: false
+#
+# grok:
+#   model: "grok-4.3"
+#   temperature: 0.3
+#   system_prompt_file: "prompts/system.md"
+#   tool_calling: true
+#
+# tools:
+#   - name: "categorize_transaction"
+#     type: "local_function"
+#     description: "Classify an X Money transaction with Grok."
+#     module: "x_money.categorize"
+#     function: "categorize"
+#     parameters:
+#       schema:
+#         type: "object"
+#         properties:
+#           amount: { type: "number" }
+#           counterparty: { type: "string" }
+#           memo: { type: "string" }
+#         required: ["amount", "counterparty"]
+#
+# constitution:
+#   rules:
+#     - "Always show 'Not financial advice' banner on every page."
+#     - "Always show 'Not tax advice' banner on the Tax Export tab."
+#     - "Never share transaction data outside local SQLite without explicit consent."
+#   consent_gates:
+#     - export_tax_report
+#     - sync_to_cloud
+#
+# safety:
+#   pii_handling: "local-only"
+#   data_retention_days: 365
+#   disclaimers:
+#     not_financial_advice: true
+#     not_tax_advice: true
+#   cost_limits:
+#     usd_per_session_max: 0.50
+#     api_calls_per_session_max: 200
+#
+# dependencies:
+#   python:
+#     version: "^3.12"
+#     packages:
+#       - "streamlit ^1.33"
+#       - "pandas ^2.2"
+#       - "pydantic ^2.7"
+#       - "pyyaml ^6.0"
+
+# --------------------------------------------------------------------------
+# Example 3 — Super Agent (kind: super-agent)
+# Built to help xAI and Grok win the agent platform battle on X.
+# --------------------------------------------------------------------------
+# version: "2.15"
+# kind: "super-agent"
+# name: "living-narrative-fabric"
+# description: "Living, versioned synthesis of X + news + academic + government data with full provenance and contradiction detection."
+# author: "@JanSol0s"
+# license: "Apache-2.0"
+#
+# metadata:
+#   display_name: "Living Narrative Fabric"
+#   tagline: "Versioned truth across X, news, academia, and gov data."
+#   categories: ["super-agent", "research", "trust"]
+#
+# windows:
+#   launcher: "launcher.ps1"
+#   appdata_folder: "grok-agent/super-agents/living-narrative-fabric"
+#
+# grok:
+#   model: "grok-4.3"
+#   temperature: 0.5
+#   system_prompt_file: "prompts/system.md"
+#   tool_calling: true
+#
+# multi_agent:
+#   role: "orchestrator"
+#   delegates_to: []
+#   shared_memory: "mem0://grok-agent-shared"
+#
+# public_apis:
+#   - name: "newsapi"
+#     base_url: "https://newsapi.org/v2"
+#     auth_env_var: "NEWSAPI_KEY"
+#   - name: "gnews"
+#     base_url: "https://gnews.io/api/v4"
+#     auth_env_var: "GNEWS_KEY"
+#   - name: "semantic_scholar"
+#     base_url: "https://api.semanticscholar.org/graph/v1"
+#     auth: "none"
+#   - name: "data_gov"
+#     base_url: "https://api.data.gov"
+#     auth_env_var: "DATA_GOV_KEY"
+#   - name: "x_search"
+#     base_url: "via_grok_4.3"
+#     auth_env_var: "XAI_API_KEY"
+#
+# memory:
+#   enabled: true
+#   provider: "mem0"
+#   vector_store:
+#     backend: "qdrant"
+#     url: "http://localhost:6333"
+#     collection: "living-narrative-fabric"
+#   episodic: true
+#   semantic: true
+#   retention_days: 730
+#
+# provenance:
+#   enabled: true
+#   cite_sources: true
+#   versioned_synthesis: true
+#   contradiction_detection: true
+#   langfuse:
+#     enabled: true
+#     public_key_env_var: "LANGFUSE_PUBLIC_KEY"
+#     secret_key_env_var: "LANGFUSE_SECRET_KEY"
+#
+# constitution:
+#   rules:
+#     - "Never publish without provenance."
+#     - "Flag contradictions; do not resolve them silently."
+#     - "Source citations are mandatory on every claim."
+#     - "User can rewind to any prior state — synthesis is versioned."
+#   consent_gates:
+#     - publish_synthesis
+#     - export_provenance_log
+#
+# safety:
+#   pii_handling: "local-only"
+#   data_retention_days: 730
+#   scanner_severity_floor: "warn"
+#   cost_limits:
+#     usd_per_session_max: 2.00
+#     usd_per_day_max: 10.00
+#     tokens_per_session_max: 500000
+#   human_in_the_loop:
+#     enabled: true
+#     confirm_before:
+#       - "publish_synthesis"
+#       - "export_provenance_log"
+#       - "any cost above $0.50"
+#
+# evaluation:
+#   enabled: true
+#   promptfoo:
+#     enabled: true
+#     config: "eval/promptfoo.yaml"
+#   deepeval:
+#     enabled: true
+#     suite: "eval/deepeval_suite.py"
+#   langfuse_traces: true
+#   weekly_loop: true
+
+# ============================================================================
+# Backwards compatibility (v2.14 → v2.15)
+# ============================================================================
+# v2.15 is purely additive. Any v2.14 manifest validates as v2.15 unchanged.
+#
+# Sections added in v2.15 that do NOT exist in v2.14:
+#   - schema_meta:
+#   - metadata:               (most fields)
+#   - install:
+#   - windows:
+#   - multi_agent:
+#   - real_time_x:
+#   - public_apis:
+#   - memory:
+#   - provenance:
+#   - constitution:
+#   - safety: (cost_limits, human_in_the_loop, disclaimers added in v2.15)
+#   - evaluation:
+#   - tools[].type: "public_api"      (v2.14 only had local_function)
+#   - kinds: super-agent, x-native, creator-template (new in v2.15)
+#
+# Migration: in most cases just bump `version: "2.14"` → `version: "2.15"` and
+# add only the new sections you need. Or leave it at "2.14" — the validator
+# accepts both.
+# ============================================================================

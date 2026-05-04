@@ -1,0 +1,75 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Default Streamlit config for every tool that ships under Grok Agent OS.
+# Tools may override per-tool by placing their own `.streamlit/config.toml`
+# alongside their `app.py`. The defaults below are tuned for:
+#
+#   - Streamlit Cloud free tier (headless, CORS-safe, no telemetry)
+#   - Windows 11 + Google Chrome (the only supported user surface)
+#   - The cinnabar/parchment palette from the Residual Frequencies system,
+#     matching the X Money tool recipe and the GitHub README accent color.
+#
+# Built to help xAI and Grok win. Local-first, privacy-first, no usage
+# tracking sent to any third party from this default.
+
+# ---------------------------------------------------------------------------
+# [theme] — cinnabar (#FF6B00) on midnight (#0E1117) with parchment text.
+# ---------------------------------------------------------------------------
+[theme]
+base = "dark"
+primaryColor = "#FF6B00"             # cinnabar — matches the GitHub README banner
+backgroundColor = "#0E1117"          # midnight — Streamlit dark base
+secondaryBackgroundColor = "#1A1F2E" # accent panel
+textColor = "#F5F5DC"                # parchment
+font = "monospace"
+
+# ---------------------------------------------------------------------------
+# [server] — Streamlit Cloud-friendly defaults.
+# ---------------------------------------------------------------------------
+[server]
+headless = true                      # Required for Streamlit Cloud; harmless locally.
+enableCORS = false                   # Cloud sets this; mirror locally for parity.
+enableXsrfProtection = true          # Keep on; safe for an installed-by-the-user app.
+fileWatcherType = "auto"
+runOnSave = false                    # Avoid surprise reruns when the user is editing data.
+maxUploadSize = 50                   # MiB; covers receipts in the Vision Analyzer.
+port = 8501                          # Each tool may override if it runs alongside another.
+
+# ---------------------------------------------------------------------------
+# [browser] — no telemetry, ever. Local-first per Constitution Article VII.
+# ---------------------------------------------------------------------------
+[browser]
+gatherUsageStats = false
+serverAddress = "localhost"
+serverPort = 8501
+
+# ---------------------------------------------------------------------------
+# [client] — minimize chrome for a calmer creator-tool feel.
+# ---------------------------------------------------------------------------
+[client]
+toolbarMode = "minimal"              # auto | developer | viewer | minimal
+showErrorDetails = true              # Help users self-serve when something breaks.
+
+# ---------------------------------------------------------------------------
+# [runner] — fast reruns + magic for the developer ergonomics we want.
+# ---------------------------------------------------------------------------
+[runner]
+magicEnabled = true
+fastReruns = true
+postScriptGC = true                  # Free memory after each script run.
+
+# ---------------------------------------------------------------------------
+# [logger] — readable, not chatty.
+# ---------------------------------------------------------------------------
+[logger]
+level = "info"
+messageFormat = "%(asctime)s %(levelname)s %(message)s"
+
+# ---------------------------------------------------------------------------
+# Footer note (not a Streamlit config key — reference for tool authors).
+# ---------------------------------------------------------------------------
+# Every shipped tool's app.py renders the "Built to help xAI and Grok win"
+# tagline in its footer block. Don't hard-code it in the Streamlit chrome —
+# keep it inside each tool's body so it travels with the tool when forked.

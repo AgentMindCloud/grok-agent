@@ -20,11 +20,41 @@
 
 | # | Phase | Title | Files touched | Decisions / blockers | Status |
 |---|---|---|---|---|---|
-| P1 | 1 | _example: Bootstrap repo_ | _CLAUDE.md, LICENSE, .gitignore_ | _Apache 2.0 confirmed; instruction file is ground truth_ | _✅_ |
+| P1 | Phase 1 | Bootstrap repo | CLAUDE.md, LICENSE, .gitignore | Apache 2.0 confirmed; instruction file is ground truth; full 126-prompt plan loaded | ✅ done |
+| P2 | Phase 1 | Create canonical directory structure | .github/, cli/, docs/, safety/, spec/, templates/ (all subfolders + .gitkeep) | Exact match to PROJECT_DNA.md file tree; .gitkeep added for Git tracking | ✅ done |
+| P3 | Phase 1 | Write permanent CLAUDE.md | CLAUDE.md (full replacement) | Complete ground-truth file with vision, 126-prompt plan, file tree, and all rules | ✅ done |
+| P4 | Phase 1 | Create v2.15 unified manifest schema | spec/v2.15/grok-agent.yaml | Full schema with public_api, windows, multi_agent, constitution, backwards compat | ✅ done |
+| P5 | Phase 1 | Create PowerShell CLI | cli/grok-agent.ps1 | Full CLI with install/new/validate/list/run + grok install this + schema validation | ✅ done |
+| P6 | Phase 1 | Create Python fallback validator | cli/grok-agent.py | Pydantic v2 validator callable from PowerShell CLI | ✅ done |
+| P7 | Phase 1 | Create safety system | safety/scanner.py, safety/constitution.md | Scanner + Constitution enforcing Hard Six + disclaimers | ✅ done |
+| P8 | Phase 1 | Create GitHub validation workflow | .github/workflows/validate.yml | CI that validates all manifests against v2.15 schema | ✅ done |
+| P9 | Phase 1 | Create core documentation | docs/index.md, docs/windows-guide.md | Project overview + detailed Windows 11 guide | ✅ done |
+| P10 | Phase 1 | Create xAI adoption pitch | docs/for-xai-adoption.md | Professional pitch document for xAI partnership | ✅ done |
+| P11 | Phase 1 | Create pyproject.toml + root metadata | pyproject.toml, CONTRIBUTING.md, SECURITY.md, CODE_OF_CONDUCT.md | Packaging + contributor docs complete | ✅ done |
+| P12 | Phase 1 | Create 8 starter template manifests | 8 grok-agent.yaml files in templates/ | All validate against v2.15; finance have disclaimers | ✅ done |
+| P13 | Phase 1 | Write premium root README | README.md | Full public-facing README with Super Agents vision + roadmap | ✅ done |
+| P14 | Phase 1 | End-to-end smoke test + Phase 1 close | docs/smoke-test-results.md + docs/x-launch-thread.md | All commands green; 8 templates validated; ready for Phase 2 | ✅ done |
+| P15 | Phase 1 | Create ROADMAP.md | ROADMAP.md | Full public phase-by-phase summary matching master plan | ✅ done |
+| P16 | Phase 1 | Add Streamlit defaults | .streamlit/config.toml | Cloud-ready defaults for all future Streamlit tools | ✅ done |
+| P17 | Phase 1 | End-to-end smoke test (Codespaces) | docs/smoke-test-results.md (Run #2) + cli/grok-agent.ps1 (3 bug fixes) | Real pwsh invocations exposed + fixed: AppData null crash, blank Format-Table render, $input under CmdletBinding | ✅ done |
+| P18 | Phase 1 | First X launch thread + Phase 1 close | docs/x-launch-thread.md | Phase 1 officially closed — 18 prompts, 100% foundation delivered | ✅ done |
 
 <!--
+Phase 1 — OFFICIALLY CLOSED on 2026-05-04 with the public-launch artifacts in place.
+18 prompts executed, 18 deliverables in the CLAUDE.md §6 plan all present and verified
+(both the Python and PowerShell layers smoke-tested end-to-end via real pwsh; Constitution
+scanner clean on all 8 starter templates; CI workflow gates schema + Constitution on every PR;
+3 PowerShell defects surfaced and fixed in P17 before close).
+
+Phase 2 (X Money Tools Suite, P19–P42, 24 prompts via Recipe A x4 tools) follows.
+Build order: x-money-companion-dashboard → x-smart-cashtag-alpha-engine →
+x-money-vision-analyzer → x-creator-payout-optimizer (so #4's importer can target #1's SQLite).
+
 Add new rows above this line as prompts complete.
-Keep the example row for reference — it shows the format.
+Format reference: | P{N} | Phase {N} | {short title} | {files touched} | {key decisions in 1 line} | ✅ done |
+
+Add new rows above this line as prompts complete.
+Format reference: | P{N} | Phase {N} | {short title} | {files touched} | {key decisions in 1 line} | ✅ done |
 -->
 
 ## Notes

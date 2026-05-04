@@ -47,6 +47,7 @@
 | P24 | Phase 2 | X Money Companion Dashboard — Final smoke test + Tool #1 complete | smoke_test.ps1, README.md, HANDOFF_LOG.md | Tool #1 fully validated and ready for "grok install this" | ✅ done |
 | P25 | Phase 2 | X Smart Cashtag Alpha Engine — Manifest + folder + README | templates/finance/x-smart-cashtag-alpha-engine/grok-agent.yaml, README.md | v2.15 manifest with full Constitution disclaimers; Tool #2 started after Tool #1 complete | ✅ done |
 | P26 | Phase 2 | X Smart Cashtag Alpha Engine — Streamlit skeleton | templates/finance/x-smart-cashtag-alpha-engine/app.py, requirements.txt | 6-tab layout (Overview/Watchlist/Charts/Alpha Reports/Portfolio Simulator/Trending) with full disclaimers | ✅ done |
+| P27 | Phase 2 | X Smart Cashtag Alpha Engine — Grok prompts | prompts/system.md, prompts/user_templates.md | Alpha-engine system prompt + 10 templates with Article IV/V enforcement and contradiction detection | ✅ done |
 
 <!--
 Tool #1 — X Money Companion Dashboard — OFFICIALLY COMPLETE on 2026-05-04

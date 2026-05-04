@@ -74,6 +74,7 @@
 | P74 | Phase 3 | Content Recycler runner + README + examples | templates/creator/content-recycler/run.py, README.md, examples/ | Deterministic offline runner matching P44–P72 quality bar + P73 system prompt schema + 4 canonical Recycle Score metrics with weighted formula + stale-rehash paradox surfacing + handle-mismatch refusal + attribution stamp preserved + cross-template bridges | ✅ done |
 | P75 | Phase 3 | Brand Voice Trainer manifest + system prompt | templates/creator/brand-voice-trainer/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + voice analysis + cross-template bridges | ✅ done |
 | P76 | Phase 3 | Brand Voice Trainer runner + README + examples | templates/creator/brand-voice-trainer/run.py, README.md, examples/ | Deterministic offline runner matching P44–P74 quality bar + P75 system prompt schema + 4 canonical Voice Profile metrics with weighted formula + generic-polish paradox surfacing + sample-size double gate + cross-template bridges | ✅ done |
+| P77 | Phase 3 | AB Test Suggester manifest + system prompt | templates/creator/ab-test-suggester/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + A/B variant generation + cross-template bridges | ✅ done |
 
 <!--
 ====================================================================

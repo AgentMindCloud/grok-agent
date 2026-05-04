@@ -1,0 +1,125 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — local-first A/B test planner for X
+# creators. Reads a post idea or URL and emits a 6/7-section structured
+# A/B test plan with 2-3 variants that change exactly one dimension at
+# a time, 4 canonical Test Plan Score metrics, multi-variable paradox
+# detection, success metrics + statistical notes, and >= 3 cross-template
+# bridges. Drafts only — never auto-publishes any variant.
+
+version: "2.15"
+kind: "creator-template"
+name: "ab-test-suggester"
+description: "Local-first A/B test planner for X creators — turns a single post idea into a 6/7-section test plan with 2-3 variants isolated to a single test dimension (headline / visual / cta / timing), 4 canonical Test Plan Score metrics (Variant clarity / Test isolation / Sample feasibility / Decision actionability), success metrics + statistical notes, multi-variable paradox detection, and >= 3 cross-template bridges. Drafts only — never auto-publishes. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "AB Test Suggester"
+  tagline: "Test one thing at a time. Decide on signal, not vibes."
+  categories: ["creator", "experimentation", "analytics"]
+  tags: ["creator-template", "cli-only", "drafts-only", "single-axis-tests"]
+  created: "2026-05-04"
+  updated: "2026-05-04"
+
+install:
+  one_click: true
+  install_command: "grok-agent install ab-test-suggester"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  appdata_folder: "grok-agent/ab-test-suggester"
+  cache_folder: "grok-agent/ab-test-suggester/cache"
+  log_folder: "grok-agent/ab-test-suggester/logs"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.4
+  max_tokens: 3072
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+
+tools:
+  - name: "generate_ab_test_plan"
+    type: "local_function"
+    description: "Produce a 6-section structured A/B test plan (or 7-section when red-flag count > 3 OR test_focus='all') with 2-3 variants isolated to a single test dimension, 4-row Test Plan Score table, success metrics + statistical notes, multi-variable paradox detection, and >= 3 cross-template bridges. Drafts only — never auto-publishes."
+    module: "ab_test_suggester.run"
+    function: "generate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          x_handle:
+            type: "string"
+            description: "Creator's X handle (with or without @). The voice anchor for variant generation."
+          post_idea_or_url:
+            type: "string"
+            description: "Either an x.com / twitter.com URL pointing to an existing post, OR the literal post idea text. Required unless --demo is passed."
+          test_focus:
+            type: "string"
+            enum: ["headline", "visual", "cta", "timing", "all"]
+            default: "headline"
+            description: "Which single dimension the variants vary along. 'all' lets the runner pick the highest-leverage dimension for the supplied idea."
+          num_variants:
+            type: "integer"
+            minimum: 2
+            maximum: 3
+            default: 2
+            description: "Number of variants to emit (control + N treatments). Default 2 (control vs one treatment)."
+        required: ["x_handle", "post_idea_or_url"]
+
+constitution:
+  rules:
+    - "Drafts only. The runner emits a test plan + variant text the creator reviews and ships. Constitution Article II's `publish_to_x` consent gate covers every variant."
+    - "Single-axis isolation. When test_focus is one of 'headline'/'visual'/'cta'/'timing', the variants MUST vary on that dimension only. Surface the multi-variable paradox in BOTH the Test Plan section AND the Red Flags section whenever Variant clarity > 70 AND Test isolation < 40 (variants are clearly different but diverge across multiple dimensions — the test cannot isolate the cause)."
+    - "Honest statistics. Sample-size and duration estimates in the Statistical Notes section are rough heuristics, not promises. The runner names them as such. The runner refuses to fabricate p-values or confidence intervals."
+    - "Every monetization-related test recommendation (e.g. paid-tier conversion test, sponsored-content test) carries the Article V.1 'Not financial advice' banner verbatim."
+    - "Cannibalization disclosure. When the test ships variants on the same audience without splitting reach (the X-native default), the runner surfaces the cannibalization risk explicitly — the variants will compete with each other for impressions."
+    - "Every analysis links to >= 3 cross-template bridges so the creator can wire the test result into the next loop without leaving Grok Agent OS."
+  hard_refusals:
+    - "auto-publish a variant to any platform without an explicit consent gate"
+    - "suggest variants that change multiple dimensions simultaneously when test_focus is single-axis (would invalidate the test)"
+    - "fabricate statistical significance numbers, p-values, or confidence intervals"
+    - "recommend tests designed to manipulate the algorithm or coordinate engagement"
+    - "scrape authenticated content of any creator to seed variants"
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 90
+  scanner_severity_floor: "warn"
+  forbidden_actions:
+    - scrape_authenticated_x_content
+    - impersonate_user_identity
+    - bypass_safety_scanner
+    - exfiltrate_user_data
+  cost_limits:
+    usd_per_session_max: 0.30
+    usd_per_day_max: 1.00
+    tokens_per_session_max: 60000
+    api_calls_per_session_max: 80
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "any export of the test plan to a path outside the agent AppData folder"
+      - "any future-version auto-publish (currently disabled in v1)"
+    timeout_seconds: 60
+  disclaimers:
+    not_financial_advice: true
+    not_tax_advice: false
+    real_world_action_consent: false
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+      - "requests ^2.31"

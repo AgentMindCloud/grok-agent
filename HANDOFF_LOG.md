@@ -63,6 +63,7 @@
 | P40 | Phase 2 | X Creator Payout Optimizer — Data layer + API clients | data/store.py, data/api_clients.py, data/companion_reader.py, data/vision_reader.py | Tool #3-specific schema + cross-tool readers for Tool #1 + Tool #4 with full provenance | ✅ done |
 | P41 | Phase 2 | X Creator Payout Optimizer — Launcher + Cloud config | launcher.ps1, .streamlit/config.toml, README.md | One-click Windows launcher (port 8503) + Streamlit Cloud ready; Tool #3 complete | ✅ done |
 | P42 | Phase 2 | X Creator Payout Optimizer — Final smoke test + Tool #3 + X Money Suite complete | smoke_test.ps1, README.md, HANDOFF_LOG.md | Tool #3 fully validated and ready for "grok install this"; X Money Suite (4 tools, 24 prompts) officially complete | ✅ done |
+| P43 | Phase 3 | Content Idea Generator — Manifest + system prompt (Recipe B Slot 1) | templates/creator/content-idea-generator/grok-agent.yaml, prompts/system.md | Phase 1 P12 starter upgraded to production-grade Recipe B Slot 1: added constitution.rules (5 rules — no fabrication, distinct angles, no endorsement, no engagement-bait, finance-adjacent tag), tightened metadata + cost limits ($0.15 / 50 calls per session); new prompts/system.md (~60 lines) with 8 hard rules, 8 angle types, idea-card output schema, confidence line; 0 scanner findings on templates/creator/ scan-all (2/2 manifests clean); v2.15 schema validator green | ✅ done |
 
 <!--
 ====================================================================

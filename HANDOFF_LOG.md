@@ -53,6 +53,7 @@
 | P30 | Phase 2 | X Smart Cashtag Alpha Engine — Final smoke test + Tool #2 complete | smoke_test.ps1, README.md, HANDOFF_LOG.md | Tool #2 fully validated and ready for "grok install this"; next: Tool #4 (Vision Analyzer) | ✅ done |
 | P31 | Phase 2 | X Money Vision Analyzer — Manifest + folder + README | templates/finance/x-money-vision-analyzer/grok-agent.yaml, README.md | v2.15 manifest with cross-tool import requirement into Tool #1; Tool #4 started | ✅ done |
 | P32 | Phase 2 | X Money Vision Analyzer — Streamlit skeleton | templates/finance/x-money-vision-analyzer/app.py, requirements.txt | 6-tab layout (Drop Files / Parsed Preview / Validate / Import to Tool #1 / History / Settings) with cross-tool import mock | ✅ done |
+| P33 | Phase 2 | X Money Vision Analyzer — Grok prompts | prompts/system.md, prompts/user_templates.md | Vision-focused system prompt + 10 templates with Article III contradiction detection and cross-tool import safety | ✅ done |
 
 <!--
 Tool #2 — X Smart Cashtag Alpha Engine — OFFICIALLY COMPLETE on 2026-05-04

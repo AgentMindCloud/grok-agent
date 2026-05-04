@@ -81,6 +81,7 @@
 | P58 | Phase 3 | Monetization Optimizer runner + README + examples | templates/creator/monetization-optimizer/run.py, README.md, examples/ | Deterministic offline runner matching P44–P56 quality bar + P57 system prompt schema + mandatory V.1/V.2 disclaimers on every money/tax card | ✅ done |
 | P59 | Phase 3 | Thread Builder manifest + system prompt | templates/creator/thread-builder/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + 8-angle distinctness + cross-template bridges | ✅ done |
 | P60 | Phase 3 | Thread Builder runner + README + examples | templates/creator/thread-builder/run.py, README.md, examples/ | Deterministic offline runner matching P44–P58 quality bar + P59 system prompt schema + 8-angle parent-arc + angle-spanning hooks | ✅ done |
+| P61 | Phase 3 | DM Triager manifest + system prompt | templates/creator/dm-triager/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + priority scoring + policy refusal + cross-template bridges | ✅ done |
 
 <!--
 ====================================================================

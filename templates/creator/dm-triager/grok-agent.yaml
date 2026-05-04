@@ -1,0 +1,113 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — X DM triager for creators.
+# DMs are private; this template is privacy-paranoid by design.
+
+version: "2.15"
+kind: "creator-template"
+name: "dm-triager"
+description: "Triage a batch of X DMs into priority / opportunity / spam buckets, get back paraphrased priority cards (NEVER verbatim DM text), suggested-reply drafts, action items, and cross-template bridges. Privacy-paranoid by design. Local-first. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "DM Triager"
+  tagline: "Triage your DMs in 30 seconds. Privacy-paranoid by design."
+  categories: ["creator", "engagement", "triage"]
+  tags: ["creator-template", "cli-only", "phase-3", "privacy-paranoid"]
+  language: "en"
+  created: "2026-05-04"
+  updated: "2026-05-04"
+  repository: "https://github.com/AgentMindCloud/grok-agent"
+
+install:
+  one_click: true
+  install_command: "grok-agent install dm-triager"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  launcher: "launcher.ps1"
+  appdata_folder: "grok-agent/dm-triager"
+  cache_folder: "grok-agent/dm-triager/cache"
+  log_folder: "grok-agent/dm-triager/logs"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.3
+  max_tokens: 2048
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+  streaming: true
+
+tools:
+  - name: "generate_dm_triage"
+    type: "local_function"
+    description: "Triage a batch of X DMs into priority / opportunity / spam buckets and emit a structured summary with paraphrased priority cards, suggested replies, action items, and cross-template bridges. Privacy-paranoid: never reproduces DM text verbatim."
+    module: "dm_triager.run"
+    function: "generate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          x_handle:
+            type: "string"
+            description: "Your X handle, e.g. @JanSol0s -- the DM recipient."
+          dms:
+            type: "array"
+            description: "List of DM records: [{sender, text, timestamp, has_attachments?}]. Mutually exclusive with date_range."
+            items:
+              type: "object"
+          date_range:
+            type: "string"
+            description: "ISO range like '2026-04-30:2026-05-04' for local-cache lookups (v2 feature)."
+          priority_focus:
+            type: "string"
+            enum: ["urgent", "opportunities", "all"]
+            description: "What to weight in the priority pass. Default 'all'."
+          max_dms:
+            type: "integer"
+            minimum: 1
+            maximum: 100
+            description: "Cap on DMs to ingest per run (1..100, default 20)."
+          niche:
+            type: "string"
+            description: "Optional niche hint to bias opportunity ranking."
+        required: ["x_handle"]
+
+constitution:
+  rules:
+    - "PRIVACY-PARANOID: Never reproduce DM text verbatim. Always paraphrase. Redact phone numbers, email addresses, full names, addresses, financial account numbers, and identity-link signals before quoting any phrase. The DM text in input is sensitive; treat it like a medical record."
+    - "Always emit the structured 6-section shape: Headline, Priority DMs (3-5 paraphrased cards), Suggested Replies (one per priority card), Spam / Low-Value (flagged senders, paraphrased reason), Action Items (3-5), Confidence. Add the 7th 'Privacy Audit' section only when >25% of the batch matches sensitive-PII patterns."
+    - "Priority scoring is qualitative -- high / medium-high / medium / low -- with a category tag (urgent | opportunity | community | admin | spam). Never percentages, never fake confidence numbers."
+    - "Refuse to triage batches where >70% match scam / phishing / harassment / doxxing patterns; surface a one-line refusal recommending the user mute/block/report and skip the structured output."
+    - "Refuse policy-violating reply suggestions: never draft replies that would help a sender harass, doxx, scam, or coordinate against another user. Surface a one-line refusal for that single DM card and continue triaging the rest."
+    - "Suggested replies are <=400 chars (DMs are not tweets) and always shown as DRAFT-only -- the user reviews and sends manually. Never auto-send anything; the runner is offline by design."
+    - "Spam / Low-Value section paraphrases the spam pattern (e.g. 'crypto-DM-bait copypasta', 'follow-back farm') without quoting the actual text. Aggregate handles into a list."
+    - "Cross-Template Bridges section MUST cite at least 3 sibling templates by name when a genuine bridge exists: reply-drafter (for full draft expansion), research-assistant (to verify a prospect's claim before responding), monetization-optimizer (when a DM is a sponsorship inquiry), mention-summarizer (to cross-reference public mentions from the same handle), daily-briefing-agent (to thread the inbox signal into tomorrow's brief), analytics-summarizer (to confirm engagement context for an opportunity DM)."
+    - "Sender-handle dedup: if the same handle appears in multiple DMs, surface them once in the priority list with a cumulative reason."
+    - "Tag finance-adjacent priority cards (sponsorship dollars, payout terms, cashtags, financial product offers) with a 'Context only -- not financial advice.' line on the affected card."
+    - "Local-first: DM history, prior triage runs, and sensitive-PII redaction caches live under $env:LOCALAPPDATA. Never propose syncing or uploading them."
+    - "No silent contradictions: if two DMs about the same topic disagree on a fact (e.g. two prospects claim conflicting deal terms), surface both and let the user verify -- don't pretend the picture is clean."
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 30
+  cost_limits:
+    usd_per_session_max: 0.20
+    api_calls_per_session_max: 60
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+      - "requests ^2.31"

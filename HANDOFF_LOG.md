@@ -57,6 +57,7 @@
 | P34 | Phase 2 | X Money Vision Analyzer — Data layer + API clients | data/store.py, data/api_clients.py, data/import_receipts.py | Vision-specific SQLite + cross-tool import writer into Tool #1 with full provenance | ✅ done |
 | P35 | Phase 2 | X Money Vision Analyzer — Launcher + Cloud config | launcher.ps1, .streamlit/config.toml, README.md | One-click Windows launcher (port 8504) + Streamlit Cloud ready; Tool #4 complete | ✅ done |
 | P36 | Phase 2 | X Money Vision Analyzer — Final smoke test + Tool #4 complete | smoke_test.ps1, README.md, HANDOFF_LOG.md | Tool #4 fully validated and ready for "grok install this"; next: Tool #3 (Creator Payout Optimizer) | ✅ done |
+| P37 | Phase 2 | X Creator Payout Optimizer — Manifest + folder + README | templates/finance/x-creator-payout-optimizer/grok-agent.yaml, README.md | v2.15 manifest with cross-tool reads from Tool #1 + Tool #4; final X Money tool started | ✅ done |
 
 <!--
 Tool #4 — X Money Vision Analyzer — OFFICIALLY COMPLETE on 2026-05-04

@@ -1,0 +1,195 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — the X Creator Payout Optimizer is the
+# earnings-forecasting + content-optimization + tax-estimation tool of the
+# Grok Agent OS suite. It is the LAST X Money tool in the suite per
+# CLAUDE.md §6's build order (Tool #1 -> Tool #2 -> Tool #4 -> Tool #3) so
+# at install time it reads from BOTH Tool #1's transactions table (revenue
+# context) and Tool #4's receipts + parsed_items tables (cost context) for
+# the richest possible local data. Read-only on both — no cross-tool writes.
+#
+# Constitution mapping (v1.0):
+#   Article I    : Apache-2.0 + xAI ally line + Windows-first + v2.15 schema
+#   Article III  : cross-tool READS only; no writes permitted by this manifest
+#   Article IV   : provenance.enabled + cite_sources for every forecast
+#   Article V.1  : "Not financial advice" — required for finance kinds
+#   Article V.2  : "Not tax advice"        — primary feature (tax estimator); MANDATORY
+#   Article VI.1 : safety.cost_limits declared (300 calls/session — between Tool #1 + Tool #2)
+#   Article VI.2 : safety.human_in_the_loop enabled, gated on tax export + cloud sync
+#   Article VII  : pii_handling=local-only (no PII leaves the box)
+
+version: "2.15"
+kind: "creator-payout-optimizer"
+name: "x-creator-payout-optimizer"
+description: "Earnings forecasting, content optimization, and tax estimator for X creators. Reads from the X Money Companion Dashboard (Tool #1) and the X Money Vision Analyzer (Tool #4) for the richest possible local data. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "X Creator Payout Optimizer"
+  tagline: "Forecast earnings. Optimize content. Estimate taxes."
+  categories: ["finance", "x-money", "creator-tools"]
+  tags: ["streamlit", "sqlite", "forecast", "tax", "windows-first", "tool-3", "cross-tool-reader"]
+  language: "en"
+
+install:
+  one_click: true
+  install_command: "grok-agent install x-creator-payout-optimizer"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  launcher: "launcher.ps1"
+  appdata_folder: "grok-agent/x-creator-payout-optimizer"
+  log_folder: "grok-agent/x-creator-payout-optimizer/logs"
+  cache_folder: "grok-agent/x-creator-payout-optimizer/cache"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.4                # mid temp — some creativity for content optimization, restraint on forecasts
+  max_tokens: 4096
+  system_prompt_file: "prompts/system.md"
+  user_template_file: "prompts/user_templates.md"
+  tool_calling: true
+  vision: false
+
+public_apis:
+  - name: "x_search"
+    base_url: "via_grok_4.3"
+    auth_env_var: "XAI_API_KEY"
+    privacy: "no_pii_sent"
+  - name: "yfinance"
+    base_url: "https://query2.finance.yahoo.com"
+    auth: "none"
+    rate_limit: 100
+    privacy: "no_pii_sent"
+  - name: "newsapi"
+    base_url: "https://newsapi.org/v2"
+    auth_env_var: "NEWSAPI_KEY"
+    rate_limit: 100
+    privacy: "no_pii_sent"
+
+tools:
+  - name: "forecast_earnings"
+    type: "local_function"
+    description: "Forecast the user's next-N-day creator earnings using local Tool #1 transaction history + Tool #4 receipt history (both read-only) + recent X engagement metrics."
+    module: "x_payout.forecast"
+    function: "forecast"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          window_days:  { type: "integer" }
+          horizon_days: { type: "integer" }
+        required: ["window_days", "horizon_days"]
+
+  - name: "optimize_content_topic"
+    type: "local_function"
+    description: "Suggest content angles for a topic using the user's past engagement + payout patterns."
+    module: "x_payout.optimize"
+    function: "suggest_topic"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          topic:            { type: "string" }
+          audience_profile: { type: "object" }
+        required: ["topic"]
+
+  - name: "estimate_tax_burden"
+    type: "local_function"
+    description: "Estimate tax burden on creator earnings for a date range. CONSENT-GATED export. NOT TAX ADVICE — the V.2 disclaimer banner is mandatory on every output of this tool."
+    module: "x_payout.tax"
+    function: "estimate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          start_date:   { type: "string" }
+          end_date:     { type: "string" }
+          jurisdiction: { type: "string" }
+        required: ["start_date", "end_date", "jurisdiction"]
+
+  - name: "fetch_x_metrics"
+    type: "local_function"
+    description: "Pull recent X engagement / reach / payouts metrics for the user's handle via Grok 4.3 x_search."
+    module: "x_payout.metrics"
+    function: "fetch_for_handle"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          handle:      { type: "string" }
+          period_days: { type: "integer" }
+        required: ["handle"]
+
+  - name: "analyze_content_roi"
+    type: "local_function"
+    description: "Compute content ROI by combining Tool #1 revenue rows with Tool #4 parsed-receipt costs for the same period — both read-only."
+    module: "x_payout.roi"
+    function: "compute"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          content_topic: { type: "string" }
+          start_date:    { type: "string" }
+          end_date:      { type: "string" }
+        required: ["start_date", "end_date"]
+
+provenance:
+  enabled: true
+  cite_sources: true
+  contradiction_detection: false   # this tool is forecast/synthesis, not truth-checking like Tool #2
+
+constitution:
+  rules:
+    - "Always show 'Not financial advice' banner on every page (Article V.1)."
+    - "Always show 'Not tax advice' banner on every page — tax estimator is a primary feature, not an aside (Article V.2)."
+    - "All earnings, receipt, and forecast data stays local under $env:LOCALAPPDATA\\grok-agent\\x-creator-payout-optimizer (Article VII)."
+    - "Cross-tool READS only. Tool #1 (transactions) and Tool #4 (receipts + parsed_items) are read-only targets. No cross-tool writes are permitted by this manifest (Article III)."
+    - "Forecast outputs cite the data window and the source rows used. No silent extrapolation (Article IV)."
+    - "Tax estimator output explicitly names the jurisdiction and the assumption set used; the V.2 banner is part of every export."
+  consent_gates:
+    - export_tax_estimate
+    - sync_to_cloud
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 365
+  scanner_severity_floor: "warn"
+  disclaimers:
+    not_financial_advice: true
+    not_tax_advice: true
+  cost_limits:
+    usd_per_session_max: 1.00
+    usd_per_day_max: 5.00
+    api_calls_per_session_max: 300   # between Tool #1's 200 and Tool #2's 500 — forecast queries are mid-weight
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "export_tax_estimate"
+      - "sync_to_cloud"
+      - "any cost above $0.20"
+    timeout_seconds: 60
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "streamlit ^1.33"
+      - "pandas ^2.2"
+      - "plotly ^5.22"
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+      - "requests ^2.31"
+      - "yfinance ^0.2"
+  system:
+    - "powershell >= 5.1"

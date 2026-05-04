@@ -74,6 +74,7 @@
 | P51 | Phase 3 | Daily Briefing Agent manifest + system prompt | templates/creator/daily-briefing-agent/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching P45/P47/P49 quality bar | ✅ done |
 | P52 | Phase 3 | Daily Briefing Agent runner + README + examples | templates/creator/daily-briefing-agent/run.py, README.md, examples/ | Deterministic offline runner matching P44/P46/P48/P50 quality bar + P51 system prompt schema | ✅ done |
 | P53 | Phase 3 | Research Assistant manifest + system prompt | templates/creator/research-assistant/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching P45/P47/P49/P51 quality bar + cross-template compatibility | ✅ done |
+| P54 | Phase 3 | Research Assistant runner + README + examples | templates/creator/research-assistant/run.py, README.md, examples/ | Deterministic offline runner matching P44–P52 quality bar + P53 system prompt schema + cross-template bridges | ✅ done |
 
 <!--
 ====================================================================

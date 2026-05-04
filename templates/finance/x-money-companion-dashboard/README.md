@@ -155,9 +155,41 @@ Both must return zero `error`-level findings before this agent is allowed to ins
 
 ---
 
+## Smoke test & `grok install this` readiness
+
+Before this dashboard goes near a real X Money account, every commit must pass the offline smoke test:
+
+```powershell
+.\smoke_test.ps1
+```
+
+The script runs 11 checks — file presence, Python interpreter, schema validation, Constitution scanner, Apache 2.0 headers, Article V disclaimer presence in `app.py` / `prompts/system.md` / `README.md`, manifest-tool importability, SQLite round-trip, API client offline-safety, `launcher.ps1` parse, and `.streamlit/config.toml` shape + privacy posture — and prints **`Tool #1 - X Money Companion Dashboard: PASS`** when every check lands green. Exit code is `0` on PASS, `1` on FAIL. Add `-Json` for a machine-readable summary suitable for CI.
+
+```powershell
+.\smoke_test.ps1 -Json | Out-File smoke.json
+```
+
+### `grok install this` (X-native shorthand)
+
+Once the smoke test is green, this dashboard is ready for the X-native installation primitive. In a tweet or DM that mentions `@grok`, you can write:
+
+```
+grok install this
+```
+
+…with the dashboard's manifest URL or template name attached. The Grok Agent OS orchestra resolves that to the equivalent local CLI flow:
+
+```powershell
+grok-agent install x-money-companion-dashboard
+```
+
+…which runs the same Pydantic deep validator + Constitution scanner before writing any files. Both routes refuse to install if the smoke test would fail.
+
+---
+
 ## Build slots (Recipe A)
 
-Slots 1–5 are shipped on `main`; Slot 6 (smoke test + disclaimer audit) lands in P24:
+All 6 slots are shipped on `main`; Tool #1 is **COMPLETE**:
 
 | Slot | Files | Status |
 |---|---|---|
@@ -165,8 +197,8 @@ Slots 1–5 are shipped on `main`; Slot 6 (smoke test + disclaimer audit) lands 
 | 2 — Streamlit app skeleton | `app.py`, `requirements.txt` | ✅ P20 |
 | 3 — Grok prompts | `prompts/system.md`, `prompts/user_templates.md` | ✅ P21 |
 | 4 — Data layer + APIs | `data/__init__.py`, `data/store.py`, `data/api_clients.py` (accepts `data/import_receipts.py` from Tool #4) | ✅ P22 |
-| 5 — Launcher + Streamlit Cloud config | `launcher.ps1`, `.streamlit/config.toml` | ✅ this prompt (P23) |
-| 6 — `grok install this` smoke test + disclaimer audit | end-to-end PowerShell run + Constitution scan | ⏭️ P24 |
+| 5 — Launcher + Streamlit Cloud config | `launcher.ps1`, `.streamlit/config.toml` | ✅ P23 |
+| 6 — Smoke test + `grok install this` readiness | `smoke_test.ps1` (11 checks); README Smoke-test section | ✅ this prompt (P24) |
 
 ---
 

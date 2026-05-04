@@ -71,6 +71,7 @@
 | P71 | Phase 3 | Cross-Platform Reposter manifest + system prompt | templates/creator/cross-platform-reposter/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + platform adaptation + cross-template bridges | ✅ done |
 | P72 | Phase 3 | Cross-Platform Reposter runner + README + examples | templates/creator/cross-platform-reposter/run.py, README.md, examples/ | Deterministic offline runner matching P44–P70 quality bar + P71 system prompt schema + 4 canonical Variant Score metrics with weighted formula + voice-drift paradox surfacing + attribution footer preserved + cross-template bridges | ✅ done |
 | P73 | Phase 3 | Content Recycler manifest + system prompt | templates/creator/content-recycler/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + recycle angles + cross-template bridges | ✅ done |
+| P74 | Phase 3 | Content Recycler runner + README + examples | templates/creator/content-recycler/run.py, README.md, examples/ | Deterministic offline runner matching P44–P72 quality bar + P73 system prompt schema + 4 canonical Recycle Score metrics with weighted formula + stale-rehash paradox surfacing + handle-mismatch refusal + attribution stamp preserved + cross-template bridges | ✅ done |
 
 <!--
 ====================================================================

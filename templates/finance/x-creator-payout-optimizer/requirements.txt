@@ -1,0 +1,16 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Pinned to match templates/finance/x-creator-payout-optimizer/grok-agent.yaml
+# dependencies.python.packages. The cross-tool readers (Tool #1 + Tool #4)
+# and the live forecast / optimize / tax / metrics / ROI tools ship in
+# Slot 4 / P40 at data/store.py + data/companion_reader.py + data/vision_reader.py.
+
+streamlit>=1.33,<2.0
+pandas>=2.2,<3.0
+plotly>=5.22,<6.0
+pydantic>=2.7,<3.0
+pyyaml>=6.0,<7.0
+yfinance>=0.2,<0.3
+requests>=2.31,<3.0

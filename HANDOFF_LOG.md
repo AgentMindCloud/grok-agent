@@ -101,6 +101,7 @@
 | P78 | Phase 3 | AB Test Suggester runner + README + examples | templates/creator/ab-test-suggester/run.py, README.md, examples/ | Deterministic offline runner matching P44–P76 quality bar + P77 system prompt schema + 4 canonical Test Plan Score metrics with weighted formula + single-axis isolation contract + multi-variable paradox surfacing + statistical heuristics + cross-template bridges | ✅ done |
 | P79 | Phase 3 | Comment Engagement Booster manifest + system prompt | templates/creator/comment-engagement-booster/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + comment variant generation + cross-template bridges | ✅ done |
 | P80 | Phase 3 | Hashtag Strategy Advisor manifest + system prompt | templates/creator/hashtag-strategy-advisor/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + hashtag scoring + cross-template bridges | ✅ done |
+| P81 | Phase 3 | Comment Engagement Booster runner + README + examples | templates/creator/comment-engagement-booster/run.py, README.md, examples/ | Deterministic offline runner matching P44–P78 quality bar + P79 system prompt schema + 4 canonical Comment Plan Score metrics with weighted formula + hook-without-substance paradox surfacing + 240-char comment-length cap + anti-spam token-overlap guard (>60% blocked) + cross-template bridges; brings creator suite from 7/20 to 8/20 fully complete | ✅ done |
 
 <!--
 ====================================================================

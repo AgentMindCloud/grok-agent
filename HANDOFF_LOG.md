@@ -63,6 +63,29 @@
 | P40 | Phase 2 | X Creator Payout Optimizer — Data layer + API clients | data/store.py, data/api_clients.py, data/companion_reader.py, data/vision_reader.py | Tool #3-specific schema + cross-tool readers for Tool #1 + Tool #4 with full provenance | ✅ done |
 | P41 | Phase 2 | X Creator Payout Optimizer — Launcher + Cloud config | launcher.ps1, .streamlit/config.toml, README.md | One-click Windows launcher (port 8503) + Streamlit Cloud ready; Tool #3 complete | ✅ done |
 | P42 | Phase 2 | X Creator Payout Optimizer — Final smoke test + Tool #3 + X Money Suite complete | smoke_test.ps1, README.md, HANDOFF_LOG.md | Tool #3 fully validated and ready for "grok install this"; X Money Suite (4 tools, 24 prompts) officially complete | ✅ done |
+| P43 | Phase 3 | Content Idea Generator manifest + system prompt | templates/creator/content-idea-generator/grok-agent.yaml | P12 starter manifest exists; prompts/system.md NOT yet written — Slot 1 partial | ⚠️ partial |
+| P44 | Phase 3 | Content Idea Generator runner + README + examples | (none yet) | Slot 2 deliverables not yet built (run.py, README.md, examples/) | ⏭️ skipped |
+| P45 | Phase 3 | Reply Drafter manifest + system prompt | templates/creator/reply-drafter/grok-agent.yaml | P12 starter manifest exists; prompts/system.md NOT yet written — Slot 1 partial | ⚠️ partial |
+| P46 | Phase 3 | Reply Drafter runner + README + examples | (none yet) | Slot 2 deliverables not yet built (run.py, README.md, examples/) | ⏭️ skipped |
+| P47 | Phase 3 | Analytics Summarizer manifest + system prompt | (none yet) | Template not yet started | ⏭️ skipped |
+| P48 | Phase 3 | Analytics Summarizer runner + README + examples | (none yet) | Template not yet started | ⏭️ skipped |
+| P49 | Phase 3 | Monetization Optimizer manifest + system prompt | (none yet) | Template not yet started | ⏭️ skipped |
+| P50 | Phase 3 | Monetization Optimizer runner + README + examples | (none yet) | Template not yet started | ⏭️ skipped |
+| P51 | Phase 3 | Thread Builder manifest + system prompt | (none yet) | Template not yet started | ⏭️ skipped |
+| P52 | Phase 3 | Thread Builder runner + README + examples | (none yet) | Template not yet started | ⏭️ skipped |
+| P53 | Phase 3 | Mention Summarizer manifest + system prompt | (none yet — x-native stub exists at templates/x-native/mention-summarizer/) | Creator-template not yet started; an x-native stub manifest exists in a different folder | ⏭️ skipped |
+| P54 | Phase 3 | Mention Summarizer runner + README + examples | (none yet) | Template not yet started | ⏭️ skipped |
+| P55 | Phase 3 | DM Triager manifest + system prompt | (none yet) | Template not yet started | ⏭️ skipped |
+| P56 | Phase 3 | DM Triager runner + README + examples | (none yet) | Template not yet started | ⏭️ skipped |
+| P57 | Phase 3 | Trend-Aligned Poster manifest + system prompt | (none yet — x-native stub exists at templates/x-native/trend-aligned-poster/) | Creator-template not yet started; an x-native stub manifest exists in a different folder | ⏭️ skipped |
+| P58 | Phase 3 | Trend-Aligned Poster runner + README + examples | (none yet) | Template not yet started | ⏭️ skipped |
+| P59 | Phase 3 | Quote-Tweet Suggestor manifest + system prompt | (none yet) | Template not yet started | ⏭️ skipped |
+| P60 | Phase 3 | Quote-Tweet Suggestor runner + README + examples | (none yet) | Template not yet started | ⏭️ skipped |
+| P61 | Phase 3 | Content Calendar Builder manifest + system prompt | (none yet) | Template not yet started | ⏭️ skipped |
+| P62 | Phase 3 | Content Calendar Builder runner + README + examples | (none yet) | Template not yet started | ⏭️ skipped |
+| P63 | Phase 3 | Growth Experiment Runner manifest + system prompt | (none yet) | Template not yet started | ⏭️ skipped |
+| P64 | Phase 3 | Growth Experiment Runner runner + README + examples | (none yet) | Template not yet started | ⏭️ skipped |
+| P65 | Phase 3 | Follower Quality Analyzer manifest + system prompt | templates/creator/follower-quality-analyzer/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured system prompt — Slot 1 prerequisite for P66 runner; built on the build-follower-quality-analyzer feature branch | ✅ done |
 | P66 | Phase 3 | Follower Quality Analyzer runner + README + examples | templates/creator/follower-quality-analyzer/run.py, README.md, examples/ | Deterministic offline runner matching P44–P64 quality bar + P65 system prompt schema + 4 canonical metrics + bot-engagement paradox surfacing + cross-template bridges + aggregate-only privacy | ✅ done |
 | P67 | Phase 3 | Niche Influencer Finder manifest + system prompt | templates/creator/niche-influencer-finder/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + influencer scoring + cross-template bridges | ✅ done |
 | P68 | Phase 3 | Niche Influencer Finder runner + README + examples | templates/creator/niche-influencer-finder/run.py, README.md, examples/ | Deterministic offline runner matching P44–P66 quality bar + P67 system prompt schema + 4 canonical match metrics with weighted formula + engagement-pod paradox surfacing + cross-template bridges | ✅ done |

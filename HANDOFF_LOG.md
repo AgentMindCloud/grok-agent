@@ -20,11 +20,11 @@
 
 | # | Phase | Title | Files touched | Decisions / blockers | Status |
 |---|---|---|---|---|---|
-| P1 | 1 | _example: Bootstrap repo_ | _CLAUDE.md, LICENSE, .gitignore_ | _Apache 2.0 confirmed; instruction file is ground truth_ | _✅_ |
+| P1 | Phase 1 | Bootstrap repo | CLAUDE.md, LICENSE, .gitignore | Apache 2.0 confirmed; instruction file is ground truth; full 126-prompt plan loaded | ✅ done |
 
 <!--
 Add new rows above this line as prompts complete.
-Keep the example row for reference — it shows the format.
+Format reference: | P{N} | Phase {N} | {short title} | {files touched} | {key decisions in 1 line} | ✅ done |
 -->
 
 ## Notes

@@ -1,0 +1,139 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — the canonical open standard + Windows-first
+# distribution layer for Grok agents on X.
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+# ---------------------------------------------------------------------------
+# Project metadata (PEP 621)
+# ---------------------------------------------------------------------------
+[project]
+name = "grok-agent"
+version = "0.1.0"
+description = "Built to help xAI and Grok win — the canonical open standard + Windows-first distribution layer for Grok agents on X."
+readme = "README.md"
+requires-python = ">=3.12"
+license = {file = "LICENSE"}
+authors = [
+    {name = "AgentMindCloud"},
+]
+maintainers = [
+    {name = "JanSol0s"},
+]
+keywords = [
+    "grok",
+    "xai",
+    "agents",
+    "x",
+    "x-money",
+    "windows",
+    "powershell",
+    "yaml",
+    "manifest",
+    "v2.15",
+    "super-agent",
+    "creator-tools",
+    "open-standard",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: Microsoft :: Windows :: Windows 11",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: Utilities",
+]
+
+# Core runtime deps — required for cli/grok-agent.py and safety/scanner.py.
+dependencies = [
+    "pydantic>=2.7,<3",
+    "pyyaml>=6.0",
+]
+
+# ---------------------------------------------------------------------------
+# Optional dependency groups — installed via:
+#   python -m pip install --user ".[dev]"
+#   python -m pip install --user ".[agents]"
+#   python -m pip install --user ".[super-agents]"
+# ---------------------------------------------------------------------------
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+    "mypy>=1.10",
+]
+agents = [
+    "streamlit>=1.33",
+    "pandas>=2.2",
+    "requests>=2.31",
+    "yfinance>=0.2",
+]
+super-agents = [
+    "mem0ai>=0.1",
+    "qdrant-client>=1.9",
+    "langfuse>=2.0",
+    "promptfoo>=0.50; platform_system != 'Windows' or python_version >= '3.12'",
+    "deepeval>=0.20",
+]
+
+[project.urls]
+Homepage      = "https://github.com/AgentMindCloud/grok-agent"
+Repository    = "https://github.com/AgentMindCloud/grok-agent"
+Issues        = "https://github.com/AgentMindCloud/grok-agent/issues"
+Documentation = "https://github.com/AgentMindCloud/grok-agent/blob/main/docs/index.md"
+Schema        = "https://github.com/AgentMindCloud/grok-agent/blob/main/spec/v2.15/grok-agent.yaml"
+Constitution  = "https://github.com/AgentMindCloud/grok-agent/blob/main/safety/constitution.md"
+Roadmap       = "https://github.com/AgentMindCloud/grok-agent/blob/main/CLAUDE.md"
+
+# ---------------------------------------------------------------------------
+# Build configuration
+# This repo is a tooling repo, not a Python library. The CLI scripts at
+# cli/grok-agent.py and safety/scanner.py are invoked by path. We declare an
+# empty wheel so `pip install .` works (installing only the `dependencies`
+# above, no Python modules) without surprising contributors.
+# ---------------------------------------------------------------------------
+[tool.setuptools]
+packages = []
+py-modules = []
+
+# ---------------------------------------------------------------------------
+# Tooling configs
+# ---------------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+# Conservative starter set — surface real bugs, not style noise.
+select = ["E", "F", "I", "B", "UP", "ARG", "PIE"]
+ignore = [
+    "E501",  # line-too-long is enforced by formatter, not linter
+]
+
+[tool.ruff.format]
+line-ending = "lf"
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.12"
+strict = false
+warn_unused_ignores = true
+show_error_codes = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-q --strict-markers"

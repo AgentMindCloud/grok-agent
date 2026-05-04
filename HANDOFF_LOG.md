@@ -30,6 +30,7 @@
 | P8 | Phase 1 | Create GitHub validation workflow | .github/workflows/validate.yml | CI that validates all manifests against v2.15 schema | ✅ done |
 | P9 | Phase 1 | Create core documentation | docs/index.md, docs/windows-guide.md | Project overview + detailed Windows 11 guide | ✅ done |
 | P10 | Phase 1 | Create xAI adoption pitch | docs/for-xai-adoption.md | Professional pitch document for xAI partnership | ✅ done |
+| P11 | Phase 1 | Create pyproject.toml + root metadata | pyproject.toml, CONTRIBUTING.md, SECURITY.md, CODE_OF_CONDUCT.md | Packaging + contributor docs complete | ✅ done |
 
 <!--
 Add new rows above this line as prompts complete.

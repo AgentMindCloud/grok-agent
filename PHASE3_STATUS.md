@@ -19,16 +19,16 @@ This document is the single source of truth for **what is actually on disk** in 
 | Counter | Value |
 |---|---|
 | Templates planned | **20** |
-| Templates fully complete (Slot 1 + Slot 2) | **9** |
+| Templates fully complete (Slot 1 + Slot 2) | **10** |
 | Templates with Slot 1 only (manifest + system prompt) | **0** |
 | Templates with P12 starter manifest only (no system prompt, no runner) | **2** |
-| Templates entirely missing (not started) | **9** |
-| Total subfolders under `templates/creator/` | **11** |
+| Templates entirely missing (not started) | **8** |
+| Total subfolders under `templates/creator/` | **12** |
 | `templates/creator/` directories that exist but are empty / stub-only | **0** |
 
-Phase-3 completion against the 20-template target: **45% fully complete · 0% Slot 1 only · 10% starter-manifest only · 45% missing.**
+Phase-3 completion against the 20-template target: **50% fully complete · 0% Slot 1 only · 10% starter-manifest only · 40% missing.**
 
-> Updated 2026-05-04 (post-P82): `hashtag-strategy-advisor` advanced from "Slot 1 only" to "fully complete". Suite count moved from 8/20 → 9/20. Zero templates remain in the "Slot 1 only" bucket — every template that has a system prompt now has its full Slot 2 deliverables.
+> Updated 2026-05-04 (post-P84): `analytics-summarizer` advanced from "Slot 1 only" to "fully complete" via P84 (runner + README + 3 example pairs). Suite count moved from 9/20 → 10/20 — halfway mark reached. P84 introduced session-scoped phrasing override for this template only: "Built for X, Grok & the ecosystem community" replaces "Built to help xAI and Grok win" in the analytics-summarizer README + runner banner + examples (per @JanSol0s explicit instruction in active session per CLAUDE.md). The 9 prior fully-complete templates retain the original phrasing.
 
 ---
 
@@ -40,7 +40,7 @@ The canonical Recipe-B build order from `docs/PARAMETERIZED_RECIPES.md` (easiest
 |---|---|---|---|---|---|---|---|
 | 1 | `content-idea-generator` | ✓ (P12 starter) | ✗ | ✗ | ✗ | ✗ | **starter-manifest only** |
 | 2 | `reply-drafter` | ✓ (P12 starter) | ✗ | ✗ | ✗ | ✗ | **starter-manifest only** |
-| 3 | `analytics-summarizer` | ✗ | ✗ | ✗ | ✗ | ✗ | **missing** |
+| 3 | `analytics-summarizer` | ✓ | ✓ | ✓ | ✓ | ✓ (3 input.json + 3 output.md pairs) | **fully complete** |
 | 4 | `monetization-optimizer` | ✗ | ✗ | ✗ | ✗ | ✗ | **missing** |
 | 5 | `thread-builder` | ✗ | ✗ | ✗ | ✗ | ✗ | **missing** |
 | 6 | `mention-summarizer` | ✗ (x-native stub elsewhere) | ✗ | ✗ | ✗ | ✗ | **missing** |
@@ -59,9 +59,9 @@ The canonical Recipe-B build order from `docs/PARAMETERIZED_RECIPES.md` (easiest
 | 19 | `content-recycler` | ✓ | ✓ | ✓ | ✓ | ✓ (2) | **fully complete** |
 | 20 | `brand-voice-trainer` | ✓ | ✓ | ✓ | ✓ | ✓ (2) | **fully complete** |
 
-### Fully complete (9 templates)
+### Fully complete (10 templates)
 
-These 9 templates have all 5 deliverables on disk: `grok-agent.yaml` + `prompts/system.md` + `run.py` + `README.md` + `examples/` (2 example outputs each):
+These 10 templates have all 5 deliverables on disk: `grok-agent.yaml` + `prompts/system.md` + `run.py` + `README.md` + `examples/`:
 
 1. `follower-quality-analyzer`
 2. `niche-influencer-finder`
@@ -72,6 +72,7 @@ These 9 templates have all 5 deliverables on disk: `grok-agent.yaml` + `prompts/
 7. `brand-voice-trainer`
 8. `comment-engagement-booster` *(advanced from Slot 1 only in P81)*
 9. `hashtag-strategy-advisor` *(advanced from Slot 1 only in P82)*
+10. `analytics-summarizer` *(P83 Slot 1 + P84 Slot 2 — examples shipped as 3 input.json + output.md pairs instead of the prior 2 .md outputs; new phrasing "Built for X, Grok & the ecosystem community" per session-scoped override)*
 
 ### Slot 1 only (0 templates)
 
@@ -84,19 +85,18 @@ These have only the P12 starter `grok-agent.yaml` (a minimal v2.15 manifest from
 1. `content-idea-generator`
 2. `reply-drafter`
 
-### Missing entirely (9 templates)
+### Missing entirely (8 templates)
 
 No directory under `templates/creator/`:
 
-1. `analytics-summarizer`
-2. `monetization-optimizer`
-3. `thread-builder`
-4. `mention-summarizer` *(an x-native stub manifest exists at `templates/x-native/mention-summarizer/grok-agent.yaml`, but it is not the creator-template flavour)*
-5. `dm-triager`
-6. `trend-aligned-poster` *(x-native stub at `templates/x-native/trend-aligned-poster/grok-agent.yaml`)*
-7. `quote-tweet-suggestor`
-8. `content-calendar-builder`
-9. `growth-experiment-runner`
+1. `monetization-optimizer`
+2. `thread-builder`
+3. `mention-summarizer` *(an x-native stub manifest exists at `templates/x-native/mention-summarizer/grok-agent.yaml`, but it is not the creator-template flavour)*
+4. `dm-triager`
+5. `trend-aligned-poster` *(x-native stub at `templates/x-native/trend-aligned-poster/grok-agent.yaml`)*
+6. `quote-tweet-suggestor`
+7. `content-calendar-builder`
+8. `growth-experiment-runner`
 
 ---
 
@@ -107,6 +107,7 @@ Exactly **11** subfolders are present (corrected from prior reports of "20 done"
 ```
 templates/creator/
 ├── ab-test-suggester/                 ✅ fully complete
+├── analytics-summarizer/              ✅ fully complete (P83 Slot 1 + P84 Slot 2)
 ├── brand-voice-trainer/               ✅ fully complete
 ├── comment-engagement-booster/        ✅ fully complete (advanced in P81)
 ├── competitor-watch/                  ✅ fully complete
@@ -203,16 +204,16 @@ Phase 3 (Creator Distribution Flywheel) target: 50 prompts
    - 5 program-setup prompts (P43–P47 in canonical plan, but the orchestrator's actual numbering shifted)
    - 5 program-launch prompts (P88–P92)
 
-Current state on `main` (post-P82):
-   - Templates fully complete:        [ 9/20]   45%
+Current state on `main` (post-P84):
+   - Templates fully complete:        [10/20]   50%   ← halfway mark
    - Templates Slot-1 only:           [ 0/20]    0%
    - Templates starter-manifest only: [ 2/20]   10%
-   - Templates missing:               [ 9/20]   45%
+   - Templates missing:               [ 8/20]   40%
 
    - Program-setup prompts:           [ 0/ 5]    0%
    - Program-launch prompts:          [ 0/ 5]    0%
 
-   Total Phase-3 prompts shipped:    [18/50]   ~36% complete
+   Total Phase-3 prompts shipped:    [20/50]   ~40% complete
 ```
 
 ---

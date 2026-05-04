@@ -1,0 +1,44 @@
+{
+  "_copyright": "Copyright 2026 AgentMindCloud",
+  "_license": "Apache License, Version 2.0",
+  "_license_url": "http://www.apache.org/licenses/LICENSE-2.0",
+  "_built_for": "X, Grok & the ecosystem community",
+  "_comment_purpose": "Sample 2 — healthy growth case. All metrics in the healthy band; no paradox. Demonstrates the canonical 'good period' shape with rising impressions, healthy engagement rate above the niche baseline, positive follower delta, and steady cadence.",
+  "x_handle": "@habitstacker",
+  "time_range": "30d",
+  "compare_to": "previous_period",
+  "metric_focus": "all",
+  "data_source": "demo",
+  "current_period": {
+    "impressions": 96500,
+    "engagements": 5500,
+    "follower_delta_pct": 3.2,
+    "posts_per_week": 5
+  },
+  "previous_period": {
+    "impressions": 84000,
+    "engagements": 4200,
+    "follower_delta_pct": 2.4,
+    "posts_per_week": 4
+  },
+  "top_content": [
+    {
+      "archetype_label": "Personal-anecdote thread on evening-friction audits",
+      "format": "thread",
+      "impression_share_pct": 38,
+      "engagement_rate_pct": 6.8
+    },
+    {
+      "archetype_label": "Habit-stacking case study with concrete numbers",
+      "format": "single-post",
+      "impression_share_pct": 22,
+      "engagement_rate_pct": 7.4
+    },
+    {
+      "archetype_label": "Reply-thread on deep-work shutdown rituals",
+      "format": "reply",
+      "impression_share_pct": 14,
+      "engagement_rate_pct": 5.9
+    }
+  ]
+}

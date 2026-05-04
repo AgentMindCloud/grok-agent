@@ -48,7 +48,7 @@ Your watchlist, alpha reports, and simulation history never leave `$env:LOCALAPP
 .\launcher.ps1
 ```
 
-(The launcher ships in Slot 5 / P29.) Until then, the three options below also work.
+That's it. The launcher resolves Python 3.12+, installs pinned deps from `requirements.txt` on first run, ensures `$env:LOCALAPPDATA\grok-agent\x-smart-cashtag-alpha-engine\` exists with an initialised SQLite, then opens `http://localhost:8502` in your default browser. (Port 8502 leaves 8501 free for Tool #1 — both can run side by side.) For more control, see the three options below.
 
 ### Option A — `grok-agent install` (recommended)
 
@@ -65,7 +65,15 @@ cd templates\finance\x-smart-cashtag-alpha-engine
 .\launcher.ps1
 ```
 
-The launcher ships in Slot 5 / P29 and follows Tool #1's pattern: Python 3.12+ resolution, idempotent dependency install, AppData + SQLite init, then headless Streamlit on `http://localhost:8501`.
+The launcher does six things in order: shows the disclaimer banner; resolves Python 3.12+ (`python` then `py -3`); runs `python -m pip install --quiet -r requirements.txt` (skip with `-SkipDeps`); creates `$env:LOCALAPPDATA\grok-agent\x-smart-cashtag-alpha-engine\` if missing; calls `data.store.init_db()` to create the SQLite schema (idempotent — safe on every launch); then runs `streamlit run app.py` headless on port 8502 and opens the URL in your default browser (skip with `-NoBrowser`).
+
+Optional flags:
+
+```powershell
+.\launcher.ps1 -Port 8765 -SkipDeps -NoBrowser
+```
+
+Chrome only, per the manifest's `windows.chrome_only: true`.
 
 ### Option C — direct Streamlit (developers only)
 
@@ -143,15 +151,15 @@ Both must return zero `error`-level findings before this agent is allowed to ins
 
 ## Build slots (Recipe A)
 
-This is **Slot 1 of 6** — manifest + folder + README. The remaining slots populate this folder over P26–P30:
+Slots 1–5 are shipped on `main`; Slot 6 (smoke test + `grok install this` readiness) lands in P30:
 
 | Slot | Files | Status |
 |---|---|---|
-| 1 — Manifest + README | `grok-agent.yaml`, `README.md` | ✅ this prompt (P25) |
-| 2 — Streamlit app skeleton (6 tabs) | `app.py`, `requirements.txt` | ⏭️ P26 |
-| 3 — Grok prompts | `prompts/system.md`, `prompts/user_templates.md` | ⏭️ P27 |
-| 4 — Data layer + APIs | `data/__init__.py`, `data/store.py`, `data/api_clients.py` | ⏭️ P28 |
-| 5 — Launcher + Streamlit Cloud config | `launcher.ps1`, `.streamlit/config.toml` | ⏭️ P29 |
+| 1 — Manifest + README | `grok-agent.yaml`, `README.md` | ✅ P25 |
+| 2 — Streamlit app skeleton (6 tabs) | `app.py`, `requirements.txt` | ✅ P26 |
+| 3 — Grok prompts | `prompts/system.md`, `prompts/user_templates.md` | ✅ P27 |
+| 4 — Data layer + APIs | `data/__init__.py`, `data/store.py`, `data/api_clients.py` | ✅ P28 |
+| 5 — Launcher + Streamlit Cloud config | `launcher.ps1`, `.streamlit/config.toml` | ✅ this prompt (P29) |
 | 6 — Smoke test + `grok install this` readiness | `smoke_test.ps1` (11 checks) | ⏭️ P30 |
 
 ---

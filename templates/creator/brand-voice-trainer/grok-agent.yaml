@@ -1,0 +1,132 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — local-first brand voice trainer for X
+# creators. Reads a sample of the creator's own past posts (inline list,
+# file, or seeded date-range) and emits a structured voice profile +
+# training prompts the creator can paste into other Grok Agent OS
+# templates. 4 canonical Voice Profile metrics, generic-polish paradox
+# detection, sample-size refusal, and >= 3 cross-template bridges.
+# Drafts only — never auto-publishes a single thing.
+
+version: "2.15"
+kind: "creator-template"
+name: "brand-voice-trainer"
+description: "Local-first brand voice trainer for X creators — reads a sample of the creator's own past posts and emits a 6/7-section voice profile (tone consistency / structure consistency / vocabulary distinctiveness / voice cohesion), tone/structure/vocabulary signatures, 3-5 training prompts the creator can paste into other templates, generic-polish paradox detection, and >= 3 cross-template bridges. Refuses to train on another account's voice. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Brand Voice Trainer"
+  tagline: "Train your own voice — not a generic-polish replica of the niche."
+  categories: ["creator", "voice", "consistency"]
+  tags: ["creator-template", "cli-only", "drafts-only", "no-other-voices"]
+  created: "2026-05-04"
+  updated: "2026-05-04"
+
+install:
+  one_click: true
+  install_command: "grok-agent install brand-voice-trainer"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  appdata_folder: "grok-agent/brand-voice-trainer"
+  cache_folder: "grok-agent/brand-voice-trainer/cache"
+  log_folder: "grok-agent/brand-voice-trainer/logs"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.4
+  max_tokens: 3072
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+
+tools:
+  - name: "generate_voice_profile"
+    type: "local_function"
+    description: "Produce a 6-section structured voice-profile report (or 7-section when red-flag count > 3 OR sample size < 10) with 4 canonical Voice Profile metrics (Tone consistency / Structure consistency / Vocabulary distinctiveness / Voice cohesion), tone / structure / vocabulary signature subsections, 3-5 training prompts, generic-polish paradox detection, and >= 3 cross-template bridges. Trains only on the creator's own posts."
+    module: "brand_voice_trainer.run"
+    function: "generate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          x_handle:
+            type: "string"
+            description: "Creator's X handle (with or without @). The voice belongs to the creator — sample posts must be authored by this handle."
+          sample_posts:
+            type: "array"
+            items:
+              type: "string"
+            description: "Optional inline list of post texts authored by --x-handle. Each entry is a single post body (no surrounding URL or metadata)."
+          sample_file:
+            type: "string"
+            description: "Optional path to a newline-delimited file of post texts (lines starting with # are ignored)."
+          date_range:
+            type: "string"
+            description: "Optional ISO date range (YYYY-MM-DD/YYYY-MM-DD) used as a deterministic seed when no inline sample is provided."
+          voice_focus:
+            type: "string"
+            enum: ["tone", "structure", "vocabulary", "all"]
+            default: "all"
+            description: "Which of the 3 canonical signature dimensions to emphasise (the 4th metric, Voice cohesion, is always reported)."
+          output_format:
+            type: "string"
+            enum: ["analysis", "training_prompts", "both"]
+            default: "both"
+            description: "Whether the report includes the analysis + training prompts (default), analysis only, or training prompts only."
+        required: ["x_handle"]
+
+constitution:
+  rules:
+    - "Train only on the creator's own posts. The runner's sample-collection layer normalises every post to bare text, but the runner's contract is unambiguous: this template is for the creator's voice, not a copy of someone else's."
+    - "Drafts only. Training prompts emitted by the runner are text the creator pastes into other templates. The runner never auto-applies, never auto-publishes."
+    - "Surface the generic-polish paradox in BOTH the Voice Profile section AND the Red Flags section whenever Voice cohesion > 70 AND Vocabulary distinctiveness < 35 (the voice is internally consistent but indistinguishable from niche-default — polished but generic)."
+    - "Every monetization-related training prompt (e.g. paid-tier funnel voice, sponsorship-content voice) carries the Article V.1 'Not financial advice' banner verbatim."
+    - "Refuse to score a sample of fewer than 5 posts — emit guidance, not a fabricated profile. Below 10 posts, auto-trigger the optional Voice Audit section."
+    - "Every analysis links to >= 3 cross-template bridges so the creator can apply the trained voice elsewhere in Grok Agent OS without copy-paste re-implementation."
+  hard_refusals:
+    - "train on another creator's posts (the system prompt is unambiguous; the runner's contract is unambiguous; the manifest binds the unambiguous contract)"
+    - "auto-apply training prompts to any template without explicit user paste"
+    - "fabricate signature phrases the sample did not contain"
+    - "score a sample of fewer than 5 posts as if it were a stable voice profile"
+    - "scrape authenticated X content to build the sample"
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 90
+  scanner_severity_floor: "warn"
+  forbidden_actions:
+    - scrape_authenticated_x_content
+    - impersonate_user_identity
+    - bypass_safety_scanner
+    - exfiltrate_user_data
+  cost_limits:
+    usd_per_session_max: 0.30
+    usd_per_day_max: 1.00
+    tokens_per_session_max: 60000
+    api_calls_per_session_max: 80
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "any export of the voice profile to a path outside the agent AppData folder"
+    timeout_seconds: 60
+  disclaimers:
+    not_financial_advice: true
+    not_tax_advice: false
+    real_world_action_consent: false
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+      - "requests ^2.31"

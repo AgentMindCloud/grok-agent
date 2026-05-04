@@ -1,0 +1,128 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — local-first competitor monitoring for X
+# creators. Reads a creator's stated competitors and emits a 6/7-section
+# structured watch report with 4 canonical Watch Score metrics, paraphrased
+# competitor profile cards, content gaps, growth opportunities, and >= 3
+# cross-template bridges. Defaults to local-only — never scrapes
+# authenticated content, never exposes competitor follower PII.
+
+version: "2.15"
+kind: "creator-template"
+name: "competitor-watch"
+description: "Aggregate competitor monitoring for X creators — 4 canonical Watch Score metrics (Audience overlap / Content velocity / Growth signal / Monetization activity), 3-5 paraphrased competitor profile cards, 3-5 content gaps + 3-5 growth opportunities, cadence-fatigue paradox detection, and >= 3 cross-template bridges. Surfaces named competitors only when explicitly passed as input — never their followers, never their DMs, never their PII. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Competitor Watch"
+  tagline: "Watch the competitors you chose — not their audience, not their DMs."
+  categories: ["creator", "intelligence", "growth"]
+  tags: ["creator-template", "cli-only", "aggregate-only", "no-pii"]
+  created: "2026-05-04"
+  updated: "2026-05-04"
+
+install:
+  one_click: true
+  install_command: "grok-agent install competitor-watch"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  appdata_folder: "grok-agent/competitor-watch"
+  cache_folder: "grok-agent/competitor-watch/cache"
+  log_folder: "grok-agent/competitor-watch/logs"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.4
+  max_tokens: 3072
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+
+tools:
+  - name: "generate_competitor_watch"
+    type: "local_function"
+    description: "Produce a 6-section structured competitor-watch report (or 7-section when red-flag count > 3 OR competitor handle count < 2) with 4 canonical Watch Score metrics per competitor, 3-5 paraphrased profile cards, 3-5 content gaps, 3-5 growth opportunities, cadence-fatigue paradox detection, and >= 3 cross-template bridges. Names only the competitors the creator explicitly supplied — never their followers, never their DMs."
+    module: "competitor_watch.run"
+    function: "generate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          x_handle:
+            type: "string"
+            description: "Creator's X handle (with or without @). The 'self' for the watch."
+          competitor_handles:
+            type: "array"
+            items:
+              type: "string"
+            description: "List of 1-10 competitor X handles the creator explicitly wants to track. Required unless --competitor-file or --demo is passed."
+          competitor_file:
+            type: "string"
+            description: "Optional path to a newline-delimited file of competitor handles (lines starting with # ignored)."
+          time_range:
+            type: "string"
+            enum: ["7d", "30d", "90d"]
+            default: "30d"
+            description: "Window over which growth and content-velocity signals are aggregated. Default 30d."
+          focus:
+            type: "string"
+            enum: ["content", "growth", "monetization", "all"]
+            default: "all"
+            description: "Which of the 4 canonical Watch Score metrics to emphasise in the headline and recommendations."
+        required: ["x_handle"]
+
+constitution:
+  rules:
+    - "Reference competitors only by the handles the creator explicitly supplied. Never invent rival accounts. Never imply the creator should track an account they did not name."
+    - "Never expose any data about a competitor's followers, DMs, mutuals, mentions, or other PII. The watch is on the competitor's PUBLIC posting pattern only."
+    - "Surface the cadence-fatigue paradox in BOTH the competitor profile card AND the Red Flags section whenever Content velocity > 70 AND Growth signal < 30 (the competitor is burning out — protect the creator from copying that pattern)."
+    - "Every monetization-related recommendation carries the Article V.1 'Not financial advice' banner verbatim."
+    - "Refuse any recommendation that involves scraping authenticated competitor content, impersonating a competitor, mass automated engagement against them, or any pattern an X policy review would treat as harassment."
+    - "Every analysis links to >= 3 cross-template bridges so the creator can act on the findings without leaving Grok Agent OS."
+  hard_refusals:
+    - "scrape authenticated X content of any competitor"
+    - "impersonate a competitor's voice, branding, or handle"
+    - "recommend coordinated harassment, mass replies, or report-brigading against a competitor"
+    - "expose the followers, DMs, mentions, or other PII of any competitor"
+    - "fabricate metrics or invent a competitor handle the creator did not supply"
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 90
+  scanner_severity_floor: "warn"
+  forbidden_actions:
+    - scrape_authenticated_x_content
+    - impersonate_user_identity
+    - bypass_safety_scanner
+    - exfiltrate_user_data
+  cost_limits:
+    usd_per_session_max: 0.30
+    usd_per_day_max: 1.00
+    tokens_per_session_max: 60000
+    api_calls_per_session_max: 80
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "any export of the watch report to a path outside the agent AppData folder"
+    timeout_seconds: 60
+  disclaimers:
+    not_financial_advice: true
+    not_tax_advice: false
+    real_world_action_consent: false
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+      - "requests ^2.31"

@@ -1,0 +1,121 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — local-first follower quality analyzer for
+# X creators. Surfaces aggregate signal on engagement, authenticity, niche
+# alignment, and growth potential without ever exposing individual follower PII.
+
+version: "2.15"
+kind: "creator-template"
+name: "follower-quality-analyzer"
+description: "Aggregate follower-quality scoring for X creators — 4 canonical metrics, paraphrased top-follower archetypes, bot-engagement paradox detection, and ≥3 cross-template bridges. Aggregate-only privacy. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Follower Quality Analyzer"
+  tagline: "Know your real audience — aggregate signal, never individual PII."
+  categories: ["creator", "audience", "growth"]
+  tags: ["creator-template", "cli-only", "aggregate-only", "no-pii"]
+  created: "2026-05-04"
+  updated: "2026-05-04"
+
+install:
+  one_click: true
+  install_command: "grok-agent install follower-quality-analyzer"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  appdata_folder: "grok-agent/follower-quality-analyzer"
+  cache_folder: "grok-agent/follower-quality-analyzer/cache"
+  log_folder: "grok-agent/follower-quality-analyzer/logs"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.4
+  max_tokens: 3072
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+
+tools:
+  - name: "generate_follower_quality_analysis"
+    type: "local_function"
+    description: "Produce a 6-section structured follower-quality analysis (or 7-section when red-flag count > 3 OR sample size < 50) with 4 canonical aggregate metrics, paraphrased top-follower archetypes, bot-engagement paradox detection, and ≥3 cross-template bridges. Never exposes individual follower PII."
+    module: "follower_quality_analyzer.run"
+    function: "generate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          x_handle:
+            type: "string"
+            description: "Creator's X handle (with or without @). Aggregate analysis target."
+          follower_sample:
+            type: "array"
+            items:
+              type: "string"
+            description: "Optional inline sample of follower handles. If omitted, --follower-file or --date-range supplies the sample."
+          follower_file:
+            type: "string"
+            description: "Optional path to a newline-delimited file of follower handles."
+          date_range:
+            type: "string"
+            description: "Optional ISO date range (YYYY-MM-DD/YYYY-MM-DD) used as the sample-window seed when no explicit sample is provided."
+          focus:
+            type: "string"
+            enum: ["engagement", "authenticity", "growth_potential", "all"]
+            default: "all"
+            description: "Which of the 4 canonical metrics to emphasise in the headline and recommendations."
+        required: ["x_handle"]
+
+constitution:
+  rules:
+    - "Aggregate-only output. Never expose an individual follower's handle, display name, bio, or any other PII in the analysis body."
+    - "Surface the bot-engagement paradox in BOTH the Quality Scores table AND the Red Flags section whenever bot share > 15% AND aggregate engagement is above the niche median."
+    - "Top Followers cards describe paraphrased archetypes (e.g. 'Indie ML researcher, 3-year tenure, replies daily') — never named accounts."
+    - "Every monetization-tier recommendation carries the Article V.1 'Not financial advice' banner verbatim."
+    - "Every analysis links to ≥3 cross-template bridges so the creator can act on the findings without leaving Grok Agent OS."
+    - "Refuse to run scoring on a sample whose size is < 5 (insufficient signal — emit guidance, not a fabricated score)."
+  hard_refusals:
+    - "expose individual follower handles in any output section"
+    - "score followers as 'low value' or 'block-worthy' — that judgement belongs to the creator, not the agent"
+    - "scrape authenticated X content without the creator's consent"
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 90
+  scanner_severity_floor: "warn"
+  forbidden_actions:
+    - scrape_authenticated_x_content
+    - impersonate_user_identity
+    - bypass_safety_scanner
+    - exfiltrate_user_data
+  cost_limits:
+    usd_per_session_max: 0.30
+    usd_per_day_max: 1.00
+    tokens_per_session_max: 60000
+    api_calls_per_session_max: 80
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "any export of the analysis to a path outside the agent AppData folder"
+    timeout_seconds: 60
+  disclaimers:
+    not_financial_advice: true
+    not_tax_advice: false
+    real_world_action_consent: false
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+      - "requests ^2.31"

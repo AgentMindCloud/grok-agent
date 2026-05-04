@@ -1,0 +1,127 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — local-first niche-influencer discovery for
+# X creators. Surfaces 3-5 paraphrased influencer archetypes that match the
+# creator's niche keywords, with 4 canonical match scores, collaboration
+# angles, and cross-template bridges. Aggregate-only — output never names
+# a real account, so the creator stays in control of who they actually
+# reach out to.
+
+version: "2.15"
+kind: "creator-template"
+name: "niche-influencer-finder"
+description: "Aggregate niche-influencer discovery for X creators — 4 canonical match scores (Authority / Engagement / Audience fit / Collaboration potential), 3-5 paraphrased archetype cards across Micro / Mid / Macro tiers, 3-5 collaboration opportunities, and >= 3 cross-template bridges. Aggregate-only — never names a real account. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Niche Influencer Finder"
+  tagline: "Find the right collaborators in your niche — without naming names you haven't approved."
+  categories: ["creator", "discovery", "growth"]
+  tags: ["creator-template", "cli-only", "aggregate-only", "no-pii"]
+  created: "2026-05-04"
+  updated: "2026-05-04"
+
+install:
+  one_click: true
+  install_command: "grok-agent install niche-influencer-finder"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  appdata_folder: "grok-agent/niche-influencer-finder"
+  cache_folder: "grok-agent/niche-influencer-finder/cache"
+  log_folder: "grok-agent/niche-influencer-finder/logs"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.45
+  max_tokens: 3072
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+
+tools:
+  - name: "generate_niche_influencer_recommendations"
+    type: "local_function"
+    description: "Produce a 6-section structured niche-influencer discovery report (or 7-section when red-flag count > 3 OR niche keyword count < 2) with 4 canonical match scores per archetype, 3-5 paraphrased influencer cards across Micro / Mid / Macro tiers, 3-5 collaboration opportunities, and >= 3 cross-template bridges. Never names a real account."
+    module: "niche_influencer_finder.run"
+    function: "generate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          x_handle:
+            type: "string"
+            description: "Creator's X handle (with or without @). Aggregate analysis target."
+          niche_keywords:
+            type: "array"
+            items:
+              type: "string"
+            description: "List of 1-8 niche keywords / phrases the creator wants matched against influencer bios and post topics. Two or more keywords yields a stable analysis; a single keyword triggers the optional 7th section."
+          min_followers:
+            type: "integer"
+            default: 5000
+            description: "Lower bound on follower count for candidate accounts. Default 5000 (Micro tier floor)."
+          max_followers:
+            type: "integer"
+            default: 500000
+            description: "Upper bound on follower count for candidate accounts. Default 500000 (Macro tier ceiling for niche-creator collaborations)."
+          focus:
+            type: "string"
+            enum: ["engagement", "authority", "collaboration_potential", "all"]
+            default: "all"
+            description: "Which of the 4 canonical scores to emphasise in the headline and recommendations."
+        required: ["x_handle", "niche_keywords"]
+
+constitution:
+  rules:
+    - "Aggregate-only output. Top-Influencer cards describe paraphrased archetypes (e.g. 'Indie LLM-infra founder, 8k followers, weekly long-form posts') — never named accounts."
+    - "Never invent a follower count, engagement rate, or post date. If sample-derived signal is missing for a metric, mark it `n/a` and note what data would resolve it."
+    - "Surface inflated-engagement risk in BOTH the score row AND the Red Flags section whenever Engagement > 70 AND Authority < 50 (engagement-pod paradox — same shape as the bot-engagement paradox in follower-quality-analyzer)."
+    - "Every collaboration recommendation that touches paid placements, sponsorship money, or revenue share carries the Article V.1 'Not financial advice' banner verbatim."
+    - "Every analysis links to >= 3 cross-template bridges so the creator can act on the findings without leaving Grok Agent OS."
+    - "Refuse to recommend influencers whose tier sits outside the requested min_followers / max_followers band — return a guidance card instead of fabricating matches."
+  hard_refusals:
+    - "name a real X account in any output section"
+    - "fabricate engagement metrics or follower counts the input did not supply"
+    - "scrape authenticated X content without the creator's consent"
+    - "recommend influencers as a 'must follow' list — recommendations are collaboration angles, not endorsements"
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 90
+  scanner_severity_floor: "warn"
+  forbidden_actions:
+    - scrape_authenticated_x_content
+    - impersonate_user_identity
+    - bypass_safety_scanner
+    - exfiltrate_user_data
+  cost_limits:
+    usd_per_session_max: 0.30
+    usd_per_day_max: 1.00
+    tokens_per_session_max: 60000
+    api_calls_per_session_max: 80
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "any export of the analysis to a path outside the agent AppData folder"
+    timeout_seconds: 60
+  disclaimers:
+    not_financial_advice: true
+    not_tax_advice: false
+    real_world_action_consent: false
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+      - "requests ^2.31"

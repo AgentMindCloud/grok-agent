@@ -31,6 +31,7 @@
 | P9 | Phase 1 | Create core documentation | docs/index.md, docs/windows-guide.md | Project overview + detailed Windows 11 guide | ✅ done |
 | P10 | Phase 1 | Create xAI adoption pitch | docs/for-xai-adoption.md | Professional pitch document for xAI partnership | ✅ done |
 | P11 | Phase 1 | Create pyproject.toml + root metadata | pyproject.toml, CONTRIBUTING.md, SECURITY.md, CODE_OF_CONDUCT.md | Packaging + contributor docs complete | ✅ done |
+| P12 | Phase 1 | Create 8 starter template manifests | 8 grok-agent.yaml files in templates/ | All validate against v2.15; finance have disclaimers | ✅ done |
 
 <!--
 Add new rows above this line as prompts complete.

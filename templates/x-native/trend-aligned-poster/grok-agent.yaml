@@ -1,0 +1,80 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — X-native trend-aligned poster that always
+# requires user consent before each post.
+
+version: "2.15"
+kind: "x-native"
+name: "trend-aligned-poster"
+description: "X-native scheduler that proposes trend-aligned posts at user-chosen times; every post requires explicit consent before going live. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Trend-Aligned Poster"
+  tagline: "X-native posting, always with consent."
+  categories: ["x-native", "creator"]
+  tags: ["x-native", "scheduler", "real-time-x"]
+
+install:
+  one_click: true
+  install_command: "grok-agent install trend-aligned-poster"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+
+windows:
+  appdata_folder: "grok-agent/trend-aligned-poster"
+  min_powershell_version: "5.1"
+  requires_admin: false
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.5
+  max_tokens: 2048
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+
+real_time_x:
+  enabled: true
+  consent_required: true
+  triggers:
+    - schedule
+  schedule_cron: "0 8 * * *"
+  posts: true
+  reply_only: false
+  max_posts_per_day: 3
+
+constitution:
+  rules:
+    - "Never post without explicit user approval; every post shows full content + cost first."
+    - "Stay aligned with declared brand/voice; refuse anything that would violate X's policies."
+    - "Cap at 3 posts per day; the user can lower this but not raise it autonomously."
+    - "Cite the trend signal driving each suggestion."
+  consent_gates:
+    - publish_to_x
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 90
+  disclaimers:
+    real_world_action_consent: true
+  cost_limits:
+    usd_per_session_max: 0.30
+    api_calls_per_session_max: 100
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "publish_to_x"
+      - "any cost above $0.10"
+    timeout_seconds: 120
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+      - "requests ^2.31"

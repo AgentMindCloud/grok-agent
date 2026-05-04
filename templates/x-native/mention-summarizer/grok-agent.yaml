@@ -1,0 +1,64 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — read-only X mention digest, twice a day,
+# never posts.
+
+version: "2.15"
+kind: "x-native"
+name: "mention-summarizer"
+description: "Read-only X agent that summarizes the user's mentions twice a day with sentiment + priority tags. Never posts. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Mention Summarizer"
+  tagline: "Daily X mention digest, never posts."
+  categories: ["x-native", "engagement"]
+  tags: ["x-native", "read-only", "real-time-x"]
+
+install:
+  one_click: true
+  install_command: "grok-agent install mention-summarizer"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+
+windows:
+  appdata_folder: "grok-agent/mention-summarizer"
+  min_powershell_version: "5.1"
+  requires_admin: false
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.4
+  max_tokens: 2048
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+
+real_time_x:
+  enabled: true
+  consent_required: true
+  triggers:
+    - mention
+    - schedule
+  schedule_cron: "0 8,18 * * *"
+  posts: false
+  reply_only: true
+  max_posts_per_day: 0
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 60
+  cost_limits:
+    usd_per_session_max: 0.20
+    api_calls_per_session_max: 50
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+      - "requests ^2.31"

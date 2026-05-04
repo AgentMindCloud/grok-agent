@@ -50,6 +50,32 @@
 | P27 | Phase 2 | X Smart Cashtag Alpha Engine — Grok prompts | prompts/system.md, prompts/user_templates.md | Alpha-engine system prompt + 10 templates with Article IV/V enforcement and contradiction detection | ✅ done |
 | P28 | Phase 2 | X Smart Cashtag Alpha Engine — Data layer + API clients | data/store.py, data/api_clients.py | Alpha-specific SQLite schema + thin clients with full provenance and contradiction support | ✅ done |
 | P29 | Phase 2 | X Smart Cashtag Alpha Engine — Launcher + Cloud config | launcher.ps1, .streamlit/config.toml, README.md | One-click Windows launcher + Streamlit Cloud ready; Tool #2 complete | ✅ done |
+| P30 | Phase 2 | X Smart Cashtag Alpha Engine — Final smoke test + Tool #2 complete | smoke_test.ps1, README.md, HANDOFF_LOG.md | Tool #2 fully validated and ready for "grok install this"; next: Tool #4 (Vision Analyzer) | ✅ done |
+
+<!--
+Tool #2 — X Smart Cashtag Alpha Engine — OFFICIALLY COMPLETE on 2026-05-04
+6 prompts (P25–P30) executed via Recipe A, 6 deliverables shipped end-to-end:
+  - manifest + README (P25)        — v2.15 kind=alpha-engine, scanner-clean, V.1+V.2 disclaimers
+  - 6-tab Streamlit skeleton (P26) — Overview/Watchlist/Charts/Alpha Reports/Portfolio Sim/Trending
+  - Grok prompts (P27)             — 47-line system + 9 templates, Article III contradiction-flagging
+  - data layer + APIs (P28)        — SQLite (5 tables incl. contradictions JSON column) +
+                                     yfinance/coingecko/newsapi/x_search clients +
+                                     cross-tool read of Tool #1's transactions (proven)
+  - launcher + Cloud config (P29)  — port=8502 (leaves 8501 free for Tool #1; both run side-by-side)
+  - smoke test + readiness (P30)   — 15/15 checks PASS, "grok install this" green
+
+Phase 2 build order continues: x-money-vision-analyzer (Tool #4, P31–P36) is NEXT — its
+data/import_receipts.py writes parsed receipts into Tool #1's data/store.py schema (already
+shipped). x-creator-payout-optimizer (Tool #3, P37–P42) follows last so it can read from
+both Tool #1 (transactions) and Tool #4 (receipts) when it ships.
+
+Cross-tool integration map (verified end-to-end as of P30):
+  Tool #4 → Tool #1   (writes parsed receipts; ships in P31–P36)
+  Tool #2 → Tool #1   (reads transactions read-only; PROVEN in P28+P30 smoke tests)
+  Tool #3 → Tool #1+#4 (reads both; ships in P37–P42)
+
+Add new rows above this line as prompts complete.
+-->
 
 <!--
 Tool #1 — X Money Companion Dashboard — OFFICIALLY COMPLETE on 2026-05-04

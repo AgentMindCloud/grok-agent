@@ -149,9 +149,41 @@ Both must return zero `error`-level findings before this agent is allowed to ins
 
 ---
 
+## Smoke test & `grok install this` readiness
+
+Before this engine goes near a real cashtag stream, every commit must pass the offline smoke test:
+
+```powershell
+.\smoke_test.ps1
+```
+
+The script runs 15 checks — file presence, Python interpreter, schema validation, Constitution scanner, Apache 2.0 headers, Article V.1+V.2 disclaimer presence, **Article III contradiction-flagging language presence in `system.md` + `user_templates.md`** (the alpha engine's defining capability), manifest-tool importability across `data.store` + `data.api_clients`, SQLite `track_cashtag` + watchlist round-trip, `simulate_portfolio` computation + persist, `generate_alpha_report` orchestration + persist, API offline-safety (`search_x_posts` stub shape), **cross-tool read via `fetch_companion_dashboard_holdings`** (Tool #1 SQLite, optional but verified gracefully when present), `launcher.ps1` parse, and `.streamlit/config.toml` shape with `port=8502` verified — and prints **`Tool #2 - X Smart Cashtag Alpha Engine: PASS`** when every check lands green. Exit code is `0` on PASS, `1` on FAIL. Add `-Json` for machine-readable output suitable for CI.
+
+```powershell
+.\smoke_test.ps1 -Json | Out-File smoke.json
+```
+
+### `grok install this` (X-native shorthand)
+
+Once the smoke test is green, this engine is ready for the X-native installation primitive. In a tweet or DM that mentions `@grok`, you can write:
+
+```
+grok install this
+```
+
+…with the engine's manifest URL or template name attached. The Grok Agent OS orchestra resolves that to the equivalent local CLI flow:
+
+```powershell
+grok-agent install x-smart-cashtag-alpha-engine
+```
+
+…which runs the same Pydantic deep validator + Constitution scanner before writing any files. Both routes refuse to install if the smoke test would fail.
+
+---
+
 ## Build slots (Recipe A)
 
-Slots 1–5 are shipped on `main`; Slot 6 (smoke test + `grok install this` readiness) lands in P30:
+All 6 slots are shipped on `main`; Tool #2 is **COMPLETE**:
 
 | Slot | Files | Status |
 |---|---|---|
@@ -159,8 +191,8 @@ Slots 1–5 are shipped on `main`; Slot 6 (smoke test + `grok install this` read
 | 2 — Streamlit app skeleton (6 tabs) | `app.py`, `requirements.txt` | ✅ P26 |
 | 3 — Grok prompts | `prompts/system.md`, `prompts/user_templates.md` | ✅ P27 |
 | 4 — Data layer + APIs | `data/__init__.py`, `data/store.py`, `data/api_clients.py` | ✅ P28 |
-| 5 — Launcher + Streamlit Cloud config | `launcher.ps1`, `.streamlit/config.toml` | ✅ this prompt (P29) |
-| 6 — Smoke test + `grok install this` readiness | `smoke_test.ps1` (11 checks) | ⏭️ P30 |
+| 5 — Launcher + Streamlit Cloud config | `launcher.ps1`, `.streamlit/config.toml` | ✅ P29 |
+| 6 — Smoke test + `grok install this` readiness | `smoke_test.ps1` (15 checks); README Smoke-test section | ✅ this prompt (P30) |
 
 ---
 

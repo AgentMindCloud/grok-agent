@@ -24,6 +24,7 @@
 | P2 | Phase 1 | Create canonical directory structure | .github/, cli/, docs/, safety/, spec/, templates/ (all subfolders + .gitkeep) | Exact match to PROJECT_DNA.md file tree; .gitkeep added for Git tracking | ✅ done |
 | P3 | Phase 1 | Write permanent CLAUDE.md | CLAUDE.md (full replacement) | Complete ground-truth file with vision, 126-prompt plan, file tree, and all rules | ✅ done |
 | P4 | Phase 1 | Create v2.15 unified manifest schema | spec/v2.15/grok-agent.yaml | Full schema with public_api, windows, multi_agent, constitution, backwards compat | ✅ done |
+| P5 | Phase 1 | Create PowerShell CLI | cli/grok-agent.ps1 | Full CLI with install/new/validate/list/run + grok install this + schema validation | ✅ done |
 
 <!--
 Add new rows above this line as prompts complete.

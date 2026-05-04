@@ -110,6 +110,7 @@
 | P91 | Phase 3 | DM Triager manifest + system prompt | grok-agent.yaml, prompts/system.md | Matches P83/P85/P87/P89 v2.15 shape; new phrasing + bridges | ✅ done |
 | P92 | Phase 3 | DM Triager runner + README + examples | run.py, README.md, examples/ (3 pairs) | Matches P91 exactly; new phrasing + spam guard + bridges | ✅ done |
 | P93 | Phase 3 | Trend-Aligned Poster manifest + system prompt | grok-agent.yaml, prompts/system.md | Matches P83/P85/P87/P89/P91 v2.15 shape; new phrasing + bridges | ✅ done |
+| P94 | Phase 3 | Monetization Optimizer manifest + system prompt | templates/creator/monetization-optimizer/grok-agent.yaml, prompts/system.md | Matches P83 v2.15 shape exactly; new phrasing + strong disclaimers | ✅ done |
 
 <!--
 ====================================================================

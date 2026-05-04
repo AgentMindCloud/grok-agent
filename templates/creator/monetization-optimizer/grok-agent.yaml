@@ -1,0 +1,147 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built for X, Grok & the ecosystem community — local-first monetization
+# optimizer for X creators. Reads a creator's X performance + revenue
+# signals (or seeded demo signals when no ledger is supplied) and emits a
+# 7/8-section structured monetization plan with 4 canonical Monetization
+# Plan Score metrics, single-channel-dependence paradox detection,
+# prioritized monetization recommendations across the 5-channel mix
+# (paid-tier / creator-fund / sponsorships / digital-products / affiliate),
+# sponsorship fit analysis, tax/expense reserve notes, and >= 3
+# cross-template bridges. Drafts only — never auto-publishes a single
+# thing. Never gives financial advice. Never gives tax advice.
+
+version: "2.15"
+kind: "creator-template"
+name: "monetization-optimizer"
+description: "Local-first monetization optimizer for X creators — reads a creator's X performance + revenue signals (or seeded demo signals) and emits a 7/8-section structured monetization plan with 4 canonical Monetization Plan Score metrics (Earnings forecast confidence / Revenue diversification / Sponsorship fit alignment / Tax-and-expense readiness), single-channel-dependence paradox detection, prioritized recommendations across the 5-channel mix (paid-tier / creator-fund / sponsorships / digital-products / affiliate), sponsorship fit analysis, tax/expense reserve notes with strong jurisdiction caveats, and >= 3 cross-template bridges. Drafts only — never auto-publishes; never fabricates dollar amounts; never gives financial or tax advice. Built for X, Grok & the ecosystem community."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Monetization Optimizer"
+  tagline: "Diversify the stack before the channel disappears — concentration risk eats creators alive."
+  categories: ["creator", "monetization", "revenue"]
+  tags: ["creator-template", "cli-only", "drafts-only", "not-financial-advice", "not-tax-advice"]
+  created: "2026-05-04"
+  updated: "2026-05-04"
+
+install:
+  one_click: true
+  install_command: "grok-agent install monetization-optimizer"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  appdata_folder: "grok-agent/monetization-optimizer"
+  cache_folder: "grok-agent/monetization-optimizer/cache"
+  log_folder: "grok-agent/monetization-optimizer/logs"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.4
+  max_tokens: 3072
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+
+tools:
+  - name: "generate_monetization_plan"
+    type: "local_function"
+    description: "Produce a 7-section structured monetization plan (or 8-section when red-flag count > 3 OR projection_horizon='365d' OR data_source='demo') with 4-row Monetization Plan Score table (Earnings forecast confidence / Revenue diversification / Sponsorship fit alignment / Tax-and-expense readiness), 30d/90d/365d earnings forecast bands (no fabricated dollar amounts), prioritized recommendations across the 5-channel mix, sponsorship fit analysis, tax/expense reserve notes with jurisdiction caveats, single-channel-dependence paradox detection, and >= 3 cross-template bridges. Drafts only — never auto-publishes; never gives financial or tax advice."
+    module: "monetization_optimizer.run"
+    function: "generate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          x_handle:
+            type: "string"
+            description: "Creator's X handle (with or without @). The voice anchor for sponsorship-archetype paraphrasing."
+          revenue_file:
+            type: "string"
+            description: "Optional path to a creator-supplied revenue ledger (JSON or CSV — typically exported from x-money-companion-dashboard's SQLite). Schema: rows of {channel, period, gross, currency} where channel is one of 'paid_tier' | 'creator_fund' | 'sponsorships' | 'digital_products' | 'affiliate' | 'other'. When omitted, the runner emits seeded demo signals explicitly labelled as such."
+          analytics_file:
+            type: "string"
+            description: "Optional path to a creator-supplied analytics export (the same JSON the analytics-summarizer template consumes). Drives the Period Performance signals that feed the earnings forecast."
+          projection_horizon:
+            type: "string"
+            enum: ["30d", "90d", "365d"]
+            default: "90d"
+            description: "Forecast horizon. 30d is short-cycle (sponsorship pipeline visibility); 90d is the default planning window; 365d auto-triggers the optional Plan Audit because the cone of uncertainty is large."
+          channel_focus:
+            type: "string"
+            enum: ["paid_tier", "creator_fund", "sponsorships", "digital_products", "affiliate", "all"]
+            default: "all"
+            description: "Which monetization channel to emphasise in the headline + recommendation ranking. 'all' applies no nudge."
+          jurisdiction:
+            type: "string"
+            description: "Optional ISO country code (e.g. 'VN', 'US', 'SG') used to caveat the tax/expense notes. The notes always carry the Article V.2 'Not tax advice' banner regardless. Default: jurisdiction-agnostic guidance."
+          concentration_threshold:
+            type: "number"
+            minimum: 0.4
+            maximum: 0.9
+            default: 0.6
+            description: "Top-channel share above which the single-channel-dependence paradox becomes eligible to trigger. Default 0.6 = 60%. Lower = more conservative concentration warnings."
+        required: ["x_handle"]
+
+constitution:
+  rules:
+    - "Drafts only. The runner emits a plan the creator reads, edits, and acts on themselves; the runner never auto-publishes, never auto-applies, never auto-files, never auto-pitches a sponsor."
+    - "No fabricated dollar amounts. The runner refuses to print absolute revenue projections it did not derive from the supplied --revenue-file. Demo seeds are reported as range bands explicitly labelled `[demo signal — re-run with --revenue-file for real-ledger forecast]`. Forecasts are always reported as wide bands, never point estimates."
+    - "Surface the single-channel-dependence paradox in BOTH the Plan Performance section AND the Red Flags section whenever the top channel's revenue share exceeds the configured concentration_threshold (default 60%) AND the Earnings forecast confidence is medium or higher (>= 60). Concentration without runway is the killer of creator-economy sustainability — the creator is confidently sailing toward a cliff."
+    - "Every Earnings Forecast section carries the Article V.1 'Not financial advice' banner verbatim. Every Tax & Expense Notes section carries the Article V.2 'Not tax advice' banner verbatim with the Vietnam-resident-creator addendum, since many of the Grok Agent OS users are exactly that demographic."
+    - "Every monetization recommendation that derives a tactic from the analytics or revenue file ALSO carries the Article V.1 disclaimer at the recommendation level — not just at the Earnings Forecast section level."
+    - "Sponsorship-fit recommendations name paraphrased sponsor archetypes (e.g. `dev-tools company with technical-founder audience`) — never specific brand names the creator did not supply themselves. The runner refuses to suggest specific sponsors without explicit creator-supplied input."
+    - "When `revenue_file` is omitted, the runner emits seeded demo signals with an explicit `[demo signal — re-run with --revenue-file for real-ledger forecast]` label so the creator never confuses the demo plan for their actual monetization roadmap."
+    - "Every analysis links to >= 3 cross-template bridges so the creator can wire the plan into the next loop without leaving Grok Agent OS — bridges always include `analytics-summarizer` (the upstream measurement layer) and `content-idea-generator` (the downstream content layer) when those templates are relevant to the recommendation."
+  hard_refusals:
+    - "auto-publish, auto-apply, auto-pitch, or auto-file any element of the monetization plan to any platform without an explicit consent gate"
+    - "fabricate absolute dollar revenue projections the creator's input does not support — projections are always reported as wide bands, never point estimates"
+    - "give jurisdiction-specific tax filing advice (the Tax & Expense Notes are documentation guidance only — the creator must consult a licensed tax professional)"
+    - "recommend specific sponsor brand names the creator did not supply (paraphrased archetypes only)"
+    - "recommend monetization tactics that would erode audience trust (clickbait paid-tier hooks, misleading affiliate disclosure, over-saturated sponsorship cadence)"
+    - "scrape authenticated X content or the creator's payment-processor account to seed the ledger"
+    - "expose another creator's revenue ledger or paste a non-creator's data as if it belonged to --x-handle"
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 90
+  scanner_severity_floor: "warn"
+  forbidden_actions:
+    - scrape_authenticated_x_content
+    - scrape_payment_processor_account
+    - impersonate_user_identity
+    - bypass_safety_scanner
+    - exfiltrate_user_data
+    - emit_specific_sponsor_brand_names
+  cost_limits:
+    usd_per_session_max: 0.30
+    usd_per_day_max: 1.00
+    tokens_per_session_max: 60000
+    api_calls_per_session_max: 80
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "any export of the monetization plan to a path outside the agent AppData folder"
+      - "any future-version auto-pitch (currently disabled in v1)"
+      - "any future-version auto-publish (currently disabled in v1)"
+    timeout_seconds: 60
+  disclaimers:
+    not_financial_advice: true
+    not_tax_advice: true
+    real_world_action_consent: false
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+      - "requests ^2.31"

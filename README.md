@@ -22,7 +22,7 @@
 </p>
 
 <p align="center">
-  <b>The canonical open standard + Windows-first distribution layer that makes Grok the easiest, most powerful, and most magical platform for deploying agents on X.</b>
+  <b>The Windows-first distribution layer that makes Grok the easiest, most powerful, and most magical platform for deploying agents on X.</b>
 </p>
 
 ---

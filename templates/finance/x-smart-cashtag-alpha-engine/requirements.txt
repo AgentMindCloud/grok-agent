@@ -1,0 +1,18 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Pinned to match templates/finance/x-smart-cashtag-alpha-engine/grok-agent.yaml
+# dependencies.python.packages. Real API calls are commented out in this Slot 2
+# skeleton — the live yfinance / coingecko / newsapi / x_search clients ship in
+# Slot 4 / P28 at data/api_clients.py.
+
+streamlit>=1.33,<2.0
+pandas>=2.2,<3.0
+plotly>=5.22,<6.0
+pydantic>=2.7,<3.0
+pyyaml>=6.0,<7.0
+
+# External-data dependencies (declared up front; called from Slot 4 / P28)
+yfinance>=0.2,<0.3
+requests>=2.31,<3.0

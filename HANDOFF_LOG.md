@@ -33,8 +33,12 @@
 | P11 | Phase 1 | Create pyproject.toml + root metadata | pyproject.toml, CONTRIBUTING.md, SECURITY.md, CODE_OF_CONDUCT.md | Packaging + contributor docs complete | ✅ done |
 | P12 | Phase 1 | Create 8 starter template manifests | 8 grok-agent.yaml files in templates/ | All validate against v2.15; finance have disclaimers | ✅ done |
 | P13 | Phase 1 | Write premium root README | README.md | Full public-facing README with Super Agents vision + roadmap | ✅ done |
+| P14 | Phase 1 | End-to-end smoke test + Phase 1 close | docs/smoke-test-results.md + docs/x-launch-thread.md | All commands green; 8 templates validated; ready for Phase 2 | ✅ done |
 
 <!--
+Phase 1 — CLOSED. 14 executed prompts produced all 18 deliverables in the original CLAUDE.md §6 plan
+(P11 merged P11+P14; P14 merged P17+P18). Ready for Phase 2 (X Money tools, P19–P42).
+
 Add new rows above this line as prompts complete.
 Format reference: | P{N} | Phase {N} | {short title} | {files touched} | {key decisions in 1 line} | ✅ done |
 -->

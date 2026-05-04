@@ -45,6 +45,7 @@
 | P22 | Phase 2 | X Money Companion Dashboard — Data layer + API clients | data/store.py, data/api_clients.py | SQLite schema + thin clients for yfinance/newsapi/x_search with provenance | ✅ done |
 | P23 | Phase 2 | X Money Companion Dashboard — Launcher + Cloud config | launcher.ps1, .streamlit/config.toml, README.md | One-click Windows launcher + Streamlit Cloud ready; Tool #1 complete | ✅ done |
 | P24 | Phase 2 | X Money Companion Dashboard — Final smoke test + Tool #1 complete | smoke_test.ps1, README.md, HANDOFF_LOG.md | Tool #1 fully validated and ready for "grok install this" | ✅ done |
+| P25 | Phase 2 | X Smart Cashtag Alpha Engine — Manifest + folder + README | templates/finance/x-smart-cashtag-alpha-engine/grok-agent.yaml, README.md | v2.15 manifest with full Constitution disclaimers; Tool #2 started after Tool #1 complete | ✅ done |
 
 <!--
 Tool #1 — X Money Companion Dashboard — OFFICIALLY COMPLETE on 2026-05-04

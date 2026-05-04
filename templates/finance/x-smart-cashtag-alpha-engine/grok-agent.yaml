@@ -2,9 +2,20 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — the X Smart Cashtag Alpha Engine surfaces
-# Grok-powered narrative momentum and contradiction-flagged alpha across the
-# X cashtag stream.
+# Built to help xAI and Grok win — the X Smart Cashtag Alpha Engine is the
+# narrative-momentum + alpha-signal tool of the Grok Agent OS suite. It
+# composes on top of Tool #1's local SQLite for portfolio context and can
+# feed holdings back into the X Money Companion Dashboard for cross-tool
+# reconciliation (planned via export_holdings_to_companion_dashboard).
+#
+# Constitution mapping (v1.0):
+#   Article I    : Apache-2.0 + xAI ally line + Windows-first + v2.15 schema
+#   Article IV   : provenance.enabled + contradiction_detection — alpha-critical
+#   Article V.1  : "Not financial advice" — required for kind=alpha-engine
+#   Article V.2  : "Not tax advice"        — declared defensively; surfaced on every page
+#   Article VI.1 : safety.cost_limits declared (per-session + per-day caps)
+#   Article VI.2 : safety.human_in_the_loop enabled with consent confirmations
+#   Article VII  : pii_handling=local-only, all data under $env:LOCALAPPDATA
 
 version: "2.15"
 kind: "alpha-engine"
@@ -17,7 +28,8 @@ metadata:
   display_name: "X Smart Cashtag Alpha Engine"
   tagline: "Cashtag-aware market intelligence for X."
   categories: ["finance", "x-money", "alpha"]
-  tags: ["streamlit", "sqlite", "real-time-x", "windows-first"]
+  tags: ["streamlit", "sqlite", "real-time-x", "windows-first", "cashtag", "alpha-engine"]
+  language: "en"
 
 install:
   one_click: true
@@ -25,10 +37,13 @@ install:
   prerequisites:
     - "Windows 11"
     - "Python 3.12+"
+    - "PowerShell 5.1+"
 
 windows:
   launcher: "launcher.ps1"
   appdata_folder: "grok-agent/x-smart-cashtag-alpha-engine"
+  log_folder: "grok-agent/x-smart-cashtag-alpha-engine/logs"
+  cache_folder: "grok-agent/x-smart-cashtag-alpha-engine/cache"
   min_powershell_version: "5.1"
   requires_admin: false
   chrome_only: true
@@ -38,6 +53,7 @@ grok:
   temperature: 0.4
   max_tokens: 4096
   system_prompt_file: "prompts/system.md"
+  user_template_file: "prompts/user_templates.md"
   tool_calling: true
   vision: false
 
@@ -52,10 +68,83 @@ public_apis:
     auth: "none"
     rate_limit: 30
     privacy: "no_pii_sent"
+  - name: "newsapi"
+    base_url: "https://newsapi.org/v2"
+    auth_env_var: "NEWSAPI_KEY"
+    rate_limit: 100
+    privacy: "no_pii_sent"
   - name: "x_search"
     base_url: "via_grok_4.3"
     auth_env_var: "XAI_API_KEY"
     privacy: "no_pii_sent"
+
+tools:
+  - name: "track_cashtag"
+    type: "local_function"
+    description: "Add or remove a cashtag from the user's watchlist with optional alert threshold."
+    module: "x_alpha.watchlist"
+    function: "track"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          cashtag: { type: "string" }
+          threshold_pct: { type: "number" }
+          action: { type: "string", enum: ["add", "remove"] }
+        required: ["cashtag", "action"]
+
+  - name: "fetch_cashtag_quote"
+    type: "local_function"
+    description: "Pull a live quote for a cashtag — yfinance for equities/FX, coingecko for crypto."
+    module: "x_alpha.market"
+    function: "fetch_quote"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          cashtag: { type: "string" }
+        required: ["cashtag"]
+
+  - name: "fetch_cashtag_news"
+    type: "local_function"
+    description: "Pull NewsAPI headlines for a cashtag's underlying ticker / company / project."
+    module: "x_alpha.news"
+    function: "fetch_for_cashtag"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          cashtag: { type: "string" }
+          limit: { type: "integer" }
+          from_date: { type: "string" }
+        required: ["cashtag"]
+
+  - name: "generate_alpha_report"
+    type: "local_function"
+    description: "Generate a Grok-powered alpha report for a cashtag — narrative momentum, contradictions across sources, confidence rating. Never autonomously published; the report stays local until the user explicitly chooses to share."
+    module: "x_alpha.report"
+    function: "build"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          cashtag: { type: "string" }
+          window_hours: { type: "integer" }
+        required: ["cashtag"]
+
+  - name: "simulate_portfolio"
+    type: "local_function"
+    description: "Run a what-if portfolio simulation across the user's watchlist with hypothetical positions and a date window."
+    module: "x_alpha.portfolio"
+    function: "simulate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          positions: { type: "array", items: { type: "object" } }
+          start_date: { type: "string" }
+          end_date: { type: "string" }
+        required: ["positions", "start_date", "end_date"]
 
 real_time_x:
   enabled: true
@@ -77,10 +166,14 @@ provenance:
 
 constitution:
   rules:
-    - "Always show 'Not financial advice' banner on every page."
-    - "Cite the source for every signal — never aggregate without provenance."
-    - "Flag contradictions across sources; never silently resolve them."
-    - "All cashtag history stays local under $env:LOCALAPPDATA\\grok-agent."
+    - "Always show 'Not financial advice' banner on every page (Article V.1)."
+    - "Always show 'Not tax advice' banner alongside any export or accounting-related output (Article V.2)."
+    - "Cite the source for every signal — never aggregate without provenance (Article IV)."
+    - "Flag contradictions across sources; never silently resolve them (Article IV)."
+    - "All cashtag history stays local under $env:LOCALAPPDATA\\grok-agent (Article VII)."
+    - "Never post an alpha report or signal to X without the publish_alpha_to_x consent gate; posts is currently false in this manifest (Article II)."
+  consent_gates:
+    - sync_to_cloud
 
 safety:
   pii_handling: "local-only"
@@ -88,12 +181,16 @@ safety:
   scanner_severity_floor: "warn"
   disclaimers:
     not_financial_advice: true
+    not_tax_advice: true
   cost_limits:
     usd_per_session_max: 1.00
     usd_per_day_max: 5.00
     api_calls_per_session_max: 500
   human_in_the_loop:
     enabled: true
+    confirm_before:
+      - "sync_to_cloud"
+      - "any cost above $0.20"
     timeout_seconds: 60
 
 dependencies:
@@ -106,3 +203,6 @@ dependencies:
       - "yfinance ^0.2"
       - "requests ^2.31"
       - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+  system:
+    - "powershell >= 5.1"

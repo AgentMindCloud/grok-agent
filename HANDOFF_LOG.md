@@ -67,6 +67,7 @@
 | P44 | Phase 3 | Content Idea Generator runner + README + examples | templates/creator/content-idea-generator/run.py, README.md, examples/ | Self-contained demo runner with niche-aware ideas; Windows-native CLI; 2 example outputs | ✅ done |
 | P45 | Phase 3 | Reply Drafter manifest + system prompt | templates/creator/reply-drafter/grok-agent.yaml, prompts/system.md | v2.15 manifest + high-quality offline system prompt matching P44 quality bar | ✅ done |
 | P46 | Phase 3 | Reply Drafter runner + README + examples | templates/creator/reply-drafter/run.py, README.md, examples/ | Deterministic offline runner matching P44 quality bar + P45 system prompt | ✅ done |
+| P47 | Phase 3 | Mention Summarizer manifest + system prompt | templates/creator/mention-summarizer/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching P45 quality bar | ✅ done |
 
 <!--
 ====================================================================

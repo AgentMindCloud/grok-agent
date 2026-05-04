@@ -1,0 +1,107 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — on-demand X mention summarizer for creators.
+
+version: "2.15"
+kind: "creator-template"
+name: "mention-summarizer"
+description: "Paste or pipe in your recent X mentions; get back a structured summary with 3-5 themes, sentiment mix, top-3 priority mentions, and concrete action items. Local-first, never posts. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Mention Summarizer"
+  tagline: "Triage your mentions in 30 seconds."
+  categories: ["creator", "engagement", "summarization"]
+  tags: ["creator-template", "cli-only", "phase-3"]
+  language: "en"
+  created: "2026-05-04"
+  updated: "2026-05-04"
+  repository: "https://github.com/AgentMindCloud/grok-agent"
+
+install:
+  one_click: true
+  install_command: "grok-agent install mention-summarizer"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  launcher: "launcher.ps1"
+  appdata_folder: "grok-agent/mention-summarizer"
+  cache_folder: "grok-agent/mention-summarizer/cache"
+  log_folder: "grok-agent/mention-summarizer/logs"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.4
+  max_tokens: 2048
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+  streaming: true
+
+tools:
+  - name: "generate_mention_summary"
+    type: "local_function"
+    description: "Summarize a batch of X mentions with themes, sentiment, priority flags, action items, and optional reply suggestions."
+    module: "mention_summarizer.run"
+    function: "generate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          x_handle:
+            type: "string"
+            description: "Your X handle, e.g. @JanSol0s — the mention recipient."
+          mentions:
+            type: "array"
+            description: "List of mention objects ({author, text, timestamp, ...}). Mutually exclusive with date_range."
+            items:
+              type: "object"
+          date_range:
+            type: "string"
+            description: "ISO range like '2026-05-01..2026-05-04' — used when mentions are loaded from local cache. Mutually exclusive with mentions."
+          max_mentions:
+            type: "integer"
+            minimum: 1
+            maximum: 200
+            description: "Cap on how many mentions to ingest per run (default 50)."
+          niche:
+            type: "string"
+            description: "Optional creator-niche hint used for action-item ideation."
+          suggest_replies:
+            type: "boolean"
+            description: "If true, surface 1-3 high-leverage reply suggestions; default false."
+        required: ["x_handle"]
+
+constitution:
+  rules:
+    - "Never fabricate mention text, author handles, sentiment labels, or engagement numbers. Every claim must be grounded in the input batch."
+    - "Always emit a structured summary block: themes (3-5), sentiment mix, top-3 priority mentions, action items (3-5), optional suggested replies — same shape every run."
+    - "Surface sentiment as one of four qualitative labels only: positive, neutral, negative, mixed. Never invent percentages."
+    - "Priority scoring is qualitative — high / medium-high / medium / low — and every priority tag must include a one-line reason grounded in the source mention."
+    - "Refuse to summarize batches that are purely spam, scam, or coordinated harassment; surface a one-line refusal with the reason and recommend muting/blocking instead."
+    - "Tag finance-adjacent mentions (cashtags, tokens, earnings, P&L, tax) with a 'Context only -- not financial advice.' line on the affected priority card."
+    - "Privacy: don't repeat full sensitive @-mention text verbatim in summaries. Quote selectively, redact when in doubt, never expose private info."
+    - "If the same person appears in multiple mentions, dedupe in the priority list; surface the cumulative signal in the reason."
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 60
+  cost_limits:
+    usd_per_session_max: 0.20
+    api_calls_per_session_max: 80
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+      - "requests ^2.31"

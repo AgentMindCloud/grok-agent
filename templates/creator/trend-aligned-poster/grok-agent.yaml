@@ -1,0 +1,106 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — trend-aligned post drafter for X creators.
+
+version: "2.15"
+kind: "creator-template"
+name: "trend-aligned-poster"
+description: "Drafts 3 high-engagement X posts that naturally incorporate current trends in your niche. CLI-only — review locally and post manually. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Trend-Aligned Poster"
+  tagline: "3 trend-aware X drafts, every morning."
+  categories: ["creator", "content", "trends"]
+  tags: ["creator-template", "cli-only", "phase-3"]
+  language: "en"
+  created: "2026-05-04"
+  updated: "2026-05-04"
+  repository: "https://github.com/AgentMindCloud/grok-agent"
+
+install:
+  one_click: true
+  install_command: "grok-agent install trend-aligned-poster"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  launcher: "launcher.ps1"
+  appdata_folder: "grok-agent/trend-aligned-poster"
+  cache_folder: "grok-agent/trend-aligned-poster/cache"
+  log_folder: "grok-agent/trend-aligned-poster/logs"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.7
+  max_tokens: 1536
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+  streaming: true
+
+tools:
+  - name: "generate_trend_aligned_posts"
+    type: "local_function"
+    description: "Generate 3 trend-aligned X post drafts for a given niche, with engagement prediction and optional Grok Imagine visual prompts."
+    module: "trend_aligned_poster.run"
+    function: "generate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          x_handle:
+            type: "string"
+            description: "Your X handle, e.g. @JanSol0s — anchors voice matching."
+          niche_keywords:
+            type: "string"
+            description: "Niche or topic area in plain language (e.g. 'AI agents on X', 'creator economy')."
+          trend_source:
+            type: "string"
+            enum: ["x_trending", "news", "both", "evergreen"]
+            description: "Trend pool to draw from. Defaults to 'x_trending'. 'evergreen' skips trend grounding."
+          num_posts:
+            type: "integer"
+            minimum: 1
+            maximum: 5
+            description: "How many drafts to return (default 3)."
+          tone:
+            type: "string"
+            enum: ["punchy", "thoughtful", "data-led", "warm"]
+            description: "Voice flavor (default punchy)."
+        required: ["x_handle", "niche_keywords"]
+
+constitution:
+  rules:
+    - "Never fabricate trends, hashtags, news headlines, or stats. If a signal isn't grounded in the trend pool the runner provides, mark it 'evergreen' rather than inventing one."
+    - "Always produce N distinct angles -- no two drafts share the same hook or framing. Cycle through the 8-angle palette: contrarian, data-led, story-led, list-led, prediction, comparison, how-to, hot-take."
+    - "Every draft cites its trend source inline (e.g. 'tied to: trend slug') so the user can verify before posting. If 'evergreen', say so explicitly."
+    - "Surface trends as inspiration, never as endorsement of any cashtag, person, brand, or product. Phrase as 'people are talking about X' rather than 'you should buy X'."
+    - "Refuse engagement-bait that violates X policy: false outrage, hate, harassment, doxxing, ratio-bait, copypasta. If asked, refuse in one line."
+    - "Tag finance-adjacent drafts (cashtags, tokens, earnings, P&L, tax) with a 'Context only -- not financial advice.' line on the affected draft."
+    - "Strict char limits enforced before emission: short <=140 chars, medium <=220 chars, value-add <=280 chars (or thread-of-N starter)."
+    - "Engagement scoring is qualitative only -- low / medium / medium-high / high. Never produce percentages or fake confidence numbers."
+    - "Suggest a richer format (image / thread / poll) only when it would genuinely outperform a single tweet, never as decoration."
+    - "Local-first: all niche history, prior posts, and trend snapshots live under $env:LOCALAPPDATA. Never propose syncing or uploading them."
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 30
+  cost_limits:
+    usd_per_session_max: 0.20
+    api_calls_per_session_max: 60
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+      - "requests ^2.31"

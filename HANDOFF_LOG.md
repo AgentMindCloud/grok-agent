@@ -21,6 +21,7 @@
 | # | Phase | Title | Files touched | Decisions / blockers | Status |
 |---|---|---|---|---|---|
 | P1 | Phase 1 | Bootstrap repo | CLAUDE.md, LICENSE, .gitignore | Apache 2.0 confirmed; instruction file is ground truth; full 126-prompt plan loaded | ✅ done |
+| P2 | Phase 1 | Create canonical directory structure | .github/, cli/, docs/, safety/, spec/, templates/ (all subfolders + .gitkeep) | Exact match to PROJECT_DNA.md file tree; .gitkeep added for Git tracking | ✅ done |
 
 <!--
 Add new rows above this line as prompts complete.

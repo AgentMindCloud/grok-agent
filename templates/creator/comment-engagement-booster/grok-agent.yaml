@@ -1,0 +1,126 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — local-first comment engagement booster
+# for X creators. Reads a post (URL or pasted text) and emits a 6/7-section
+# structured set of 3-5 comment variants tuned to a chosen boost angle
+# (question / controversy / story / poll / all) with 4 canonical Comment
+# Plan Score metrics, hook-without-substance paradox detection, anti-spam
+# refusal, and >= 3 cross-template bridges. Drafts only — never
+# auto-publishes a single comment.
+
+version: "2.15"
+kind: "creator-template"
+name: "comment-engagement-booster"
+description: "Local-first comment engagement booster for X creators — turns a single post into 3-5 comment variants tuned to a chosen boost angle (question / controversy / story / poll / all) with 4 canonical Comment Plan Score metrics (Hook strength / Conversation potential / Voice fidelity / Distinct angle), hook-without-substance paradox detection, anti-spam refusal, and >= 3 cross-template bridges. Drafts only — never auto-publishes. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Comment Engagement Booster"
+  tagline: "Comment with substance — never with mass-identical engagement-bait."
+  categories: ["creator", "engagement", "comments"]
+  tags: ["creator-template", "cli-only", "drafts-only", "anti-spam"]
+  created: "2026-05-04"
+  updated: "2026-05-04"
+
+install:
+  one_click: true
+  install_command: "grok-agent install comment-engagement-booster"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  appdata_folder: "grok-agent/comment-engagement-booster"
+  cache_folder: "grok-agent/comment-engagement-booster/cache"
+  log_folder: "grok-agent/comment-engagement-booster/logs"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.5
+  max_tokens: 3072
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+
+tools:
+  - name: "generate_comment_variants"
+    type: "local_function"
+    description: "Produce a 6-section structured comment-engagement plan (or 7-section when red-flag count > 3 OR boost_focus='all') with 3-5 comment variants spanning the chosen angle, 4-row Comment Plan Score table per variant, hook-without-substance paradox detection, anti-spam refusal, and >= 3 cross-template bridges. Drafts only — never auto-publishes."
+    module: "comment_engagement_booster.run"
+    function: "generate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          x_handle:
+            type: "string"
+            description: "Creator's X handle (with or without @). The voice anchor for comment generation."
+          post_url_or_text:
+            type: "string"
+            description: "Either an x.com / twitter.com URL pointing to the post being commented on, OR the literal post text. Required unless --demo is passed."
+          boost_focus:
+            type: "string"
+            enum: ["question", "controversy", "story", "poll", "all"]
+            default: "question"
+            description: "Which angle the comment variants prioritise. 'all' lets the runner pick the most leverage-y angle for the supplied post."
+          num_comments:
+            type: "integer"
+            minimum: 3
+            maximum: 5
+            default: 3
+            description: "Number of variant comments to emit (default 3, max 5)."
+        required: ["x_handle", "post_url_or_text"]
+
+constitution:
+  rules:
+    - "Drafts only. The runner emits comment text the creator reviews and ships. Constitution Article II's `publish_to_x` consent gate covers every variant."
+    - "No mass-identical comments. The runner refuses to emit two variants that share more than 60% token overlap — that pattern is comment spam, not engagement, and X's policy review treats it as abuse."
+    - "Surface the hook-without-substance paradox in BOTH the Comment Plan section AND the Red Flags section whenever Hook strength > 70 AND Conversation potential < 30 (the opener is gripping but the comment does not invite or sustain a reply chain — bait without follow-through)."
+    - "No misrepresentation. When commenting on another creator's post, never put words in their mouth, never claim authorship of their idea, never frame the comment as if the creator agreed with a position they didn't take."
+    - "Every monetization-related comment recommendation (e.g. paid-tier funnel comment, sponsored-content comment) carries the Article V.1 'Not financial advice' banner verbatim."
+    - "Every analysis links to >= 3 cross-template bridges so the creator can wire the comment into the next loop without leaving Grok Agent OS."
+  hard_refusals:
+    - "auto-publish a comment to X (or any platform) without an explicit consent gate"
+    - "emit two variants that share more than 60% token overlap (comment spam)"
+    - "recommend coordinated mass-engagement, report-brigading, or pile-on patterns against any post or creator"
+    - "misrepresent the post being commented on (no fabricated quotes, no putting words in someone's mouth)"
+    - "scrape authenticated X content to seed comment variants"
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 90
+  scanner_severity_floor: "warn"
+  forbidden_actions:
+    - scrape_authenticated_x_content
+    - impersonate_user_identity
+    - bypass_safety_scanner
+    - exfiltrate_user_data
+  cost_limits:
+    usd_per_session_max: 0.30
+    usd_per_day_max: 1.00
+    tokens_per_session_max: 60000
+    api_calls_per_session_max: 80
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "any export of the comment variants to a path outside the agent AppData folder"
+      - "any future-version auto-publish (currently disabled in v1)"
+    timeout_seconds: 60
+  disclaimers:
+    not_financial_advice: true
+    not_tax_advice: false
+    real_world_action_consent: false
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+      - "requests ^2.31"

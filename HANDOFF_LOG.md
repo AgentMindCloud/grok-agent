@@ -76,6 +76,7 @@
 | P76 | Phase 3 | Brand Voice Trainer runner + README + examples | templates/creator/brand-voice-trainer/run.py, README.md, examples/ | Deterministic offline runner matching P44–P74 quality bar + P75 system prompt schema + 4 canonical Voice Profile metrics with weighted formula + generic-polish paradox surfacing + sample-size double gate + cross-template bridges | ✅ done |
 | P77 | Phase 3 | AB Test Suggester manifest + system prompt | templates/creator/ab-test-suggester/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + A/B variant generation + cross-template bridges | ✅ done |
 | P78 | Phase 3 | AB Test Suggester runner + README + examples | templates/creator/ab-test-suggester/run.py, README.md, examples/ | Deterministic offline runner matching P44–P76 quality bar + P77 system prompt schema + 4 canonical Test Plan Score metrics with weighted formula + single-axis isolation contract + multi-variable paradox surfacing + statistical heuristics + cross-template bridges | ✅ done |
+| P79 | Phase 3 | Comment Engagement Booster manifest + system prompt | templates/creator/comment-engagement-booster/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + comment variant generation + cross-template bridges | ✅ done |
 
 <!--
 ====================================================================

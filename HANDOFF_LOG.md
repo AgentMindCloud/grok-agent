@@ -84,6 +84,7 @@
 | P61 | Phase 3 | DM Triager manifest + system prompt | templates/creator/dm-triager/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + priority scoring + policy refusal + cross-template bridges | ✅ done |
 | P62 | Phase 3 | DM Triager runner + README + examples | templates/creator/dm-triager/run.py, README.md, examples/ | Deterministic offline runner matching P44–P60 quality bar + P61 system prompt schema + privacy-paranoid paraphrase/redaction + ≤400-char DM replies + cross-template bridges | ✅ done |
 | P63 | Phase 3 | Quote Tweet Suggestor manifest + system prompt | templates/creator/quote-tweet-suggestor/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching prior quality bar + 8-angle distinctness + cross-template bridges | ✅ done |
+| P64 | Phase 3 | Quote Tweet Suggestor runner + README + examples | templates/creator/quote-tweet-suggestor/run.py, README.md, examples/ | Deterministic offline runner matching P44–P62 quality bar + P63 system prompt schema + 5-angle palette + Original-Post-Read paraphrase rule + cross-template bridges | ✅ done |
 
 <!--
 ====================================================================

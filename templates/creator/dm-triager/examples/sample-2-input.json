@@ -1,0 +1,109 @@
+{
+  "_copyright": "Copyright 2026 AgentMindCloud",
+  "_license": "Apache License, Version 2.0",
+  "_license_url": "http://www.apache.org/licenses/LICENSE-2.0",
+  "_built_for": "X, Grok & the ecosystem community",
+  "_comment_purpose": "Sample 2 — healthy inbox case. Opportunity ratio +29.6% (below the +30% paradox threshold) and Authentic sender share +91.5% (well above the 60% floor) → no paradox. No coordinated spam burst detected. 6 priority DMs in the queue (Urgent/Opportunity dominant). Triage Health score 78/100. Confidence: low (demo data). Demonstrates the 7-section non-audit output shape.",
+  "x_handle": "@habitstacker",
+  "window_days": 30,
+  "compare_to": "previous_period",
+  "data_source": "demo",
+  "current_period": {
+    "total_dms": 71,
+    "urgent_count": 7,
+    "opportunity_count": 21,
+    "routine_count": 36,
+    "spam_count": 7,
+    "authentic_sender_count": 65
+  },
+  "previous_period": {
+    "total_dms": 58,
+    "urgent_count": 6,
+    "opportunity_count": 16,
+    "routine_count": 30,
+    "spam_count": 6,
+    "authentic_sender_count": 53
+  },
+  "dms": [
+    {
+      "id": "d001",
+      "bucket": "Opportunity",
+      "priority_score": 92,
+      "intent": "Brand sponsorship inquiry from an established habit-coaching company with concrete scope",
+      "sender_followers": 12300,
+      "tokens": ["sponsorship", "brand", "habit", "scope", "established"]
+    },
+    {
+      "id": "d002",
+      "bucket": "Opportunity",
+      "priority_score": 86,
+      "intent": "Podcast producer asking to feature the creator in a deep-work episode",
+      "sender_followers": 7600,
+      "tokens": ["podcast", "feature", "deep", "work", "episode"]
+    },
+    {
+      "id": "d003",
+      "bucket": "Urgent",
+      "priority_score": 78,
+      "intent": "Existing collaborator asking for feedback on a draft before tomorrow's call",
+      "sender_followers": 3400,
+      "tokens": ["collaborator", "feedback", "draft", "call", "tomorrow"]
+    },
+    {
+      "id": "d004",
+      "bucket": "Opportunity",
+      "priority_score": 70,
+      "intent": "Newsletter writer requesting permission to cite the habit-stacking thread",
+      "sender_followers": 5200,
+      "tokens": ["newsletter", "permission", "cite", "habit", "stacking"]
+    },
+    {
+      "id": "d005",
+      "bucket": "Opportunity",
+      "priority_score": 62,
+      "intent": "Adjacent-niche creator proposing a thread swap on shared productivity topic",
+      "sender_followers": 2100,
+      "tokens": ["adjacent", "thread", "swap", "productivity", "creator"]
+    },
+    {
+      "id": "d006",
+      "bucket": "Urgent",
+      "priority_score": 53,
+      "intent": "Returning client asking to book the next monthly coaching slot",
+      "sender_followers": 880,
+      "tokens": ["client", "coaching", "monthly", "slot", "returning"]
+    },
+    {
+      "id": "d007",
+      "bucket": "Routine",
+      "priority_score": 44,
+      "intent": "Friendly fan question about which books inspired the evening-friction system",
+      "sender_followers": 410,
+      "tokens": ["fan", "books", "evening", "inspired", "system"]
+    },
+    {
+      "id": "d008",
+      "bucket": "Routine",
+      "priority_score": 35,
+      "intent": "Peer check-in with no time-bound ask",
+      "sender_followers": 290,
+      "tokens": ["peer", "check", "casual"]
+    },
+    {
+      "id": "d009",
+      "bucket": "Spam",
+      "priority_score": 22,
+      "intent": "Low-context promotional pitch — not part of any coordinated burst",
+      "sender_followers": 70,
+      "tokens": ["pitch", "promo", "independent"]
+    },
+    {
+      "id": "d010",
+      "bucket": "Routine",
+      "priority_score": 18,
+      "intent": "Brief one-line affirmation from a longtime follower",
+      "sender_followers": 130,
+      "tokens": ["affirmation", "follower", "brief"]
+    }
+  ]
+}

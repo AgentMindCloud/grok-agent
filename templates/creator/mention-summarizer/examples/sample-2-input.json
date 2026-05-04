@@ -1,0 +1,108 @@
+{
+  "_copyright": "Copyright 2026 AgentMindCloud",
+  "_license": "Apache License, Version 2.0",
+  "_license_url": "http://www.apache.org/licenses/LICENSE-2.0",
+  "_built_for": "X, Grok & the ecosystem community",
+  "_comment_purpose": "Sample 2 — healthy community growth case. Mention volume delta +22.4% (below the +30% paradox threshold) and Net sentiment score +52.1 (well above the 10 baseline) → no paradox. No troll cluster detected. 7 genuine priority mentions in the queue. Confidence: low (demo data). Demonstrates the 7-section non-audit output shape.",
+  "x_handle": "@habitstacker",
+  "window_days": 30,
+  "compare_to": "previous_period",
+  "data_source": "demo",
+  "current_period": {
+    "total_mentions": 71,
+    "positive_count": 45,
+    "neutral_count": 18,
+    "negative_count": 8,
+    "authentic_mention_count": 67
+  },
+  "previous_period": {
+    "total_mentions": 58,
+    "positive_count": 32,
+    "neutral_count": 16,
+    "negative_count": 10,
+    "authentic_mention_count": 53,
+    "priority_mention_count": 5
+  },
+  "mentions": [
+    {
+      "id": "m001",
+      "sentiment": "positive",
+      "priority_score": 94,
+      "intent": "Creator in adjacent habit-science niche sharing their own evening-friction audit results inspired by the thread",
+      "author_followers": 6800,
+      "tokens": ["habit", "evening", "friction", "audit", "inspired"]
+    },
+    {
+      "id": "m002",
+      "sentiment": "positive",
+      "priority_score": 87,
+      "intent": "Detailed question about the shutdown-ritual framework and whether it applies to async-first teams",
+      "author_followers": 3900,
+      "tokens": ["shutdown", "ritual", "async", "teams", "framework"]
+    },
+    {
+      "id": "m003",
+      "sentiment": "positive",
+      "priority_score": 81,
+      "intent": "Follow-up sharing a concrete data point that adds a counter-example to the habit-stacking case study",
+      "author_followers": 2700,
+      "tokens": ["data", "counter", "habit", "stacking", "case"]
+    },
+    {
+      "id": "m004",
+      "sentiment": "neutral",
+      "priority_score": 74,
+      "intent": "Podcast producer asking to feature the shutdown-ritual thread in a deep-work episode",
+      "author_followers": 4100,
+      "tokens": ["podcast", "feature", "deep", "work", "episode"]
+    },
+    {
+      "id": "m005",
+      "sentiment": "positive",
+      "priority_score": 67,
+      "intent": "Newsletter writer citing the habit-stacking numbers post as a reference for an upcoming issue",
+      "author_followers": 5200,
+      "tokens": ["newsletter", "citing", "habit", "numbers", "reference"]
+    },
+    {
+      "id": "m006",
+      "sentiment": "positive",
+      "priority_score": 60,
+      "intent": "Productivity coach asking for permission to adapt the evening-friction audit into a client worksheet",
+      "author_followers": 1800,
+      "tokens": ["productivity", "coach", "adapt", "worksheet", "permission"]
+    },
+    {
+      "id": "m007",
+      "sentiment": "positive",
+      "priority_score": 52,
+      "intent": "Question about the recommended minimum commitment period before the habit-stacking effect is measurable",
+      "author_followers": 730,
+      "tokens": ["minimum", "commitment", "measurable", "habit", "period"]
+    },
+    {
+      "id": "m008",
+      "sentiment": "neutral",
+      "priority_score": 44,
+      "intent": "Offhand repost note adding the creator's handle to an existing thread without a direct question",
+      "author_followers": 290,
+      "tokens": ["repost", "thread", "note"]
+    },
+    {
+      "id": "m009",
+      "sentiment": "negative",
+      "priority_score": 38,
+      "intent": "Mild pushback on the claim that shutdown rituals apply equally to deep-work and shallow-work contexts",
+      "author_followers": 410,
+      "tokens": ["pushback", "shallow", "work", "claim", "rituals"]
+    },
+    {
+      "id": "m010",
+      "sentiment": "positive",
+      "priority_score": 28,
+      "intent": "Brief supportive reply with an emoji and a one-word affirmation",
+      "author_followers": 120,
+      "tokens": ["supportive", "emoji", "affirmation"]
+    }
+  ]
+}

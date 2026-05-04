@@ -1,0 +1,188 @@
+{
+  "_copyright": "Copyright 2026 AgentMindCloud",
+  "_license": "Apache License, Version 2.0",
+  "_license_url": "http://www.apache.org/licenses/LICENSE-2.0",
+  "_built_for": "X, Grok & the ecosystem community",
+  "_comment_purpose": "Sample 1 — sentiment-spike paradox + troll-cluster case. Mention volume delta +44.8% (above the +30% threshold) and Net sentiment score -28.6 (below the 10 baseline) → paradox fires in BOTH the Mention Health section AND the Red Flags section. A 6-member troll cluster is detected via >60% pairwise Jaccard token overlap → excluded from priority queue and consolidated as a Red Flag. 8 genuine priority mentions appear in the queue.",
+  "x_handle": "@JanSol0s",
+  "window_days": 30,
+  "compare_to": "previous_period",
+  "data_source": "demo",
+  "current_period": {
+    "total_mentions": 84,
+    "positive_count": 14,
+    "neutral_count": 32,
+    "negative_count": 38,
+    "authentic_mention_count": 71
+  },
+  "previous_period": {
+    "total_mentions": 58,
+    "positive_count": 22,
+    "neutral_count": 20,
+    "negative_count": 16,
+    "authentic_mention_count": 51,
+    "priority_mention_count": 9
+  },
+  "mentions": [
+    {
+      "id": "m001",
+      "sentiment": "positive",
+      "priority_score": 98,
+      "intent": "Thoughtful question about multi-agent orchestration scaling beyond 10 concurrent agents",
+      "author_followers": 4200,
+      "tokens": ["multi", "agent", "orchestration", "scaling", "question"]
+    },
+    {
+      "id": "m002",
+      "sentiment": "neutral",
+      "priority_score": 91,
+      "intent": "Request for a comparison between two competing orchestration frameworks from the top thread",
+      "author_followers": 3100,
+      "tokens": ["comparison", "frameworks", "orchestration", "request"]
+    },
+    {
+      "id": "m003",
+      "sentiment": "positive",
+      "priority_score": 85,
+      "intent": "Detailed follow-up on agent-eval failure modes with a proposed alternative validation approach",
+      "author_followers": 2800,
+      "tokens": ["agent", "eval", "failure", "validation", "approach"]
+    },
+    {
+      "id": "m004",
+      "sentiment": "neutral",
+      "priority_score": 79,
+      "intent": "Developer asking for clarification on the offline runner design and Windows path handling",
+      "author_followers": 1900,
+      "tokens": ["offline", "runner", "windows", "paths", "clarification"]
+    },
+    {
+      "id": "m005",
+      "sentiment": "positive",
+      "priority_score": 74,
+      "intent": "Niche peer sharing a related finding that validates the central claim in the period's top post",
+      "author_followers": 5600,
+      "tokens": ["finding", "validates", "claim", "peer", "niche"]
+    },
+    {
+      "id": "m006",
+      "sentiment": "negative",
+      "priority_score": 68,
+      "intent": "Critical but substantive pushback on the benchmark drift claim — cites a counter-example",
+      "author_followers": 2200,
+      "tokens": ["benchmark", "drift", "counter", "pushback", "claim"]
+    },
+    {
+      "id": "m007",
+      "sentiment": "positive",
+      "priority_score": 63,
+      "intent": "Adjacent-niche creator asking about adapting the agent-eval approach to a content-workflow context",
+      "author_followers": 1500,
+      "tokens": ["adapting", "workflow", "context", "creator", "approach"]
+    },
+    {
+      "id": "m008",
+      "sentiment": "neutral",
+      "priority_score": 57,
+      "intent": "Question about Windows-first deployment versus cross-platform tradeoffs for the CLI runner",
+      "author_followers": 870,
+      "tokens": ["windows", "deployment", "cross", "platform", "tradeoffs"]
+    },
+    {
+      "id": "t001",
+      "sentiment": "negative",
+      "priority_score": 88,
+      "intent": "Coordinated negative mention matching cluster pattern",
+      "author_followers": 12,
+      "tokens": ["content", "garbage", "stop", "posting", "terrible", "account", "your"]
+    },
+    {
+      "id": "t002",
+      "sentiment": "negative",
+      "priority_score": 82,
+      "intent": "Coordinated negative mention matching cluster pattern",
+      "author_followers": 8,
+      "tokens": ["content", "garbage", "stop", "posting", "terrible", "account", "this"]
+    },
+    {
+      "id": "t003",
+      "sentiment": "negative",
+      "priority_score": 75,
+      "intent": "Coordinated negative mention matching cluster pattern",
+      "author_followers": 5,
+      "tokens": ["content", "garbage", "stop", "posting", "terrible", "account", "just"]
+    },
+    {
+      "id": "t004",
+      "sentiment": "negative",
+      "priority_score": 69,
+      "intent": "Coordinated negative mention matching cluster pattern",
+      "author_followers": 3,
+      "tokens": ["content", "garbage", "stop", "posting", "terrible", "account", "awful"]
+    },
+    {
+      "id": "t005",
+      "sentiment": "negative",
+      "priority_score": 61,
+      "intent": "Coordinated negative mention matching cluster pattern",
+      "author_followers": 7,
+      "tokens": ["content", "garbage", "stop", "posting", "terrible", "account", "please"]
+    },
+    {
+      "id": "t006",
+      "sentiment": "negative",
+      "priority_score": 54,
+      "intent": "Coordinated negative mention matching cluster pattern",
+      "author_followers": 4,
+      "tokens": ["content", "garbage", "stop", "posting", "terrible", "account", "bad"]
+    },
+    {
+      "id": "m009",
+      "sentiment": "positive",
+      "priority_score": 45,
+      "intent": "Brief supportive comment on the thread style",
+      "author_followers": 320,
+      "tokens": ["thread", "style", "support", "nice"]
+    },
+    {
+      "id": "m010",
+      "sentiment": "neutral",
+      "priority_score": 38,
+      "intent": "Repost note with no question or engagement hook",
+      "author_followers": 210,
+      "tokens": ["repost", "share", "note"]
+    },
+    {
+      "id": "m011",
+      "sentiment": "positive",
+      "priority_score": 30,
+      "intent": "Generic appreciation with no specific question",
+      "author_followers": 150,
+      "tokens": ["appreciate", "great", "work"]
+    },
+    {
+      "id": "m012",
+      "sentiment": "neutral",
+      "priority_score": 24,
+      "intent": "Offhand mention in a multi-person tag chain",
+      "author_followers": 90,
+      "tokens": ["tag", "mention", "chain"]
+    },
+    {
+      "id": "m013",
+      "sentiment": "negative",
+      "priority_score": 18,
+      "intent": "Low-signal complaint with no actionable content",
+      "author_followers": 45,
+      "tokens": ["complaint", "unhappy", "dislike"]
+    },
+    {
+      "id": "m014",
+      "sentiment": "positive",
+      "priority_score": 10,
+      "intent": "Emoji-only positive reaction with no text",
+      "author_followers": 80,
+      "tokens": ["emoji", "reaction"]
+    }
+  ]
+}

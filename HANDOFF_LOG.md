@@ -72,6 +72,7 @@
 | P49 | Phase 3 | Trend-Aligned Poster manifest + system prompt | templates/creator/trend-aligned-poster/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching P45/P47 quality bar | ✅ done |
 | P50 | Phase 3 | Trend-Aligned Poster runner + README + examples | templates/creator/trend-aligned-poster/run.py, README.md, examples/ | Deterministic offline runner matching P44/P46/P48 quality bar + P49 system prompt schema | ✅ done |
 | P51 | Phase 3 | Daily Briefing Agent manifest + system prompt | templates/creator/daily-briefing-agent/grok-agent.yaml, prompts/system.md | v2.15 manifest + structured offline system prompt matching P45/P47/P49 quality bar | ✅ done |
+| P52 | Phase 3 | Daily Briefing Agent runner + README + examples | templates/creator/daily-briefing-agent/run.py, README.md, examples/ | Deterministic offline runner matching P44/P46/P48/P50 quality bar + P51 system prompt schema | ✅ done |
 
 <!--
 ====================================================================

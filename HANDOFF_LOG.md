@@ -38,6 +38,7 @@
 | P16 | Phase 1 | Add Streamlit defaults | .streamlit/config.toml | Cloud-ready defaults for all future Streamlit tools | ✅ done |
 | P17 | Phase 1 | End-to-end smoke test (Codespaces) | docs/smoke-test-results.md (Run #2) + cli/grok-agent.ps1 (3 bug fixes) | Real pwsh invocations exposed + fixed: AppData null crash, blank Format-Table render, $input under CmdletBinding | ✅ done |
 | P18 | Phase 1 | First X launch thread + Phase 1 close | docs/x-launch-thread.md | Phase 1 officially closed — 18 prompts, 100% foundation delivered | ✅ done |
+| MERGE | Phase 1 | Merged claude/grok-agent-os-blueprint-Fpsr8 into main | All P1-P18 files now on main | Phase 1 officially on main branch | ✅ done |
 
 <!--
 Phase 1 — OFFICIALLY CLOSED on 2026-05-04 with the public-launch artifacts in place.

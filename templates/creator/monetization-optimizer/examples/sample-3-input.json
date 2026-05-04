@@ -1,0 +1,33 @@
+{
+  "_copyright": "Copyright 2026 AgentMindCloud",
+  "_license": "Apache License, Version 2.0",
+  "_license_url": "http://www.apache.org/licenses/LICENSE-2.0",
+  "_built_for": "X, Grok & the ecosystem community",
+  "_comment_purpose": "Sample 3 — 365d-horizon thin-data audit case. Only 30 days of history, only 2 active channels, no reserve, no analytics file attached. Forecast confidence is below the 60-floor so the paradox does NOT fire even though concentration is severe — instead the runner emits 'Concentration without forecast confidence' and auto-triggers the Plan Audit due to the 365d horizon.",
+  "x_handle": "@JanSol0s",
+  "projection_horizon": "365d",
+  "channel_focus": "all",
+  "jurisdiction": "VN",
+  "data_source": "demo",
+  "currency": "USD",
+  "channels": [
+    {"channel": "sponsorships", "gross_90d": 5400},
+    {"channel": "paid_tier", "gross_90d": 2100},
+    {"channel": "creator_fund", "gross_90d": 0},
+    {"channel": "digital_products", "gross_90d": 0},
+    {"channel": "affiliate", "gross_90d": 0}
+  ],
+  "history_depth_days": 30,
+  "analytics_file_present": false,
+  "sponsorship_signals": {
+    "recent_sponsor_niche": "dev-tools",
+    "creator_niche": "agent-eval",
+    "audience_substantive_overlap_pct": 65,
+    "audience_size_match_only_pct": 90
+  },
+  "tax_expense_signals": {
+    "expense_tracking_active": false,
+    "reserve_pct_set_aside": 0,
+    "documentation_quality": "low"
+  }
+}

@@ -19,16 +19,16 @@ This document is the single source of truth for **what is actually on disk** in 
 | Counter | Value |
 |---|---|
 | Templates planned | **20** |
-| Templates fully complete (Slot 1 + Slot 2) | **8** |
-| Templates with Slot 1 only (manifest + system prompt) | **1** |
+| Templates fully complete (Slot 1 + Slot 2) | **9** |
+| Templates with Slot 1 only (manifest + system prompt) | **0** |
 | Templates with P12 starter manifest only (no system prompt, no runner) | **2** |
 | Templates entirely missing (not started) | **9** |
 | Total subfolders under `templates/creator/` | **11** |
 | `templates/creator/` directories that exist but are empty / stub-only | **0** |
 
-Phase-3 completion against the 20-template target: **40% fully complete · 5% Slot 1 only · 10% starter-manifest only · 45% missing.**
+Phase-3 completion against the 20-template target: **45% fully complete · 0% Slot 1 only · 10% starter-manifest only · 45% missing.**
 
-> Updated 2026-05-04 (post-P81): `comment-engagement-booster` advanced from "Slot 1 only" to "fully complete". Suite count moved from 7/20 → 8/20.
+> Updated 2026-05-04 (post-P82): `hashtag-strategy-advisor` advanced from "Slot 1 only" to "fully complete". Suite count moved from 8/20 → 9/20. Zero templates remain in the "Slot 1 only" bucket — every template that has a system prompt now has its full Slot 2 deliverables.
 
 ---
 
@@ -53,15 +53,15 @@ The canonical Recipe-B build order from `docs/PARAMETERIZED_RECIPES.md` (easiest
 | 13 | `content-calendar-builder` | ✗ | ✗ | ✗ | ✗ | ✗ | **missing** |
 | 14 | `ab-test-suggester` | ✓ | ✓ | ✓ | ✓ | ✓ (2) | **fully complete** |
 | 15 | `comment-engagement-booster` | ✓ | ✓ | ✓ | ✓ | ✓ (2) | **fully complete** |
-| 16 | `hashtag-strategy-advisor` | ✓ | ✓ | ✗ | ✗ | ✗ | **Slot 1 only** |
+| 16 | `hashtag-strategy-advisor` | ✓ | ✓ | ✓ | ✓ | ✓ (2) | **fully complete** |
 | 17 | `growth-experiment-runner` | ✗ | ✗ | ✗ | ✗ | ✗ | **missing** |
 | 18 | `competitor-watch` | ✓ | ✓ | ✓ | ✓ | ✓ (2) | **fully complete** |
 | 19 | `content-recycler` | ✓ | ✓ | ✓ | ✓ | ✓ (2) | **fully complete** |
 | 20 | `brand-voice-trainer` | ✓ | ✓ | ✓ | ✓ | ✓ (2) | **fully complete** |
 
-### Fully complete (8 templates)
+### Fully complete (9 templates)
 
-These 8 templates have all 5 deliverables on disk: `grok-agent.yaml` + `prompts/system.md` + `run.py` + `README.md` + `examples/` (2 example outputs each):
+These 9 templates have all 5 deliverables on disk: `grok-agent.yaml` + `prompts/system.md` + `run.py` + `README.md` + `examples/` (2 example outputs each):
 
 1. `follower-quality-analyzer`
 2. `niche-influencer-finder`
@@ -71,12 +71,11 @@ These 8 templates have all 5 deliverables on disk: `grok-agent.yaml` + `prompts/
 6. `content-recycler`
 7. `brand-voice-trainer`
 8. `comment-engagement-booster` *(advanced from Slot 1 only in P81)*
+9. `hashtag-strategy-advisor` *(advanced from Slot 1 only in P82)*
 
-### Slot 1 only (1 template)
+### Slot 1 only (0 templates)
 
-This has `grok-agent.yaml` + `prompts/system.md` but no runner / README / examples:
-
-1. `hashtag-strategy-advisor`
+Every template that has a system prompt now has its full Slot 2 deliverables. The previous Slot-1-only bucket is empty.
 
 ### Starter-manifest only (2 templates)
 
@@ -115,7 +114,7 @@ templates/creator/
 ├── content-recycler/                  ✅ fully complete
 ├── cross-platform-reposter/           ✅ fully complete
 ├── follower-quality-analyzer/         ✅ fully complete
-├── hashtag-strategy-advisor/          ⚠️  Slot 1 only
+├── hashtag-strategy-advisor/          ✅ fully complete (advanced in P82)
 ├── niche-influencer-finder/           ✅ fully complete
 └── reply-drafter/                     ⚠️  P12 starter manifest only
 ```
@@ -204,16 +203,16 @@ Phase 3 (Creator Distribution Flywheel) target: 50 prompts
    - 5 program-setup prompts (P43–P47 in canonical plan, but the orchestrator's actual numbering shifted)
    - 5 program-launch prompts (P88–P92)
 
-Current state on `main` (post-P81):
-   - Templates fully complete:        [ 8/20]   40%
-   - Templates Slot-1 only:           [ 1/20]    5%
+Current state on `main` (post-P82):
+   - Templates fully complete:        [ 9/20]   45%
+   - Templates Slot-1 only:           [ 0/20]    0%
    - Templates starter-manifest only: [ 2/20]   10%
    - Templates missing:               [ 9/20]   45%
 
    - Program-setup prompts:           [ 0/ 5]    0%
    - Program-launch prompts:          [ 0/ 5]    0%
 
-   Total Phase-3 prompts shipped:    [17/50]   ~34% complete
+   Total Phase-3 prompts shipped:    [18/50]   ~36% complete
 ```
 
 ---

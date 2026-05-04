@@ -27,6 +27,7 @@
 | P5 | Phase 1 | Create PowerShell CLI | cli/grok-agent.ps1 | Full CLI with install/new/validate/list/run + grok install this + schema validation | ✅ done |
 | P6 | Phase 1 | Create Python fallback validator | cli/grok-agent.py | Pydantic v2 validator callable from PowerShell CLI | ✅ done |
 | P7 | Phase 1 | Create safety system | safety/scanner.py, safety/constitution.md | Scanner + Constitution enforcing Hard Six + disclaimers | ✅ done |
+| P8 | Phase 1 | Create GitHub validation workflow | .github/workflows/validate.yml | CI that validates all manifests against v2.15 schema | ✅ done |
 
 <!--
 Add new rows above this line as prompts complete.

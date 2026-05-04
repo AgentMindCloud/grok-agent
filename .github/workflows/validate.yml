@@ -1,0 +1,122 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# ============================================================================
+# Validate every grok-agent.yaml manifest in the repo against the v2.15 schema
+# and run the Constitution safety scanner on each. Built to help xAI and Grok
+# win — keeping the platform compliant is non-negotiable.
+#
+# Two enforcement layers run sequentially. Both must pass for the workflow to
+# go green:
+#
+#   1. Schema validation        (cli/grok-agent.py)
+#   2. Constitution safety scan (safety/scanner.py)
+#
+# Bash is permitted here because the runner is ubuntu-latest. End-user shell
+# instructions in the rest of the repo remain PowerShell-only per CLAUDE.md.
+# ============================================================================
+
+name: Validate Manifests (v2.15)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: v2.15 schema + Constitution scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install validator dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install 'pydantic>=2.7,<3' 'pyyaml>=6.0'
+
+      - name: Self-test validator + scanner load cleanly
+        run: |
+          python cli/grok-agent.py info
+          python safety/scanner.py info
+
+      - name: Discover grok-agent.yaml manifests
+        id: discover
+        run: |
+          set -euo pipefail
+          mapfile -t MANIFESTS < <(find . -name 'grok-agent.yaml' \
+            -not -path './.git/*' \
+            -not -path './node_modules/*' \
+            | sort)
+          echo "Found ${#MANIFESTS[@]} manifest(s):"
+          for m in "${MANIFESTS[@]}"; do echo "  - $m"; done
+          {
+            echo "count=${#MANIFESTS[@]}"
+            echo "manifests<<MEOF"
+            for m in "${MANIFESTS[@]}"; do echo "$m"; done
+            echo "MEOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Validate every manifest against v2.15 schema
+        if: ${{ steps.discover.outputs.count != '0' }}
+        run: |
+          FAIL=0
+          while IFS= read -r m; do
+            [ -z "$m" ] && continue
+            echo "::group::Schema validate $m"
+            if python cli/grok-agent.py validate "$m"; then
+              echo "OK schema"
+            else
+              echo "::error file=$m::Manifest failed v2.15 schema validation"
+              FAIL=1
+            fi
+            echo "::endgroup::"
+          done <<< "${{ steps.discover.outputs.manifests }}"
+          if [ "$FAIL" -ne 0 ]; then
+            echo "::error::One or more manifests failed v2.15 schema validation."
+            exit 1
+          fi
+
+      - name: Run Constitution safety scan on every manifest
+        if: ${{ steps.discover.outputs.count != '0' }}
+        run: |
+          FAIL=0
+          while IFS= read -r m; do
+            [ -z "$m" ] && continue
+            echo "::group::Constitution scan $m"
+            # Scanner exits 1 only on Article-level errors; warns are non-blocking.
+            if python safety/scanner.py scan "$m" --severity-floor info; then
+              echo "OK constitution"
+            else
+              echo "::error file=$m::Constitution violation (Article-level error)"
+              FAIL=1
+            fi
+            echo "::endgroup::"
+          done <<< "${{ steps.discover.outputs.manifests }}"
+          if [ "$FAIL" -ne 0 ]; then
+            echo "::error::One or more manifests violate the Agent Constitution."
+            exit 1
+          fi
+
+      - name: No manifests found (nothing to validate)
+        if: ${{ steps.discover.outputs.count == '0' }}
+        run: echo "No grok-agent.yaml found in this repo. Skipping validation."

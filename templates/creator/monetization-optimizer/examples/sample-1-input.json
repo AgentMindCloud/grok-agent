@@ -1,0 +1,33 @@
+{
+  "_copyright": "Copyright 2026 AgentMindCloud",
+  "_license": "Apache License, Version 2.0",
+  "_license_url": "http://www.apache.org/licenses/LICENSE-2.0",
+  "_built_for": "X, Grok & the ecosystem community",
+  "_comment_purpose": "Sample 1 — single-channel-dependence paradox firing. Sponsorships is 73% of 90d revenue while Earnings forecast confidence sits at 74/100 (medium). Demonstrates the paradox firing in BOTH the Plan Performance section AND the Red Flags section, plus tax-ambush risk for a VN-resident creator with no reserve set aside.",
+  "x_handle": "@JanSol0s",
+  "projection_horizon": "90d",
+  "channel_focus": "all",
+  "jurisdiction": "VN",
+  "data_source": "demo",
+  "currency": "USD",
+  "channels": [
+    {"channel": "sponsorships", "gross_90d": 12000},
+    {"channel": "paid_tier", "gross_90d": 1200},
+    {"channel": "creator_fund", "gross_90d": 0},
+    {"channel": "digital_products", "gross_90d": 2400},
+    {"channel": "affiliate", "gross_90d": 800}
+  ],
+  "history_depth_days": 90,
+  "analytics_file_present": false,
+  "sponsorship_signals": {
+    "recent_sponsor_niche": "dev-tools",
+    "creator_niche": "agent-eval",
+    "audience_substantive_overlap_pct": 74,
+    "audience_size_match_only_pct": 95
+  },
+  "tax_expense_signals": {
+    "expense_tracking_active": true,
+    "reserve_pct_set_aside": 0,
+    "documentation_quality": "medium"
+  }
+}

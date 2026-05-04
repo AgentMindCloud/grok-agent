@@ -1,0 +1,33 @@
+{
+  "_copyright": "Copyright 2026 AgentMindCloud",
+  "_license": "Apache License, Version 2.0",
+  "_license_url": "http://www.apache.org/licenses/LICENSE-2.0",
+  "_built_for": "X, Grok & the ecosystem community",
+  "_comment_purpose": "Sample 2 — healthy diversified stack (no paradox). Top channel (sponsorships) is 35% of 90d revenue; all 5 channels active; analytics file attached; reserve at 25%. Demonstrates the diversified-runway happy path with strong tax readiness.",
+  "x_handle": "@habitstacker",
+  "projection_horizon": "90d",
+  "channel_focus": "all",
+  "jurisdiction": "US",
+  "data_source": "demo",
+  "currency": "USD",
+  "channels": [
+    {"channel": "sponsorships", "gross_90d": 3500},
+    {"channel": "paid_tier", "gross_90d": 2500},
+    {"channel": "creator_fund", "gross_90d": 800},
+    {"channel": "digital_products", "gross_90d": 2200},
+    {"channel": "affiliate", "gross_90d": 1000}
+  ],
+  "history_depth_days": 180,
+  "analytics_file_present": true,
+  "sponsorship_signals": {
+    "recent_sponsor_niche": "habit-tracking-app",
+    "creator_niche": "habit-stacking",
+    "audience_substantive_overlap_pct": 70,
+    "audience_size_match_only_pct": 78
+  },
+  "tax_expense_signals": {
+    "expense_tracking_active": true,
+    "reserve_pct_set_aside": 25,
+    "documentation_quality": "high"
+  }
+}

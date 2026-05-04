@@ -168,9 +168,41 @@ Both must return zero `error`-level findings before this agent is allowed to ins
 
 ---
 
+## Smoke test & `grok install this` readiness
+
+Before this optimizer goes near a real creator's earnings, every commit must pass the offline smoke test:
+
+```powershell
+.\smoke_test.ps1
+```
+
+The script runs **18 checks** — file presence, Python interpreter, schema validation, Constitution scanner, Apache 2.0 headers, Article V.1+V.2 disclaimers, **Article III + cross-tool READS-ONLY language presence in `system.md` + manifest** (Tool #3 specific — the read-only posture is its defining constitutional concern), manifest-tool importability across `data.store` + `data.api_clients` + both cross-tool readers, **`companion_reader.get_companion_summary()` cross-tool read** (Tool #1), **`vision_reader.get_vision_summary()` cross-tool read** (Tool #4), **SQLite-engine-level read-only enforcement** (attempts an INSERT through a `mode=ro` URI handle and verifies `OperationalError: attempt to write a readonly database`), **graceful-degradation contract** (both readers return structured `installed`/`error` fields regardless of sibling presence), `forecast_earnings` persistence (3 horizons), `estimate_tax_burden` + **Vietnam-resident assumption surfaced**, `analyze_content_roi` + provenance row counts, Grok stub honesty (`provenance.stub: True`), `launcher.ps1` parse, and `.streamlit/config.toml` shape with `port=8503` verified — and prints **`Tool #3 - X Creator Payout Optimizer: PASS`** plus **`X Money Suite (Tools #1 + #2 + #3 + #4) COMPLETE.`** when every check lands green. Exit code is `0` on PASS, `1` on FAIL. Add `-Json` for machine-readable output suitable for CI.
+
+```powershell
+.\smoke_test.ps1 -Json | Out-File smoke.json
+```
+
+### `grok install this` (X-native shorthand)
+
+Once the smoke test is green, this optimizer is ready for the X-native installation primitive. In a tweet or DM that mentions `@grok`, you can write:
+
+```
+grok install this
+```
+
+…with the optimizer's manifest URL or template name attached. The Grok Agent OS orchestra resolves that to the equivalent local CLI flow:
+
+```powershell
+grok-agent install x-creator-payout-optimizer
+```
+
+…which runs the same Pydantic deep validator + Constitution scanner before writing any files. Both routes refuse to install if the smoke test would fail.
+
+---
+
 ## Build slots (Recipe A)
 
-This is **Slot 1 of 6** — manifest + folder + README. The remaining slots populate this folder over P38–P42:
+All 6 slots are shipped on `main`; Tool #3 is **COMPLETE** — and so is the entire **X Money Suite**:
 
 | Slot | Files | Status |
 |---|---|---|
@@ -178,8 +210,8 @@ This is **Slot 1 of 6** — manifest + folder + README. The remaining slots popu
 | 2 — Streamlit app skeleton (6 tabs) | `app.py`, `requirements.txt` | ✅ P38 |
 | 3 — Grok prompts | `prompts/system.md`, `prompts/user_templates.md` | ✅ P39 |
 | 4 — Data layer + APIs (with cross-tool readers for Tool #1 + Tool #4) | `data/__init__.py`, `data/store.py`, `data/api_clients.py`, `data/companion_reader.py`, `data/vision_reader.py` | ✅ P40 |
-| 5 — Launcher + Streamlit Cloud config | `launcher.ps1`, `.streamlit/config.toml` | ✅ this prompt (P41) |
-| 6 — Smoke test + `grok install this` readiness | `smoke_test.ps1` | ⏭️ P42 |
+| 5 — Launcher + Streamlit Cloud config | `launcher.ps1`, `.streamlit/config.toml` | ✅ P41 |
+| 6 — Smoke test + `grok install this` readiness | `smoke_test.ps1` (18 checks); README Smoke-test section | ✅ this prompt (P42) |
 
 ---
 

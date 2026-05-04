@@ -43,6 +43,7 @@
 | P20 | Phase 2 | X Money Companion Dashboard — Streamlit skeleton | templates/finance/x-money-companion-dashboard/app.py, requirements.txt | 6-tab layout with full disclaimers; placeholders only; ready for data layer (P22) | ✅ done |
 | P21 | Phase 2 | X Money Companion Dashboard — Grok prompts | prompts/system.md, prompts/user_templates.md | Finance-safe system prompt + 8 reusable templates with Article V enforcement | ✅ done |
 | P22 | Phase 2 | X Money Companion Dashboard — Data layer + API clients | data/store.py, data/api_clients.py | SQLite schema + thin clients for yfinance/newsapi/x_search with provenance | ✅ done |
+| P23 | Phase 2 | X Money Companion Dashboard — Launcher + Cloud config | launcher.ps1, .streamlit/config.toml, README.md | One-click Windows launcher + Streamlit Cloud ready; Tool #1 complete | ✅ done |
 
 <!--
 Phase 1 — OFFICIALLY CLOSED on 2026-05-04 with the public-launch artifacts in place.

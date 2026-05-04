@@ -39,7 +39,15 @@ Your data never leaves `$env:LOCALAPPDATA\grok-agent\x-money-companion-dashboard
 
 ---
 
-## Quick-start (Windows 11 + PowerShell)
+## Quick Launch (Windows 11)
+
+**TL;DR — one command, opens in your browser:**
+
+```powershell
+.\launcher.ps1
+```
+
+That's it. The launcher resolves Python 3.12+, installs pinned deps from `requirements.txt` on first run, ensures `$env:LOCALAPPDATA\grok-agent\x-money-companion-dashboard\` exists with an initialised SQLite, then opens `http://localhost:8501` in your default browser. For more control, see the three options below.
 
 ### Option A — `grok-agent install` (recommended)
 
@@ -63,7 +71,15 @@ cd templates\finance\x-money-companion-dashboard
 .\launcher.ps1
 ```
 
-The launcher (shipping in Slot 5 / P23) checks Python 3.12+, installs dependencies on first run via `python -m pip install -r requirements.txt`, then launches Streamlit on `http://localhost:8501`. Chrome only, per the manifest's `windows.chrome_only: true`.
+The launcher does six things in order: shows the disclaimer banner; resolves Python 3.12+ (`python` then `py -3`); runs `python -m pip install --quiet -r requirements.txt` (skip with `-SkipDeps`); creates `$env:LOCALAPPDATA\grok-agent\x-money-companion-dashboard\` if missing; runs `init_db()` to create the SQLite schema (idempotent — safe on every launch); then runs `streamlit run app.py` headless and opens `http://localhost:8501` in your default browser (skip with `-NoBrowser`).
+
+Optional flags:
+
+```powershell
+.\launcher.ps1 -Port 8765 -SkipDeps -NoBrowser
+```
+
+Chrome only, per the manifest's `windows.chrome_only: true`.
 
 ### Option C — direct Streamlit (developers only)
 
@@ -141,15 +157,15 @@ Both must return zero `error`-level findings before this agent is allowed to ins
 
 ## Build slots (Recipe A)
 
-This is **Slot 1 of 6** — manifest + folder + README. The remaining slots populate this folder over P20–P24:
+Slots 1–5 are shipped on `main`; Slot 6 (smoke test + disclaimer audit) lands in P24:
 
 | Slot | Files | Status |
 |---|---|---|
-| 1 — Manifest + README | `grok-agent.yaml`, `README.md` | ✅ this prompt (P19) |
-| 2 — Streamlit app skeleton | `app.py`, `requirements.txt`, `.streamlit/config.toml` | ⏭️ P20 |
-| 3 — Grok prompts | `prompts/system.md`, `prompts/user_templates.md` | ⏭️ P21 |
-| 4 — Data layer + APIs | `data/store.py`, `data/api_clients.py` (and accepts `data/import_receipts.py` from Tool #4) | ⏭️ P22 |
-| 5 — PowerShell launcher | `launcher.ps1` | ⏭️ P23 |
+| 1 — Manifest + README | `grok-agent.yaml`, `README.md` | ✅ P19 |
+| 2 — Streamlit app skeleton | `app.py`, `requirements.txt` | ✅ P20 |
+| 3 — Grok prompts | `prompts/system.md`, `prompts/user_templates.md` | ✅ P21 |
+| 4 — Data layer + APIs | `data/__init__.py`, `data/store.py`, `data/api_clients.py` (accepts `data/import_receipts.py` from Tool #4) | ✅ P22 |
+| 5 — Launcher + Streamlit Cloud config | `launcher.ps1`, `.streamlit/config.toml` | ✅ this prompt (P23) |
 | 6 — `grok install this` smoke test + disclaimer audit | end-to-end PowerShell run + Constitution scan | ⏭️ P24 |
 
 ---

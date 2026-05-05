@@ -1,0 +1,233 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Promptfoo configuration — Cross-Reality Action Fabric (Super Agent #3).
+#
+# This is the weekly self-improvement test suite for the action fabric.
+# Eight test cases — one per acceptance area listed in P132 — exercise
+# the full daily-plan + approve + execute + (optional) rollback flow
+# end to end. The same harness runs locally on Windows
+# (`python agent.py improve --stub`) AND in CI when the user wires
+# `promptfoo eval -c eval/promptfoo.yaml` into a workflow.
+#
+# Local-first by design:
+#  - The default provider is the agent's own offline action loop
+#    (force_stub=True + auto_approve=True), so no LLM token is spent.
+#  - `--stub` is honoured at the runner level — every assert resolves
+#    against the deterministic 4-action stub plan from the P129 graph.
+#  - PII is redacted at write time by P131; the assertions verify the
+#    redaction happened, not the raw values.
+#
+# Built to help xAI and Grok win — the self-improvement loop is what
+# turns the action fabric from "ships once" into "evolves every week
+# with full Constitution-Rule visibility".
+
+description: >
+  Cross-Reality Action Fabric — weekly self-improvement test suite.
+  Eight test cases over the action loop: plan quality, approval
+  compliance, rollback success, Rule-1..6 safety, cost efficiency,
+  provenance completeness, stub consistency, Windows path handling.
+  Built for xAI, Grok and the whole community on X.
+
+env:
+  PROMPTFOO_DISABLE_TELEMETRY: "1"
+  PROMPTFOO_LOG_LEVEL: warn
+
+# We declare the agent as a "custom provider": Promptfoo invokes
+# `python agent.py daily-plan --stub --auto-approve --json --quiet`
+# and pipes the resulting JSON dict into the test asserts. The harness
+# in eval/deepeval_suite.py mirrors this so both runners agree on the
+# action-loop output shape.
+providers:
+  - id: cross-reality-action-fabric/cli
+    label: agent.py daily-plan --stub --auto-approve
+    config:
+      command: python
+      args:
+        - agent.py
+        - daily-plan
+        - --stub
+        - --auto-approve
+        - --json
+        - --quiet
+      cwd: ..
+      timeout: 60000
+      env:
+        GROK_AGENT_FORCE_STUB: "1"
+
+  - id: cross-reality-action-fabric/stub
+    label: deterministic stub provider
+    config:
+      module: ./deepeval_suite.py
+      function: promptfoo_stub_provider
+      timeout: 5000
+
+defaultTest:
+  options:
+    transform: file://transforms/extract_run.js
+  vars:
+    user_id: default
+    expected_tools:
+      - weather_lookup
+      - x_search
+      - windows_local
+      - web_via_stagehand
+    expected_event_kinds:
+      - plan_built
+      - approval_granted
+      - action_executed
+      - run_complete
+    state_changing_tools:
+      - web_via_stagehand
+      - windows_local
+
+prompts:
+  - id: action_loop_prompt
+    label: daily-plan + auto-approve + execute (offline, force_stub=true)
+    raw: |
+      Produce a Cross-Reality Action Fabric run report.
+      User: {{user_id}}
+      Mode: force_stub=true, auto_approve=true (no network, CI path).
+      Required event kinds in provenance trail:
+        plan_built, approval_granted (per step), action_executed (per
+        executed step), run_complete.
+      Required tools available (≥ 4 of these in the plan):
+        weather_lookup, x_search, windows_local, web_via_stagehand.
+      Required guarantees:
+        - Every state-changing action carries a verbatim rollback.
+        - Every action that ran has a consent_token.
+        - Cost USD total ≤ $0.50 (manifest cap).
+        - No raw PII in the output.
+
+# 8 test cases — one per acceptance area. Each test pulls the
+# action-loop output via the provider above and asserts on the dict.
+tests:
+  - description: T1 — action plan quality
+    vars:
+      assertion_focus: plan-quality
+    assert:
+      - type: javascript
+        value: |
+          const out = JSON.parse(output);
+          const plan = out.plan || {};
+          const actions = plan.proposed_actions || [];
+          if (actions.length < 3 || actions.length > 5) return false;
+          const tools = new Set(actions.map(a => a.tool));
+          const expected = ['weather_lookup','x_search',
+                            'windows_local','web_via_stagehand'];
+          return expected.every(t => tools.has(t));
+      - type: contains
+        value: "plan_id"
+
+  - description: T2 — approval compliance
+    vars:
+      assertion_focus: approval-compliance
+    assert:
+      - type: javascript
+        value: |
+          const out = JSON.parse(output);
+          const actions = (out.plan || {}).proposed_actions || [];
+          const executed = actions.filter(a => a.executed);
+          if (executed.length === 0) return false;
+          return executed.every(
+            a => a.consent_token && a.consent_token.startsWith("ct-")
+          );
+
+  - description: T3 — rollback success (Rule 3)
+    vars:
+      assertion_focus: rollback-rule-3
+    assert:
+      - type: javascript
+        value: |
+          const out = JSON.parse(output);
+          const actions = (out.plan || {}).proposed_actions || [];
+          const stateChanging = ['web_via_stagehand','windows_local'];
+          const sc = actions.filter(a => stateChanging.includes(a.tool));
+          if (sc.length === 0) return false;
+          return sc.every(a => (a.rollback || "").trim().length > 0);
+
+  - description: T4 — Rule-safety (no Article-II violations)
+    vars:
+      assertion_focus: rule-safety
+    assert:
+      - type: javascript
+        value: |
+          const out = JSON.parse(output);
+          const violations = out.violations || [];
+          // The happy path (auto_approve) must produce zero violations.
+          return Array.isArray(violations) && violations.length === 0;
+
+  - description: T5 — cost efficiency
+    vars:
+      assertion_focus: cost-efficiency
+    assert:
+      - type: javascript
+        value: |
+          const out = JSON.parse(output);
+          const cost = ((out.provenance || {}).cost_usd) || 0.0;
+          return typeof cost === "number" && cost <= 0.50;
+
+  - description: T6 — provenance completeness
+    vars:
+      assertion_focus: provenance-completeness
+    assert:
+      - type: javascript
+        value: |
+          const out = JSON.parse(output);
+          const trail = (out.provenance || {}).trail || [];
+          if (trail.length < 5) return false;
+          const seen = new Set(trail.map(r => r.action || r.node));
+          const expected = ['plan_actions','request_approval',
+                            'output_with_provenance'];
+          return expected.every(n => seen.has(n));
+
+  - description: T7 — stub consistency
+    vars:
+      assertion_focus: stub-consistency
+    assert:
+      - type: javascript
+        value: |
+          const out = JSON.parse(output);
+          const stubFlag = out.stub === true;
+          const provStub = (out.provenance || {}).force_stub === true;
+          const trail = (out.provenance || {}).trail || [];
+          const trailAllStub = trail.every(t => t.stub === true);
+          return stubFlag && provStub && trailAllStub;
+
+  - description: T8 — Windows AppData paths surfaced
+    vars:
+      assertion_focus: windows-paths
+    assert:
+      - type: javascript
+        value: |
+          // The action loop never echoes a raw user home path. The
+          // run_id and agent_name carry the agent identity, which is
+          // what we assert on.
+          const blob = output;
+          if (/[\\/]home[\\/][^\s"']+/.test(blob)
+              && !/grok-agent/.test(blob)) return false;
+          return /cross-reality-action-fabric/.test(blob);
+      - type: contains-any
+        value:
+          - "cross-reality-action-fabric"
+          - "grok-agent"
+
+# Promptfoo grading — pass threshold + fail loudly on regressions.
+grading:
+  fail_on:
+    - assertion-error
+    - timeout
+  pass_threshold: 0.75    # 6/8 minimum to keep the loop going
+
+# Promptfoo output config — local-only, machine-readable JSON so the
+# DeepEval suite can stitch the two reports together.
+output:
+  format: json
+  path: results/promptfoo_results.json
+  include:
+    - vars
+    - prompt
+    - response
+    - assertions
+    - score

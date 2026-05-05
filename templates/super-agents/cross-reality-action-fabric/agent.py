@@ -679,6 +679,19 @@ def _build_parser() -> argparse.ArgumentParser:
     p_roll.add_argument("--no-stub", action="store_true")
     p_roll.add_argument("--quiet",   action="store_true")
 
+    p_improve = sub.add_parser(
+        "improve",
+        help="Run the weekly self-improvement loop (Promptfoo + DeepEval).",
+    )
+    p_improve.add_argument("--user-id", default="default")
+    p_improve.add_argument("--stub",    action="store_true",
+                           help="Force offline + stub backends (default).")
+    p_improve.add_argument("--no-stub", action="store_true",
+                           help="Disable force_stub. Requires real backends.")
+    p_improve.add_argument("--json",    action="store_true",
+                           help="Print full EvalReport JSON instead of human summary.")
+    p_improve.add_argument("--quiet",   action="store_true")
+
     sub.add_parser("info",    help="Print the graph description + backend selection.")
     sub.add_parser("version", help="Print agent + backend version.")
 
@@ -742,6 +755,27 @@ def main(argv: list[str] | None = None) -> int:
             force_stub=_resolve_stub(args),
             quiet=bool(args.quiet),
         )
+        return 0
+
+    if args.command == "improve":
+        from eval.deepeval_suite import run_full_loop, _print_summary  # type: ignore
+        force_stub = False if args.no_stub else True
+        report = run_full_loop(force_stub=force_stub, user_id=args.user_id)
+        _log_run("improve", {
+            "force_stub":      force_stub,
+            "overall_score":   report.overall_score,
+            "promptfoo_pass":  sum(1 for r in report.promptfoo if r.get("passed")),
+            "promptfoo_total": len(report.promptfoo),
+            "deepeval_pass":   sum(1 for m in report.deepeval if m.passed),
+            "deepeval_total":  len(report.deepeval),
+            "suggestion_count": len(report.suggestions),
+            "review_required": report.review_required,
+        })
+        if args.json:
+            print(json.dumps(report.to_dict(), indent=2,
+                             ensure_ascii=False, default=str))
+        elif not args.quiet:
+            _print_summary(report)
         return 0
 
     if args.command == "info":

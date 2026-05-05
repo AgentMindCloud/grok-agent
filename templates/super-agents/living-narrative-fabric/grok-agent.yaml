@@ -1,0 +1,218 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — the Living Narrative Fabric Super Agent
+# scaffold. This file is the initial v2.15 manifest for the agent that
+# synthesizes X + news + academic + government + personal data into a
+# versioned, contradiction-aware narrative with full provenance. Recipe C
+# step 1 of 8 (manifest + folder + agent constitution); orchestration core
+# (step 2), memory layer (step 3), API connectors (step 4), provenance log
+# (step 5), self-improvement loop (step 6), Streamlit surface (step 7),
+# and demo + launch thread (step 8) ship in P94–P100 per CLAUDE.md §6.
+
+version: "2.15"
+kind: "super-agent"
+name: "living-narrative-fabric"
+description: |
+  The first flagship Super Agent of Grok Agent OS. Versioned synthesis
+  of X posts + news + academic + government + personal data into a
+  contradiction-aware narrative document with full provenance. Reads
+  many sources; writes nothing without explicit consent. Highlights
+  conflicting claims rather than papering over them. Built to help xAI
+  and Grok win.
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Living Narrative Fabric"
+  tagline: "A versioned, contradiction-aware narrative woven from every public surface — local-first, provenance-first."
+  categories: ["super-agent", "research", "synthesis", "narrative"]
+  tags:
+    - "super-agent"
+    - "provenance-first"
+    - "contradiction-aware"
+    - "local-first"
+    - "drafts-only"
+    - "phase-4-scaffold"
+  created: "2026-05-05"
+  updated: "2026-05-05"
+  phase: 4
+  recipe: "C"
+  recipe_step: 1
+  next_step_prompt: "P94 — orchestration core (Mastra preferred per CLAUDE.md §4)"
+
+install:
+  one_click: true
+  install_command: "grok-agent install living-narrative-fabric"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+    - "Node.js 20+ (for Mastra orchestration core, lands in P94)"
+
+windows:
+  appdata_folder: "grok-agent/super-agents/living-narrative-fabric"
+  cache_folder: "grok-agent/super-agents/living-narrative-fabric/cache"
+  log_folder: "grok-agent/super-agents/living-narrative-fabric/logs"
+  provenance_folder: "grok-agent/super-agents/living-narrative-fabric/provenance"
+  versions_folder: "grok-agent/super-agents/living-narrative-fabric/versions"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.3
+  max_tokens: 4096
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+
+# Recipe C step 2 lands the orchestration core. This stub declares the
+# orchestration layer for the schema validator; the implementation file
+# does not yet exist.
+multi_agent:
+  enabled: true
+  orchestrator: "mastra"
+  pattern: "supervisor"
+  workers:
+    - "ingest"
+    - "synthesize"
+    - "contradict"
+    - "version"
+
+# Recipe C step 4 wires the public-API connectors. Declared here so the
+# scanner can flag missing keys at install time.
+public_api:
+  enabled: true
+  apis:
+    - name: "newsapi"
+      status: "planned"
+      auth: "api_key"
+      env_var: "NEWSAPI_KEY"
+    - name: "gnews"
+      status: "planned"
+      auth: "api_key"
+      env_var: "GNEWS_API_KEY"
+    - name: "semantic-scholar"
+      status: "planned"
+      auth: "none"
+    - name: "data.gov"
+      status: "planned"
+      auth: "api_key"
+      env_var: "DATAGOV_API_KEY"
+    - name: "x-search-via-grok-4-3"
+      status: "planned"
+      auth: "api_key"
+      env_var: "XAI_API_KEY"
+    - name: "crawl4ai"
+      status: "planned"
+      auth: "none"
+    - name: "docling"
+      status: "planned"
+      auth: "none"
+
+tools:
+  - name: "ingest_source"
+    type: "local_function"
+    description: |
+      Pull content from a declared public API (or a user-supplied
+      file). Writes the raw payload + a provenance record (source,
+      url, retrieved_at, hash) into the local versions folder.
+      Never writes to the user's other apps.
+    module: "living_narrative_fabric.run"
+    function: "ingest_source"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          source_kind:
+            type: "string"
+            enum: ["newsapi", "gnews", "semantic-scholar", "data.gov", "x-search", "file", "crawl4ai", "docling"]
+          query:
+            type: "string"
+        required: ["source_kind"]
+
+  - name: "synthesize_version"
+    type: "local_function"
+    description: |
+      Render a new version of the narrative document from the current
+      ingestion set. Every claim carries a citation key linking to a
+      provenance record. Drafts only — never auto-publishes.
+    module: "living_narrative_fabric.run"
+    function: "synthesize_version"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          topic:
+            type: "string"
+          horizon_days:
+            type: "integer"
+            default: 30
+        required: ["topic"]
+
+  - name: "detect_contradictions"
+    type: "local_function"
+    description: |
+      Cross-reference claims across sources. Emits a list of
+      contradiction records (claim_a, source_a, claim_b, source_b,
+      severity). The narrative document surfaces these inline as
+      "Conflicting evidence" callouts rather than collapsing them.
+    module: "living_narrative_fabric.run"
+    function: "detect_contradictions"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          version_id:
+            type: "string"
+        required: ["version_id"]
+
+constitution:
+  inherits: "safety/constitution.md"
+  per_agent_file: "templates/super-agents/living-narrative-fabric/constitution.md"
+  articles_specialized:
+    - article: "II"
+      rule: "consent-gate-on-every-source-add"
+    - article: "III"
+      rule: "no-cross-tool-writes"
+    - article: "IV"
+      rule: "every-claim-carries-provenance"
+    - article: "V"
+      rule: "no-financial-advice-no-tax-advice-no-medical-advice"
+    - article: "IX"
+      rule: "contradictions-surfaced-not-resolved"
+
+cost_limits:
+  max_calls_per_day: 100
+  max_usd_per_day: 1.0
+  hitl_required_for:
+    - "ingest_source"
+    - "any external API call beyond cached results"
+
+privacy:
+  pii_handling: "local-only"
+  redacted_cloud: false
+  data_retention_days: null  # local; user controls
+
+streamlit:
+  enabled: true
+  port: 8601
+  config_file: ".streamlit/config.toml"
+  status: "planned-p99"
+
+self_improvement:
+  enabled: true
+  framework: ["promptfoo", "deepeval", "langfuse"]
+  status: "planned-p98"
+
+phase_4_recipe_c_progress:
+  step_1_manifest_folder_constitution: "✅ in this prompt (P107 scaffold)"
+  step_2_orchestration_core_mastra: "planned-p94"
+  step_3_memory_mem0_qdrant: "planned-p95"
+  step_4_public_api_connectors: "planned-p96"
+  step_5_provenance_log_langfuse: "planned-p97"
+  step_6_self_improvement_loop: "planned-p98"
+  step_7_streamlit_surface: "planned-p99"
+  step_8_demo_video_x_thread: "planned-p100"

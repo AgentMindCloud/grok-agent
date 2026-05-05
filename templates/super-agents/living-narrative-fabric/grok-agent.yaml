@@ -1,0 +1,512 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — Living Narrative Fabric is the
+# flagship Super Agent of the Grok Agent OS suite. It produces
+# versioned, provenance-first synthesis across X (via Grok 4.3),
+# news (NewsAPI + GNews), academia (Semantic Scholar), government
+# (data.gov), and the open web (Crawl4AI), and refuses to silently
+# resolve contradictions across sources.
+#
+# Constitution mapping (v1.0 — see constitution.md for the full text):
+#   Article I    : Apache-2.0 + xAI-ally line + Windows-first + v2.15 schema
+#   Article II   : Source citations are mandatory (ConstitutionViolation on empty source_id)
+#   Article III  : Contradictions are never silently resolved
+#   Article IV   : Versioned synthesis (parent_version_id chain, full rewind)
+#   Article V    : Append-only provenance (JSONL + Mem0 mirror + optional Langfuse)
+#   Article V.1  : "Not financial advice" — auto-attached on $XAI-style topics
+#   Article VI   : 4-metric Synthesis Confidence formula is locked
+#   Article VII  : Mandatory ≥3 cross-template / cross-Super-Agent bridges
+#   Article VIII : Audit triggers fire when contradictions > 3 OR sources < 3 OR confidence < 50
+#   Article IX   : Human approval is required for every real-world action
+#   Article X    : Local-first + privacy-first; all data under $env:LOCALAPPDATA
+
+version: "2.15"
+kind: "super-agent"
+name: "living-narrative-fabric"
+description: "Versioned, provenance-first synthesis across X, news, academia, government, and the open web — with full contradiction detection that never silently picks a winner. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+# ----------------------------------------------------------------------------
+# metadata: discovery + cataloguing
+# ----------------------------------------------------------------------------
+metadata:
+  display_name: "Living Narrative Fabric"
+  tagline: "Versioned truth across X, news, academia, and gov data — on Windows."
+  categories: ["super-agent", "research", "trust", "narrative"]
+  tags: ["streamlit", "mem0", "qdrant", "langfuse", "promptfoo", "deepeval", "windows-first"]
+  language: "en"
+  homepage: "https://github.com/AgentMindCloud/grok-agent"
+  repository: "github.com/AgentMindCloud/grok-agent"
+  docs:       "github.com/AgentMindCloud/grok-agent/blob/main/templates/super-agents/living-narrative-fabric/README.md"
+  demo_video: "templates/super-agents/living-narrative-fabric/DEMO.md"
+
+# ----------------------------------------------------------------------------
+# install: the "grok install this" primitive
+# Paste this manifest into an X post; the install action triggers the
+# command below on the user's Windows 11 machine.
+# ----------------------------------------------------------------------------
+install:
+  one_click: true
+  install_command: "grok-agent install living-narrative-fabric"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+ (PowerShell 7.x recommended)"
+    - "Google Chrome (latest)"
+  optional_prerequisites:
+    - "Node.js 20+ (only when opting into Mastra orchestration)"
+    - "Qdrant server (local docker run -p 6333:6333 qdrant/qdrant — falls back to in-process when missing)"
+    - "Langfuse account (only when LANGFUSE_PUBLIC_KEY + LANGFUSE_SECRET_KEY are set)"
+  one_command_install: |
+    git clone https://github.com/AgentMindCloud/grok-agent ;
+    cd grok-agent\templates\super-agents\living-narrative-fabric ;
+    python -m pip install -r requirements.txt ;
+    streamlit run dashboard.py
+
+# ----------------------------------------------------------------------------
+# windows: Windows 11 specifics
+# ----------------------------------------------------------------------------
+windows:
+  launcher: "dashboard.py"
+  launch_command: "streamlit run dashboard.py"
+  appdata_folder:    "grok-agent/living-narrative-fabric"
+  log_folder:        "grok-agent/living-narrative-fabric/logs"
+  cache_folder:      "grok-agent/living-narrative-fabric/cache"
+  provenance_folder: "grok-agent/living-narrative-fabric/provenance"
+  eval_folder:       "grok-agent/living-narrative-fabric/eval"
+  min_powershell_version: "5.1"
+  requires_admin:    false
+  chrome_only:       true
+  default_port:      8501
+  env_vars_optional:
+    - "NEWSAPI_KEY"
+    - "GNEWS_KEY"
+    - "SEMANTIC_SCHOLAR_KEY"
+    - "DATA_GOV_KEY"
+    - "XAI_API_KEY"
+    - "CRAWL4AI_SEED_URLS"
+    - "LANGFUSE_PUBLIC_KEY"
+    - "LANGFUSE_SECRET_KEY"
+    - "LANGFUSE_HOST"
+    - "QDRANT_URL"
+    - "MASTRA_HTTP_URL"
+
+# ----------------------------------------------------------------------------
+# grok: model + system-prompt configuration
+# ----------------------------------------------------------------------------
+grok:
+  model: "grok-4.3"
+  temperature: 0.5
+  max_tokens: 8192
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+  vision: false
+
+# ----------------------------------------------------------------------------
+# multi_agent: orchestration role + delegation
+# ----------------------------------------------------------------------------
+multi_agent:
+  role: "orchestrator"
+  delegates_to:
+    - "self-evolving-personal-os"
+    - "cross-reality-action-fabric"
+  shared_memory: "mem0://grok-agent-shared"
+  message_bus: null
+  max_concurrent_workers: 4
+
+# ----------------------------------------------------------------------------
+# public_apis: the 6 Slot-4 connectors (P112)
+# ----------------------------------------------------------------------------
+public_apis:
+  - name: "newsapi"
+    base_url: "https://newsapi.org/v2"
+    auth_env_var: "NEWSAPI_KEY"
+    rate_limit: 100
+    privacy: "no_pii_sent"
+    source_authority: 0.65
+  - name: "gnews"
+    base_url: "https://gnews.io/api/v4"
+    auth_env_var: "GNEWS_KEY"
+    rate_limit: 100
+    privacy: "no_pii_sent"
+    source_authority: 0.65
+  - name: "semantic_scholar"
+    base_url: "https://api.semanticscholar.org/graph/v1"
+    auth_env_var: "SEMANTIC_SCHOLAR_KEY"
+    auth: "optional"
+    rate_limit: 100
+    privacy: "no_pii_sent"
+    source_authority: 0.95
+  - name: "data_gov"
+    base_url: "https://catalog.data.gov/api/3/action"
+    auth_env_var: "DATA_GOV_KEY"
+    auth: "optional"
+    privacy: "no_pii_sent"
+    source_authority: 0.90
+  - name: "x_search"
+    base_url: "via_grok_4.3"
+    auth_env_var: "XAI_API_KEY"
+    privacy: "no_pii_sent"
+    source_authority: 0.35
+  - name: "crawl4ai"
+    base_url: "(local crawl4ai package)"
+    auth_env_var: "CRAWL4AI_SEED_URLS"
+    auth: "none"
+    privacy: "no_pii_sent"
+    source_authority: 0.45
+
+# ----------------------------------------------------------------------------
+# memory: Slot 3 (P111) — Mem0 + Qdrant
+# ----------------------------------------------------------------------------
+memory:
+  enabled: true
+  provider: "mem0"
+  vector_store:
+    backend: "qdrant"
+    url: "http://localhost:6333"
+    collection_prefix: "living-narrative-fabric"
+  episodic: true
+  semantic: true
+  procedural: false
+  retention_days: 730
+  encryption_at_rest: true
+  fallback:
+    structured: "sqlite"
+    vectors:    "in-process"
+    embeddings: "hash-stub"
+
+# ----------------------------------------------------------------------------
+# provenance: Slot 5 (P113) — append-only JSONL + optional Langfuse
+# ----------------------------------------------------------------------------
+provenance:
+  enabled: true
+  log_path: "$env:LOCALAPPDATA\\grok-agent\\living-narrative-fabric\\provenance\\events.jsonl"
+  cite_sources: true
+  versioned_synthesis: true
+  contradiction_detection: true
+  append_only: true
+  langfuse:
+    enabled: false
+    public_key_env_var: "LANGFUSE_PUBLIC_KEY"
+    secret_key_env_var: "LANGFUSE_SECRET_KEY"
+    host: "https://cloud.langfuse.com"
+
+# ----------------------------------------------------------------------------
+# constitution: see constitution.md for the full text — this section is the
+# machine-readable summary the safety scanner enforces at install time.
+# ----------------------------------------------------------------------------
+constitution:
+  file: "constitution.md"
+  rules:
+    - "Source citations are mandatory on every claim (Article II)."
+    - "Contradictions are never silently resolved; both sides stay verbatim (Article III)."
+    - "Synthesis is versioned and rewindable (Article IV)."
+    - "Provenance is append-only — no mutations, no deletes (Article V)."
+    - "The 4-metric Synthesis Confidence formula is locked (Article VI)."
+    - "Every emitted synthesis carries ≥3 cross-template bridges (Article VII)."
+    - "Audit triggers fire when contradictions > 3 OR sources < 3 OR confidence < 50 (Article VIII)."
+    - "Real-world actions require explicit human approval (Article IX)."
+    - "All user data lives under $env:LOCALAPPDATA — local-first + privacy-first (Article X)."
+  consent_gates:
+    - "publish_synthesis"
+    - "export_provenance_log"
+    - "apply_improvements"
+    - "any_real_world_action"
+  hard_refusals:
+    - "Silently resolve contradictions across sources."
+    - "Emit a claim with empty source_id."
+    - "Mutate or delete provenance events."
+    - "Publish a synthesis without ≥3 cross-template bridges."
+    - "Take any real-world action without an explicit user click."
+
+# ----------------------------------------------------------------------------
+# safety: PII handling, retention, scanner severity, cost limits, HITL
+# ----------------------------------------------------------------------------
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 730
+  scanner_severity_floor: "warn"
+  forbidden_actions:
+    - "scrape_authenticated_x_content"
+    - "impersonate_user_identity"
+    - "bypass_safety_scanner"
+    - "silently_resolve_contradictions"
+    - "mutate_provenance_events"
+  cost_limits:
+    usd_per_session_max: 2.00
+    usd_per_day_max: 10.00
+    tokens_per_session_max: 500000
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "publish_synthesis"
+      - "export_provenance_log"
+      - "apply_improvements"
+      - "any cost above $0.50"
+
+# ----------------------------------------------------------------------------
+# evaluation: Slot 6 (P114) — Promptfoo + DeepEval weekly loop
+# ----------------------------------------------------------------------------
+evaluation:
+  enabled: true
+  promptfoo:
+    enabled: true
+    config: "eval/promptfoo.yaml"
+    test_count: 21
+    categories:
+      - "contradiction"
+      - "provenance"
+      - "formula"
+      - "constitution"
+      - "audit"
+  deepeval:
+    enabled: true
+    suite: "eval/deepeval_suite.py"
+    metrics:
+      - "ContradictionDetection"
+      - "ProvenanceCompleteness"
+      - "FourMetricFormula"
+      - "ConstitutionCompliance"
+    formula_weights:
+      ContradictionDetection: 0.30
+      ProvenanceCompleteness: 0.30
+      FourMetricFormula:      0.25
+      ConstitutionCompliance: 0.15
+  langfuse_traces: true
+  weekly_loop: true
+  history_path: "$env:LOCALAPPDATA\\grok-agent\\living-narrative-fabric\\eval\\history.sqlite3"
+
+# ----------------------------------------------------------------------------
+# synthesis_confidence: the canonical 4-metric formula (Article VI)
+# Locked at the manifest level so external tools can verify the orchestrator
+# never deviates without a manifest bump.
+# ----------------------------------------------------------------------------
+synthesis_confidence:
+  formula: "round(0.30·SourceDiversity + 0.30·ProvenanceCompleteness + 0.25·CrossSourceAgreement + 0.15·RecencyCoverage)"
+  weights:
+    Source diversity:         0.30
+    Provenance completeness:  0.30
+    Cross-source agreement:   0.25
+    Recency coverage:         0.15
+  audit_triggers:
+    contradictions_gt: 3
+    sources_lt:        3
+    confidence_lt:     50
+
+# ----------------------------------------------------------------------------
+# bridges: mandatory ≥3 cross-template / cross-Super-Agent links (Article VII)
+# ----------------------------------------------------------------------------
+bridges:
+  min_count: 3
+  links:
+    - "self-evolving-personal-os"      # Super Agent #2 — personalises every synthesis
+    - "cross-reality-action-fabric"    # Super Agent #3 — turns synthesis into action
+    - "analytics-summarizer"           # creator template — periodic narrative health
+    - "competitor-watch"               # creator template — peer narratives
+    - "content-idea-generator"         # creator template — synthesis → posts
+    - "research-assistant"             # creator template — deeper recall
+    - "x-money-companion-dashboard"    # X Money tool #1 — cashtag financial context
+
+# ----------------------------------------------------------------------------
+# tools: every Slot-2 → Slot-7 component the orchestrator calls
+# ----------------------------------------------------------------------------
+tools:
+  - name: "synthesize"
+    type: "local_function"
+    description: "Run the 6-node DAG (ingest → normalise → detect_contradictions → score → audit → finalize) and return a SynthesisVersion."
+    module: "orchestrator"
+    function: "LivingNarrativeFabric.synthesize"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          topic:      { type: "string" }
+          time_range: { type: "string", enum: ["7d", "30d", "90d"] }
+          audit:      { type: "boolean", default: false }
+        required: ["topic"]
+
+  - name: "rewind_to_version"
+    type: "local_function"
+    description: "Walk the parent_version_id chain back to a prior SynthesisVersion. Append-only — never mutates."
+    module: "memory"
+    function: "Mem0QdrantStore.rewind_to_version"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          version_id: { type: "string" }
+        required: ["version_id"]
+
+  - name: "flag_contradiction"
+    type: "local_function"
+    description: "Append-only flag against a prior contradiction. Reason is mandatory and visible in audit_trail forever."
+    module: "memory"
+    function: "Mem0QdrantStore.flag_contradiction"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          contradiction_id: { type: "string" }
+          reason:           { type: "string" }
+          flagged_by:       { type: "string", default: "user" }
+        required: ["contradiction_id", "reason"]
+
+  - name: "export_provenance_report"
+    type: "local_function"
+    description: "Render a Markdown provenance report covering Topic Snapshot, Run Timeline, Connector Activity, Contradictions Flagged, and Bridges. Consent-gated."
+    module: "provenance"
+    function: "LivingNarrativeFabricProvenance.export_report"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          version_id: { type: "string" }
+          format:     { type: "string", enum: ["markdown"], default: "markdown" }
+        required: ["version_id"]
+
+  - name: "run_weekly_eval"
+    type: "local_function"
+    description: "Run the Promptfoo + DeepEval suite, write the EvaluationRun, generate prompt suggestions (dry-run by default)."
+    module: "eval"
+    function: "SelfImprovementLoop.run_weekly_eval"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          dry_run: { type: "boolean", default: true }
+          notes:   { type: "string", default: "" }
+        required: []
+
+  - name: "newsapi_fetch"
+    type: "public_api"
+    description: "Pull recent articles from NewsAPI /v2/everything for a topic, since-window, and per-source limit."
+    module: "connectors.newsapi_client"
+    function: "NewsApiConnector.fetch"
+    api_ref: "newsapi"
+
+  - name: "gnews_fetch"
+    type: "public_api"
+    module: "connectors.gnews_client"
+    function: "GnewsConnector.fetch"
+    api_ref: "gnews"
+    description: "Pull recent articles from GNews /api/v4/search."
+
+  - name: "semantic_scholar_fetch"
+    type: "public_api"
+    module: "connectors.semantic_scholar_client"
+    function: "SemanticScholarConnector.fetch"
+    api_ref: "semantic_scholar"
+    description: "Pull peer-reviewed papers from Semantic Scholar Graph API /paper/search. Highest authority tier (0.95)."
+
+  - name: "data_gov_fetch"
+    type: "public_api"
+    module: "connectors.data_gov_client"
+    function: "DataGovConnector.fetch"
+    api_ref: "data_gov"
+    description: "Pull primary government datasets from data.gov CKAN /api/3/action/package_search."
+
+  - name: "x_search_fetch"
+    type: "public_api"
+    module: "connectors.x_grok_client"
+    function: "XGrokConnector.fetch"
+    api_ref: "x_search"
+    description: "X (Twitter) search via Grok 4.3 tool-calling. Cashtag detection auto-flags Article V.1 disclaimer when a $XAI-style ticker appears."
+
+  - name: "crawl4ai_fetch"
+    type: "public_api"
+    module: "connectors.crawl4ai_client"
+    function: "Crawl4aiConnector.fetch"
+    api_ref: "crawl4ai"
+    description: "Open-web scrape via the local Crawl4AI package; async-to-sync bridge via asyncio.run."
+
+# ----------------------------------------------------------------------------
+# dependencies: Python deps mirrored from requirements.txt
+# ----------------------------------------------------------------------------
+dependencies:
+  python:
+    version: ">=3.12,<3.13"
+    packages:
+      - "pydantic>=2.7,<3.0"
+      - "langgraph>=0.2.0,<1.0"
+      - "httpx>=0.27,<1.0"
+      - "pyyaml>=6.0,<7.0"
+      - "streamlit>=1.33,<2.0"
+      - "pandas>=2.2,<3.0"
+      - "plotly>=5.22,<6.0"
+  optional_packages:
+      - "mem0ai      # Slot 3 — falls back to direct SQLite when missing"
+      - "qdrant-client # Slot 3 — falls back to in-process cosine when missing"
+      - "sentence-transformers # Slot 3 — falls back to hash-stub embedding when missing"
+      - "requests   # Slot 4 — connectors fall back to deterministic stubs when missing"
+      - "crawl4ai   # Slot 4 — Crawl4ai connector falls back to stub when missing"
+      - "langfuse   # Slot 5 — provenance becomes JSONL-only when missing"
+      - "deepeval   # Slot 6 — eval runs deterministic metrics only when missing"
+
+# ----------------------------------------------------------------------------
+# entry_points: structured map for the dashboard + CLI entries
+# ----------------------------------------------------------------------------
+entry_points:
+  cli:
+    - name: "synthesize"
+      command: "python orchestrator.py --topic <topic> --time-range <7d|30d|90d> [--audit] [--runtime auto|mastra|langgraph|inprocess] [--out <path>]"
+    - name: "memory_smoke"
+      command: "python memory/__init__.py"
+    - name: "connectors_smoke"
+      command: "python connectors/__init__.py"
+    - name: "provenance_smoke"
+      command: "python provenance/__init__.py"
+    - name: "eval_smoke"
+      command: "python eval/__init__.py"
+    - name: "dashboard_smoke"
+      command: "python dashboard.py --smoke"
+  ui:
+    - name: "dashboard"
+      command: "streamlit run dashboard.py"
+      port: 8501
+      tabs:
+        - "Overview"
+        - "Live Pipeline"
+        - "Contradictions"
+        - "Provenance Reports"
+        - "Memory Explorer"
+        - "Improvements"
+        - "Settings"
+
+# ----------------------------------------------------------------------------
+# files: every artifact this Super Agent ships
+# ----------------------------------------------------------------------------
+files:
+  manifest:    "grok-agent.yaml"
+  constitution: "constitution.md"
+  readme:      "README.md"
+  demo:        "DEMO.md"
+  launch:      "X_LAUNCH_THREAD.md"
+  requirements: "requirements.txt"
+  orchestrator:
+    - "orchestrator.py"
+    - "graph.py"
+  memory:
+    - "memory/__init__.py"
+    - "memory/mem0_setup.py"
+    - "memory/qdrant_index.py"
+  connectors:
+    - "connectors/__init__.py"
+    - "connectors/newsapi_client.py"
+    - "connectors/gnews_client.py"
+    - "connectors/semantic_scholar_client.py"
+    - "connectors/data_gov_client.py"
+    - "connectors/x_grok_client.py"
+    - "connectors/crawl4ai_client.py"
+  provenance:
+    - "provenance/__init__.py"
+    - "provenance/log.py"
+    - "provenance/langfuse_hooks.py"
+  eval:
+    - "eval/__init__.py"
+    - "eval/deepeval_suite.py"
+    - "eval/promptfoo.yaml"
+  dashboard:
+    - "dashboard.py"

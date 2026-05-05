@@ -123,6 +123,7 @@
 | P114 | Phase 4 | Implement self-improvement loop for Living Narrative Fabric | eval/__init__.py, promptfoo.yaml, deepeval_suite.py | Plugs into P110–P113 via Protocol; re-uses 4-metric scoring + ConstitutionViolation; local Promptfoo + DeepEval | ✅ done |
 | P115 | Phase 4 | Build Streamlit dashboard for Living Narrative Fabric | dashboard.py, requirements.txt | 7-tab local UI reading directly from P110–P114 stores; interactive rewind + contradiction explorer + improvement dry-run | ✅ done |
 | P116 | Phase 4 | Create demo video script and X launch thread for Living Narrative Fabric | DEMO.md, X_LAUNCH_THREAD.md | Complete 60–90s demo script + ready-to-post X thread for full 8-slot agent | ✅ done |
+| P117 | Phase 4 | Create manifest + constitution for Living Narrative Fabric | grok-agent.yaml, constitution.md | Closes final gap for 8-slot Super Agent #1; fully installable via grok install this | ✅ done |
 
 <!--
 ====================================================================

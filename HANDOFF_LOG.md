@@ -119,6 +119,7 @@
 | P110 | Phase 4 | Build Living Narrative Fabric — Orchestration Core (Slot 2) | templates/super-agents/living-narrative-fabric/orchestrator.py, graph.py, requirements.txt, README.md | Mastra primary with LangGraph fallback; consistent style with P98–P102; ready for memory + API slots | ✅ done |
 | P111 | Phase 4 | Implement memory layer for Living Narrative Fabric | memory/mem0_setup.py, memory/qdrant_index.py, memory/__init__.py | Integrated via with_dependencies Protocol; re-uses 4-metric scoring and ConstitutionViolation | ✅ done |
 | P112 | Phase 4 | Build public API connector helpers for Living Narrative Fabric | connectors/__init__.py + 6 client files | Plugs into P110/P111 via with_dependencies Protocol; full provenance + ConstitutionViolation on every fetch | ✅ done |
+| P113 | Phase 4 | Implement provenance log + Langfuse hooks for Living Narrative Fabric | provenance/__init__.py, log.py, langfuse_hooks.py | Plugs into P110–P112 via Protocol; append-only + Langfuse spans + ConstitutionViolation on every step | ✅ done |
 
 <!--
 ====================================================================

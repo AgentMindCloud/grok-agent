@@ -306,13 +306,31 @@ _PII_FIELD_NAMES: frozenset[str] = frozenset({
 })
 
 
+# ISO 8601 timestamp matcher — used to skip the free-text PII pass on
+# strings that are clearly machine timestamps (e.g. ``2026-05-06T12:00Z``,
+# ``2026-05-06``). Timestamps are not PII; bypassing the regex pass on them
+# avoids false-positive mangling by the phone / SSN patterns. This is an
+# additive correctness fix: the field-name rule still applies to keys
+# named ``timestamp`` if the agent author chose to flag them.
+_ISO_TIMESTAMP_RE = re.compile(
+    r"^\d{4}-\d{2}-\d{2}"
+    r"(?:[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+\-]\d{2}:?\d{2})?)?$"
+)
+
+
 def redact_pii(value: Any) -> Any:
     """Redact PII from a string, list, or dict — recursive and deep.
 
     Returns a new structure; the input is not mutated. Used by every
     connector before any payload leaves the connector boundary.
+
+    ISO 8601 timestamp strings are passed through unchanged — they are
+    machine timestamps, not PII, and the conservative phone-number regex
+    would otherwise false-positive-match the digit-and-dash pattern.
     """
     if isinstance(value, str):
+        if _ISO_TIMESTAMP_RE.match(value):
+            return value
         out = value
         for _name, pattern, replacement in _PII_PATTERNS:
             out = pattern.sub(replacement, out)

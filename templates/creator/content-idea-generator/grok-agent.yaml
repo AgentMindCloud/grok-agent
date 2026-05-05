@@ -2,20 +2,31 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — daily content idea generator for X creators.
+# Built for X, Grok & the ecosystem community — local-first content idea
+# generator for X creators. Reads creator-supplied performance + voice
+# signals (or seeded demo signals when nothing is supplied) and emits a
+# 7/8-section structured idea batch with 4 canonical Idea Plan Score
+# metrics, derivative-and-thin paradox detection, 4-6 idea cards (single
+# / thread / quote-tweet / image-post / reply-thread), per-idea niche
+# fit + originality + voice fidelity scores, and mandatory bridges to
+# analytics-summarizer + brand-voice-trainer in every output. Drafts
+# only — never auto-publishes. Refuses financial / cashtag / sponsorship
+# / harassment content.
 
 version: "2.15"
 kind: "creator-template"
 name: "content-idea-generator"
-description: "Daily content idea generator for X creators — surfaces 5 fresh post angles aligned with your niche and the last 7 days of X trends. Built to help xAI and Grok win."
+description: "Local-first content idea generator for X creators — reads creator-supplied performance + voice signals (or seeded demo signals) and emits a 7/8-section structured idea batch with 4 canonical Idea Plan Score metrics (Niche fit / Voice fidelity / Originality / Engageability), derivative-and-thin paradox detection in BOTH the Plan Score AND Red Flags sections (avg Originality < 40 AND avg Voice fidelity < 60), 4-6 idea cards across single / thread / quote-tweet / image-post / reply-thread formats, per-idea niche fit + originality + voice fidelity scores, and mandatory bridges to analytics-summarizer + brand-voice-trainer + thread-builder. Drafts only — never auto-publishes. Refuses financial / cashtag / investment / sponsorship / harassment content. Built for X, Grok & the ecosystem community."
 author: "@JanSol0s"
 license: "Apache-2.0"
 
 metadata:
   display_name: "Content Idea Generator"
-  tagline: "5 fresh X post ideas, every morning."
+  tagline: "The blank page is the bottleneck — fix it without losing your voice."
   categories: ["creator", "content", "ideation"]
-  tags: ["creator-template", "streamlit-lite"]
+  tags: ["creator-template", "cli-only", "drafts-only", "voice-anchored", "no-finance-content"]
+  created: "2026-05-04"
+  updated: "2026-05-05"
 
 install:
   one_click: true
@@ -23,46 +34,112 @@ install:
   prerequisites:
     - "Windows 11"
     - "Python 3.12+"
+    - "PowerShell 5.1+"
 
 windows:
   appdata_folder: "grok-agent/content-idea-generator"
+  cache_folder: "grok-agent/content-idea-generator/cache"
+  log_folder: "grok-agent/content-idea-generator/logs"
   min_powershell_version: "5.1"
   requires_admin: false
+  chrome_only: true
 
 grok:
   model: "grok-4.3"
-  temperature: 0.7
-  max_tokens: 2048
+  temperature: 0.6
+  max_tokens: 3072
   system_prompt_file: "prompts/system.md"
   tool_calling: true
 
 tools:
-  - name: "generate_post_ideas"
+  - name: "generate_post_idea_batch"
     type: "local_function"
-    description: "Generate N X post ideas given the user's niche and a 7-day trend snapshot."
-    module: "content_idea_generator.runner"
+    description: "Produce a 7-section structured content idea batch (or 8-section when paradox fires, all candidate ideas score below the originality floor, or window=7d) with 4 canonical Idea Plan Score metrics, weighted Plan Score, derivative-and-thin paradox detection in BOTH the Plan Score section AND the Red Flags section, 4-6 idea cards across single / thread / quote-tweet / image-post / reply-thread formats with paraphrased copy outlines (no raw post text, no source-post URLs), per-idea niche fit + originality + voice fidelity scores, predicted engagement bands, and mandatory bridges to analytics-summarizer + brand-voice-trainer + thread-builder. Never auto-publishes. Refuses financial / cashtag / investment / sponsorship / harassment content."
+    module: "content_idea_generator.run"
     function: "generate"
     parameters:
       schema:
         type: "object"
         properties:
+          x_handle:
+            type: "string"
+            description: "Creator's X handle (with or without @). Privacy anchor — only the creator's handle appears in the rendered output."
           niche:
             type: "string"
+            description: "Free-text creator niche (max 80 chars). Used to seed the niche-fit baseline for demo modes and as the niche label in the output snapshot. Optional — defaults to 'general creator' when omitted."
           tone:
             type: "string"
-            enum: ["punchy", "thoughtful", "data-led"]
+            enum: ["punchy", "thoughtful", "data-led", "story-led", "playful"]
+            default: "thoughtful"
+            description: "Tone vector for the idea batch. Drives the voice-fidelity baseline and shapes copy outline phrasing."
           count:
             type: "integer"
-            minimum: 1
-            maximum: 10
-        required: ["niche"]
+            default: 5
+            description: "Target number of idea cards to emit (clamped to [4, 6])."
+          trend_signals_file:
+            type: "string"
+            description: "Optional path to a creator-supplied trend signals export — typically the JSON output from `trend-aligned-poster`'s analysis layer. When supplied, it pipes directly into the Niche fit + Engageability scoring."
+          voice_profile_file:
+            type: "string"
+            description: "Optional path to a creator-supplied voice profile — typically the JSON output from `brand-voice-trainer`. When supplied, it tightens the Voice fidelity baseline and surfaces voice-drift candidates."
+          analytics_file:
+            type: "string"
+            description: "Optional path to a creator-supplied analytics export (the JSON `analytics-summarizer` consumes). Drives the Engageability prior — best-performing archetypes get re-sourced first."
+          window:
+            type: "integer"
+            enum: [7, 30, 90]
+            default: 30
+            description: "Period window in days. 7-day window auto-triggers the Idea Audit section."
+          target_idea_count:
+            type: "integer"
+            default: 5
+            description: "Alias for `count` — preserved for backward compatibility with the P12 starter manifest. Clamped to [4, 6]."
+        required: ["x_handle"]
+
+constitution:
+  rules:
+    - "Drafts only. The runner emits an idea batch the creator reads before posting; it never auto-publishes, schedules, or queues posts on X."
+    - "No fabricated statistics. Demo niche fit, originality, voice fidelity, and engagement bands carry an explicit [demo idea — re-run with --analytics-file / --trend-signals-file / --voice-profile-file for real X data] label so the creator never confuses demo output for real data."
+    - "Surface the derivative-and-thin paradox in BOTH the Idea Plan Score section AND the Red Flags section whenever average Originality is below 40 AND average Voice fidelity is below 60. Both conditions must hold — if only one fires, surface each in its own Plan Score interpretation row instead."
+    - "Every output unconditionally includes bridges to analytics-summarizer (upstream measurement that informs the next idea batch) AND brand-voice-trainer (always-voice-check before posting). These two bridges are never optional."
+    - "Idea cards are capped at 4-6 entries (target configurable via --count or --target-idea-count, clamped to [4, 6]). Below the floor only when the candidate pool is too small to meet the target — surfaced as a Red Flag."
+    - "Privacy-first: no source-post handles, raw post text, or external URLs appear in the rendered output. Trend hooks and copy outlines are paraphrased only — never raw text or third-party handles."
+    - "Voice-anchored output. Every copy outline is phrased to match the configured tone vector and (when supplied) the voice profile. Generic-helpful phrasing is treated as a paradox signal."
+    - "Refuse financial / cashtag / investment / sponsorship / harassment content. Forbidden tokens in either niche, tone, or copy outlines trigger a hard refusal with the exact token surfaced to the operator."
+  hard_refusals:
+    - "auto-publish, auto-schedule, or auto-queue any idea on X without explicit creator consent"
+    - "generate financial, cashtag, investment, portfolio, ticker, or trading content of any kind"
+    - "generate sponsored-post or paid-promotion content without explicit creator-supplied disclosure copy"
+    - "expose source-post X handles, raw post text, or external URLs in the rendered output"
+    - "scrape authenticated X content to seed the niche or trend signals"
 
 safety:
   pii_handling: "local-only"
-  data_retention_days: 90
+  data_retention_days: 30
+  scanner_severity_floor: "warn"
+  forbidden_actions:
+    - scrape_authenticated_x_content
+    - auto_publish_post
+    - auto_schedule_post
+    - generate_financial_content
+    - generate_unsanctioned_sponsored_content
+    - expose_third_party_handles
+    - bypass_safety_scanner
   cost_limits:
-    usd_per_session_max: 0.20
-    api_calls_per_session_max: 50
+    usd_per_session_max: 0.30
+    usd_per_day_max: 1.00
+    tokens_per_session_max: 60000
+    api_calls_per_session_max: 80
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "any export of the idea batch to a path outside the agent AppData folder"
+      - "any future-version auto-publish action (currently disabled in v1)"
+    timeout_seconds: 60
+  disclaimers:
+    not_financial_advice: false
+    not_tax_advice: false
+    real_world_action_consent: false
 
 dependencies:
   python:
@@ -70,4 +147,3 @@ dependencies:
     packages:
       - "pydantic ^2.7"
       - "pyyaml ^6.0"
-      - "requests ^2.31"

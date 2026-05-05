@@ -1,0 +1,72 @@
+{
+  "x_handle": "@habitstacker",
+  "niche": "habit-design",
+  "tone": "story-led",
+  "window": 30,
+  "data_source": "demo",
+  "previous_window_summary": {
+    "avg_niche_fit_score": 82.0,
+    "avg_voice_fidelity_score": 80.0,
+    "avg_originality_score": 70.0,
+    "avg_engageability_score": 65.0
+  },
+  "top_archetypes": [
+    {
+      "archetype_label": "personal anecdote on evening-friction audits",
+      "format": "thread",
+      "rationale": "engagement rate 6.8% \u2014 top archetype in the period's analytics"
+    },
+    {
+      "archetype_label": "habit-stacking case study with concrete numbers",
+      "format": "single",
+      "rationale": "follower delta +1.4% on every ship; archetype carries authority"
+    },
+    {
+      "archetype_label": "framework comparison from creator's own practice",
+      "format": "thread",
+      "rationale": "voice fidelity 92 \u2014 the trainer flags this as the creator's signature shape"
+    }
+  ],
+  "candidate_ideas": [
+    {
+      "format": "thread",
+      "copy_outline": "five-tweet thread on the evening-friction audit that surfaced the smallest fix that worked",
+      "niche_fit_score": 90,
+      "originality_score": 78,
+      "voice_fidelity_score": 88,
+      "engageability_score": 80
+    },
+    {
+      "format": "single",
+      "copy_outline": "a one-paragraph lesson from a three-month habit stack with the retention numbers attached",
+      "niche_fit_score": 92,
+      "originality_score": 80,
+      "voice_fidelity_score": 86,
+      "engageability_score": 75
+    },
+    {
+      "format": "thread",
+      "copy_outline": "compare two behaviour-design frameworks the creator has actually run, not just read",
+      "niche_fit_score": 88,
+      "originality_score": 82,
+      "voice_fidelity_score": 90,
+      "engageability_score": 70
+    },
+    {
+      "format": "quote-tweet",
+      "copy_outline": "quote a paraphrased researcher post and add the practitioner-side counter-experience",
+      "niche_fit_score": 80,
+      "originality_score": 72,
+      "voice_fidelity_score": 84,
+      "engageability_score": 65
+    },
+    {
+      "format": "image-post",
+      "copy_outline": "share the creator-drawn diagram of the friction-audit loop with an annotated caption",
+      "niche_fit_score": 82,
+      "originality_score": 75,
+      "voice_fidelity_score": 80,
+      "engageability_score": 60
+    }
+  ]
+}

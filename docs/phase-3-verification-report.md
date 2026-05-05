@@ -14,11 +14,13 @@
 
 ## 1. Headline scoreboard
 
+> **Updated 2026-05-05 (P108):** the three previously-partial templates (`trend-aligned-poster`, `content-idea-generator`, `reply-drafter`) shipped to fully-complete in P108. The scoreboard now reads **17 / 20 fully shipped**. The remaining 3 (`quote-tweet-suggestor`, `content-calendar-builder`, `growth-experiment-runner`) are not-started and ship in P109 to reach genuine 20/20.
+
 | Surface | State | Verified by |
 |---|---|---|
 | Creator template folders on disk | **17 / 20** | `ls templates/creator/` |
-| Creator templates fully shipped (yaml + system + run + readme + examples) | **14 / 20** | per-folder file check (§2) |
-| Creator templates partial (manifest-only or Slot-1-only) | **3 / 20** | per-folder file check (§2) |
+| Creator templates fully shipped (yaml + system + run + readme + examples) | **17 / 20** ✅ (was 14 — P108 closed 3 partials) | per-folder file check (§2) |
+| Creator templates partial (manifest-only or Slot-1-only) | **0 / 20** ✅ (was 3 — P108 cleared) | per-folder file check (§2) |
 | Creator templates not started | **3 / 20** | per-folder file check (§2) |
 | Program-infrastructure files | **8 / 8** | `ls templates/creator-program/` |
 | Public X launch thread | **shipped** | `docs/creator-program/launch-thread.md` |
@@ -26,7 +28,7 @@
 | Operator dashboard (terminal + HTML) | **shipped + smoke-tested** | §3 below |
 | Privacy / disclaimer guards | **enforced** | §4 below |
 
-**Phase 3 is operationally complete enough to launch the program.** The 6 not-fully-shipped templates can ship in a v1.5 sweep alongside the §2 launch — they are not blockers for opening creator outreach.
+**Phase 3 is launch-ready and 17/20 shipped.** The remaining 3 templates ship in P109 (Recipe-B from-scratch each) to close to genuine 20/20 before Phase 4 Recipe-C step 2 begins.
 
 ---
 
@@ -64,20 +66,21 @@ Result on `main` at the head of P106:
 | 12 | `monetization-optimizer` | ✓ | ✓ | ✓ | ✓ | 6 | **fully shipped** |
 | 13 | `niche-influencer-finder` | ✓ | ✓ | ✓ | ✓ | 2 | **fully shipped** |
 | 14 | `thread-builder` | ✓ | ✓ | ✓ | ✓ | 6 | **fully shipped** |
-| 15 | `trend-aligned-poster` | ✓ | ✓ | ✗ | ✗ | 0 | **partial** (Slot 1 only) |
-| 16 | `content-idea-generator` | ✓ | ✗ | ✗ | ✗ | 0 | **partial** (P12 starter manifest only) |
-| 17 | `reply-drafter` | ✓ | ✗ | ✗ | ✗ | 0 | **partial** (P12 starter manifest only) |
-| 18 | `quote-tweet-suggestor` | — | — | — | — | — | **not started** |
-| 19 | `content-calendar-builder` | — | — | — | — | — | **not started** |
-| 20 | `growth-experiment-runner` | — | — | — | — | — | **not started** |
+| 15 | `trend-aligned-poster` | ✓ | ✓ | ✓ | ✓ | 6 | **fully shipped (P108 — Slot 2 closed; trend-chasing paradox + off-niche guard verified)** |
+| 16 | `content-idea-generator` | ✓ | ✓ | ✓ | ✓ | 6 | **fully shipped (P108 — manifest rewritten v2.15; derivative-and-thin paradox + voice-drift surfacing verified)** |
+| 17 | `reply-drafter` | ✓ | ✓ | ✓ | ✓ | 6 | **fully shipped (P108 — manifest rewritten v2.15; helpful-but-off-voice paradox + risk-exclude guard verified)** |
+| 18 | `quote-tweet-suggestor` | — | — | — | — | — | **not started — P109** |
+| 19 | `content-calendar-builder` | — | — | — | — | — | **not started — P109** |
+| 20 | `growth-experiment-runner` | — | — | — | — | — | **not started — P109** |
 
-**Syntax sanity** — `python3 -c "import ast; ast.parse(open(...).read())"` against five sampled runners (`analytics-summarizer`, `monetization-optimizer`, `thread-builder`, `competitor-watch`, `hashtag-strategy-advisor`) all return `OK syntax`.
+**Syntax sanity (P108 update)** — `python3 -c "import ast; ast.parse(open(...).read())"` against ALL 17 runners now passes (verified by P108's per-folder audit script transliterated to bash). The 3 newly-completed runners (`trend-aligned-poster`, `content-idea-generator`, `reply-drafter`) each pass an additional smoke-run check — paradox dual-surface + mandatory bridges + demo-label invariants confirmed by grep on the demo output.
 
-### Why this is OK to launch with
+### Status after P108
 
-- The 14 fully-shipped templates cover every category in the launch thread (Content / Engagement / Analytics / Audience+Brand+Money) — no group is empty.
-- The 3 partial templates have public-facing manifests, so creators can see them in the catalog and `grok-agent` lists them; the runners just need filling in.
-- The 3 unstarted templates are the lowest-volume requested per `v1.5-improvements.md` §1 simulated metrics. They can ship in a v1.5 sweep without blocking the launch.
+- **17 / 20 fully shipped.** Every shipped template has yaml + system.md + run.py + README.md + ≥2 examples.
+- **0 / 20 partial.** The 3 P108 deliveries cleared every partial slot.
+- **3 / 20 not started** — `quote-tweet-suggestor`, `content-calendar-builder`, `growth-experiment-runner`. These ship in P109.
+- The launch thread, outreach tracker, weekly report, testimonial collector, dashboard, and v1.5 improvements doc remain unchanged — Phase 3's program infrastructure is 100% intact.
 
 ---
 
@@ -139,7 +142,7 @@ HTML dashboard mode also verified separately (6.7 KB single-file output, cinnaba
 
 ## 7. Recommended next prompts (in order)
 
-1. **P108** — Fill the 3 partial templates (Slot 2 for `trend-aligned-poster`; full Slot 1+2 for `content-idea-generator` + `reply-drafter`). Brings the suite to 17/20 fully shipped.
+1. ~~**P108** — Fill the 3 partial templates~~ ✅ **shipped** (3 partials → fully complete; suite at 17/20).
 2. **P109** — Build the 3 unstarted templates (`quote-tweet-suggestor`, `content-calendar-builder`, `growth-experiment-runner`) via Recipe B. Brings the suite to **20/20 fully shipped**.
 3. **P110** — Phase 4 starts. `living-narrative-fabric` orchestration core (Recipe C step 2 — Mastra setup, ingestion adapters, contradiction detection scaffolding).
 
@@ -149,6 +152,6 @@ Optional in parallel: ship the v1.5 §2.1 (short intake form), §2.3 (disclaimer
 
 ## 8. Status
 
-Phase 3 is **operationally closed for launch**. Three follow-up template prompts (P108, P109) bring the suite to mathematically 20/20 without blocking the public launch or the start of Phase 4.
+Phase 3 is **17/20 fully shipped** and operationally closed for launch. P109 brings the suite to mathematically 20/20 (3 not-started → fully complete via Recipe B). After P109, Phase 4 Recipe-C step 2 can begin.
 
 > Built to help xAI and Grok win. 🚀

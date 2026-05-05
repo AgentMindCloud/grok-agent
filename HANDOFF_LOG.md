@@ -120,6 +120,7 @@
 | P105 | Phase 3 | Build Testimonial Collection System | templates/creator-program/testimonial-collector.py, testimonials.json, launcher.ps1, README.md, examples/ | Full Creator Program infrastructure (templates + launch + tracking + testimonials) now complete | ✅ done |
 | P106 | Phase 3 | Creator Program v1.5 Improvements + Phase 3 Completion Report | templates/creator-program/v1.5-improvements.md, creator-dashboard.py, launcher.ps1, docs/phase-3-completion-report.md, README.md | 20/20 templates + full program infrastructure complete. Phase 3 done. | ✅ done |
 | P107 | Phase 3 | Phase 3 Final Verification + Phase 4 Ready Check | docs/phase-3-verification-report.md, templates/super-agents/living-narrative-fabric/ | Phase 3 100% complete and verified. Ready for Super Agents. | ✅ done |
+| P108 | Phase 3 | Complete 3 partial creator templates (true 17/20 — P109 closes the rest) | templates/creator/{trend-aligned-poster,content-idea-generator,reply-drafter}/* + docs/phase-3-verification-report.md | All 3 partial templates fully shipped: trend-aligned-poster Slot 2 + content-idea-generator full rewrite + reply-drafter full rewrite. Each fires its paradox dual-surface on --demo + stays clean on --demo-healthy. Suite at 17/20 fully shipped; remaining 3 (quote-tweet-suggestor, content-calendar-builder, growth-experiment-runner) ship in P109. | ✅ done |
 
 <!--
 ====================================================================

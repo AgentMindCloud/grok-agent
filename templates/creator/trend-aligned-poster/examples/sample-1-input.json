@@ -1,0 +1,146 @@
+{
+  "x_handle": "@JanSol0s",
+  "window": 30,
+  "compare_to": "previous_period",
+  "data_source": "demo",
+  "niche_label": "ai-agents + creator-tools",
+  "trends": [
+    {
+      "trend_paraphrase": "celebrity-led debate on the day's top news cycle",
+      "velocity": "accelerating",
+      "niche_fit_label": "off",
+      "hours_old": 6
+    },
+    {
+      "trend_paraphrase": "viral consumer-app meme with no enterprise angle",
+      "velocity": "accelerating",
+      "niche_fit_label": "loose",
+      "hours_old": 10
+    },
+    {
+      "trend_paraphrase": "open-source agent eval framework crossing benchmark thresholds",
+      "velocity": "steady",
+      "niche_fit_label": "tight",
+      "hours_old": 18
+    },
+    {
+      "trend_paraphrase": "thread genre about agent-failure post-mortems gaining traction",
+      "velocity": "steady",
+      "niche_fit_label": "adjacent",
+      "hours_old": 30
+    },
+    {
+      "trend_paraphrase": "quote-tweet wave riffing on a peer benchmark publication",
+      "velocity": "decaying",
+      "niche_fit_label": "tight",
+      "hours_old": 22
+    }
+  ],
+  "candidate_ideas": [
+    {
+      "format": "single",
+      "trend_tag": "celebrity-news-cycle",
+      "copy_outline": "react to the top news headline with a punchy take",
+      "trend_match_score": 92,
+      "niche_fit_score": 8,
+      "voice_fidelity_score": 65,
+      "originality_score": 28
+    },
+    {
+      "format": "quote-tweet",
+      "trend_tag": "viral-consumer-meme",
+      "copy_outline": "quote the viral consumer-app meme with a brand-tilted angle",
+      "trend_match_score": 88,
+      "niche_fit_score": 12,
+      "voice_fidelity_score": 60,
+      "originality_score": 30
+    },
+    {
+      "format": "single",
+      "trend_tag": "celebrity-news-cycle",
+      "copy_outline": "react to the second day's news cycle with a hot take",
+      "trend_match_score": 95,
+      "niche_fit_score": 5,
+      "voice_fidelity_score": 55,
+      "originality_score": 25
+    },
+    {
+      "format": "quote-tweet",
+      "trend_tag": "off-niche-sports-clip",
+      "copy_outline": "quote a sports highlight with a 'productivity lesson' angle",
+      "trend_match_score": 85,
+      "niche_fit_score": 15,
+      "voice_fidelity_score": 58,
+      "originality_score": 30
+    },
+    {
+      "format": "image-post",
+      "trend_tag": "viral-consumer-meme",
+      "copy_outline": "lift the viral meme template with a generic creator caption",
+      "trend_match_score": 82,
+      "niche_fit_score": 10,
+      "voice_fidelity_score": 50,
+      "originality_score": 22
+    },
+    {
+      "format": "single",
+      "trend_tag": "off-niche-pop-culture",
+      "copy_outline": "comment on the pop culture controversy of the week",
+      "trend_match_score": 80,
+      "niche_fit_score": 18,
+      "voice_fidelity_score": 60,
+      "originality_score": 35
+    },
+    {
+      "format": "quote-tweet",
+      "trend_tag": "celebrity-news-cycle",
+      "copy_outline": "quote a celeb post and shoehorn a creator-tools angle",
+      "trend_match_score": 78,
+      "niche_fit_score": 16,
+      "voice_fidelity_score": 55,
+      "originality_score": 28
+    },
+    {
+      "format": "thread",
+      "trend_tag": "agent-eval-benchmark",
+      "copy_outline": "walk through the eval framework's contribution and where it falls short",
+      "trend_match_score": 72,
+      "niche_fit_score": 88,
+      "voice_fidelity_score": 82,
+      "originality_score": 70
+    },
+    {
+      "format": "single",
+      "trend_tag": "agent-failure-post-mortem",
+      "copy_outline": "share a one-paragraph post-mortem from a recent build with the lesson up front",
+      "trend_match_score": 70,
+      "niche_fit_score": 90,
+      "voice_fidelity_score": 80,
+      "originality_score": 75
+    },
+    {
+      "format": "quote-tweet",
+      "trend_tag": "peer-benchmark-publication",
+      "copy_outline": "quote a paraphrased peer benchmark and add the missing context the chart elides",
+      "trend_match_score": 68,
+      "niche_fit_score": 82,
+      "voice_fidelity_score": 78,
+      "originality_score": 65
+    },
+    {
+      "format": "reply-thread",
+      "trend_tag": "agent-failure-post-mortem",
+      "copy_outline": "reply to two niche peers' threads with concrete failure-mode counter-examples",
+      "trend_match_score": 65,
+      "niche_fit_score": 80,
+      "voice_fidelity_score": 78,
+      "originality_score": 60
+    }
+  ],
+  "previous_window_summary": {
+    "avg_trend_match_score": 64.0,
+    "avg_niche_fit_score": 70.0,
+    "avg_voice_fidelity_score": 76.0,
+    "avg_originality_score": 68.0
+  }
+}

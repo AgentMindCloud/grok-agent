@@ -1,0 +1,86 @@
+{
+  "x_handle": "@habitstacker",
+  "window": 30,
+  "compare_to": "previous_period",
+  "data_source": "demo",
+  "niche_label": "habit-design + behavioural-engineering",
+  "trends": [
+    {
+      "trend_paraphrase": "morning-routine debate trending across productivity feed",
+      "velocity": "accelerating",
+      "niche_fit_label": "tight",
+      "hours_old": 5
+    },
+    {
+      "trend_paraphrase": "evening-friction audits format gaining steady volume",
+      "velocity": "steady",
+      "niche_fit_label": "tight",
+      "hours_old": 14
+    },
+    {
+      "trend_paraphrase": "habit-stacking case-study format with concrete numbers",
+      "velocity": "steady",
+      "niche_fit_label": "tight",
+      "hours_old": 20
+    },
+    {
+      "trend_paraphrase": "behaviour-design framework debate among researchers and writers",
+      "velocity": "accelerating",
+      "niche_fit_label": "adjacent",
+      "hours_old": 8
+    }
+  ],
+  "candidate_ideas": [
+    {
+      "format": "thread",
+      "trend_tag": "morning-routine-debate",
+      "copy_outline": "five-tweet thread on why most morning routines fail at the friction-audit step",
+      "trend_match_score": 78,
+      "niche_fit_score": 88,
+      "voice_fidelity_score": 84,
+      "originality_score": 76
+    },
+    {
+      "format": "single",
+      "trend_tag": "evening-friction-audit",
+      "copy_outline": "single post sharing a one-week evening-friction audit with the smallest fix that worked",
+      "trend_match_score": 72,
+      "niche_fit_score": 90,
+      "voice_fidelity_score": 86,
+      "originality_score": 78
+    },
+    {
+      "format": "thread",
+      "trend_tag": "habit-stacking-case-study",
+      "copy_outline": "case-study thread with measured retention numbers from a three-month stack",
+      "trend_match_score": 74,
+      "niche_fit_score": 92,
+      "voice_fidelity_score": 88,
+      "originality_score": 80
+    },
+    {
+      "format": "quote-tweet",
+      "trend_tag": "behaviour-design-debate",
+      "copy_outline": "quote a paraphrased researcher post and add the practitioner-side counter-experience",
+      "trend_match_score": 65,
+      "niche_fit_score": 80,
+      "voice_fidelity_score": 82,
+      "originality_score": 70
+    },
+    {
+      "format": "image-post",
+      "trend_tag": "evening-friction-audit",
+      "copy_outline": "share a creator-drawn diagram of the friction-audit loop",
+      "trend_match_score": 60,
+      "niche_fit_score": 82,
+      "voice_fidelity_score": 80,
+      "originality_score": 72
+    }
+  ],
+  "previous_window_summary": {
+    "avg_trend_match_score": 64.0,
+    "avg_niche_fit_score": 84.0,
+    "avg_voice_fidelity_score": 82.0,
+    "avg_originality_score": 74.0
+  }
+}

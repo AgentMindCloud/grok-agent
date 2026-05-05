@@ -127,6 +127,7 @@
 | P130 | Phase 4 | Build memory layer for Cross-Reality Action Fabric | memory/mem0_setup.py, memory/qdrant_index.py, memory/__init__.py | Action history + approval records with consent gates and rollback provenance | ✅ done |
 | P131 | Phase 4 | Build provenance log + Langfuse hooks for Cross-Reality Action Fabric | provenance/log.py, provenance/langfuse_hooks.py, provenance/__init__.py | Action-specific provenance with consent_token + rollback chain + strict Langfuse opt-in | ✅ done |
 | P132 | Phase 4 | Build self-improvement loop for Cross-Reality Action Fabric | eval/promptfoo.yaml, eval/deepeval_suite.py, agent.py (additive) | 8-test Promptfoo + 6-metric DeepEval with human-review gate and Rule-safety focus | ✅ done |
+| P133 | Phase 4 | Build UI surface for Cross-Reality Action Fabric | dashboard.py, requirements.txt, .streamlit/config.toml | 6-tab dashboard with one-click approve/rollback + rollback chain visualizer + V.3 banner | ✅ done |
 
 <!--
 ====================================================================

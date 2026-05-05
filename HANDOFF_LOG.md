@@ -123,6 +123,7 @@
 | P126 | Phase 4 | Build UI surface for Self-Evolving Personal OS | dashboard.py, requirements.txt, .streamlit/config.toml | 5-tab Streamlit dashboard wired to all prior layers with one-click daily-brief and improve | ✅ done |
 | P127 | Phase 4 | Build demo video script + X launch thread for Self-Evolving Personal OS | DEMO.md, X_LAUNCH_THREAD.md | 90-second Windows demo script + 10-tweet launch thread ready for X | ✅ done |
 | P128 | Phase 4 | Initialize Cross-Reality Action Fabric (manifest + constitution + folder) | grok-agent.yaml, constitution.md, README.md + folder skeleton | Foundation for final Super Agent with strict human-approval constitution | ✅ done |
+| P129 | Phase 4 | Build orchestration core for Cross-Reality Action Fabric | agent.py, graph.py, __init__.py | LangGraph with mandatory HITL approval gates + rollback for all real-world actions | ✅ done |
 
 <!--
 ====================================================================

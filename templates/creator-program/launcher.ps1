@@ -33,6 +33,9 @@
     testimonial-cards      — write publish-ready markdown cards
     testimonial-export     — full JSON backup
     testimonial-stats      — testimonial counts + outreach linkage
+  Dashboard:
+    dashboard              — print operator dashboard to stdout
+    dashboard-html         — write a single-file HTML dashboard to AppData
   Misc:
     open-dir         — open the AppData folder in Explorer
 
@@ -72,6 +75,7 @@ param(
         'report','report-7','report-30',
         'testimonial-add','testimonial-list','testimonial-revoke',
         'testimonial-cards','testimonial-export','testimonial-stats',
+        'dashboard','dashboard-html',
         'open-dir'
     )]
     [string] $Action,
@@ -87,15 +91,18 @@ $ScriptDir       = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Tracker         = Join-Path $ScriptDir 'outreach-tracker.py'
 $Report          = Join-Path $ScriptDir 'weekly-report.py'
 $Testimonials    = Join-Path $ScriptDir 'testimonial-collector.py'
+$Dashboard       = Join-Path $ScriptDir 'creator-dashboard.py'
 
 # AppData paths — match outreach-tracker.py exactly.
 $AppDataDir       = Join-Path $env:LOCALAPPDATA 'grok-agent\creator-program'
 $ReportDir        = Join-Path $AppDataDir 'reports'
 $TestimonialDir   = Join-Path $AppDataDir 'testimonials'
+$DashboardDir     = Join-Path $AppDataDir 'dashboards'
 
 if (-not (Test-Path $Tracker))      { throw "Missing: $Tracker"      }
 if (-not (Test-Path $Report))       { throw "Missing: $Report"       }
 if (-not (Test-Path $Testimonials)) { throw "Missing: $Testimonials" }
+if (-not (Test-Path $Dashboard))    { throw "Missing: $Dashboard"    }
 
 # Ensure Python 3 is available.
 $python = Get-Command python -ErrorAction SilentlyContinue
@@ -125,6 +132,14 @@ function Invoke-Testimonials {
     & $python.Source $Testimonials @Args
     if ($LASTEXITCODE -ne 0) {
         throw "testimonial-collector.py exited with code $LASTEXITCODE"
+    }
+}
+
+function Invoke-Dashboard {
+    param([string[]] $Args)
+    & $python.Source $Dashboard @Args
+    if ($LASTEXITCODE -ne 0) {
+        throw "creator-dashboard.py exited with code $LASTEXITCODE"
     }
 }
 
@@ -172,6 +187,16 @@ switch ($Action) {
         $stamp = Get-Date -Format 'yyyy-MM-dd'
         $out   = Join-Path $TestimonialDir ("testimonials-backup-$stamp.json")
         Invoke-Testimonials -Args @('export', '--fmt', 'json', '--out', $out)
+        Write-Host "Wrote $out"
+    }
+
+    'dashboard'      { Invoke-Dashboard -Args @() }
+
+    'dashboard-html' {
+        New-Item -Path $DashboardDir -ItemType Directory -Force | Out-Null
+        $stamp = Get-Date -Format 'yyyy-MM-dd'
+        $out   = Join-Path $DashboardDir ("dashboard-$stamp.html")
+        Invoke-Dashboard -Args @('--html', $out)
         Write-Host "Wrote $out"
     }
 

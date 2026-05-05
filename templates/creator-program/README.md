@@ -21,8 +21,10 @@ The operational backbone of the Creator Agent Program (per `CLAUDE.md` §6 Phase
 | `outreach-tracker.py` | CLI to log/respond/deliver/list/stats |
 | `weekly-report.py` | Renders a clean markdown weekly report |
 | `testimonial-collector.py` | Consent-gated testimonial collector + card generator |
+| `creator-dashboard.py` | Operator dashboard (terminal + single-file HTML) |
 | `testimonials.json` | Schema seed file (NEVER read at runtime; live store is in AppData) |
-| `launcher.ps1` | Windows 11 + PowerShell launcher (single entry point for all three tools) |
+| `v1.5-improvements.md` | Roadmap for v1.5 (post-first-30-signups improvements) |
+| `launcher.ps1` | Windows 11 + PowerShell launcher (single entry point for all four tools) |
 | `examples/weekly-report-sample.md` | What the rendered report looks like |
 | `examples/testimonial-card.md` | What a published testimonial card looks like |
 
@@ -207,6 +209,47 @@ The entry stays on disk (audit trail) but is excluded from every public output g
 
 ---
 
+## Operator dashboard (v1.5)
+
+The dashboard combines the outreach store and the testimonials store into a single live view of the program — funnel metrics, top niches, the **Niches × Templates** matrix (per `v1.5-improvements.md` §2.4), zero-signup templates to surface in DM macros, and the most recent publishable testimonials.
+
+### Terminal view
+
+```powershell
+.\launcher.ps1 dashboard
+```
+
+Pipes a clean text summary to stdout — paste a slice of it into a DM when a creator asks "what are others in my niche picking?"
+
+### HTML view
+
+```powershell
+.\launcher.ps1 dashboard-html
+# → Wrote ...\dashboards\dashboard-2026-05-12.html
+```
+
+Single-file HTML (no JS, no external assets) styled in the cinnabar/parchment palette per `CLAUDE.md` §3 branding. Open it in Chrome on Windows; share by exporting as PDF if needed. Keep it local — it summarises consent-gated data.
+
+The HTML report auto-attaches the V.1+V.2 disclaimer block whenever any monetization-optimizer signal is on screen.
+
+---
+
+## v1.5 improvements
+
+Read `v1.5-improvements.md` for the full plan. The shortest version:
+
+1. Cut the intake form from 14 → 6 fields (P0)
+2. Pre-build "Tuning Kits" for the top-5 templates × top-3 niches (P0)
+3. Ship a one-keystroke disclaimer DM macro for `monetization-optimizer` (P0)
+4. Niche → recommended-template suggestions in the dashboard (P1, **shipped in this version**)
+5. Welcome DM that surfaces under-loved templates (P1)
+6. Weekly testimonial-thread auto-generator (P2)
+7. `auto-stale` outreach flagging (P2)
+
+Re-baseline after the next 30 sign-ups; revise the document before P107.
+
+---
+
 ## Storage layout
 
 ```text
@@ -217,9 +260,11 @@ $env:LOCALAPPDATA\grok-agent\creator-program\
 │   ├── weekly-report-7d-2026-05-12.md
 │   ├── weekly-report-7d-2026-05-19.md
 │   └── weekly-report-30d-2026-05-31.md
-└── testimonials\
-    ├── testimonial-cards-2026-05-12.md
-    └── testimonials-backup-2026-05-12.json
+├── testimonials\
+│   ├── testimonial-cards-2026-05-12.md
+│   └── testimonials-backup-2026-05-12.json
+└── dashboards\
+    └── dashboard-2026-05-12.html
 ```
 
 The JSON schema is intentionally simple so you can hand-edit it in any text editor (e.g. to redact a handle on request). Each entry has:

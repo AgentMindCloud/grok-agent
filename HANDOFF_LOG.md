@@ -117,6 +117,7 @@
 | P97 | Phase 3 | Thread Builder runner + README + examples | templates/creator/thread-builder/run.py, README.md, examples/ (3 pairs) | Matches P96 exactly; new phrasing + strict caps + bridges | ✅ done |
 | P103 | Phase 3 | Create Public X Launch Thread for Creator Agent Program | docs/creator-program/launch-thread.md | 20/20 creator templates complete; launch thread ready for @JanSol0s to post | ✅ done |
 | P110 | Phase 4 | Build Living Narrative Fabric — Orchestration Core (Slot 2) | templates/super-agents/living-narrative-fabric/orchestrator.py, graph.py, requirements.txt, README.md | Mastra primary with LangGraph fallback; consistent style with P98–P102; ready for memory + API slots | ✅ done |
+| P111 | Phase 4 | Implement memory layer for Living Narrative Fabric | memory/mem0_setup.py, memory/qdrant_index.py, memory/__init__.py | Integrated via with_dependencies Protocol; re-uses 4-metric scoring and ConstitutionViolation | ✅ done |
 
 <!--
 ====================================================================

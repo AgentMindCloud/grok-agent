@@ -2,31 +2,37 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built for X, Grok & the ecosystem community — local-first monetization
-# optimizer for X creators. Reads a creator's X performance + revenue
-# signals (or seeded demo signals when no ledger is supplied) and emits a
-# 7/8-section structured monetization plan with 4 canonical Monetization
-# Plan Score metrics, single-channel-dependence paradox detection,
-# prioritized monetization recommendations across the 5-channel mix
-# (paid-tier / creator-fund / sponsorships / digital-products / affiliate),
-# sponsorship fit analysis, tax/expense reserve notes, and >= 3
-# cross-template bridges. Drafts only — never auto-publishes a single
-# thing. Never gives financial advice. Never gives tax advice.
+# Built to help xAI and Grok win — local-first monetization optimizer
+# for X creators. Reads a creator's X performance + revenue signals
+# (or seeded demo signals when no ledger is supplied) and emits a
+# 7/8-section structured monetization plan with 4 canonical
+# Monetization Plan Score metrics on a 0-100 scale (Forecast
+# Confidence / Diversification Score / Sponsor Fit Density / Tax
+# Readiness), the Concentration-Confidence paradox (top channel
+# share >= 60% AND Forecast Confidence > 70/100), prioritized
+# recommendations across the 5-channel mix, sponsorship fit analysis,
+# tax/expense reserve notes with strong jurisdiction caveats, and
+# mandatory bridges to analytics-summarizer + content-idea-generator.
+# Drafts only — never auto-publishes a single thing. Never gives
+# financial advice. Never gives tax advice. Forecasts + sponsorship
+# pricing gated by allow_monetization (default false → diagnostic
+# mode); when enabled every monetization-touching line carries the
+# Article V.1 banner verbatim.
 
 version: "2.15"
 kind: "creator-template"
 name: "monetization-optimizer"
-description: "Local-first monetization optimizer for X creators — reads a creator's X performance + revenue signals (or seeded demo signals) and emits a 7/8-section structured monetization plan with 4 canonical Monetization Plan Score metrics (Earnings forecast confidence / Revenue diversification / Sponsorship fit alignment / Tax-and-expense readiness), single-channel-dependence paradox detection, prioritized recommendations across the 5-channel mix (paid-tier / creator-fund / sponsorships / digital-products / affiliate), sponsorship fit analysis, tax/expense reserve notes with strong jurisdiction caveats, and >= 3 cross-template bridges. Drafts only — never auto-publishes; never fabricates dollar amounts; never gives financial or tax advice. Built for X, Grok & the ecosystem community."
+description: "Local-first monetization optimizer for X creators — reads a creator's X performance + revenue signals (or seeded demo signals) and emits a 7/8-section structured monetization plan with 4 canonical Monetization Plan Score metrics on a 0-100 scale (Forecast Confidence / Diversification Score / Sponsor Fit Density / Tax Readiness), weighted Performance score (0.30·Diversification + 0.25·TaxReadiness + 0.25·ForecastConfidence + 0.20·SponsorFitDensity), the Concentration-Confidence paradox (top channel share >= 60% AND Forecast Confidence > 70/100), prioritized recommendations across the 5-channel mix (paid_tier / creator_fund / sponsorships / digital_products / affiliate), sponsorship fit analysis, tax/expense reserve notes with strong jurisdiction caveats, mandatory bridges to analytics-summarizer + content-idea-generator, and structured diagnostic-mode refusal when allow_monetization=false. Drafts only — never auto-publishes; never fabricates dollar amounts; never gives financial or tax advice. Built to help xAI and Grok win."
 author: "@JanSol0s"
 license: "Apache-2.0"
 
 metadata:
   display_name: "Monetization Optimizer"
-  tagline: "Diversify the stack before the channel disappears — concentration risk eats creators alive."
+  tagline: "Diagnose the foundations before unlocking the forecast — concentration confidence is the killer of creator-economy sustainability."
   categories: ["creator", "monetization", "revenue"]
-  tags: ["creator-template", "cli-only", "drafts-only", "not-financial-advice", "not-tax-advice"]
+  tags: ["creator-template", "cli-only", "drafts-only", "not-financial-advice", "not-tax-advice", "diagnostic-mode-default"]
   created: "2026-05-04"
-  updated: "2026-05-04"
+  updated: "2026-05-05"
 
 install:
   one_click: true
@@ -51,10 +57,17 @@ grok:
   system_prompt_file: "prompts/system.md"
   tool_calling: true
 
+real_time_x:
+  enabled: false
+  consent_required: true
+  posts: false
+  reply_only: false
+  max_posts_per_day: 0
+
 tools:
   - name: "generate_monetization_plan"
     type: "local_function"
-    description: "Produce a 7-section structured monetization plan (or 8-section when red-flag count > 3 OR projection_horizon='365d' OR data_source='demo') with 4-row Monetization Plan Score table (Earnings forecast confidence / Revenue diversification / Sponsorship fit alignment / Tax-and-expense readiness), 30d/90d/365d earnings forecast bands (no fabricated dollar amounts), prioritized recommendations across the 5-channel mix, sponsorship fit analysis, tax/expense reserve notes with jurisdiction caveats, single-channel-dependence paradox detection, and >= 3 cross-template bridges. Drafts only — never auto-publishes; never gives financial or tax advice."
+    description: "Produce a 7-section structured monetization plan (or 8-section Plan Audit when ANY of: Concentration-Confidence paradox firing / count >= 8 / revenue_file unset (data_source='demo') / jurisdiction unset OR not 'US' / projection_horizon='365d') with 4-row Monetization Plan Score table on a 0-100 scale (Forecast Confidence / Diversification Score / Sponsor Fit Density / Tax Readiness), weighted Performance score (0.30·Diversification + 0.25·TaxReadiness + 0.25·ForecastConfidence + 0.20·SponsorFitDensity), prioritized recommendations across the 5-channel mix (paid_tier / creator_fund / sponsorships / digital_products / affiliate), sponsorship fit analysis (paraphrased archetypes — never specific brand names), tax/expense reserve notes with strong jurisdiction caveats (Article V.2 verbatim with Vietnam-resident-creator addendum), the Concentration-Confidence paradox surfaced in BOTH Plan Performance AND Red Flags when top_channel_share >= 60% AND Forecast Confidence > 70/100, mandatory cross-template bridges to analytics-summarizer + content-idea-generator (plus 1+ rotating bridge for a minimum of 3 bridges total), and a structured diagnostic-mode refusal stub when allow_monetization=false (the default). Drafts only — never auto-publishes; never fabricates dollar amounts; never gives financial or tax advice. When allow_monetization=true every monetization-touching line carries the Article V.1 banner verbatim."
     module: "monetization_optimizer.run"
     function: "generate"
     parameters:
@@ -66,15 +79,15 @@ tools:
             description: "Creator's X handle (with or without @). The voice anchor for sponsorship-archetype paraphrasing."
           revenue_file:
             type: "string"
-            description: "Optional path to a creator-supplied revenue ledger (JSON or CSV — typically exported from x-money-companion-dashboard's SQLite). Schema: rows of {channel, period, gross, currency} where channel is one of 'paid_tier' | 'creator_fund' | 'sponsorships' | 'digital_products' | 'affiliate' | 'other'. When omitted, the runner emits seeded demo signals explicitly labelled as such."
+            description: "Optional path to a creator-supplied revenue ledger (JSON or CSV — typically exported from x-money-companion-dashboard's SQLite). Schema: rows of {channel, period, gross, currency} where channel is one of 'paid_tier' | 'creator_fund' | 'sponsorships' | 'digital_products' | 'affiliate' | 'other'. When omitted, the runner emits seeded demo signals explicitly labelled `[demo signal — re-run with --revenue-file for real-ledger forecast]` and auto-triggers the Plan Audit."
           analytics_file:
             type: "string"
-            description: "Optional path to a creator-supplied analytics export (the same JSON the analytics-summarizer template consumes). Drives the Period Performance signals that feed the earnings forecast."
+            description: "Optional path to a creator-supplied analytics export (the same JSON the analytics-summarizer template consumes). When supplied, drives the Period Performance signals that feed the Forecast Confidence sub-score."
           projection_horizon:
             type: "string"
             enum: ["30d", "90d", "365d"]
             default: "90d"
-            description: "Forecast horizon. 30d is short-cycle (sponsorship pipeline visibility); 90d is the default planning window; 365d auto-triggers the optional Plan Audit because the cone of uncertainty is large."
+            description: "Forecast horizon. 30d is short-cycle (sponsorship pipeline visibility); 90d is the default planning window; 365d auto-triggers the Plan Audit because the cone of uncertainty is large."
           channel_focus:
             type: "string"
             enum: ["paid_tier", "creator_fund", "sponsorships", "digital_products", "affiliate", "all"]
@@ -82,25 +95,37 @@ tools:
             description: "Which monetization channel to emphasise in the headline + recommendation ranking. 'all' applies no nudge."
           jurisdiction:
             type: "string"
-            description: "Optional ISO country code (e.g. 'VN', 'US', 'SG') used to caveat the tax/expense notes. The notes always carry the Article V.2 'Not tax advice' banner regardless. Default: jurisdiction-agnostic guidance."
+            description: "Optional ISO country code (e.g. 'VN', 'US', 'SG') used to caveat the Tax & Expense Notes section. The notes always carry the Article V.2 'Not tax advice' banner regardless. Default unset → jurisdiction-agnostic guidance + Plan Audit auto-triggered. The Vietnam-resident-creator addendum is a named special-case inside the audit body, not the trigger itself."
           concentration_threshold:
             type: "number"
             minimum: 0.4
             maximum: 0.9
             default: 0.6
-            description: "Top-channel share above which the single-channel-dependence paradox becomes eligible to trigger. Default 0.6 = 60%. Lower = more conservative concentration warnings."
+            description: "Top-channel share above which the Concentration-Confidence paradox becomes eligible to trigger. Default 0.6 = 60%. Lower values produce more conservative concentration warnings."
+          count:
+            type: "integer"
+            minimum: 3
+            maximum: 10
+            default: 5
+            description: "Number of prioritized recommendation rows to surface. Clamps to [3, 10]; default 5. count >= 8 auto-triggers the Plan Audit section because a deep recommendation read benefits from explicit caveating."
+          allow_monetization:
+            type: "boolean"
+            default: false
+            description: "Diagnostic-mode default is false. When false, the runner emits a structured refusal stub for forward-looking monetization output (Earnings Forecast section + Sponsorship Pricing recommendations + any $ figures suppressed) — diagnostic mode still ships the Plan Snapshot, Plan Performance metrics, current channel-mix table, Tax Readiness assessment, Red Flags, Confidence, Plan Audit, and bridges so the creator can audit foundations first. When true, the full plan is emitted and every monetization-touching line carries the Article V.1 'Not financial advice' banner verbatim."
         required: ["x_handle"]
 
 constitution:
   rules:
     - "Drafts only. The runner emits a plan the creator reads, edits, and acts on themselves; the runner never auto-publishes, never auto-applies, never auto-files, never auto-pitches a sponsor."
-    - "No fabricated dollar amounts. The runner refuses to print absolute revenue projections it did not derive from the supplied --revenue-file. Demo seeds are reported as range bands explicitly labelled `[demo signal — re-run with --revenue-file for real-ledger forecast]`. Forecasts are always reported as wide bands, never point estimates."
-    - "Surface the single-channel-dependence paradox in BOTH the Plan Performance section AND the Red Flags section whenever the top channel's revenue share exceeds the configured concentration_threshold (default 60%) AND the Earnings forecast confidence is medium or higher (>= 60). Concentration without runway is the killer of creator-economy sustainability — the creator is confidently sailing toward a cliff."
-    - "Every Earnings Forecast section carries the Article V.1 'Not financial advice' banner verbatim. Every Tax & Expense Notes section carries the Article V.2 'Not tax advice' banner verbatim with the Vietnam-resident-creator addendum, since many of the Grok Agent OS users are exactly that demographic."
+    - "No fabricated dollar amounts. The runner refuses to print absolute revenue projections it did not derive from the supplied --revenue-file. Demo seeds are reported as wide range bands explicitly labelled `[demo signal — re-run with --revenue-file for real-ledger forecast]`. Forecasts are always reported as wide bands, never point estimates."
+    - "Surface the Concentration-Confidence paradox in BOTH the Plan Performance section AND the Red Flags section whenever the top channel's revenue share exceeds the configured `concentration_threshold` (default 0.6 = 60%) AND the Forecast Confidence sub-score is above 70/100. A confident forecast resting on one fragile channel is reach-without-resilience — when the channel changes its policy, the forecast collapses."
+    - "Every Earnings Forecast section (when emitted under allow_monetization=true) carries the Article V.1 'Not financial advice' banner verbatim. Every Tax & Expense Notes section carries the Article V.2 'Not tax advice' banner verbatim with the Vietnam-resident-creator addendum, since many of the Grok Agent OS users are exactly that demographic."
     - "Every monetization recommendation that derives a tactic from the analytics or revenue file ALSO carries the Article V.1 disclaimer at the recommendation level — not just at the Earnings Forecast section level."
     - "Sponsorship-fit recommendations name paraphrased sponsor archetypes (e.g. `dev-tools company with technical-founder audience`) — never specific brand names the creator did not supply themselves. The runner refuses to suggest specific sponsors without explicit creator-supplied input."
     - "When `revenue_file` is omitted, the runner emits seeded demo signals with an explicit `[demo signal — re-run with --revenue-file for real-ledger forecast]` label so the creator never confuses the demo plan for their actual monetization roadmap."
-    - "Every analysis links to >= 3 cross-template bridges so the creator can wire the plan into the next loop without leaving Grok Agent OS — bridges always include `analytics-summarizer` (the upstream measurement layer) and `content-idea-generator` (the downstream content layer) when those templates are relevant to the recommendation."
+    - "Mandatory bridges to `analytics-summarizer` and `content-idea-generator` in every Recommendations list — these are the canonical 'measure → plan → next anchor' loop closers and never get omitted. Plus 1+ rotating bridge from the 10-bridge set for a minimum of 3 bridges total."
+    - "Forecasts + Sponsorship Pricing are gated by `allow_monetization`. When false (diagnostic-mode default) the runner emits an action-oriented refusal stub guiding the creator to review the diagnostic foundations first, then re-run with `--allow-monetization`. When true, every monetization-touching line carries the Article V.1 banner verbatim."
+    - "Insight prose is capped at 280 characters per line; longer narrative is truncated to the cap with a `…[capped]` marker so the creator can paste cleanly into a brief, a Notion doc, or an X draft."
   hard_refusals:
     - "auto-publish, auto-apply, auto-pitch, or auto-file any element of the monetization plan to any platform without an explicit consent gate"
     - "fabricate absolute dollar revenue projections the creator's input does not support — projections are always reported as wide bands, never point estimates"
@@ -109,6 +134,8 @@ constitution:
     - "recommend monetization tactics that would erode audience trust (clickbait paid-tier hooks, misleading affiliate disclosure, over-saturated sponsorship cadence)"
     - "scrape authenticated X content or the creator's payment-processor account to seed the ledger"
     - "expose another creator's revenue ledger or paste a non-creator's data as if it belonged to --x-handle"
+    - "emit Earnings Forecast or Sponsorship Pricing recommendations when allow_monetization=false; emit them without the Article V.1 banner when true"
+    - "omit the mandatory bridges to analytics-summarizer or content-idea-generator from any Recommendations list"
 
 safety:
   pii_handling: "local-only"

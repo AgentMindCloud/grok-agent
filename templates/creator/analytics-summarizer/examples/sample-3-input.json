@@ -2,43 +2,57 @@
   "_copyright": "Copyright 2026 AgentMindCloud",
   "_license": "Apache License, Version 2.0",
   "_license_url": "http://www.apache.org/licenses/LICENSE-2.0",
-  "_built_for": "X, Grok & the ecosystem community",
-  "_comment_purpose": "Sample 3 — 7-day window case. Auto-triggers the optional Period Audit section because 7d windows are dominated by single-day variance. Demonstrates the runner's directional-only stance for short windows and the explicit 'widen to 30d' remediation.",
+  "_built_for": "xAI and Grok",
+  "_comment_purpose": "Sample 3 — 7-day window with auto-triggered Period Audit. Real-ish numbers but in a 7d window which always triggers the audit. Sub-scores RS=72, EV=48, AQ=58, CR=55. No paradox (RS not above 80). Performance score 58/100. Period Audit auto-triggered solely by time_range='7d'.",
   "x_handle": "@JanSol0s",
   "time_range": "7d",
   "compare_to": "previous_period",
   "metric_focus": "engagement",
   "data_source": "demo",
   "current_period": {
-    "impressions": 38000,
-    "engagements": 1100,
-    "follower_delta_pct": 0.4,
-    "posts_per_week": 6
+    "impressions": 190000,
+    "prev_impressions": 150000,
+    "substantive_replies": 1200,
+    "reposts": 900,
+    "bookmarks": 940,
+    "repeat_engager_pct": 55.0,
+    "niche_overlap_pct": 60.0,
+    "substantive_reply_ratio_pct": 60.0,
+    "reply_depth_avg": 2.0,
+    "quote_tweet_ratio_pct": 25.0,
+    "save_to_repost_ratio": 1.55
   },
   "previous_period": {
-    "impressions": 41000,
-    "engagements": 1280,
-    "follower_delta_pct": 0.6,
-    "posts_per_week": 5
+    "impressions": 170000,
+    "prev_impressions": 140000,
+    "substantive_replies": 900,
+    "reposts": 800,
+    "bookmarks": 800,
+    "repeat_engager_pct": 50.0,
+    "niche_overlap_pct": 60.0,
+    "substantive_reply_ratio_pct": 55.0,
+    "reply_depth_avg": 2.0,
+    "quote_tweet_ratio_pct": 22.0,
+    "save_to_repost_ratio": 1.45
   },
   "top_content": [
     {
-      "archetype_label": "Mid-week long-form thread on infra tooling",
+      "archetype_label": "Live-thread during the xAI dev event",
       "format": "thread",
-      "impression_share_pct": 42,
-      "engagement_rate_pct": 3.1
+      "impression_share_pct": 28.0,
+      "engagement_rate_pct": 2.4
     },
     {
-      "archetype_label": "Quote-tweet rally on a niche launch",
-      "format": "quote-tweet",
-      "impression_share_pct": 18,
-      "engagement_rate_pct": 2.7
+      "archetype_label": "Reply-stack on a competitor thread on agent OS",
+      "format": "reply",
+      "impression_share_pct": 15.0,
+      "engagement_rate_pct": 2.8
     },
     {
-      "archetype_label": "Numbers post (small sample, single-day spike)",
+      "archetype_label": "Numbers-led explainer on weekly impression mix",
       "format": "single-post",
-      "impression_share_pct": 11,
-      "engagement_rate_pct": 4.0
+      "impression_share_pct": 11.0,
+      "engagement_rate_pct": 2.1
     }
   ]
 }

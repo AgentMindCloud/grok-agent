@@ -2,43 +2,69 @@
   "_copyright": "Copyright 2026 AgentMindCloud",
   "_license": "Apache License, Version 2.0",
   "_license_url": "http://www.apache.org/licenses/LICENSE-2.0",
-  "_built_for": "X, Grok & the ecosystem community",
-  "_comment_purpose": "Sample 2 — healthy growth case. All metrics in the healthy band; no paradox. Demonstrates the canonical 'good period' shape with rising impressions, healthy engagement rate above the niche baseline, positive follower delta, and steady cadence.",
+  "_built_for": "xAI and Grok",
+  "_comment_purpose": "Sample 2 — healthy/balanced case. All four sub-scores inside their healthy bands (RS=67, EV=60, AQ=72, CR=65). No paradox. No red flags. Performance score 66/100. No Period Audit auto-triggered (real data path; non-7d window; no paradox; count<8).",
   "x_handle": "@habitstacker",
   "time_range": "30d",
   "compare_to": "previous_period",
   "metric_focus": "all",
   "data_source": "demo",
   "current_period": {
-    "impressions": 96500,
-    "engagements": 5500,
-    "follower_delta_pct": 3.2,
-    "posts_per_week": 5
+    "impressions": 150000,
+    "prev_impressions": 125000,
+    "substantive_replies": 1200,
+    "reposts": 900,
+    "bookmarks": 900,
+    "repeat_engager_pct": 70.0,
+    "niche_overlap_pct": 75.0,
+    "substantive_reply_ratio_pct": 70.0,
+    "reply_depth_avg": 2.5,
+    "quote_tweet_ratio_pct": 30.0,
+    "save_to_repost_ratio": 1.75
   },
   "previous_period": {
-    "impressions": 84000,
-    "engagements": 4200,
-    "follower_delta_pct": 2.4,
-    "posts_per_week": 4
+    "impressions": 125000,
+    "prev_impressions": 110000,
+    "substantive_replies": 900,
+    "reposts": 700,
+    "bookmarks": 700,
+    "repeat_engager_pct": 65.0,
+    "niche_overlap_pct": 70.0,
+    "substantive_reply_ratio_pct": 70.0,
+    "reply_depth_avg": 2.2,
+    "quote_tweet_ratio_pct": 25.0,
+    "save_to_repost_ratio": 1.75
   },
   "top_content": [
     {
-      "archetype_label": "Personal-anecdote thread on evening-friction audits",
-      "format": "thread",
-      "impression_share_pct": 38,
-      "engagement_rate_pct": 6.8
-    },
-    {
-      "archetype_label": "Habit-stacking case study with concrete numbers",
+      "archetype_label": "Tactical how-to on weekly habit stacks",
       "format": "single-post",
-      "impression_share_pct": 22,
-      "engagement_rate_pct": 7.4
+      "impression_share_pct": 22.0,
+      "engagement_rate_pct": 3.6
     },
     {
-      "archetype_label": "Reply-thread on deep-work shutdown rituals",
-      "format": "reply",
-      "impression_share_pct": 14,
-      "engagement_rate_pct": 5.9
+      "archetype_label": "Personal story opener on a 90-day streak",
+      "format": "thread",
+      "impression_share_pct": 18.0,
+      "engagement_rate_pct": 4.1
+    },
+    {
+      "archetype_label": "Resource list / curated digest of tracking apps",
+      "format": "single-post",
+      "impression_share_pct": 14.0,
+      "engagement_rate_pct": 3.2
+    },
+    {
+      "archetype_label": "Numbers-led explainer on adherence math",
+      "format": "single-post",
+      "impression_share_pct": 12.0,
+      "engagement_rate_pct": 3.5
+    },
+    {
+      "archetype_label": "Behind-the-scenes log of the streak board build",
+      "format": "single-post",
+      "impression_share_pct": 9.0,
+      "engagement_rate_pct": 2.8
     }
   ]
 }

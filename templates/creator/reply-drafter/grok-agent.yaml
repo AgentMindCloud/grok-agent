@@ -39,6 +39,7 @@ install:
     - "PowerShell 5.1+"
 
 windows:
+  launcher: "launcher.ps1"
   appdata_folder: "grok-agent/reply-drafter"
   cache_folder: "grok-agent/reply-drafter/cache"
   log_folder: "grok-agent/reply-drafter/logs"
@@ -52,6 +53,7 @@ grok:
   max_tokens: 3072
   system_prompt_file: "prompts/system.md"
   tool_calling: true
+  streaming: true
 
 real_time_x:
   enabled: false

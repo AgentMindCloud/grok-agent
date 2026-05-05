@@ -1,0 +1,107 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — quick-to-deep research assistant for X creators.
+
+version: "2.15"
+kind: "creator-template"
+name: "research-assistant"
+description: "Quick-to-deep research for X creators — multi-source synthesis with key findings, source citations, contradiction flags, and actionable next steps that bridge into the rest of the creator-template suite. Local-first. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Research Assistant"
+  tagline: "Balanced research, citations-first, ready in 60 seconds."
+  categories: ["creator", "research", "synthesis"]
+  tags: ["creator-template", "cli-only", "phase-3"]
+  language: "en"
+  created: "2026-05-04"
+  updated: "2026-05-04"
+  repository: "https://github.com/AgentMindCloud/grok-agent"
+
+install:
+  one_click: true
+  install_command: "grok-agent install research-assistant"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  launcher: "launcher.ps1"
+  appdata_folder: "grok-agent/research-assistant"
+  cache_folder: "grok-agent/research-assistant/cache"
+  log_folder: "grok-agent/research-assistant/logs"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.4
+  max_tokens: 2560
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+  streaming: true
+
+tools:
+  - name: "generate_research_summary"
+    type: "local_function"
+    description: "Run a quick / standard / deep research pass on a query across X / news / academic / all sources and return a structured summary with key findings, contradictions flagged, sources cited, and suggested next steps."
+    module: "research_assistant.run"
+    function: "generate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          x_handle:
+            type: "string"
+            description: "Your X handle, e.g. @JanSol0s — anchors voice for next-step suggestions."
+          query:
+            type: "string"
+            description: "The research question or topic, in plain language."
+          depth:
+            type: "string"
+            enum: ["quick", "standard", "deep"]
+            description: "Research depth: quick (top 3 findings, 30s), standard (5 findings + contradictions, 60s), deep (8 findings + cross-source synthesis, 2-3min). Default standard."
+          sources:
+            type: "string"
+            enum: ["x", "news", "academic", "all"]
+            description: "Source pool to draw from. Default 'all'."
+          niche:
+            type: "string"
+            description: "Optional niche hint to bias source weighting and next-step ideation."
+          include_visual:
+            type: "boolean"
+            description: "If true, append a Grok Imagine visual prompt suitable for a research-card hero. Default false."
+        required: ["x_handle", "query"]
+
+constitution:
+  rules:
+    - "Never fabricate sources, citations, headlines, paper titles, dates, author names, or quoted text. Every claim must trace to a specific source the runner provides; if a claim cannot be grounded, omit it or label it 'evergreen' / 'analyst inference'."
+    - "Always emit the structured 6-section shape: Question, Key Findings (3-8 with inline citations), Contradictions Flagged, Sources Cited (table), Suggested Next Steps (3-5), Confidence. Add the 7th 'Visual Aid' section only when include_visual is true."
+    - "Cite every key finding inline with a short source tag like [src 3] tied to the Sources Cited table. No floating claims."
+    - "Surface contradictions explicitly -- never silently pick a side. If two sources disagree on a fact, both appear in Contradictions Flagged with the side each takes."
+    - "Confidence and source-strength are qualitative labels only: low / medium / medium-high / high. Never percentages or fake numerical scores."
+    - "Suggested Next Steps reference the rest of the creator-template suite where useful: 'expand into a thread via content-idea-generator', 'draft a reply via reply-drafter', 'queue for tomorrow's brief via daily-briefing-agent', etc."
+    - "Tag finance-adjacent findings (cashtags, tokens, earnings, P&L, taxes, specific buy/sell language) with a 'Context only -- not financial advice.' line on the affected finding."
+    - "Refuse to research queries that violate X policy or that ask for instructions facilitating doxxing, harassment, scams, or illegal activity. Surface a one-line refusal with the reason."
+    - "Privacy: when surfacing X-source material, redact phone numbers and email addresses before quoting; quote selectively; never reveal private info even if it appears in a public mention."
+    - "Local-first: query history, prior summaries, and cached source pools live under $env:LOCALAPPDATA. Never propose syncing or uploading them."
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 90
+  cost_limits:
+    usd_per_session_max: 0.30
+    api_calls_per_session_max: 100
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+      - "requests ^2.31"

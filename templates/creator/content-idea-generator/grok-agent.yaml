@@ -15,7 +15,11 @@ metadata:
   display_name: "Content Idea Generator"
   tagline: "5 fresh X post ideas, every morning."
   categories: ["creator", "content", "ideation"]
-  tags: ["creator-template", "streamlit-lite"]
+  tags: ["creator-template", "streamlit-lite", "phase-3"]
+  language: "en"
+  created: "2026-05-04"
+  updated: "2026-05-04"
+  repository: "https://github.com/AgentMindCloud/grok-agent"
 
 install:
   one_click: true
@@ -23,18 +27,24 @@ install:
   prerequisites:
     - "Windows 11"
     - "Python 3.12+"
+    - "PowerShell 5.1+"
 
 windows:
+  launcher: "launcher.ps1"
   appdata_folder: "grok-agent/content-idea-generator"
+  cache_folder: "grok-agent/content-idea-generator/cache"
+  log_folder: "grok-agent/content-idea-generator/logs"
   min_powershell_version: "5.1"
   requires_admin: false
+  chrome_only: true
 
 grok:
   model: "grok-4.3"
-  temperature: 0.7
+  temperature: 0.8
   max_tokens: 2048
   system_prompt_file: "prompts/system.md"
   tool_calling: true
+  streaming: true
 
 tools:
   - name: "generate_post_ideas"
@@ -48,20 +58,36 @@ tools:
         properties:
           niche:
             type: "string"
+            description: "User's niche or topic area (e.g. 'AI tooling', 'creator economy', 'fintech')."
           tone:
             type: "string"
             enum: ["punchy", "thoughtful", "data-led"]
+            description: "Voice flavor — punchy = short + sharp, thoughtful = long-form essay angles, data-led = number-anchored takes."
           count:
             type: "integer"
             minimum: 1
             maximum: 10
+            description: "How many ideas to return (default 5)."
+          trend_window_days:
+            type: "integer"
+            minimum: 1
+            maximum: 30
+            description: "Look-back window for the trend snapshot (default 7)."
         required: ["niche"]
+
+constitution:
+  rules:
+    - "Never fabricate stats, quotes, or news headlines — if a number or claim is not grounded in the trend snapshot, omit it."
+    - "Always produce N distinct angles — no two ideas may share the same hook or framing."
+    - "Surface trends as inspiration, never as endorsement of any cashtag, person, or product."
+    - "Refuse to draft engagement-bait that violates X policy (false outrage, hate, harassment, or doxxing)."
+    - "Tag finance-adjacent ideas with a soft 'Context only — not financial advice.' note inside the idea card."
 
 safety:
   pii_handling: "local-only"
-  data_retention_days: 90
+  data_retention_days: 30
   cost_limits:
-    usd_per_session_max: 0.20
+    usd_per_session_max: 0.15
     api_calls_per_session_max: 50
 
 dependencies:

@@ -101,6 +101,8 @@ metadata:
   icon: "icon.png"                     # OPTIONAL · path relative to manifest, 256x256 PNG/SVG
   homepage: "https://example.com"      # OPTIONAL · URL for docs/landing
   repository: "https://github.com/AgentMindCloud/grok-agent"  # OPTIONAL · URL
+  docs: "https://example.com/docs"     # OPTIONAL · URL or repo path to the agent's README/docs (P138)
+  demo_video: "DEMO.md"                # OPTIONAL · URL or repo path to the agent's 90-second demo (P138)
   language: "en"                       # OPTIONAL · IETF tag · default "en"
   created: "2026-05-04"                # OPTIONAL · ISO-8601 date
   updated: "2026-05-04"                # OPTIONAL · ISO-8601 date

@@ -131,6 +131,9 @@ class Metadata(BaseModel):
     icon: Optional[str] = None
     homepage: Optional[str] = None
     repository: Optional[str] = None
+    # P138: docs + demo_video links carried by Super Agent manifests.
+    docs: Optional[str] = None
+    demo_video: Optional[str] = None
     language: str = "en"
     created: Optional[str] = None
     updated: Optional[str] = None
@@ -143,22 +146,42 @@ class Install(BaseModel):
     install_command: Optional[str] = None
     post_url: Optional[str] = None
     prerequisites: List[str] = Field(default_factory=list)
+    # P138: Super Agent manifests carry an optional-prereqs list and a
+    # full one_command_install snippet that "grok install this" can shell
+    # out to. Both are documented in the canonical example for super-agents.
+    optional_prerequisites: List[str] = Field(default_factory=list)
+    one_command_install: Optional[str] = None
 
     model_config = _strict
 
 
 class Windows(BaseModel):
     launcher: Optional[str] = None
+    # P138: launch_command is the verbatim PowerShell line "grok install this"
+    # invokes; distinct from launcher (which is a path). Both are accepted.
+    launch_command: Optional[str] = None
     appdata_folder: Optional[str] = None
     config_folder: Optional[str] = None
     cache_folder: Optional[str] = None
     log_folder: Optional[str] = None
+    # P138: Super Agent-specific subfolders under AppData. The schema's
+    # canonical Super Agent example documents these names; accepting them
+    # explicitly stops the validator from rejecting common patterns.
+    provenance_folder: Optional[str] = None
+    eval_folder: Optional[str] = None
+    workflows_folder: Optional[str] = None
+    briefings_folder: Optional[str] = None
     defender_exclusion_recommended: bool = False
     registry_keys: List[str] = Field(default_factory=list)
     min_powershell_version: str = "5.1"
     requires_admin: bool = False
     chrome_only: bool = True
     no_install_dependencies: List[str] = Field(default_factory=list)
+    # P138: Streamlit / dashboard port + scheduled-task config + the
+    # env-vars list a user might want to set before launch.
+    default_port: Optional[int] = Field(default=None, ge=1, le=65535)
+    scheduled_task: Optional[Dict[str, Any]] = None
+    env_vars_optional: List[str] = Field(default_factory=list)
 
     model_config = _strict
 
@@ -184,6 +207,11 @@ class Grok(BaseModel):
     vision: bool = False
     streaming: bool = True
     fallback_model: Optional[str] = None
+    # P138: Super Agent manifests carry a free-form personalisation block
+    # describing user-tunable behaviour knobs (tone preferences, locale,
+    # default redaction posture, etc.). The block is intentionally
+    # untyped — agents read what they understand and ignore the rest.
+    personalisation: Optional[Dict[str, Any]] = None
 
     model_config = _strict
 
@@ -222,8 +250,17 @@ class Tool(BaseModel):
     name: str = Field(..., pattern=TOOL_NAME_PATTERN)
     type: Literal["public_api", "local_function", "mcp_server"]
     description: str = Field(..., min_length=1)
-    parameters: ToolParameters
+    # P138: parameters is now optional. When `type == public_api` and the
+    # tool delegates to a `public_apis[]` entry via `api_ref`, the JSON
+    # Schema is supplied by the public_apis declaration and inlining
+    # `parameters` is redundant.
+    parameters: Optional[ToolParameters] = None
     api: Optional[ToolApi] = None
+    # P138: api_ref is an alternative to `api` for public_api tools — it
+    # references a `public_apis[].name` entry instead of inlining the
+    # full URL/auth block. Either api or api_ref is required when
+    # type=public_api (enforced below).
+    api_ref: Optional[str] = None
     module: Optional[str] = None
     function: Optional[str] = None
     server: Optional[ToolServer] = None
@@ -232,9 +269,10 @@ class Tool(BaseModel):
 
     @model_validator(mode="after")
     def _type_consistency(self) -> "Tool":
-        if self.type == "public_api" and self.api is None:
+        if self.type == "public_api" and self.api is None and not self.api_ref:
             raise ValueError(
-                f"tools[].api is required when type='public_api' (tool '{self.name}')"
+                f"tools[].api OR tools[].api_ref is required when "
+                f"type='public_api' (tool '{self.name}')"
             )
         if self.type == "local_function" and (not self.module or not self.function):
             raise ValueError(
@@ -252,15 +290,36 @@ class PublicApi(BaseModel):
     name: str
     base_url: str
     auth_env_var: Optional[str] = None
-    auth: Optional[Literal["none", "bearer", "basic", "api_key", "oauth2"]] = None
+    # P138: 'optional' was added so a public API that supports but
+    # does not require auth (e.g. Semantic Scholar with a soft rate
+    # limit, Google Calendar with a personal token) can be declared
+    # honestly. Backwards compatible — every prior value still passes.
+    auth: Optional[Literal[
+        "none", "bearer", "basic", "api_key", "oauth2", "optional",
+    ]] = None
     free_tier_quota: Optional[str] = None
     rate_limit: Optional[int] = Field(default=None, ge=0)
     privacy: str = "no_pii_sent"
+    # P138: descriptive metadata Super Agent manifests carry.
+    # source_authority is a 0.0–1.0 confidence weight the
+    # contradiction-detection layer uses when sources disagree
+    # (Living Narrative Fabric semantics, also reused by Self-
+    # Evolving Personal OS). scope is a free-form list/string
+    # documenting the OAuth scope required when applicable.
+    # default_mode is the operational mode the agent treats this
+    # API as ("read-only" / "write-on-consent" / etc.).
+    source_authority: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+    scope: Optional[Any] = None
+    default_mode: Optional[str] = None
 
     model_config = _strict
 
 
 class MultiAgent(BaseModel):
+    # P138: explicit enable/disable flag. Some Super Agent manifests use
+    # multi_agent purely as a coordination block without orchestrating
+    # delegates yet — the toggle lets the runtime skip wiring entirely.
+    enabled: bool = False
     role: Literal["orchestrator", "worker", "observer"] = "worker"
     delegates_to: List[str] = Field(default_factory=list)
     shared_memory: Optional[str] = None
@@ -282,6 +341,9 @@ class RealTimeX(BaseModel):
     posts: bool = False
     reply_only: bool = True
     max_posts_per_day: int = Field(default=10, ge=0)
+    # P138: free-form notes block — manifests use it to record posting
+    # cadence rationale, audit-trail comments, or migration notes.
+    notes: Optional[str] = None
 
     model_config = _strict
 
@@ -298,6 +360,10 @@ class VectorStore(BaseModel):
     backend: Literal["qdrant", "chroma", "pgvector"] = "qdrant"
     url: Optional[str] = None
     collection: Optional[str] = None
+    # P138: Super Agent memory layers split a single backend into many
+    # per-kind collections (e.g. personal.x / personal.calendar /
+    # personal.email) using a shared prefix.
+    collection_prefix: Optional[str] = None
 
     model_config = _strict
 
@@ -311,6 +377,11 @@ class Memory(BaseModel):
     procedural: bool = False
     retention_days: int = Field(default=365, ge=0)
     encryption_at_rest: bool = True
+    # P138: Super Agent memory layers declare a fallback strategy
+    # (e.g. "in-memory + sqlite when qdrant unavailable") and an
+    # explicit list of personal collections the agent owns.
+    fallback: Optional[Any] = None
+    personal_collections: List[str] = Field(default_factory=list)
 
     model_config = _strict
 
@@ -331,6 +402,14 @@ class Provenance(BaseModel):
     cite_sources: bool = True
     versioned_synthesis: bool = False
     contradiction_detection: bool = False
+    # P138: append-only contract is the default for Super Agent
+    # provenance logs, declared explicitly in the manifest so the
+    # scanner can refuse any agent that reverses it.
+    append_only: bool = True
+    # P138: extra redaction layer when traces flow to Langfuse —
+    # PII is redacted at write time AND again before the cloud
+    # transmission. Defence in depth.
+    redact_pii_before_langfuse: bool = True
 
     model_config = _strict
 
@@ -339,6 +418,10 @@ class Constitution(BaseModel):
     rules: List[str] = Field(..., min_length=1)
     consent_gates: List[str] = Field(default_factory=list)
     hard_refusals: List[str] = Field(default_factory=list)
+    # P138: many Super Agent manifests carry a `file:` pointer to the
+    # full constitution.md document next to the manifest. The
+    # validator records it but doesn't follow the link.
+    file: Optional[str] = None
 
     model_config = _strict
 
@@ -364,6 +447,10 @@ class Disclaimers(BaseModel):
     not_financial_advice: bool = False
     not_tax_advice: bool = False
     real_world_action_consent: bool = False
+    # P138: a few Super Agent manifests opt into an additional
+    # "not medical advice" banner — common when the agent might
+    # surface health-context information from notes or news.
+    not_medical_advice: bool = False
 
     model_config = _strict
 
@@ -391,6 +478,10 @@ class Dependencies(BaseModel):
     python: Optional[PythonDeps] = None
     system: List[str] = Field(default_factory=list)
     apis_required: List[str] = Field(default_factory=list)
+    # P138: Super Agent manifests list "best when present" packages
+    # separately from the hard-required ones. The runtime treats them
+    # as opt-in (try-import), so they're tracked but not blocking.
+    optional_packages: List[str] = Field(default_factory=list)
 
     model_config = _strict
 
@@ -398,6 +489,11 @@ class Dependencies(BaseModel):
 class PromptfooConfig(BaseModel):
     enabled: bool = False
     config: Optional[str] = None
+    # P138: descriptive metadata about the suite — count + categories.
+    # Both are read by the agent's UI for status badges; neither
+    # changes runtime behaviour.
+    test_count: Optional[int] = Field(default=None, ge=0)
+    categories: List[str] = Field(default_factory=list)
 
     model_config = _strict
 
@@ -405,6 +501,11 @@ class PromptfooConfig(BaseModel):
 class DeepEvalConfig(BaseModel):
     enabled: bool = False
     suite: Optional[str] = None
+    # P138: per-Super-Agent metric set + the formula weights used by
+    # the OverallSelfImprovement aggregate. The dashboard renders these
+    # for transparency on what the suite is measuring.
+    metrics: List[str] = Field(default_factory=list)
+    formula_weights: Optional[Dict[str, float]] = None
 
     model_config = _strict
 
@@ -415,6 +516,9 @@ class Evaluation(BaseModel):
     deepeval: Optional[DeepEvalConfig] = None
     langfuse_traces: bool = False
     weekly_loop: bool = False
+    # P138: Super Agent manifests record where the eval-history JSONL
+    # lives so the dashboard can resolve it without an env var.
+    history_path: Optional[str] = None
 
     model_config = _strict
 
@@ -457,7 +561,21 @@ class GrokAgentManifest(BaseModel):
     dependencies: Optional[Dependencies] = None
     evaluation: Optional[Evaluation] = None
 
-    model_config = _strict
+    # P138: top-level kind-specific extensions. Each Super Agent kind
+    # (super-agent, finance-dashboard, alpha-engine, vision-analyzer,
+    # creator-payout-optimizer, x-native, creator-template) is
+    # permitted to add kind-specific top-level blocks documented in
+    # its own constitution. The validator records them but does not
+    # type-check them. Examples in the wild:
+    #   - synthesis_confidence  (Living Narrative Fabric)
+    #   - briefing_trust        (Self-Evolving Personal OS)
+    #   - bridges               (every Super Agent — cross-agent links)
+    #   - entry_points          (every Super Agent — CLI command map)
+    #   - files                 (every Super Agent — file inventory)
+    # Future Super Agents may add more; the schema stays permissive at
+    # the top level (still strict everywhere else, including all
+    # nested sections above).
+    model_config = ConfigDict(extra="allow")
 
     @field_validator("version")
     @classmethod

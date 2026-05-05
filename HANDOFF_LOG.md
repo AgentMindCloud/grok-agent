@@ -116,6 +116,7 @@
 | P96 | Phase 3 | Thread Builder manifest + system prompt | templates/creator/thread-builder/grok-agent.yaml, prompts/system.md | Matches P83/P85 v2.15 shape; new phrasing + strong bridges | ✅ done |
 | P97 | Phase 3 | Thread Builder runner + README + examples | templates/creator/thread-builder/run.py, README.md, examples/ (3 pairs) | Matches P96 exactly; new phrasing + strict caps + bridges | ✅ done |
 | P103 | Phase 3 | Create Public X Launch Thread for Creator Agent Program | docs/creator-program/launch-thread.md | 20/20 creator templates complete; launch thread ready for @JanSol0s to post | ✅ done |
+| P110 | Phase 4 | Build Living Narrative Fabric — Orchestration Core (Slot 2) | templates/super-agents/living-narrative-fabric/orchestrator.py, graph.py, requirements.txt, README.md | Mastra primary with LangGraph fallback; consistent style with P98–P102; ready for memory + API slots | ✅ done |
 
 <!--
 ====================================================================

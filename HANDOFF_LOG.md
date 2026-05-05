@@ -118,6 +118,7 @@
 | P121 | Phase 4 | Build public API connector helpers for Self-Evolving Personal OS | connectors/__init__.py + 5 client files | Consent-gated + PII-redacted personal connectors; integrates with P119–P120 | ✅ done |
 | P122 | Phase 4 | Build memory layer for Self-Evolving Personal OS | memory/mem0_setup.py, memory/qdrant_index.py, connectors/__init__.py (minor) | Integrated with P121 connectors; local-first Mem0+Qdrant with consent gates and full PII redaction | ✅ done |
 | P123 | Phase 4 | Build orchestration core for Self-Evolving Personal OS | agent.py, graph.py, __init__.py | LangGraph state machine wired to P121 connectors + P122 memory; full self-evolving loop with provenance | ✅ done |
+| P124 | Phase 4 | Build provenance log + Langfuse hooks for Self-Evolving Personal OS | provenance/log.py, provenance/langfuse_hooks.py, graph.py (minor) | Structured ProvenanceRecord + local JSONL + Langfuse stub; fully integrated with P123 graph | ✅ done |
 
 <!--
 ====================================================================

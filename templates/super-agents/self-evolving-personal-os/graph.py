@@ -607,6 +607,39 @@ class _StubRunnable:
         return state
 
 
+# --- Section 5b. P124 provenance wrapper ----------------------------------
+
+def _wrap_with_provenance(node_name: str, fn: Callable[[dict], dict]) -> Callable[[dict], dict]:
+    """Wrap a node so every execution produces a ProvenanceRecord + Langfuse span."""
+    def wrapped(state: dict) -> dict:
+        from time import perf_counter
+        from provenance.log import get_default_logger  # type: ignore
+        from provenance.langfuse_hooks import get_langfuse_client, span_from_record  # type: ignore
+        started = perf_counter()
+        update: dict = {}
+        error: str | None = None
+        try:
+            update = fn(state)
+            return update
+        except Exception as exc:
+            error = f"{type(exc).__name__}: {exc}"
+            raise
+        finally:
+            try:
+                logger = get_default_logger(user_id=str(state.get("user_id") or "default"))
+                rec = logger.log_step(
+                    node_name=node_name, state=state, update=update,
+                    force_stub=bool(state.get("force_stub")),
+                    duration_ms=(perf_counter() - started) * 1000.0,
+                    error=error, correlation_id=state.get("correlation_id"),
+                )
+                lf = get_langfuse_client()
+                lf.trace_step(**span_from_record(rec))
+            except Exception:  # provenance must never break execution
+                pass
+    return wrapped
+
+
 # --- Section 6. Graph builder (single API for both backends) -------------
 
 def build_graph() -> tuple[Any, str]:
@@ -622,11 +655,16 @@ def build_graph() -> tuple[Any, str]:
         graph = _StubGraph(state_type=dict)
         END = "__end__"  # type: ignore[assignment]
 
-    graph.add_node(NODE_INGEST,   ingest_all_sources)
-    graph.add_node(NODE_REMEMBER, remember_personal)
-    graph.add_node(NODE_EVOLVE,   evolve_workflows)
-    graph.add_node(NODE_BRIEF,    generate_brief)
-    graph.add_node(NODE_OUTPUT,   output_with_provenance)
+    # P124 additive: wrap each node with the provenance logger so every
+    # node execution writes one ProvenanceRecord to local JSONL + Langfuse.
+    # The wrapper preserves the node's signature and return shape, so the
+    # downstream LangGraph / stub-runner code is unchanged.
+    _w = _wrap_with_provenance
+    graph.add_node(NODE_INGEST,   _w(NODE_INGEST,   ingest_all_sources))
+    graph.add_node(NODE_REMEMBER, _w(NODE_REMEMBER, remember_personal))
+    graph.add_node(NODE_EVOLVE,   _w(NODE_EVOLVE,   evolve_workflows))
+    graph.add_node(NODE_BRIEF,    _w(NODE_BRIEF,    generate_brief))
+    graph.add_node(NODE_OUTPUT,   _w(NODE_OUTPUT,   output_with_provenance))
 
     graph.add_edge(NODE_INGEST,   NODE_REMEMBER)
     graph.add_edge(NODE_REMEMBER, NODE_EVOLVE)
@@ -688,6 +726,20 @@ def run_daily_brief(
     final = runnable.invoke(state)
     out = final.get("output") or {}
     out.setdefault("backend", BACKEND_NAME)
+    # P124 additive: one final "run_complete" provenance record + Langfuse
+    # end-trace, so the on-disk JSONL reflects the full run lifecycle.
+    try:
+        from provenance.log import get_default_logger  # type: ignore
+        from provenance.langfuse_hooks import get_langfuse_client  # type: ignore
+        get_default_logger(user_id=user_id).log_step(
+            node_name="run_complete", state=final, update=out,
+            force_stub=force_stub, error=None,
+        )
+        lf = get_langfuse_client()
+        lf.end_trace(outputs={"memory_writes": (out.get("provenance") or {}).get("memory_writes")})
+        lf.flush()
+    except Exception:  # provenance must never break execution
+        pass
     return out
 
 

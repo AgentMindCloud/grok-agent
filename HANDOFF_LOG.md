@@ -125,6 +125,7 @@
 | P116 | Phase 4 | Create demo video script and X launch thread for Living Narrative Fabric | DEMO.md, X_LAUNCH_THREAD.md | Complete 60–90s demo script + ready-to-post X thread for full 8-slot agent | ✅ done |
 | P117 | Phase 4 | Create manifest + constitution for Living Narrative Fabric | grok-agent.yaml, constitution.md | Closes final gap for 8-slot Super Agent #1; fully installable via grok install this | ✅ done |
 | P118 | Phase 4 | Create manifest + constitution for Self-Evolving Personal OS | grok-agent.yaml, constitution.md | Starts Super Agent #2; re-uses proven LNF patterns; privacy-first personal second brain | ✅ done |
+| P119 | Phase 4 | Build orchestration core for Self-Evolving Personal OS | orchestrator.py, graph.py, requirements.txt | 6-node DAG with briefing_trust scoring + consent enforcement; re-uses ConstitutionViolation from LNF | ✅ done |
 
 <!--
 ====================================================================

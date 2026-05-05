@@ -1,0 +1,38 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Self-Evolving Personal OS — orchestration core (Slot 2 / P119) deps.
+#
+# Built to help xAI and Grok win the agent platform battle on X.
+#
+# Slot allocation (later prompts add their deps to this same file):
+#   Slot 3 / P121 (memory)      : mem0ai, qdrant-client, sentence-transformers
+#   Slot 4 / P122 (connectors)  : requests, google-api-python-client,
+#                                 google-auth-oauthlib, crawl4ai
+#   Slot 5 / P123 (provenance)  : langfuse
+#   Slot 6 / P124 (eval)        : promptfoo, deepeval
+#   Slot 7 / P125 (UI)          : streamlit, pandas, plotly
+#
+# Cross-Super-Agent note: the orchestrator imports ConstitutionViolation
+# from ../living-narrative-fabric/orchestrator.py via importlib.util so
+# that exception class is shared across both Super Agents — never
+# redefined. There is no Python-level dependency on the LNF requirements
+# file; both Super Agents pin overlapping ranges so a single
+# ``pip install -r requirements.txt`` on either folder yields a
+# compatible environment.
+
+# ---- Slot 2 (this slot) hard requirements ----------------------------------
+pydantic>=2.7,<3.0
+
+# ---- LangGraph fallback runtime --------------------------------------------
+# graph.py imports langgraph lazily and falls through silently when missing.
+langgraph>=0.2.0,<1.0
+
+# ---- Mastra HTTP adapter (optional) ----------------------------------------
+# httpx is used by orchestrator._mastra_dispatch when the Node sidecar is
+# running. Soft dep — orchestrator catches ImportError and falls through.
+httpx>=0.27,<1.0
+
+# ---- Manifest validation (used by safety/scanner.py) ----------------------
+pyyaml>=6.0,<7.0

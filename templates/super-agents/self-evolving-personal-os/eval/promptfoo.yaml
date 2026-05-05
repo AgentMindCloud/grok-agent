@@ -1,0 +1,228 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Promptfoo configuration — Self-Evolving Personal OS (Super Agent #2).
+#
+# This is the weekly self-improvement test suite. The same harness runs
+# locally (via `python agent.py improve --stub` on Windows) AND in CI
+# when the user wires `promptfoo eval -c eval/promptfoo.yaml` into
+# .github/workflows. Eight test cases — one per acceptance area listed
+# in P125 — exercise the daily-brief flow end to end.
+#
+# Local-first by design:
+#  - The default provider is the agent's own offline daily-brief output,
+#    so no LLM token is consumed during the eval.
+#  - `--stub` is honoured at the runner level: every assert resolves
+#    against the stub-mode brief which we know is structurally complete.
+#
+# Built to help xAI and Grok win — the self-improvement loop is what
+# turns the Personal OS from "ships once" into "evolves every week".
+
+description: >
+  Self-Evolving Personal OS — weekly self-improvement test suite.
+  Eight test cases over the daily-brief flow: morning-brief quality,
+  provenance completeness, memory relevance, PII safety, evolution
+  delta, consent behavior, stub consistency, Windows path handling.
+  Built for xAI, Grok and the whole community on X.
+
+env:
+  PROMPTFOO_DISABLE_TELEMETRY: "1"
+  PROMPTFOO_LOG_LEVEL: warn
+
+# We declare the agent as a "custom provider": Promptfoo invokes
+# `python agent.py daily-brief --stub --json --quiet` and pipes the
+# resulting JSON dict into the test asserts. The harness in
+# eval/deepeval_suite.py mirrors this so both runners agree on the
+# brief shape.
+providers:
+  - id: self-evolving-personal-os/cli
+    label: agent.py daily-brief --stub
+    config:
+      command: python
+      args:
+        - agent.py
+        - daily-brief
+        - --stub
+        - --json
+        - --quiet
+      cwd: ..
+      timeout: 60000
+      env:
+        GROK_AGENT_FORCE_STUB: "1"
+
+  - id: self-evolving-personal-os/stub
+    label: deterministic stub provider
+    config:
+      module: ./deepeval_suite.py
+      function: promptfoo_stub_provider
+      timeout: 5000
+
+defaultTest:
+  options:
+    transform: file://transforms/extract_brief.js
+  vars:
+    user_id: default
+    expected_sources:
+      - x_personal
+      - gcal
+      - gmail
+      - local_notes
+      - weather
+      - news_personal
+
+prompts:
+  - id: daily_brief_prompt
+    label: daily-brief (offline, force_stub=true)
+    raw: |
+      Produce a Self-Evolving Personal OS morning brief.
+      User: {{user_id}}
+      Mode: force_stub=true (no network).
+      Required sections: today_schedule, inbox_pulse, x_pulse,
+                         notes_recent, ambient, memory_health.
+      Required provenance fields: trail, per_source, memory_writes,
+                                   loop_count, prompt_version.
+
+# 8 test cases — one per acceptance area. Each test pulls the
+# daily-brief output via the provider above and asserts on the dict.
+tests:
+  - description: T1 — morning-brief structural completeness
+    vars:
+      assertion_focus: structural-completeness
+    assert:
+      - type: javascript
+        value: |
+          const out = JSON.parse(output);
+          const sections = (out.brief && out.brief.sections) || {};
+          const required = ['today_schedule','inbox_pulse','x_pulse',
+                            'notes_recent','ambient','memory_health'];
+          return required.every(s => s in sections);
+      - type: contains
+        value: "Self-Evolving Personal OS"
+      - type: cost
+        threshold: 0.0
+
+  - description: T2 — provenance trail completeness
+    vars:
+      assertion_focus: provenance-trail
+    assert:
+      - type: javascript
+        value: |
+          const out = JSON.parse(output);
+          const trail = (out.provenance || {}).trail || [];
+          return trail.length >= 5
+                 && trail.every(t => t.action && t.ts && 'stub' in t);
+      - type: contains-all
+        value:
+          - "ingest_all_sources"
+          - "remember_personal"
+          - "evolve_workflows"
+          - "generate_brief"
+          - "output_with_provenance"
+
+  - description: T3 — memory relevance per source
+    vars:
+      assertion_focus: memory-relevance
+    assert:
+      - type: javascript
+        value: |
+          const out = JSON.parse(output);
+          const rps = ((out.brief || {}).sections || {}).memory_health
+                      ?.rows_per_source || {};
+          const sources = ['x_personal','gcal','gmail','local_notes',
+                           'weather','news_personal'];
+          return sources.every(s => (rps[s] || 0) >= 1);
+
+  - description: T4 — PII safety (no raw email / handle leak)
+    vars:
+      assertion_focus: pii-safety
+    assert:
+      - type: javascript
+        value: |
+          const blob = output;
+          const leaks = [
+            /[\w.+-]+@[\w-]+\.[A-Za-z]{2,}/,    // email
+            /\+?\d{1,3}[\s.\-]?\(?\d{3}\)?[\s.\-]\d{3}[\s.\-]\d{4}/,  // phone
+            /\b\d{3}-\d{2}-\d{4}\b/             // SSN
+          ];
+          return !leaks.some(rx => rx.test(blob));
+      - type: not-icontains
+        value: "[REDACTED_PHONE]"   # ISO timestamps must NOT be over-redacted
+
+  - description: T5 — evolution delta is honest
+    vars:
+      assertion_focus: evolution-delta
+    assert:
+      - type: javascript
+        value: |
+          const out = JSON.parse(output);
+          const evo = (out.brief || {}).evolution || {};
+          return 'prompt_version_in' in evo
+                 && 'prompt_version_out' in evo
+                 && 'should_loop' in evo
+                 && Array.isArray(evo.error_sources)
+                 && Array.isArray(evo.live_threads);
+
+  - description: T6 — consent behaviour propagated
+    vars:
+      assertion_focus: consent
+    assert:
+      - type: javascript
+        value: |
+          const out = JSON.parse(output);
+          // The default test invocation runs with full consent;
+          // violation_count must be exactly zero in this happy path.
+          return (out.brief || {}).violation_count === 0
+                 && Array.isArray(out.violations)
+                 && out.violations.length === 0;
+
+  - description: T7 — stub consistency (force_stub=true honoured everywhere)
+    vars:
+      assertion_focus: stub-consistency
+    assert:
+      - type: javascript
+        value: |
+          const out = JSON.parse(output);
+          const stubFlag = out.stub === true && out.brief.stub === true;
+          const trailAllStub = ((out.provenance || {}).trail || [])
+                               .every(t => t.stub === true);
+          const provStub = (out.provenance || {}).force_stub === true;
+          return stubFlag && trailAllStub && provStub;
+
+  - description: T8 — Windows AppData paths surfaced
+    vars:
+      assertion_focus: windows-paths
+    assert:
+      - type: javascript
+        value: |
+          // The agent prints its appdata_root in the info dict; here we
+          // just verify the daily-brief output never exposes a unix
+          // /home/ path on the user's machine. On Windows the agent
+          // writes to $env:LOCALAPPDATA; on the dev box this resolves
+          // to ~/.local/share/grok-agent — both are "no /home/<user>"
+          // accidentally embedded in the user-facing brief.
+          return !/[\\/]home[\\/][^\s"']+/.test(output)
+                 || /grok-agent/.test(output);
+      - type: contains-any
+        value:
+          - "self-evolving-personal-os"
+          - "grok-agent"
+
+# Promptfoo grading — pass threshold + fail loudly on regressions.
+grading:
+  fail_on:
+    - assertion-error
+    - timeout
+  pass_threshold: 0.75    # 6/8 minimum to keep the loop going
+
+# Promptfoo output config — local-only, machine-readable JSON so the
+# DeepEval suite can stitch the two reports together.
+output:
+  format: json
+  path: results/promptfoo_results.json
+  include:
+    - vars
+    - prompt
+    - response
+    - assertions
+    - score

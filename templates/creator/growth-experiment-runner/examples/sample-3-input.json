@@ -1,0 +1,55 @@
+{
+  "x_handle": "@thindata",
+  "audience_size": 8000,
+  "window": 7,
+  "data_source": "demo",
+  "baseline_metric_name": "engagement_rate",
+  "baseline_metric_value": 2.0,
+  "previous_window_summary": {
+    "avg_hypothesis_specificity": 76.0,
+    "avg_single_axis_isolation": 85.0,
+    "avg_sample_power": 60.0,
+    "avg_risk_avoidance": 88.0
+  },
+  "candidate_experiments": [
+    {
+      "hypothesis": "Switching the methodology-callout format from prose to bullet list lifts engagement_rate by 0.5 percentage points",
+      "axis_count": 1,
+      "axis_label": "callout_format",
+      "expected_effect_pct": 0.5,
+      "planned_runtime_days": 7,
+      "primary_metric": "engagement_rate",
+      "success_criteria": "engagement_rate uplift \u2265 0.5 pt",
+      "hypothesis_specificity_score": 78,
+      "single_axis_isolation_score": 88,
+      "sample_power_score": 50,
+      "risk_avoidance_score": 90
+    },
+    {
+      "hypothesis": "Adding an explicit limitation-line at the bottom of paper-interpretation threads lifts thread_completion_rate by 1 percentage point",
+      "axis_count": 1,
+      "axis_label": "thread_limitation_line",
+      "expected_effect_pct": 1.0,
+      "planned_runtime_days": 7,
+      "primary_metric": "thread_completion_rate",
+      "success_criteria": "thread_completion_rate uplift \u2265 1.0 pt",
+      "hypothesis_specificity_score": 75,
+      "single_axis_isolation_score": 90,
+      "sample_power_score": 52,
+      "risk_avoidance_score": 88
+    },
+    {
+      "hypothesis": "Pinning the divergence post to the profile lifts impressions by 4 percentage points",
+      "axis_count": 1,
+      "axis_label": "pinned_post_choice",
+      "expected_effect_pct": 4.0,
+      "planned_runtime_days": 7,
+      "primary_metric": "impressions",
+      "success_criteria": "impressions uplift \u2265 4% vs prior 7d",
+      "hypothesis_specificity_score": 76,
+      "single_axis_isolation_score": 90,
+      "sample_power_score": 48,
+      "risk_avoidance_score": 90
+    }
+  ]
+}

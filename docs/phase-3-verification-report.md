@@ -14,21 +14,21 @@
 
 ## 1. Headline scoreboard
 
-> **Updated 2026-05-05 (P108):** the three previously-partial templates (`trend-aligned-poster`, `content-idea-generator`, `reply-drafter`) shipped to fully-complete in P108. The scoreboard now reads **17 / 20 fully shipped**. The remaining 3 (`quote-tweet-suggestor`, `content-calendar-builder`, `growth-experiment-runner`) are not-started and ship in P109 to reach genuine 20/20.
+> **Updated 2026-05-05 (P109):** the final three templates (`quote-tweet-suggestor`, `content-calendar-builder`, `growth-experiment-runner`) shipped from-scratch in P109. **The creator suite is now genuinely 20 / 20 fully shipped.** Phase 3 is mathematically and operationally complete; Phase 4 Recipe-C step 2 (`living-narrative-fabric` orchestration core) is unblocked.
 
 | Surface | State | Verified by |
 |---|---|---|
-| Creator template folders on disk | **17 / 20** | `ls templates/creator/` |
-| Creator templates fully shipped (yaml + system + run + readme + examples) | **17 / 20** ✅ (was 14 — P108 closed 3 partials) | per-folder file check (§2) |
-| Creator templates partial (manifest-only or Slot-1-only) | **0 / 20** ✅ (was 3 — P108 cleared) | per-folder file check (§2) |
-| Creator templates not started | **3 / 20** | per-folder file check (§2) |
+| Creator template folders on disk | **20 / 20** ✅ | `ls templates/creator/` |
+| Creator templates fully shipped (yaml + system + run + readme + examples) | **20 / 20** ✅ (was 17 after P108 — P109 closed final 3) | per-folder file check (§2) |
+| Creator templates partial (manifest-only or Slot-1-only) | **0 / 20** ✅ | per-folder file check (§2) |
+| Creator templates not started | **0 / 20** ✅ (was 3 before P109) | per-folder file check (§2) |
 | Program-infrastructure files | **8 / 8** | `ls templates/creator-program/` |
 | Public X launch thread | **shipped** | `docs/creator-program/launch-thread.md` |
 | Phase 3 completion narrative | **shipped** | `docs/phase-3-completion-report.md` |
 | Operator dashboard (terminal + HTML) | **shipped + smoke-tested** | §3 below |
 | Privacy / disclaimer guards | **enforced** | §4 below |
 
-**Phase 3 is launch-ready and 17/20 shipped.** The remaining 3 templates ship in P109 (Recipe-B from-scratch each) to close to genuine 20/20 before Phase 4 Recipe-C step 2 begins.
+**Phase 3 is genuinely closed at 20/20.** Every shipped template parses cleanly, fires its paradox dual-surface on `--demo` while staying clean on `--demo-healthy`, and ships with 3 input/output example pairs (or 2 niche-driven examples for the audience-side templates). Phase 4 begins with `living-narrative-fabric` Recipe-C step 2 (P110).
 
 ---
 
@@ -69,18 +69,43 @@ Result on `main` at the head of P106:
 | 15 | `trend-aligned-poster` | ✓ | ✓ | ✓ | ✓ | 6 | **fully shipped (P108 — Slot 2 closed; trend-chasing paradox + off-niche guard verified)** |
 | 16 | `content-idea-generator` | ✓ | ✓ | ✓ | ✓ | 6 | **fully shipped (P108 — manifest rewritten v2.15; derivative-and-thin paradox + voice-drift surfacing verified)** |
 | 17 | `reply-drafter` | ✓ | ✓ | ✓ | ✓ | 6 | **fully shipped (P108 — manifest rewritten v2.15; helpful-but-off-voice paradox + risk-exclude guard verified)** |
-| 18 | `quote-tweet-suggestor` | — | — | — | — | — | **not started — P109** |
-| 19 | `content-calendar-builder` | — | — | — | — | — | **not started — P109** |
-| 20 | `growth-experiment-runner` | — | — | — | — | — | **not started — P109** |
+| 18 | `quote-tweet-suggestor` | ✓ | ✓ | ✓ | ✓ | 6 | **fully shipped (P109 — dunk-bait paradox + risk-exclude guard verified; mandatory bridges to brand-voice-trainer + content-idea-generator)** |
+| 19 | `content-calendar-builder` | ✓ | ✓ | ✓ | ✓ | 6 | **fully shipped (P109 — over-scheduling paradox + format-streak guard + variety floor verified; mandatory bridges to analytics-summarizer + brand-voice-trainer)** |
+| 20 | `growth-experiment-runner` | ✓ | ✓ | ✓ | ✓ | 6 | **fully shipped (P109 — small-n paradox + multi-variable guard + risk-exclude guard verified; mandatory bridges to analytics-summarizer + ab-test-suggester)** |
 
-**Syntax sanity (P108 update)** — `python3 -c "import ast; ast.parse(open(...).read())"` against ALL 17 runners now passes (verified by P108's per-folder audit script transliterated to bash). The 3 newly-completed runners (`trend-aligned-poster`, `content-idea-generator`, `reply-drafter`) each pass an additional smoke-run check — paradox dual-surface + mandatory bridges + demo-label invariants confirmed by grep on the demo output.
+**Syntax sanity (P109 update)** — `python3 -c "import ast; ast.parse(open(...).read())"` against ALL 20 runners now passes. The 3 P109-newly-completed runners (`quote-tweet-suggestor`, `content-calendar-builder`, `growth-experiment-runner`) each pass an additional smoke-run check — paradox dual-surface + mandatory bridges + demo-label invariants confirmed by grep on the demo output. Each healthy demo confirms the paradox does NOT fire when metrics are within bounds.
 
-### Status after P108
+### Status after P109
 
-- **17 / 20 fully shipped.** Every shipped template has yaml + system.md + run.py + README.md + ≥2 examples.
-- **0 / 20 partial.** The 3 P108 deliveries cleared every partial slot.
-- **3 / 20 not started** — `quote-tweet-suggestor`, `content-calendar-builder`, `growth-experiment-runner`. These ship in P109.
+- **20 / 20 fully shipped.** Every template has yaml + system.md + run.py + README.md + ≥2 examples (most have 6 = 3 input.json + 3 output.md).
+- **0 / 20 partial.** Every partial slot has been cleared.
+- **0 / 20 not started.** The catalog is genuinely complete.
 - The launch thread, outreach tracker, weekly report, testimonial collector, dashboard, and v1.5 improvements doc remain unchanged — Phase 3's program infrastructure is 100% intact.
+
+### Paradox dual-surface invariants (verified per template)
+
+| Template | Paradox | Trigger condition |
+|---|---|---|
+| `monetization-optimizer` | Concentration-Confidence | top-channel share > 0.60 AND forecast confidence ≥ 60 |
+| `analytics-summarizer` | vanity-metric | impressions delta > +20% AND engagement rate < 2.5% |
+| `competitor-watch` | cadence-fatigue | content velocity > 70 AND growth signal < 30 |
+| `mention-summarizer` | sentiment-spike | mention volume delta > +30% AND net sentiment < 10 |
+| `dm-triager` | spam-overload | (template-specific dual-surface) |
+| `thread-builder` | thread-bloat | (template-specific dual-surface) |
+| `content-recycler` | stale-rehash | recycle score patterns |
+| `cross-platform-reposter` | voice-drift | platform adaptation patterns |
+| `brand-voice-trainer` | generic-polish | sample-size double-gate |
+| `ab-test-suggester` | multi-variable | single-axis isolation contract |
+| `comment-engagement-booster` | hook-without-substance | substance vs hook score gap |
+| `hashtag-strategy-advisor` | reach-without-relevance | trending vs niche fit gap |
+| `follower-quality-analyzer` | bot-engagement | bot share vs engagement gap |
+| `niche-influencer-finder` | engagement-pod | engagement velocity vs authentic share |
+| **`trend-aligned-poster`** | **trend-chasing** | avg TM > 75 AND avg NF < floor (P108) |
+| **`content-idea-generator`** | **derivative-and-thin** | avg Originality < 40 AND avg Voice fidelity < 60 (P108) |
+| **`reply-drafter`** | **helpful-but-off-voice** | avg Substance > 70 AND avg Voice fidelity < 55 (P108) |
+| **`quote-tweet-suggestor`** | **dunk-bait** | avg Engageability > 70 AND avg Source-fit < 40 (P109) |
+| **`content-calendar-builder`** | **over-scheduling** | avg Cadence sustainability < 50 AND posts_per_week > 7 (P109) |
+| **`growth-experiment-runner`** | **small-n** | avg Sample power < 40 AND avg Hypothesis specificity > 70 (P109) |
 
 ---
 
@@ -143,7 +168,7 @@ HTML dashboard mode also verified separately (6.7 KB single-file output, cinnaba
 ## 7. Recommended next prompts (in order)
 
 1. ~~**P108** — Fill the 3 partial templates~~ ✅ **shipped** (3 partials → fully complete; suite at 17/20).
-2. **P109** — Build the 3 unstarted templates (`quote-tweet-suggestor`, `content-calendar-builder`, `growth-experiment-runner`) via Recipe B. Brings the suite to **20/20 fully shipped**.
+2. ~~**P109** — Build the 3 unstarted templates~~ ✅ **shipped** (3 not-started → fully complete; suite at **20/20**).
 3. **P110** — Phase 4 starts. `living-narrative-fabric` orchestration core (Recipe C step 2 — Mastra setup, ingestion adapters, contradiction detection scaffolding).
 
 Optional in parallel: ship the v1.5 §2.1 (short intake form), §2.3 (disclaimer macro), §2.5 (welcome DM macro) — all are author-time markdown, no code.
@@ -152,6 +177,6 @@ Optional in parallel: ship the v1.5 §2.1 (short intake form), §2.3 (disclaimer
 
 ## 8. Status
 
-Phase 3 is **17/20 fully shipped** and operationally closed for launch. P109 brings the suite to mathematically 20/20 (3 not-started → fully complete via Recipe B). After P109, Phase 4 Recipe-C step 2 can begin.
+Phase 3 is **genuinely 20/20 shipped and closed**. Every creator template is production-ready: paradox dual-surface invariants verified, mandatory cross-template bridges declared, demo modes pass smoke checks, healthy demos confirm paradoxes don't fire spuriously. Phase 4 Recipe-C step 2 (P110) can begin.
 
 > Built to help xAI and Grok win. 🚀

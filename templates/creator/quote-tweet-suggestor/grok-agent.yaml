@@ -1,0 +1,143 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built for X, Grok & the ecosystem community — local-first quote-tweet
+# suggestor for X creators. Reads a creator-supplied source post (or
+# seeded demo source) and emits a 7/8-section structured variant plan
+# with 4 canonical Quote-Tweet Plan Score metrics, dunk-bait paradox
+# detection, risk-exclude guard, 4-6 quote-tweet variants (single-quote
+# + thread-quote formats), per-variant source-fit + voice fidelity +
+# originality + engageability scores, and mandatory bridges to
+# brand-voice-trainer + content-idea-generator. Drafts only — never
+# auto-publishes. Refuses harassment / financial / cashtag / sponsorship
+# / impersonation / dunk-bait content.
+
+version: "2.15"
+kind: "creator-template"
+name: "quote-tweet-suggestor"
+description: "Local-first quote-tweet suggestor for X creators — reads a creator-supplied source post (or seeded demo source) and emits a 7/8-section structured variant plan with 4 canonical Quote-Tweet Plan Score metrics (Source-fit / Voice fidelity / Originality / Engageability), dunk-bait paradox detection in BOTH the Plan Score AND Red Flags sections (avg Engageability > 70 AND avg Source-fit < 40), risk-exclude guard (any variant with risk_score < 40 → excluded + Red Flag), 4-6 quote-tweet variants across single-quote + thread-quote formats, per-variant source-fit + voice fidelity + originality + engageability scores, and mandatory bridges to brand-voice-trainer + content-idea-generator + thread-builder. Drafts only — never auto-publishes. Refuses harassment / dunk-bait / financial / cashtag / investment / sponsorship / impersonation content. Built for X, Grok & the ecosystem community."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Quote-Tweet Suggestor"
+  tagline: "Quote-tweet variants that engage the source — never dunk on it."
+  categories: ["creator", "engagement", "quote-tweets"]
+  tags: ["creator-template", "cli-only", "drafts-only", "voice-anchored", "no-dunk-bait"]
+  created: "2026-05-05"
+  updated: "2026-05-05"
+
+install:
+  one_click: true
+  install_command: "grok-agent install quote-tweet-suggestor"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  appdata_folder: "grok-agent/quote-tweet-suggestor"
+  cache_folder: "grok-agent/quote-tweet-suggestor/cache"
+  log_folder: "grok-agent/quote-tweet-suggestor/logs"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.5
+  max_tokens: 3072
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+
+tools:
+  - name: "generate_quote_tweet_variants"
+    type: "local_function"
+    description: "Produce a 7-section structured quote-tweet variant plan (or 8-section when paradox fires, risk-exclude guard fires, or window=7d) with 4 canonical Quote-Tweet Plan Score metrics, weighted Plan Score, dunk-bait paradox detection in BOTH the Plan Score section AND the Red Flags section, risk-exclude guard (any variant with risk_score < 40 → excluded + Red Flag), 4-6 variants across single-quote + thread-quote formats with paraphrased copy outlines (no raw source-post text, no third-party @-handles, no external URLs), per-variant source-fit + voice fidelity + originality + engageability scores, predicted engagement bands, and mandatory bridges to brand-voice-trainer + content-idea-generator + thread-builder. Never auto-publishes. Refuses harassment / dunk-bait / financial / cashtag / investment / sponsorship / impersonation content."
+    module: "quote_tweet_suggestor.run"
+    function: "generate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          x_handle:
+            type: "string"
+            description: "Creator's X handle (with or without @). Privacy anchor — only the creator's handle appears in the rendered output."
+          source_post_file:
+            type: "string"
+            description: "Optional path to a creator-supplied source-post export (JSON, local path only). Schema: {paraphrased_excerpt, source_topic, source_sentiment, source_intent, candidate_variants: [{format, copy_outline, source_fit_score, voice_fidelity_score, originality_score, engageability_score, risk_avoidance_score}]}. When omitted, the runner emits seeded demo data marked [demo variant]."
+          voice_profile_file:
+            type: "string"
+            description: "Optional path to a creator-supplied voice profile (the JSON brand-voice-trainer emits). When supplied, it tightens the Voice fidelity baseline and surfaces voice-drift variants."
+          max_variants:
+            type: "integer"
+            default: 5
+            description: "Target number of quote-tweet variants to emit (clamped to [4, 6])."
+          window:
+            type: "integer"
+            enum: [7, 30, 90]
+            default: 30
+            description: "Comparison window in days. 7-day window auto-triggers the Variant Audit section."
+          risk_floor:
+            type: "number"
+            default: 40.0
+            description: "Risk avoidance threshold (0-100) below which a variant is excluded from the plan and surfaced as a Red Flag."
+        required: ["x_handle"]
+
+constitution:
+  rules:
+    - "Drafts only. The runner emits a variant plan the creator reads before posting; it never auto-publishes, schedules, or queues quote-tweets on X."
+    - "Never impersonate. Variants speak in the creator's voice. They never claim to be the source-post author or any third party."
+    - "No fabricated statistics. Demo metrics carry an explicit [demo variant — re-run with --source-post-file / --voice-profile-file for real X data] label so the creator never confuses demo output for real data."
+    - "Surface the dunk-bait paradox in BOTH the Quote-Tweet Plan Score section AND the Red Flags section whenever average Engageability > 70 AND average Source-fit < 40. Both conditions must be true — if only one fires, surface each in its own row instead."
+    - "Risk-exclude guard: any variant with risk_score < 40 (default; configurable via --risk-floor) is excluded from the variants list and consolidated as a single Red Flag titled 'High-risk variants excluded' with severity 'high' and a specific remediation step."
+    - "Every output unconditionally includes bridges to brand-voice-trainer (always voice-check before posting) AND content-idea-generator (when the source post surfaces a content gap, the variant should source-not-just-respond). These two bridges are never optional."
+    - "Privacy-first: no third-party @-handles, raw source-post text, or external URLs appear in the rendered output. Source paraphrases and variant outlines are paraphrased only — never raw text or third-party handles."
+    - "Refuse harassment / dunk-bait / financial / cashtag / investment / sponsorship / impersonation content. Forbidden tokens in the source paraphrase, source topic, or any variant outline trigger a hard refusal with the exact token surfaced to the operator."
+  hard_refusals:
+    - "auto-publish, auto-schedule, or auto-queue any quote-tweet on X without explicit creator consent"
+    - "generate financial, cashtag, investment, portfolio, ticker, or trading content of any kind"
+    - "generate sponsored-post or paid-promotion content without explicit creator-supplied disclosure copy"
+    - "expose third-party X handles, raw source-post text, or external URLs in the rendered output"
+    - "draft variants that target individuals for harassment, dunk-bait, or X-policy-violation content"
+    - "scrape authenticated X content to seed the source post"
+    - "impersonate the source-post author or any third party"
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 30
+  scanner_severity_floor: "warn"
+  forbidden_actions:
+    - scrape_authenticated_x_content
+    - auto_publish_post
+    - auto_schedule_post
+    - generate_financial_content
+    - generate_unsanctioned_sponsored_content
+    - generate_dunk_bait_content
+    - generate_harassment_content
+    - expose_third_party_handles
+    - impersonate_users
+    - bypass_safety_scanner
+  cost_limits:
+    usd_per_session_max: 0.30
+    usd_per_day_max: 1.00
+    tokens_per_session_max: 60000
+    api_calls_per_session_max: 80
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "any export of the variant plan to a path outside the agent AppData folder"
+      - "any future-version auto-publish action (currently disabled in v1)"
+    timeout_seconds: 60
+  disclaimers:
+    not_financial_advice: false
+    not_tax_advice: false
+    real_world_action_consent: true
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"

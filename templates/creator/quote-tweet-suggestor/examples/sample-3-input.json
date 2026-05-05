@@ -1,0 +1,60 @@
+{
+  "x_handle": "@thindata",
+  "window": 7,
+  "data_source": "demo",
+  "source": {
+    "paraphrased_excerpt": "paraphrased single post on a recent applied-ml benchmark divergence",
+    "source_topic": "applied-ml-benchmark",
+    "source_sentiment": "neutral",
+    "source_intent": "data-share",
+    "source_argument": "the benchmark's divergence is concentrated in the long-tail evaluation slice"
+  },
+  "previous_window_summary": {
+    "avg_source_fit_score": 70.0,
+    "avg_voice_fidelity_score": 72.0,
+    "avg_originality_score": 64.0,
+    "avg_engageability_score": 60.0
+  },
+  "candidate_variants": [
+    {
+      "format": "single-quote",
+      "stance": "add-data",
+      "copy_outline": "share the creator's own divergence numbers on the same long-tail slice",
+      "source_fit_score": 78,
+      "voice_fidelity_score": 76,
+      "originality_score": 65,
+      "engageability_score": 60,
+      "risk_avoidance_score": 88
+    },
+    {
+      "format": "thread-quote",
+      "stance": "reframe",
+      "copy_outline": "reframe the divergence through a methodology lens \u2014 what would change the result?",
+      "source_fit_score": 80,
+      "voice_fidelity_score": 75,
+      "originality_score": 70,
+      "engageability_score": 58,
+      "risk_avoidance_score": 86
+    },
+    {
+      "format": "single-quote",
+      "stance": "agree-and-extend",
+      "copy_outline": "agree with the headline and extend with the second-order question the post leaves open",
+      "source_fit_score": 76,
+      "voice_fidelity_score": 74,
+      "originality_score": 62,
+      "engageability_score": 56,
+      "risk_avoidance_score": 90
+    },
+    {
+      "format": "single-quote",
+      "stance": "disagree-and-explain",
+      "copy_outline": "respectfully push back on the divergence framing with a counter-example",
+      "source_fit_score": 72,
+      "voice_fidelity_score": 72,
+      "originality_score": 60,
+      "engageability_score": 55,
+      "risk_avoidance_score": 84
+    }
+  ]
+}

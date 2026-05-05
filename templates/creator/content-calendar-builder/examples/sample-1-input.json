@@ -1,0 +1,45 @@
+{
+  "x_handle": "@JanSol0s",
+  "niche": "ai-agents",
+  "cadence_per_week": 12,
+  "weeks": 4,
+  "data_source": "demo",
+  "variety_floor": 4,
+  "slot_archetypes": [
+    "agent-eval framework deep dive",
+    "benchmark drift commentary",
+    "post-mortem on a recent agent regression",
+    "open-source tooling shoutout",
+    "creator's own benchmark numbers",
+    "agent-failure-mode taxonomy",
+    "tooling launch reaction",
+    "weekly agent-build update",
+    "research-paper interpretation",
+    "agent-eval methodology debate",
+    "creator-tools competitor watch",
+    "lightweight agent template share"
+  ],
+  "slot_format_pattern": [
+    "thread",
+    "thread",
+    "thread",
+    "thread",
+    "single",
+    "quote-tweet",
+    "image-post",
+    "reply-thread",
+    "single",
+    "thread",
+    "single",
+    "quote-tweet"
+  ],
+  "cadence_sustainability_seed": 30,
+  "voice_fidelity_seed": 60,
+  "niche_fit_seed": 78,
+  "previous_window_summary": {
+    "avg_cadence_sustainability": 70.0,
+    "avg_niche_fit": 80.0,
+    "avg_voice_fidelity": 78.0,
+    "avg_variety": 80.0
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "x_handle": "@habitstacker",
+  "window": 30,
+  "data_source": "demo",
+  "source": {
+    "paraphrased_excerpt": "paraphrased thread on evening-friction audits in productivity stacks",
+    "source_topic": "evening-friction-audit",
+    "source_sentiment": "positive",
+    "source_intent": "commentary",
+    "source_argument": "the evening-friction audit surfaces the 1-2 sticking points that dominate next-morning behaviour"
+  },
+  "previous_window_summary": {
+    "avg_source_fit_score": 80.0,
+    "avg_voice_fidelity_score": 80.0,
+    "avg_originality_score": 70.0,
+    "avg_engageability_score": 65.0
+  },
+  "candidate_variants": [
+    {
+      "format": "thread-quote",
+      "stance": "agree-and-extend",
+      "copy_outline": "extend the audit framework with the creator's own three-week measurement protocol",
+      "source_fit_score": 90,
+      "voice_fidelity_score": 88,
+      "originality_score": 78,
+      "engageability_score": 70,
+      "risk_avoidance_score": 95
+    },
+    {
+      "format": "single-quote",
+      "stance": "add-data",
+      "copy_outline": "share the creator's own audit numbers from three months and how they confirm the source argument",
+      "source_fit_score": 88,
+      "voice_fidelity_score": 86,
+      "originality_score": 75,
+      "engageability_score": 68,
+      "risk_avoidance_score": 95
+    },
+    {
+      "format": "single-quote",
+      "stance": "reframe",
+      "copy_outline": "reframe the audit pattern through a behaviour-design lens with concrete examples",
+      "source_fit_score": 82,
+      "voice_fidelity_score": 84,
+      "originality_score": 80,
+      "engageability_score": 65,
+      "risk_avoidance_score": 92
+    },
+    {
+      "format": "thread-quote",
+      "stance": "personal-reaction",
+      "copy_outline": "personal-reaction thread on running the audit during a creator burnout stretch",
+      "source_fit_score": 78,
+      "voice_fidelity_score": 86,
+      "originality_score": 76,
+      "engageability_score": 60,
+      "risk_avoidance_score": 90
+    },
+    {
+      "format": "single-quote",
+      "stance": "agree-and-extend",
+      "copy_outline": "agree and extend with a specific beginner trap the source did not mention",
+      "source_fit_score": 80,
+      "voice_fidelity_score": 82,
+      "originality_score": 72,
+      "engageability_score": 62,
+      "risk_avoidance_score": 92
+    }
+  ]
+}

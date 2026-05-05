@@ -25,7 +25,7 @@ metadata:
   display_name: "Analytics Summarizer"
   tagline: "Read your numbers honestly — vanity reach without audience quality is not a win."
   categories: ["creator", "analytics", "measurement"]
-  tags: ["creator-template", "cli-only", "drafts-only", "no-fabricated-stats"]
+  tags: ["creator-template", "cli-only", "read-only", "no-fabricated-stats", "no-other-voices", "consent-gated"]
   created: "2026-05-04"
   updated: "2026-05-05"
 
@@ -71,7 +71,10 @@ tools:
         properties:
           x_handle:
             type: "string"
-            description: "Creator's X handle (with or without @). Voice anchor for archetype paraphrasing."
+            description: "Creator's X handle (with or without @). The voice anchor for archetype paraphrasing and Content Resonance scoring; voice fidelity is measured against this handle's supplied samples — never another creator's posts."
+          niche:
+            type: "string"
+            description: "Creator's niche / topic anchor in plain text. Used to score Audience Quality (on-niche engagers vs drive-bys) and to paraphrase top-performing content archetypes inside the niche frame. Required so the vanity-reach paradox can fire when reach is high but the audience is off-niche."
           metrics_file:
             type: "string"
             description: "Optional path to a creator-supplied X analytics export (JSON or CSV). When omitted the runner emits seeded demo metrics explicitly marked as such."
@@ -84,7 +87,7 @@ tools:
             type: "string"
             enum: ["7d", "30d", "90d"]
             default: "30d"
-            description: "Period covered by the summary. 7d auto-triggers the optional Period Audit section because the window is noisy."
+            description: "Period covered by the summary. 7d auto-triggers the optional Period Audit because the window is dominated by single-day variance."
           compare_to:
             type: "string"
             enum: ["previous_period", "benchmark"]
@@ -129,6 +132,8 @@ safety:
     - impersonate_user_identity
     - bypass_safety_scanner
     - exfiltrate_user_data
+    - copy_competitor_signature_phrasing
+    - auto_publish_without_consent
   cost_limits:
     usd_per_session_max: 0.30
     usd_per_day_max: 1.00
@@ -138,12 +143,13 @@ safety:
     enabled: true
     confirm_before:
       - "any export of the analytics summary to a path outside the agent AppData folder"
-      - "any future-version auto-publish (currently disabled in v1)"
+      - "any future-version auto-share (currently disabled in v1)"
+      - "any analysis generated with allow_monetization=true (must be confirmed before render)"
     timeout_seconds: 60
   disclaimers:
-    not_financial_advice: true
+    not_financial_advice: false
     not_tax_advice: false
-    real_world_action_consent: false
+    real_world_action_consent: true
 
 dependencies:
   python:

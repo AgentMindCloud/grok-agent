@@ -1,0 +1,26 @@
+{
+  "_copyright": "Copyright 2026 AgentMindCloud",
+  "_license": "Apache License, Version 2.0",
+  "_license_url": "http://www.apache.org/licenses/LICENSE-2.0",
+  "_built_for": "X, Grok & the ecosystem community",
+  "_comment_purpose": "Sample 2 — anchored thoughtful-tone 5-idea run with all three anchor files attached (voice samples + trends + analytics). Demonstrates the high-confidence path: archetypes auto-shift toward thoughtful-affinity (first-person-rebuild, synthesis-takedown, question-led-poll, metric-receipt, story-cold-open), Voice fidelity lifts above 70, the Idea Audit does NOT auto-trigger, and confidence reaches high.",
+  "x_handle": "@habitstacker",
+  "niche": "evening-friction audits for makers",
+  "tone": "thoughtful",
+  "count": 5,
+  "voice_samples": [
+    "The 3 pm slump is a sleep-debt invoice arriving 6 hours late.",
+    "I stopped tracking mood and started tracking the friction before mood — much easier to fix.",
+    "Maker rituals are not productivity hacks; they are interruption shields.",
+    "If your evening shutdown takes more than 7 minutes, it is not a ritual, it is a chore.",
+    "The cheapest experiment is the one you can run again on Tuesday without thinking."
+  ],
+  "trends": [
+    "evening-friction audits trending up among makers (last 7d)",
+    "ritual-as-interruption-shield framing gaining traction",
+    "maker-economy creators sharing 5-step shutdown checklists",
+    "habit-stacking renaissance on creator X"
+  ],
+  "analytics_file": "$env:LOCALAPPDATA/grok-agent/analytics-summarizer/last30.json",
+  "data_source": "real"
+}

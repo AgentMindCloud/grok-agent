@@ -1,0 +1,26 @@
+{
+  "_copyright": "Copyright 2026 AgentMindCloud",
+  "_license": "Apache License, Version 2.0",
+  "_license_url": "http://www.apache.org/licenses/LICENSE-2.0",
+  "_built_for": "X, Grok & the ecosystem community",
+  "_comment_purpose": "Sample 3 — vanity-hook paradox case. Idea 5 (anti-pattern-warning) carries an explicit score override (niche_fit 38, trend_align 92, voice 64) that pushes Trend alignment above 80 while Niche fit collapses below 50, firing the paradox in BOTH the Idea Plan Performance section AND the Red Flags section. The Idea Audit auto-triggers because the paradox is active.",
+  "x_handle": "@JanSol0s",
+  "niche": "post-publish engagement signals for technical creators",
+  "tone": "data-led",
+  "count": 5,
+  "voice_samples": [],
+  "trends": [
+    "post-publish engagement signals trending in tech-creator X",
+    "vanity-metric paradox conversation re-emerging",
+    "first-hour reply velocity becoming the new measurement"
+  ],
+  "analytics_file": null,
+  "data_source": "demo",
+  "score_overrides": {
+    "5": {
+      "niche_fit": 38,
+      "trend_align": 92,
+      "voice": 64
+    }
+  }
+}

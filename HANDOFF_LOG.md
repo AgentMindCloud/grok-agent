@@ -115,6 +115,7 @@
 | P95 | Phase 3 | Monetization Optimizer runner + README + examples | templates/creator/monetization-optimizer/run.py, README.md, examples/ (3 pairs) | Matches P94 exactly; new phrasing + full disclaimers | ✅ done |
 | P96 | Phase 3 | Thread Builder manifest + system prompt | templates/creator/thread-builder/grok-agent.yaml, prompts/system.md | Matches P83/P85 v2.15 shape; new phrasing + strong bridges | ✅ done |
 | P97 | Phase 3 | Thread Builder runner + README + examples | templates/creator/thread-builder/run.py, README.md, examples/ (3 pairs) | Matches P96 exactly; new phrasing + strict caps + bridges | ✅ done |
+| P98 | Phase 3 | Content Idea Generator runner + README + examples | templates/creator/content-idea-generator/run.py, README.md, examples/ (3 pairs) + grok-agent.yaml binding fix | Slot 2 completion (Slot 1 was P12 starter manifest); deterministic offline runner + 4 canonical Idea Plan metrics with weighted formula + vanity-hook paradox surfacing in BOTH places + 240-char hook cap + monetization-keyword refusal path + mandatory analytics-summarizer + thread-builder bridges + 10-archetype tone-matched pool + 3-10 idea-count band; brings creator suite from 15/20 to 16/20 fully complete | ✅ done |
 
 <!--
 ====================================================================

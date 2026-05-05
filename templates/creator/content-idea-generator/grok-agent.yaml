@@ -40,7 +40,7 @@ tools:
   - name: "generate_post_ideas"
     type: "local_function"
     description: "Generate N X post ideas given the user's niche and a 7-day trend snapshot."
-    module: "content_idea_generator.runner"
+    module: "content_idea_generator.run"
     function: "generate"
     parameters:
       schema:

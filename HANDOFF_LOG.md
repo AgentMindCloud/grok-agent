@@ -120,6 +120,7 @@
 | P111 | Phase 4 | Implement memory layer for Living Narrative Fabric | memory/mem0_setup.py, memory/qdrant_index.py, memory/__init__.py | Integrated via with_dependencies Protocol; re-uses 4-metric scoring and ConstitutionViolation | ✅ done |
 | P112 | Phase 4 | Build public API connector helpers for Living Narrative Fabric | connectors/__init__.py + 6 client files | Plugs into P110/P111 via with_dependencies Protocol; full provenance + ConstitutionViolation on every fetch | ✅ done |
 | P113 | Phase 4 | Implement provenance log + Langfuse hooks for Living Narrative Fabric | provenance/__init__.py, log.py, langfuse_hooks.py | Plugs into P110–P112 via Protocol; append-only + Langfuse spans + ConstitutionViolation on every step | ✅ done |
+| P114 | Phase 4 | Implement self-improvement loop for Living Narrative Fabric | eval/__init__.py, promptfoo.yaml, deepeval_suite.py | Plugs into P110–P113 via Protocol; re-uses 4-metric scoring + ConstitutionViolation; local Promptfoo + DeepEval | ✅ done |
 
 <!--
 ====================================================================

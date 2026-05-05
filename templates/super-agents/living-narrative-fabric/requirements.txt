@@ -1,0 +1,57 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Living Narrative Fabric — orchestration core (Slot 2 / P110) Python deps.
+#
+# Built to help xAI and Grok win the agent platform battle on X.
+#
+# This file ships ONLY the dependencies the Slot 2 orchestration spine
+# needs. Later Recipe-C slots add their own deps via this same file:
+#
+#   Slot 3 / P111 (memory)      : mem0ai, qdrant-client
+#   Slot 4 / P112 (connectors)  : requests, newsapi-python, crawl4ai, docling
+#   Slot 5 / P113 (provenance)  : langfuse
+#   Slot 6 / P114 (eval)        : promptfoo, deepeval
+#   Slot 7 / P115 (UI)          : streamlit, pandas, plotly
+#
+# Mastra is NOT a Python package — it is a Node.js framework. The
+# orchestrator dispatches to a locally-running Mastra sidecar via HTTP
+# when ``MASTRA_HTTP_URL`` is set. If you want to opt into Mastra:
+#
+#   1. Install Node 20+ on Windows (winget install OpenJS.NodeJS).
+#   2. Bootstrap the sidecar (sidecar template ships in Slot 4 / P112):
+#        npx create-mastra@latest grok-agent-mastra-sidecar
+#   3. ``$env:MASTRA_HTTP_URL = "http://localhost:4111/api/v1"``
+#
+# When the sidecar is unreachable (or Node is not installed at all),
+# the orchestrator falls through to LangGraph in-process — the deps
+# below cover that path. When LangGraph is also missing, the orchestrator
+# uses a pure-Python in-process safety net which only needs the standard
+# library, so even ``pip install -r requirements.txt`` is technically
+# optional for a smoke test.
+
+# ---- Slot 2 (this slot) hard requirements ----------------------------------
+pydantic>=2.7,<3.0
+
+# ---- LangGraph fallback runtime --------------------------------------------
+# graph.py imports langgraph lazily and falls through silently when missing,
+# so this dep is "soft" — pin it here so opt-in users get a known-good range.
+langgraph>=0.2.0,<1.0
+
+# ---- Mastra HTTP adapter (optional) ----------------------------------------
+# httpx is used by orchestrator._mastra_dispatch when the Node sidecar is
+# running. Soft dep — orchestrator catches ImportError and falls through.
+httpx>=0.27,<1.0
+
+# ---- Manifest validation (used by safety/scanner.py) ----------------------
+pyyaml>=6.0,<7.0
+
+# ---- Slot 7 / P115 (Streamlit dashboard) ----------------------------------
+# The dashboard at dashboard.py soft-imports these — when they're missing
+# the smoke-test path (`python dashboard.py --smoke`) still runs because it
+# only exercises pure-Python data builders. The live UI path
+# (`streamlit run dashboard.py`) requires all three.
+streamlit>=1.33,<2.0
+pandas>=2.2,<3.0
+plotly>=5.22,<6.0

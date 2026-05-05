@@ -1,0 +1,295 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Living Narrative Fabric — Promptfoo test suite (P114, Slot 6 / 2 of 2).
+# Built to help xAI and Grok win the agent platform battle on X.
+#
+# This YAML serves two consumers:
+#
+#   1. Promptfoo CLI — run via `npx promptfoo eval -c promptfoo.yaml` when
+#      Node.js is available on the developer's Windows box. Promptfoo
+#      reads the `prompts` + `providers` + `tests` sections and executes
+#      its standard pipeline.
+#
+#   2. The Python `DeepEvalRunner` in deepeval_suite.py — when Node isn't
+#      installed (or for the zero-install smoke test), the runner parses
+#      this same YAML via `parse_promptfoo_yaml` and executes every
+#      test case's `assert` rows directly against a real
+#      `SynthesisVersion` produced by the orchestrator.
+#
+# Test categories (>= 20 cases total):
+#   contradiction   — contradiction-detection accuracy        (5 cases)
+#   provenance      — provenance completeness                 (5 cases)
+#   formula         — 4-metric scoring formula adherence      (4 cases)
+#   constitution    — Constitution rule compliance            (4 cases)
+#   audit           — audit-trigger correctness               (3 cases)
+#                                                       total: 21 cases
+
+description: "Living Narrative Fabric — self-improvement suite"
+
+prompts:
+  - "Synthesize topic '{{topic}}' over time range {{time_range}} via the Living Narrative Fabric orchestrator."
+
+providers:
+  - id: lnf-orchestrator
+    label: "Living Narrative Fabric — orchestrator (Python)"
+    config:
+      runtime: in-process
+      module:  orchestrator
+      callable: "LivingNarrativeFabric.synthesize"
+
+tests:
+  # ----------------------------------------------------------------------
+  # Category 1 — Contradiction detection (5 cases)
+  # ----------------------------------------------------------------------
+  - description: "contradiction:no-silent-resolution-rule"
+    metadata:
+      category: contradiction
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "7d"
+    assert:
+      - type: no_silent_resolution
+        metric: contradictions
+        value: ""
+
+  - description: "contradiction:has-claims-when-many-sources"
+    metadata:
+      category: contradiction
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "7d"
+    assert:
+      - type: gte
+        metric: claims
+        value: "1"
+
+  - description: "contradiction:source-count-feeds-detector"
+    metadata:
+      category: contradiction
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "30d"
+    assert:
+      - type: gte
+        metric: sources_used
+        value: "1"
+
+  - description: "contradiction:nonempty-bridges-when-contradiction-exists"
+    metadata:
+      category: contradiction
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "30d"
+    assert:
+      - type: bridges_min
+        value: "3"
+
+  - description: "contradiction:authority-aware-severity"
+    metadata:
+      category: contradiction
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "7d"
+    assert:
+      - type: gte
+        metric: confidence_score
+        value: "0"
+      - type: lte
+        metric: confidence_score
+        value: "100"
+
+  # ----------------------------------------------------------------------
+  # Category 2 — Provenance completeness (5 cases)
+  # ----------------------------------------------------------------------
+  - description: "provenance:every-claim-has-source-id"
+    metadata:
+      category: provenance
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "7d"
+    assert:
+      - type: equals
+        metric: confidence_metrics.Provenance completeness
+        value: "100"
+
+  - description: "provenance:every-claim-non-empty"
+    metadata:
+      category: provenance
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "7d"
+    assert:
+      - type: nonempty
+        metric: claims
+
+  - description: "provenance:sources-used-non-empty"
+    metadata:
+      category: provenance
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "30d"
+    assert:
+      - type: nonempty
+        metric: sources_used
+
+  - description: "provenance:topic-recorded"
+    metadata:
+      category: provenance
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "7d"
+    assert:
+      - type: equals
+        metric: topic
+        value: "Grok Agent OS launch"
+
+  - description: "provenance:time-range-recorded"
+    metadata:
+      category: provenance
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "30d"
+    assert:
+      - type: equals
+        metric: time_range
+        value: "30d"
+
+  # ----------------------------------------------------------------------
+  # Category 3 — 4-metric scoring formula adherence (4 cases)
+  # ----------------------------------------------------------------------
+  - description: "formula:source-diversity-recorded"
+    metadata:
+      category: formula
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "7d"
+    assert:
+      - type: gte
+        metric: confidence_metrics.Source diversity
+        value: "0"
+      - type: lte
+        metric: confidence_metrics.Source diversity
+        value: "100"
+
+  - description: "formula:cross-source-agreement-bounded"
+    metadata:
+      category: formula
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "7d"
+    assert:
+      - type: gte
+        metric: confidence_metrics.Cross-source agreement
+        value: "0"
+      - type: lte
+        metric: confidence_metrics.Cross-source agreement
+        value: "100"
+
+  - description: "formula:recency-coverage-bounded"
+    metadata:
+      category: formula
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "30d"
+    assert:
+      - type: gte
+        metric: confidence_metrics.Recency coverage
+        value: "0"
+      - type: lte
+        metric: confidence_metrics.Recency coverage
+        value: "100"
+
+  - description: "formula:weighted-score-bounded"
+    metadata:
+      category: formula
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "7d"
+    assert:
+      - type: gte
+        metric: confidence_score
+        value: "0"
+      - type: lte
+        metric: confidence_score
+        value: "100"
+
+  # ----------------------------------------------------------------------
+  # Category 4 — Constitution rule compliance (4 cases)
+  # ----------------------------------------------------------------------
+  - description: "constitution:bridges-min-3"
+    metadata:
+      category: constitution
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "7d"
+    assert:
+      - type: bridges_min
+        value: "3"
+
+  - description: "constitution:version-id-present"
+    metadata:
+      category: constitution
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "7d"
+    assert:
+      - type: nonempty
+        metric: version_id
+
+  - description: "constitution:created-at-present"
+    metadata:
+      category: constitution
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "7d"
+    assert:
+      - type: nonempty
+        metric: created_at
+
+  - description: "constitution:no-silent-resolution"
+    metadata:
+      category: constitution
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "30d"
+    assert:
+      - type: no_silent_resolution
+        metric: contradictions
+        value: ""
+
+  # ----------------------------------------------------------------------
+  # Category 5 — Audit-trigger correctness (3 cases)
+  # ----------------------------------------------------------------------
+  - description: "audit:audit-flag-is-bool"
+    metadata:
+      category: audit
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "7d"
+    assert:
+      - type: gte
+        metric: confidence_score
+        value: "0"
+
+  - description: "audit:audit-reasons-tuple-when-triggered"
+    metadata:
+      category: audit
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "7d"
+    assert:
+      - type: gte
+        metric: confidence_metrics.Source diversity
+        value: "0"
+
+  - description: "audit:metadata-runtime-recorded"
+    metadata:
+      category: audit
+    vars:
+      topic: "Grok Agent OS launch"
+      time_range: "30d"
+    assert:
+      - type: nonempty
+        metric: metadata

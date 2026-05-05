@@ -1,0 +1,24 @@
+{
+  "_comment_apache_license": "Copyright 2026 AgentMindCloud — Apache 2.0 — http://www.apache.org/licenses/LICENSE-2.0",
+  "_comment_purpose": "Schema seed file for testimonial-collector.py. The LIVE store lives at $env:LOCALAPPDATA/grok-agent/creator-program/testimonials.json on the user's Windows machine. This file in the repo is a documentation stub showing the expected JSON shape — it is NEVER read at runtime and does NOT contain real creator data.",
+  "_comment_privacy": "Real testimonials are consent-gated and stored locally only. Never commit a testimonial with real creator data to this file.",
+  "version": 1,
+  "created_at": "2026-05-05T00:00:00Z",
+  "schema": {
+    "id": "TS-NNNN — auto-incremented testimonial identifier",
+    "handle": "string — X handle without leading @ (max 15 chars)",
+    "niche": "string — creator niche, free-form (max 80 chars)",
+    "follower_count": "integer | null — optional, used to render '12k followers' in cards",
+    "quote": "string — the verbatim testimonial (20-600 chars). NEVER edit for tone.",
+    "templates_used": "array<string> — one or more of the 20 creator template slugs",
+    "source": "string — one of: dm, x-reply, x-quote-tweet, email, voice-memo, other",
+    "linked_outreach_id": "string | null — optional OR-NNNN id from outreach.json",
+    "captured_at": "ISO-8601 UTC timestamp",
+    "consent_to_publish": "bool — REQUIRED true to add. False after revoke.",
+    "consent_to_attribute": "bool — true = use handle, false = anonymize",
+    "revoked_at": "ISO-8601 UTC timestamp | null",
+    "revoked_reason": "string | null",
+    "notes": "string — local-only operator notes (max 500 chars)"
+  },
+  "entries": []
+}

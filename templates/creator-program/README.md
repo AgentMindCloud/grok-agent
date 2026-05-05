@@ -20,8 +20,11 @@ The operational backbone of the Creator Agent Program (per `CLAUDE.md` §6 Phase
 |---|---|
 | `outreach-tracker.py` | CLI to log/respond/deliver/list/stats |
 | `weekly-report.py` | Renders a clean markdown weekly report |
-| `launcher.ps1` | Windows 11 + PowerShell launcher (one entry point for both) |
+| `testimonial-collector.py` | Consent-gated testimonial collector + card generator |
+| `testimonials.json` | Schema seed file (NEVER read at runtime; live store is in AppData) |
+| `launcher.ps1` | Windows 11 + PowerShell launcher (single entry point for all three tools) |
 | `examples/weekly-report-sample.md` | What the rendered report looks like |
+| `examples/testimonial-card.md` | What a published testimonial card looks like |
 
 ---
 
@@ -134,15 +137,89 @@ Mirrors `templates/creator/` on disk. Any other value is rejected by the tracker
 
 ---
 
+## Testimonials workflow
+
+When a delivered creator sends back honest feedback, capture it with the testimonial collector. The same privacy contract applies — **two separate consent flags**: one to publish the quote at all (`--consent-publish`, required), and a second to attach their handle (`--consent-attribute`, optional).
+
+### Record a new testimonial
+
+```powershell
+.\launcher.ps1 testimonial-add `
+    --handle JanSol0s `
+    --niche "ai-agents" `
+    --followers 12500 `
+    --quote "Cut my reply time in half — the bridges between agents make it feel like one product, not twenty." `
+    --template reply-drafter `
+    --template content-idea-generator `
+    --source dm `
+    --outreach-id OR-0001 `
+    --consent-publish `
+    --consent-attribute
+# → Logged testimonial TS-0001 — @JanSol0s — templates: reply-drafter, content-idea-generator
+```
+
+Multiple `--template` flags = multiple templates credited. Skip `--consent-attribute` to publish anonymously.
+
+### Generate publish-ready markdown cards
+
+```powershell
+.\launcher.ps1 testimonial-cards
+# → Wrote ...\testimonials\testimonial-cards-2026-05-12.md
+```
+
+The generated file:
+
+- Contains **only** entries where `consent_to_publish=True` and not revoked
+- Renders the quote **verbatim** — never edited for tone
+- Auto-adds the **V.1+V.2 disclaimer footer** to any card mentioning `monetization-optimizer`
+- Anonymizes entries where `consent_to_attribute=False`
+
+You can scope by template:
+
+```powershell
+.\launcher.ps1 testimonial-cards --template-filter monetization-optimizer
+```
+
+### Honor a revoke request
+
+If a creator asks to be removed:
+
+```powershell
+.\launcher.ps1 testimonial-revoke --id TS-0001 --reason "creator request via DM"
+```
+
+The entry stays on disk (audit trail) but is excluded from every public output going forward. Re-run `testimonial-cards` to refresh published copies.
+
+### Other testimonial commands
+
+| Command | Purpose |
+|---|---|
+| `testimonial-list` | Table view of all (add `--include-revoked` to also see revoked) |
+| `testimonial-stats` | Counts: publishable / anonymous / revoked / outreach-linked / monetization |
+| `testimonial-export` | Full JSON backup (includes revoked entries with audit fields) |
+
+### Honest-feedback principle (non-negotiable)
+
+- **Never edit a quote for tone.** If the creator sends mixed feedback, log it verbatim or don't log it at all.
+- **Never paraphrase to make a quote shorter.** Use the unedited version or skip it.
+- **Never bundle a critical quote with happy ones to dilute it.** Fix the criticism first; ask for fresh feedback later.
+- **Mixed feedback that's fair is better than uniform praise that isn't.** Consider keeping a private "criticism log" (the `--notes` field is local-only) to drive template improvements without publishing.
+
+---
+
 ## Storage layout
 
 ```text
 $env:LOCALAPPDATA\grok-agent\creator-program\
-├── outreach.json             # the single source of truth
-└── reports\
-    ├── weekly-report-7d-2026-05-12.md
-    ├── weekly-report-7d-2026-05-19.md
-    └── weekly-report-30d-2026-05-31.md
+├── outreach.json                      # the outreach single source of truth
+├── testimonials.json                  # the testimonials single source of truth
+├── reports\
+│   ├── weekly-report-7d-2026-05-12.md
+│   ├── weekly-report-7d-2026-05-19.md
+│   └── weekly-report-30d-2026-05-31.md
+└── testimonials\
+    ├── testimonial-cards-2026-05-12.md
+    └── testimonials-backup-2026-05-12.json
 ```
 
 The JSON schema is intentionally simple so you can hand-edit it in any text editor (e.g. to redact a handle on request). Each entry has:

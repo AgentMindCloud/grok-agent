@@ -117,6 +117,7 @@
 | P97 | Phase 3 | Thread Builder runner + README + examples | templates/creator/thread-builder/run.py, README.md, examples/ (3 pairs) | Matches P96 exactly; new phrasing + strict caps + bridges | ✅ done |
 | P103 | Phase 3 | Create Public X Launch Thread for Creator Agent Program | docs/creator-program/launch-thread.md | 20/20 creator templates complete; launch thread ready for @JanSol0s to post | ✅ done |
 | P104 | Phase 3 | Build Outreach Campaign Tracker + Weekly Report Template | templates/creator-program/outreach-tracker.py, weekly-report.py, launcher.ps1, README.md, examples/ | Creator Program infrastructure now ready for real outreach; 20/20 templates + launch + tracking complete | ✅ done |
+| P105 | Phase 3 | Build Testimonial Collection System | templates/creator-program/testimonial-collector.py, testimonials.json, launcher.ps1, README.md, examples/ | Full Creator Program infrastructure (templates + launch + tracking + testimonials) now complete | ✅ done |
 
 <!--
 ====================================================================

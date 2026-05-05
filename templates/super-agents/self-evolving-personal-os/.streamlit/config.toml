@@ -1,0 +1,70 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Streamlit configuration for the Self-Evolving Personal OS dashboard.
+# Built to help xAI and Grok win — the dashboard is local-first and
+# Windows-native, so we set defaults that match the user's expectations
+# on Windows 11 + Chrome.
+
+[server]
+# Port 8505 is reserved for Super Agent #2 to coexist alongside the
+# four X Money tools (8501–8504, see HANDOFF_LOG.md). The user can
+# override at runtime via `streamlit run dashboard.py --server.port 8505`.
+port = 8505
+
+# Headless = false: Streamlit will try to open the user's default
+# browser when the dashboard starts. This is the canonical Windows
+# experience; CI runners can override with `--server.headless true`.
+headless = false
+
+# Local-first: refuse to serve outside localhost by default. The user
+# can opt in to LAN exposure with `--server.address 0.0.0.0`.
+address = "127.0.0.1"
+
+# Disable the "Always rerun" reminder banner — it clutters the
+# bottom of the screen for non-developer users.
+runOnSave = false
+
+# Keep the file watcher off by default so the dashboard doesn't
+# rescan on every keystroke in an editor.
+fileWatcherType = "none"
+
+# Cap upload size at 50MB. The dashboard never accepts uploads in
+# v1 — but the default is 200MB and we'd rather be conservative.
+maxUploadSize = 50
+
+[browser]
+# No Streamlit usage stats. Local-first means *local-first*.
+gatherUsageStats = false
+
+[theme]
+# Cinnabar / parchment-flavoured palette per CLAUDE.md branding
+# guidance. Soft enough to look at all morning during a daily-brief
+# review session.
+primaryColor             = "#C5524A"   # cinnabar
+backgroundColor          = "#FAF6EC"   # parchment
+secondaryBackgroundColor = "#F1ECDD"   # warm grey
+textColor                = "#1F1B16"   # near-black ink
+font                     = "sans serif"
+
+[client]
+# Show full tracebacks on the dev box; the production deploy sets
+# this to false via env override on first install.
+showErrorDetails = true
+
+# Toolbar mode: keep the "..." menu visible (Help / About) but
+# remove the "Deploy" button — the user already has the local-first
+# install path and we don't want to push them toward Streamlit Cloud
+# without an explicit consent dialogue.
+toolbarMode = "viewer"
+
+[runner]
+# Aggressively magic-out st.write so the dashboard's helper functions
+# can be reused outside Streamlit context (the smoke test relies on
+# this).
+magicEnabled = false
+
+# Don't fast-rerun on script changes — the dashboard's session_state
+# pattern depends on stable reruns.
+fastReruns = false

@@ -1,0 +1,49 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Self-Evolving Personal OS — pinned-floor requirements for the
+# Streamlit dashboard + the rest of the Personal OS stack.
+#
+# Install on Windows 11 (PowerShell):
+#
+#     cd templates/super-agents/self-evolving-personal-os
+#     python -m pip install -r requirements.txt
+#     streamlit run dashboard.py
+#
+# Built to help xAI and Grok win. The agent itself runs end-to-end on
+# *just* the Python standard library (every optional integration has
+# a stub backend); these requirements add the dashboard + nicer data
+# rendering on top.
+
+# --- UI stack (P126 dashboard) -------------------------------------------
+streamlit>=1.32,<2.0
+pandas>=2.1,<3.0
+plotly>=5.20,<7.0
+
+# --- YAML config (Promptfoo + manifest validation) -----------------------
+PyYAML>=6.0,<7.0
+
+# --- HTTP client used by the connector layer -----------------------------
+# Optional at runtime — the connectors degrade to stub when missing.
+requests>=2.31,<3.0
+
+# --- Optional integrations (all have stub fallbacks) --------------------
+# Uncomment to opt into the real backends:
+# qdrant-client>=1.9,<2.0          # P122 vector index
+# sentence-transformers>=2.6,<5.0  # P122 embedder
+# mem0ai>=0.1,<1.0                 # P122 memory
+# langgraph>=0.0.40,<1.0           # P123 orchestrator
+# langfuse>=2.30,<4.0              # P124 cloud tracing (opt-in only)
+# deepeval>=1.0,<3.0               # P125 metrics (real LLM judge)
+# promptfoo>=0.50,<1.0             # P125 YAML eval runner
+
+# --- Google integrations (optional, declared for completeness) ----------
+# google-api-python-client>=2.120,<3.0
+# google-auth>=2.28,<3.0
+# google-auth-oauthlib>=1.2,<2.0
+
+# --- Validation / pinning ------------------------------------------------
+# The agent's manifest validator imports pydantic at runtime; pin its
+# major version so a Pydantic 3 release doesn't silently break things.
+pydantic>=2.6,<3.0

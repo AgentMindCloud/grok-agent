@@ -129,6 +129,7 @@
 | P132 | Phase 4 | Build self-improvement loop for Cross-Reality Action Fabric | eval/promptfoo.yaml, eval/deepeval_suite.py, agent.py (additive) | 8-test Promptfoo + 6-metric DeepEval with human-review gate and Rule-safety focus | ✅ done |
 | P133 | Phase 4 | Build UI surface for Cross-Reality Action Fabric | dashboard.py, requirements.txt, .streamlit/config.toml | 6-tab dashboard with one-click approve/rollback + rollback chain visualizer + V.3 banner | ✅ done |
 | P134 | Phase 4 | Build demo video script + X launch thread for Cross-Reality Action Fabric | DEMO.md, X_LAUNCH_THREAD.md | 90-second Windows HITL demo + 10-tweet launch thread with V.3 safety emphasis | ✅ done |
+| P135 | Phase 5 | Investigate git branches and clean duplicates | scripts/diagnose-branches.ps1, HANDOFF_LOG.md | Diagnostic identified 16 remote branches: 1 main + 9 UNIQUE feature branches + 6 MERGED-deletable branches. main is 10h old because P104+ work lives on unmerged feature branches. Local git proxy blocked HTTP push deletes from CI; user runs `.\scripts\diagnose-branches.ps1 -Apply` on Windows to actually delete the 6 MERGED branches | ✅ done |
 
 <!--
 ====================================================================

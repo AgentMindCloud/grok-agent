@@ -116,6 +116,7 @@
 | P96 | Phase 3 | Thread Builder manifest + system prompt | templates/creator/thread-builder/grok-agent.yaml, prompts/system.md | Matches P83/P85 v2.15 shape; new phrasing + strong bridges | ✅ done |
 | P97 | Phase 3 | Thread Builder runner + README + examples | templates/creator/thread-builder/run.py, README.md, examples/ (3 pairs) | Matches P96 exactly; new phrasing + strict caps + bridges | ✅ done |
 | P103 | Phase 3 | Create Public X Launch Thread for Creator Agent Program | docs/creator-program/launch-thread.md | 20/20 creator templates complete; launch thread ready for @JanSol0s to post | ✅ done |
+| P121 | Phase 4 | Build public API connector helpers for Self-Evolving Personal OS | connectors/__init__.py + 5 client files | Consent-gated + PII-redacted personal connectors; integrates with P119–P120 | ✅ done |
 
 <!--
 ====================================================================

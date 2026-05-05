@@ -1,0 +1,117 @@
+{
+  "_comment": "Sample 1 — trend-chasing paradox + off-niche guard. avg Trend match 79.4 > 75 threshold AND avg Niche fit 36.1 < 40 floor → paradox fires. 2 ideas have trend_match >= 75 AND niche_fit < 40 → excluded by off-niche guard. Trend Audit auto-triggered by off-niche exclusion.",
+  "x_handle": "@JanSol0s",
+  "window_days": 30,
+  "compare_to": "previous_period",
+  "data_source": "real",
+  "previous_period": {
+    "avg_trend_match": 68.2,
+    "avg_niche_fit": 52.0,
+    "avg_voice_fidelity": 68.5,
+    "avg_originality": 54.2
+  },
+  "trends": [
+    {
+      "id": "t001",
+      "description": "Emerging discourse on lightweight agent orchestration patterns",
+      "velocity": "accelerating",
+      "niche_fit": "tight"
+    },
+    {
+      "id": "t002",
+      "description": "Viral debate on real-time X analytics tooling for independent creators",
+      "velocity": "accelerating",
+      "niche_fit": "adjacent"
+    },
+    {
+      "id": "t003",
+      "description": "Trending commentary on AI-generated content disclosure norms",
+      "velocity": "steady",
+      "niche_fit": "adjacent"
+    },
+    {
+      "id": "t004",
+      "description": "Broad conversation on creator monetisation models beyond sponsorships",
+      "velocity": "steady",
+      "niche_fit": "loose"
+    },
+    {
+      "id": "t005",
+      "description": "Off-niche viral wave around consumer gadget unboxing formats",
+      "velocity": "accelerating",
+      "niche_fit": "off"
+    }
+  ],
+  "ideas": [
+    {
+      "id": "o001",
+      "format": "single",
+      "trend_match": 88,
+      "niche_fit": 22,
+      "voice_fidelity": 72,
+      "originality": 55,
+      "copy_outline": "Hot-take angle on the gadget unboxing wave mapped to creator workflows",
+      "trend_tag": "gadget-unboxing-creator-angle"
+    },
+    {
+      "id": "o002",
+      "format": "quote-tweet",
+      "trend_match": 85,
+      "niche_fit": 25,
+      "voice_fidelity": 69,
+      "originality": 60,
+      "copy_outline": "Reframe of the AI-disclosure debate through a non-niche productivity lens",
+      "trend_tag": "ai-disclosure-productivity"
+    },
+    {
+      "id": "k001",
+      "format": "thread",
+      "trend_match": 79,
+      "niche_fit": 41,
+      "voice_fidelity": 75,
+      "originality": 62,
+      "copy_outline": "5-step breakdown of lightweight orchestration patterns for solo agent builders",
+      "trend_tag": "agent-orchestration-patterns"
+    },
+    {
+      "id": "k002",
+      "format": "single",
+      "trend_match": 76,
+      "niche_fit": 42,
+      "voice_fidelity": 73,
+      "originality": 60,
+      "copy_outline": "Counterpoint to the analytics-tooling hype: the one signal creators actually need",
+      "trend_tag": "x-analytics-tooling-hype"
+    },
+    {
+      "id": "k003",
+      "format": "quote-tweet",
+      "trend_match": 74,
+      "niche_fit": 40,
+      "voice_fidelity": 70,
+      "originality": 58,
+      "copy_outline": "Nuanced take on AI disclosure norms from a solo-builder perspective",
+      "trend_tag": "ai-content-disclosure"
+    },
+    {
+      "id": "k004",
+      "format": "image-post",
+      "trend_match": 79,
+      "niche_fit": 40,
+      "voice_fidelity": 70,
+      "originality": 57,
+      "copy_outline": "Visual framework mapping monetisation models to audience-trust curves",
+      "trend_tag": "creator-monetisation-models"
+    },
+    {
+      "id": "k005",
+      "format": "reply-thread",
+      "trend_match": 75,
+      "niche_fit": 43,
+      "voice_fidelity": 68,
+      "originality": 58,
+      "copy_outline": "Reply-thread diving into the edge cases of monetisation beyond direct sponsorship",
+      "trend_tag": "creator-monetisation-models"
+    }
+  ]
+}

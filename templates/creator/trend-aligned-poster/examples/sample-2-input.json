@@ -1,0 +1,91 @@
+{
+  "_comment": "Sample 2 — healthy trend alignment. avg Trend match 68.0 < 75 threshold, avg Niche fit 77.0 > 40 floor → no paradox, no off-niche exclusion. Clean 7-section report.",
+  "x_handle": "@habitstacker",
+  "window_days": 30,
+  "compare_to": "previous_period",
+  "data_source": "real",
+  "previous_period": {
+    "avg_trend_match": 65.0,
+    "avg_niche_fit": 74.0,
+    "avg_voice_fidelity": 77.0,
+    "avg_originality": 65.8
+  },
+  "trends": [
+    {
+      "id": "t001",
+      "description": "Growing conversation on habit-stacking systems for knowledge workers",
+      "velocity": "accelerating",
+      "niche_fit": "tight"
+    },
+    {
+      "id": "t002",
+      "description": "Mainstream interest in evening-routine optimisation frameworks",
+      "velocity": "steady",
+      "niche_fit": "tight"
+    },
+    {
+      "id": "t003",
+      "description": "Adjacent surge in productivity tool comparisons for async teams",
+      "velocity": "steady",
+      "niche_fit": "adjacent"
+    },
+    {
+      "id": "t004",
+      "description": "Decelerating thread format popularity in niche coaching content",
+      "velocity": "decaying",
+      "niche_fit": "adjacent"
+    }
+  ],
+  "ideas": [
+    {
+      "id": "h001",
+      "format": "thread",
+      "trend_match": 74,
+      "niche_fit": 82,
+      "voice_fidelity": 86,
+      "originality": 74,
+      "copy_outline": "7-tweet breakdown of the habit-stacking system applied to knowledge-work routines",
+      "trend_tag": "habit-stacking-knowledge-workers"
+    },
+    {
+      "id": "h002",
+      "format": "single",
+      "trend_match": 71,
+      "niche_fit": 79,
+      "voice_fidelity": 83,
+      "originality": 72,
+      "copy_outline": "Counterintuitive evening-routine principle most people implement backwards",
+      "trend_tag": "evening-routine-optimisation"
+    },
+    {
+      "id": "h003",
+      "format": "quote-tweet",
+      "trend_match": 68,
+      "niche_fit": 77,
+      "voice_fidelity": 81,
+      "originality": 70,
+      "copy_outline": "Reframe of the productivity-tool comparison trend through a single-system lens",
+      "trend_tag": "productivity-tool-comparison"
+    },
+    {
+      "id": "h004",
+      "format": "image-post",
+      "trend_match": 65,
+      "niche_fit": 74,
+      "voice_fidelity": 79,
+      "originality": 68,
+      "copy_outline": "Visual showing how the habit loop maps onto the three async-team failure modes",
+      "trend_tag": "async-team-productivity"
+    },
+    {
+      "id": "h005",
+      "format": "reply-thread",
+      "trend_match": 62,
+      "niche_fit": 73,
+      "voice_fidelity": 78,
+      "originality": 66,
+      "copy_outline": "Reply-thread expanding on how decelerating thread formats still outperform single posts in niche coaching",
+      "trend_tag": "thread-format-effectiveness"
+    }
+  ]
+}

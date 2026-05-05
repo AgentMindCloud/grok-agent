@@ -118,6 +118,7 @@
 | P103 | Phase 3 | Create Public X Launch Thread for Creator Agent Program | docs/creator-program/launch-thread.md | 20/20 creator templates complete; launch thread ready for @JanSol0s to post | ✅ done |
 | P110 | Phase 4 | Build Living Narrative Fabric — Orchestration Core (Slot 2) | templates/super-agents/living-narrative-fabric/orchestrator.py, graph.py, requirements.txt, README.md | Mastra primary with LangGraph fallback; consistent style with P98–P102; ready for memory + API slots | ✅ done |
 | P111 | Phase 4 | Implement memory layer for Living Narrative Fabric | memory/mem0_setup.py, memory/qdrant_index.py, memory/__init__.py | Integrated via with_dependencies Protocol; re-uses 4-metric scoring and ConstitutionViolation | ✅ done |
+| P112 | Phase 4 | Build public API connector helpers for Living Narrative Fabric | connectors/__init__.py + 6 client files | Plugs into P110/P111 via with_dependencies Protocol; full provenance + ConstitutionViolation on every fetch | ✅ done |
 
 <!--
 ====================================================================

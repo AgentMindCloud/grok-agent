@@ -95,6 +95,14 @@ __all__ = [
     # Path helpers (used by individual clients + smoke tests)
     "appdata_root",
     "audit_db_path",
+    # Routing constants (used by the P122 memory layer)
+    "SOURCES",
+    "MEMORY_COLLECTION",
+    "CONSENT_REQUIRED",
+    "DEFAULT_CACHE_TTL_S",
+    # Memory layer hooks — additive lazy-import shims for P122
+    "attach_memory_store",
+    "attach_personal_memory",
 ]
 
 
@@ -896,4 +904,75 @@ def with_connectors(
         composite.set_consent(consent)
     composite.set_force_stub(force_stub)
     setattr(orchestrator, "connectors", composite)
+    return orchestrator
+
+
+# --- Section 11. Memory hooks (lazy-imported P122 wiring) -----------------
+
+# These are thin, additive shims so callers can wire the P122 memory layer
+# without writing the memory-layer import path themselves. The actual
+# implementations live in ``memory.mem0_setup``; we import lazily so the
+# connector package keeps booting on a system that hasn't yet installed
+# any optional memory dependency.
+
+def attach_memory_store(
+    composite: "PersonalOSConnectors",
+    *,
+    user_id: str = "default",
+    force_stub: bool = False,
+    consent: ConsentContext | None = None,
+) -> Any:
+    """Build a P122 memory client + adapter, attach it to ``composite``.
+
+    Returns ``(client, adapter)`` exactly like
+    :func:`memory.mem0_setup.attach_memory`. Importing this from the
+    connector package keeps user code's import surface tidy.
+    """
+    # Absolute import — the personal-OS parent folder name contains hyphens
+    # and cannot be a Python package identifier, so relative import won't
+    # work across the connectors/ ↔ memory/ sibling boundary.
+    from memory.mem0_setup import attach_memory  # type: ignore
+    return attach_memory(
+        composite,
+        user_id=user_id,
+        force_stub=force_stub,
+        consent=consent,
+    )
+
+
+def attach_personal_memory(
+    orchestrator: Any,
+    *,
+    manifest: dict | None = None,
+    consent: ConsentContext | None = None,
+    user_id: str = "default",
+    force_stub: bool = False,
+) -> Any:
+    """One-call wiring: connectors + memory layer in a single shot.
+
+    Equivalent to::
+
+        with_connectors(orch, manifest=..., consent=..., force_stub=...)
+        attach_memory_store(orch.connectors, user_id=..., consent=..., ...)
+
+    Returns the orchestrator (already mutated to carry ``connectors`` and
+    ``memory_client``) so callers can keep chaining setup steps.
+    """
+    with_connectors(
+        orchestrator,
+        manifest=manifest,
+        consent=consent,
+        force_stub=force_stub,
+    )
+    composite = getattr(orchestrator, "connectors", None)
+    if composite is None:  # pragma: no cover — defensive
+        raise RuntimeError("attach_personal_memory: connectors not attached")
+    client, adapter = attach_memory_store(
+        composite,
+        user_id=user_id,
+        force_stub=force_stub,
+        consent=consent,
+    )
+    setattr(orchestrator, "memory_client", client)
+    setattr(orchestrator, "memory_adapter", adapter)
     return orchestrator

@@ -126,6 +126,7 @@
 | P117 | Phase 4 | Create manifest + constitution for Living Narrative Fabric | grok-agent.yaml, constitution.md | Closes final gap for 8-slot Super Agent #1; fully installable via grok install this | ✅ done |
 | P118 | Phase 4 | Create manifest + constitution for Self-Evolving Personal OS | grok-agent.yaml, constitution.md | Starts Super Agent #2; re-uses proven LNF patterns; privacy-first personal second brain | ✅ done |
 | P119 | Phase 4 | Build orchestration core for Self-Evolving Personal OS | orchestrator.py, graph.py, requirements.txt | 6-node DAG with briefing_trust scoring + consent enforcement; re-uses ConstitutionViolation from LNF | ✅ done |
+| P120 | Phase 4 | Implement memory layer for Self-Evolving Personal OS | memory/mem0_setup.py, memory/qdrant_index.py, memory/__init__.py | Re-uses P111 pattern with procedural memory + DPAPI + PII redaction; consent-gated recall | ✅ done |
 
 <!--
 ====================================================================

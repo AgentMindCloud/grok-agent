@@ -1,0 +1,75 @@
+{
+  "_comment": "Sample 3 — 7-day window. avg Trend match 72.0 in (65, 75] AND avg Niche fit 42.0 < 50 (floor+10) → near-paradox watch fires. window=7d → Trend Audit auto-triggered + Single-window variance exposure (medium) flag. One stale trend in watchlist.",
+  "x_handle": "@JanSol0s",
+  "window_days": 7,
+  "compare_to": "previous_period",
+  "data_source": "real",
+  "previous_period": {
+    "avg_trend_match": 69.0,
+    "avg_niche_fit": 48.0,
+    "avg_voice_fidelity": 67.0,
+    "avg_originality": 58.5
+  },
+  "trends": [
+    {
+      "id": "t001",
+      "description": "Emerging week-over-week spike in agent-eval workflow discourse",
+      "velocity": "accelerating",
+      "niche_fit": "tight"
+    },
+    {
+      "id": "t002",
+      "description": "Short-lived surge around a specific open-source tooling release",
+      "velocity": "steady",
+      "niche_fit": "adjacent"
+    },
+    {
+      "id": "t003",
+      "description": "Older thread-format commentary that peaked two weeks ago",
+      "velocity": "stale",
+      "niche_fit": "adjacent"
+    }
+  ],
+  "ideas": [
+    {
+      "id": "j001",
+      "format": "thread",
+      "trend_match": 74,
+      "niche_fit": 44,
+      "voice_fidelity": 72,
+      "originality": 63,
+      "copy_outline": "5-part thread on agent-eval patterns surfaced by this week's discourse spike",
+      "trend_tag": "agent-eval-workflow"
+    },
+    {
+      "id": "j002",
+      "format": "single",
+      "trend_match": 73,
+      "niche_fit": 42,
+      "voice_fidelity": 70,
+      "originality": 61,
+      "copy_outline": "Hot take on the open-source tooling release and what it actually ships vs what the thread claims",
+      "trend_tag": "oss-tooling-release"
+    },
+    {
+      "id": "j003",
+      "format": "quote-tweet",
+      "trend_match": 71,
+      "niche_fit": 41,
+      "voice_fidelity": 69,
+      "originality": 60,
+      "copy_outline": "Nuanced reframe of the thread-format debate from a niche-builder perspective",
+      "trend_tag": "thread-format-commentary"
+    },
+    {
+      "id": "j004",
+      "format": "image-post",
+      "trend_match": 70,
+      "niche_fit": 41,
+      "voice_fidelity": 68,
+      "originality": 58,
+      "copy_outline": "Visual comparing agent-eval approaches before and after the tooling release",
+      "trend_tag": "agent-eval-workflow"
+    }
+  ]
+}

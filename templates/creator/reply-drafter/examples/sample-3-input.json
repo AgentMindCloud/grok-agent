@@ -1,0 +1,83 @@
+{
+  "x_handle": "@thindata",
+  "window": 7,
+  "data_source": "demo",
+  "previous_window_summary": {
+    "avg_voice_fidelity_score": 70.0,
+    "avg_substance_score": 70.0,
+    "avg_tone_calibration_score": 75.0,
+    "avg_risk_avoidance_score": 85.0
+  },
+  "mentions": [
+    {
+      "id": "m-201",
+      "paraphrased_excerpt": "asks for the methodology behind a recent 7d benchmark write-up",
+      "sentiment": "positive",
+      "intent": "question",
+      "priority_score": 80,
+      "author_followers": 5000
+    },
+    {
+      "id": "m-202",
+      "paraphrased_excerpt": "thoughtful pushback on a single statistical claim",
+      "sentiment": "neutral",
+      "intent": "criticism",
+      "priority_score": 72,
+      "author_followers": 8000
+    },
+    {
+      "id": "m-203",
+      "paraphrased_excerpt": "shares their own replication and asks for the data path",
+      "sentiment": "positive",
+      "intent": "question",
+      "priority_score": 78,
+      "author_followers": 3500
+    },
+    {
+      "id": "m-204",
+      "paraphrased_excerpt": "general supportive comment with no specific question",
+      "sentiment": "positive",
+      "intent": "praise",
+      "priority_score": 50,
+      "author_followers": 1200
+    }
+  ],
+  "candidate_drafts": [
+    {
+      "mention_id": "m-201",
+      "format": "single",
+      "draft_outline": "answer the methodology question with a one-paragraph explanation and a link to the methodology post",
+      "voice_fidelity_score": 78,
+      "substance_score": 75,
+      "tone_calibration_score": 76,
+      "risk_avoidance_score": 88
+    },
+    {
+      "mention_id": "m-202",
+      "format": "single",
+      "draft_outline": "engage the pushback by paraphrasing the original claim and explaining the evidence",
+      "voice_fidelity_score": 76,
+      "substance_score": 80,
+      "tone_calibration_score": 78,
+      "risk_avoidance_score": 86
+    },
+    {
+      "mention_id": "m-203",
+      "format": "single",
+      "draft_outline": "share the data path and ask the replication for any flagged divergences",
+      "voice_fidelity_score": 75,
+      "substance_score": 72,
+      "tone_calibration_score": 75,
+      "risk_avoidance_score": 90
+    },
+    {
+      "mention_id": "m-204",
+      "format": "single",
+      "draft_outline": "thank the supportive comment and tease the next deeper post",
+      "voice_fidelity_score": 72,
+      "substance_score": 60,
+      "tone_calibration_score": 80,
+      "risk_avoidance_score": 95
+    }
+  ]
+}

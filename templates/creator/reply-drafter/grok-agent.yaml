@@ -175,4 +175,3 @@ dependencies:
     packages:
       - "pydantic ^2.7"
       - "pyyaml ^6.0"
-      - "requests ^2.31"

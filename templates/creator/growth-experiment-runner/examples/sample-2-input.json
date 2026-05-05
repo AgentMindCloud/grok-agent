@@ -1,0 +1,68 @@
+{
+  "x_handle": "@habitstacker",
+  "audience_size": 24000,
+  "window": 30,
+  "data_source": "demo",
+  "baseline_metric_name": "engagement_rate",
+  "baseline_metric_value": 4.0,
+  "previous_window_summary": {
+    "avg_hypothesis_specificity": 80.0,
+    "avg_single_axis_isolation": 92.0,
+    "avg_sample_power": 75.0,
+    "avg_risk_avoidance": 92.0
+  },
+  "candidate_experiments": [
+    {
+      "hypothesis": "Replacing the opening question with a one-line claim raises engagement_rate by 1 percentage point",
+      "axis_count": 1,
+      "axis_label": "opening_hook_format",
+      "expected_effect_pct": 1.0,
+      "planned_runtime_days": 30,
+      "primary_metric": "engagement_rate",
+      "success_criteria": "engagement_rate uplift \u2265 1.0 pt vs the prior 30d baseline",
+      "hypothesis_specificity_score": 88,
+      "single_axis_isolation_score": 95,
+      "sample_power_score": 78,
+      "risk_avoidance_score": 95
+    },
+    {
+      "hypothesis": "Adding a personal-anecdote anchor to friction-audit threads lifts thread_completion_rate by 2 percentage points",
+      "axis_count": 1,
+      "axis_label": "thread_anchor_format",
+      "expected_effect_pct": 2.0,
+      "planned_runtime_days": 30,
+      "primary_metric": "thread_completion_rate",
+      "success_criteria": "thread_completion_rate uplift \u2265 2.0 pts",
+      "hypothesis_specificity_score": 84,
+      "single_axis_isolation_score": 92,
+      "sample_power_score": 80,
+      "risk_avoidance_score": 92
+    },
+    {
+      "hypothesis": "Swapping the weekly numbers post for a numbers-led case study raises impressions by 8 percentage points",
+      "axis_count": 1,
+      "axis_label": "weekly_numbers_format",
+      "expected_effect_pct": 8.0,
+      "planned_runtime_days": 30,
+      "primary_metric": "impressions",
+      "success_criteria": "impressions uplift \u2265 8% vs the prior 30d baseline",
+      "hypothesis_specificity_score": 82,
+      "single_axis_isolation_score": 90,
+      "sample_power_score": 78,
+      "risk_avoidance_score": 92
+    },
+    {
+      "hypothesis": "Moving the friction-audit thread from Monday to Wednesday lifts reply_rate by 0.8 percentage points",
+      "axis_count": 1,
+      "axis_label": "thread_post_day",
+      "expected_effect_pct": 0.8,
+      "planned_runtime_days": 30,
+      "primary_metric": "reply_rate",
+      "success_criteria": "reply_rate uplift \u2265 0.8 pt",
+      "hypothesis_specificity_score": 78,
+      "single_axis_isolation_score": 92,
+      "sample_power_score": 72,
+      "risk_avoidance_score": 92
+    }
+  ]
+}

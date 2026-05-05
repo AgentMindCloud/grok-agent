@@ -1,0 +1,100 @@
+{
+  "x_handle": "@habitstacker",
+  "window": 30,
+  "data_source": "demo",
+  "previous_window_summary": {
+    "avg_voice_fidelity_score": 80.0,
+    "avg_substance_score": 75.0,
+    "avg_tone_calibration_score": 80.0,
+    "avg_risk_avoidance_score": 92.0
+  },
+  "mentions": [
+    {
+      "id": "m-101",
+      "paraphrased_excerpt": "asks about the evening-friction audit framework specifics",
+      "sentiment": "positive",
+      "intent": "question",
+      "priority_score": 90,
+      "author_followers": 15000
+    },
+    {
+      "id": "m-102",
+      "paraphrased_excerpt": "shares their own habit-stacking experiment with concrete numbers",
+      "sentiment": "positive",
+      "intent": "praise",
+      "priority_score": 75,
+      "author_followers": 9000
+    },
+    {
+      "id": "m-103",
+      "paraphrased_excerpt": "collaboration ask on a behaviour-design study",
+      "sentiment": "positive",
+      "intent": "collaboration-ask",
+      "priority_score": 85,
+      "author_followers": 25000
+    },
+    {
+      "id": "m-104",
+      "paraphrased_excerpt": "thoughtful pushback on a single claim from a recent thread",
+      "sentiment": "neutral",
+      "intent": "criticism",
+      "priority_score": 70,
+      "author_followers": 12000
+    },
+    {
+      "id": "m-105",
+      "paraphrased_excerpt": "asks for the diagram source from the friction-audit post",
+      "sentiment": "positive",
+      "intent": "question",
+      "priority_score": 65,
+      "author_followers": 7000
+    }
+  ],
+  "candidate_drafts": [
+    {
+      "mention_id": "m-101",
+      "format": "single",
+      "draft_outline": "share the framework with a concrete one-week example from the creator's own practice",
+      "voice_fidelity_score": 86,
+      "substance_score": 82,
+      "tone_calibration_score": 84,
+      "risk_avoidance_score": 95
+    },
+    {
+      "mention_id": "m-103",
+      "format": "thread-reply",
+      "draft_outline": "outline the collaboration scope in three tweets with concrete deliverables",
+      "voice_fidelity_score": 88,
+      "substance_score": 80,
+      "tone_calibration_score": 86,
+      "risk_avoidance_score": 92
+    },
+    {
+      "mention_id": "m-102",
+      "format": "single",
+      "draft_outline": "amplify the mention's experiment with a thoughtful follow-up question",
+      "voice_fidelity_score": 84,
+      "substance_score": 75,
+      "tone_calibration_score": 88,
+      "risk_avoidance_score": 95
+    },
+    {
+      "mention_id": "m-104",
+      "format": "single",
+      "draft_outline": "engage the pushback by re-stating the assumption and explaining the evidence",
+      "voice_fidelity_score": 82,
+      "substance_score": 78,
+      "tone_calibration_score": 82,
+      "risk_avoidance_score": 90
+    },
+    {
+      "mention_id": "m-105",
+      "format": "single",
+      "draft_outline": "share the diagram source path and offer a quick walkthrough as a follow-up",
+      "voice_fidelity_score": 80,
+      "substance_score": 70,
+      "tone_calibration_score": 84,
+      "risk_avoidance_score": 95
+    }
+  ]
+}

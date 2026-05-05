@@ -1,0 +1,141 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built for X, Grok & the ecosystem community — local-first content
+# calendar builder for X creators. Reads creator-supplied cadence + niche
+# + voice profile + analytics signals (or seeded demo signals) and emits
+# a 7/8-section structured calendar with 4 canonical Calendar Plan Score
+# metrics, over-scheduling paradox detection, format-streak guard,
+# 4-12 weeks × 3-14 slots/week (clamped to creator's cadence), per-slot
+# day + time-of-week + format + archetype + niche fit + predicted
+# engagement, and mandatory bridges to analytics-summarizer +
+# brand-voice-trainer in every output. Drafts only — never auto-publishes.
+# Refuses financial / cashtag / sponsorship / harassment content.
+
+version: "2.15"
+kind: "creator-template"
+name: "content-calendar-builder"
+description: "Local-first content calendar builder for X creators — reads creator-supplied cadence + niche + voice profile + analytics signals (or seeded demo signals) and emits a 7/8-section structured calendar with 4 canonical Calendar Plan Score metrics (Cadence sustainability / Niche fit / Voice fidelity / Variety), over-scheduling paradox detection in BOTH the Plan Score AND Red Flags sections (avg Cadence sustainability < 50 AND posts_per_week > 7), format-streak guard (≥ 3 consecutive same-format slots → Red Flag), 4-12 weeks × 3-14 slots/week (clamped to creator's cadence), per-slot day + time-of-week + format + archetype + niche fit + predicted engagement, and mandatory bridges to analytics-summarizer + brand-voice-trainer + content-idea-generator. Drafts only — never auto-publishes. Refuses financial / cashtag / investment / sponsorship / harassment content. Built for X, Grok & the ecosystem community."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Content Calendar Builder"
+  tagline: "A sustainable cadence — never volume past your voice."
+  categories: ["creator", "content", "calendar", "planning"]
+  tags: ["creator-template", "cli-only", "drafts-only", "voice-anchored", "sustainable-cadence"]
+  created: "2026-05-05"
+  updated: "2026-05-05"
+
+install:
+  one_click: true
+  install_command: "grok-agent install content-calendar-builder"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  appdata_folder: "grok-agent/content-calendar-builder"
+  cache_folder: "grok-agent/content-calendar-builder/cache"
+  log_folder: "grok-agent/content-calendar-builder/logs"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.4
+  max_tokens: 3072
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+
+tools:
+  - name: "generate_content_calendar"
+    type: "local_function"
+    description: "Produce a 7-section structured content calendar (or 8-section when over-scheduling paradox fires, format-streak guard fires, or weeks=1) with 4 canonical Calendar Plan Score metrics, weighted Plan Score, over-scheduling paradox detection in BOTH the Plan Score section AND the Red Flags section, format-streak guard (≥ 3 consecutive same-format slots → Red Flag), 4-12 weeks × 3-14 slots/week (clamped to creator's cadence), per-slot day + time-of-week + format + archetype + niche fit + predicted engagement bands, and mandatory bridges to analytics-summarizer + brand-voice-trainer + content-idea-generator. Never auto-publishes. Refuses financial / cashtag / investment / sponsorship / harassment content."
+    module: "content_calendar_builder.run"
+    function: "generate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          x_handle:
+            type: "string"
+            description: "Creator's X handle (with or without @). Privacy anchor — only the creator's handle appears in the rendered output."
+          niche:
+            type: "string"
+            description: "Free-text creator niche (max 80 chars). Used to seed niche-fit baseline. Optional — defaults to 'general creator'."
+          cadence_per_week:
+            type: "integer"
+            default: 5
+            description: "Target posts per week (clamped to [3, 14])."
+          weeks:
+            type: "integer"
+            default: 4
+            description: "Calendar horizon in weeks (clamped to [1, 12]). 1-week horizon auto-triggers the Calendar Audit."
+          voice_profile_file:
+            type: "string"
+            description: "Optional path to a creator-supplied voice profile (the JSON brand-voice-trainer emits). When supplied, it tightens the Voice fidelity baseline."
+          analytics_file:
+            type: "string"
+            description: "Optional path to a creator-supplied analytics export (the JSON analytics-summarizer consumes). Drives the predicted engagement priors per slot."
+          variety_floor:
+            type: "integer"
+            default: 4
+            description: "Minimum number of distinct format types (single / thread / quote-tweet / image-post / reply-thread) the calendar must contain across all slots."
+        required: ["x_handle"]
+
+constitution:
+  rules:
+    - "Drafts only. The runner emits a calendar the creator reads before scheduling; it never auto-publishes, schedules, or queues posts on X."
+    - "No fabricated statistics. Demo niche fit, voice fidelity, and predicted engagement bands carry an explicit [demo slot — re-run with --voice-profile-file / --analytics-file for real X data] label so the creator never confuses demo output for real data."
+    - "Surface the over-scheduling paradox in BOTH the Calendar Plan Score section AND the Red Flags section whenever average Cadence sustainability is below 50 AND posts_per_week is above 7. Both conditions must hold — if only one fires, surface each in its own row instead."
+    - "Format-streak guard: if any 3 consecutive slots share the same format type (single / thread / quote-tweet / image-post / reply-thread), surface a single Red Flag titled 'Format-streak guard fired' with severity 'medium' and a remediation step. The streak slots stay in the calendar (the creator may have a deliberate format push) but are flagged."
+    - "Variety floor (configurable via --variety-floor, default 4 distinct format types). Below the floor → Red Flag titled 'Variety floor breached'."
+    - "Every output unconditionally includes bridges to analytics-summarizer (calendar feeds next-window analytics) AND brand-voice-trainer (voice anchors every slot). These two bridges are never optional."
+    - "Privacy-first: no source-post handles, raw post text, or external URLs appear in the rendered output. Archetypes and slot copy outlines are paraphrased only — never raw text or third-party handles."
+    - "Refuse financial / cashtag / investment / sponsorship / harassment content. Forbidden tokens in niche, archetype labels, or slot outlines trigger a hard refusal with the exact token surfaced to the operator."
+  hard_refusals:
+    - "auto-publish, auto-schedule, or auto-queue any slot on X without explicit creator consent"
+    - "generate financial, cashtag, investment, portfolio, ticker, or trading content of any kind"
+    - "generate sponsored-post or paid-promotion content without explicit creator-supplied disclosure copy"
+    - "expose source-post X handles, raw post text, or external URLs in the rendered output"
+    - "scrape authenticated X content to seed the niche or analytics signals"
+    - "generate harassment-pattern slots"
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 30
+  scanner_severity_floor: "warn"
+  forbidden_actions:
+    - scrape_authenticated_x_content
+    - auto_publish_post
+    - auto_schedule_post
+    - generate_financial_content
+    - generate_unsanctioned_sponsored_content
+    - expose_third_party_handles
+    - bypass_safety_scanner
+  cost_limits:
+    usd_per_session_max: 0.30
+    usd_per_day_max: 1.00
+    tokens_per_session_max: 60000
+    api_calls_per_session_max: 80
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "any export of the calendar to a path outside the agent AppData folder"
+      - "any future-version auto-schedule action (currently disabled in v1)"
+    timeout_seconds: 60
+  disclaimers:
+    not_financial_advice: false
+    not_tax_advice: false
+    real_world_action_consent: false
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"

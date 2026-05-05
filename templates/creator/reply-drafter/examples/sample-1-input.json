@@ -1,0 +1,142 @@
+{
+  "x_handle": "@JanSol0s",
+  "window": 30,
+  "data_source": "demo",
+  "previous_window_summary": {
+    "avg_voice_fidelity_score": 70.0,
+    "avg_substance_score": 70.0,
+    "avg_tone_calibration_score": 75.0,
+    "avg_risk_avoidance_score": 88.0
+  },
+  "mentions": [
+    {
+      "id": "m-001",
+      "paraphrased_excerpt": "asks for the eval-framework setup that surfaced the agent regression",
+      "sentiment": "positive",
+      "intent": "question",
+      "priority_score": 92,
+      "author_followers": 12000
+    },
+    {
+      "id": "m-002",
+      "paraphrased_excerpt": "praises the creator's last benchmark thread but asks for a follow-up",
+      "sentiment": "positive",
+      "intent": "praise",
+      "priority_score": 78,
+      "author_followers": 8500
+    },
+    {
+      "id": "m-003",
+      "paraphrased_excerpt": "criticism on a recent take \u2014 asks the creator to reconsider an assumption",
+      "sentiment": "negative",
+      "intent": "criticism",
+      "priority_score": 84,
+      "author_followers": 22000
+    },
+    {
+      "id": "m-004",
+      "paraphrased_excerpt": "collaboration ask \u2014 proposes co-running an eval study",
+      "sentiment": "positive",
+      "intent": "collaboration-ask",
+      "priority_score": 88,
+      "author_followers": 35000
+    },
+    {
+      "id": "m-005",
+      "paraphrased_excerpt": "shares an unrelated personal story under a creator post",
+      "sentiment": "neutral",
+      "intent": "general",
+      "priority_score": 35,
+      "author_followers": 800
+    },
+    {
+      "id": "m-006",
+      "paraphrased_excerpt": "promotion attempt \u2014 pitches a paid newsletter unrelated to the niche",
+      "sentiment": "neutral",
+      "intent": "promotion-attempt",
+      "priority_score": 22,
+      "author_followers": 4000
+    },
+    {
+      "id": "m-007",
+      "paraphrased_excerpt": "hostile pile-on reply attacking the creator's work without specifics",
+      "sentiment": "negative",
+      "intent": "criticism",
+      "priority_score": 70,
+      "author_followers": 1500
+    },
+    {
+      "id": "m-008",
+      "paraphrased_excerpt": "neutral question about benchmark methodology",
+      "sentiment": "neutral",
+      "intent": "question",
+      "priority_score": 65,
+      "author_followers": 6000
+    }
+  ],
+  "candidate_drafts": [
+    {
+      "mention_id": "m-001",
+      "format": "single",
+      "draft_outline": "share the exact setup with a one-line caveat about edge-case behaviour",
+      "voice_fidelity_score": 48,
+      "substance_score": 82,
+      "tone_calibration_score": 75,
+      "risk_avoidance_score": 90
+    },
+    {
+      "mention_id": "m-002",
+      "format": "thread-reply",
+      "draft_outline": "thank the mention author and tease the follow-up thread with two specific angles",
+      "voice_fidelity_score": 50,
+      "substance_score": 75,
+      "tone_calibration_score": 78,
+      "risk_avoidance_score": 88
+    },
+    {
+      "mention_id": "m-003",
+      "format": "single",
+      "draft_outline": "acknowledge the criticism and concede the assumption with a paraphrased re-statement",
+      "voice_fidelity_score": 52,
+      "substance_score": 78,
+      "tone_calibration_score": 70,
+      "risk_avoidance_score": 85
+    },
+    {
+      "mention_id": "m-004",
+      "format": "thread-reply",
+      "draft_outline": "outline the eval-study collaboration scope in 4 tweets with concrete deliverables",
+      "voice_fidelity_score": 45,
+      "substance_score": 80,
+      "tone_calibration_score": 72,
+      "risk_avoidance_score": 92
+    },
+    {
+      "mention_id": "m-008",
+      "format": "single",
+      "draft_outline": "answer the methodology question with a one-paragraph explanation and a public link to the methodology post",
+      "voice_fidelity_score": 50,
+      "substance_score": 76,
+      "tone_calibration_score": 68,
+      "risk_avoidance_score": 82
+    },
+    {
+      "mention_id": "m-007",
+      "format": "single",
+      "draft_outline": "engage the hostile pile-on with a public counter-argument",
+      "voice_fidelity_score": 40,
+      "substance_score": 68,
+      "tone_calibration_score": 50,
+      "risk_avoidance_score": 25
+    },
+    {
+      "mention_id": "m-006",
+      "format": "single",
+      "draft_outline": "respond to the promotion-attempt with a polite redirect",
+      "voice_fidelity_score": 55,
+      "substance_score": 60,
+      "tone_calibration_score": 70,
+      "risk_avoidance_score": 30
+    }
+  ]
+}

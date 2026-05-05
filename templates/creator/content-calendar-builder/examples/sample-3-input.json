@@ -1,0 +1,31 @@
+{
+  "x_handle": "@thindata",
+  "niche": "applied-ml",
+  "cadence_per_week": 5,
+  "weeks": 1,
+  "data_source": "demo",
+  "variety_floor": 4,
+  "slot_archetypes": [
+    "applied-ml benchmark interpretation",
+    "research-paper limitation callout",
+    "methodology walkthrough",
+    "data-source caveats post",
+    "applied-ml tooling micro-tip"
+  ],
+  "slot_format_pattern": [
+    "single",
+    "thread",
+    "quote-tweet",
+    "single",
+    "image-post"
+  ],
+  "cadence_sustainability_seed": 75,
+  "voice_fidelity_seed": 76,
+  "niche_fit_seed": 80,
+  "previous_window_summary": {
+    "avg_cadence_sustainability": 72.0,
+    "avg_niche_fit": 78.0,
+    "avg_voice_fidelity": 74.0,
+    "avg_variety": 76.0
+  }
+}

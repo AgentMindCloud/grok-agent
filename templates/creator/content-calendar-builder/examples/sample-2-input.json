@@ -1,0 +1,31 @@
+{
+  "x_handle": "@habitstacker",
+  "niche": "habit-design",
+  "cadence_per_week": 5,
+  "weeks": 4,
+  "data_source": "demo",
+  "variety_floor": 4,
+  "slot_archetypes": [
+    "evening-friction audit walkthrough",
+    "habit-stacking case study with numbers",
+    "behaviour-design framework comparison",
+    "creator's own three-month retention data",
+    "personal-anecdote on a friction-fix"
+  ],
+  "slot_format_pattern": [
+    "thread",
+    "single",
+    "quote-tweet",
+    "image-post",
+    "reply-thread"
+  ],
+  "cadence_sustainability_seed": 82,
+  "voice_fidelity_seed": 84,
+  "niche_fit_seed": 88,
+  "previous_window_summary": {
+    "avg_cadence_sustainability": 80.0,
+    "avg_niche_fit": 86.0,
+    "avg_voice_fidelity": 82.0,
+    "avg_variety": 88.0
+  }
+}

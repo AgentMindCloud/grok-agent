@@ -1,0 +1,145 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built for X, Grok & the ecosystem community — local-first growth
+# experiment runner for X creators. Reads creator-supplied hypothesis +
+# audience signals (or seeded demo signals) and emits a 7/8-section
+# structured experiment plan with 4 canonical Experiment Plan Score
+# metrics, small-n paradox detection, multi-variable guard, 3-6
+# experiment cards (each with hypothesis + axis + expected effect +
+# sample required + runtime + primary metric + success criteria), and
+# mandatory bridges to analytics-summarizer + ab-test-suggester in every
+# output. Drafts only — never auto-runs experiments. Refuses
+# financial / cashtag / sponsorship / harassment / unsafe experiment content.
+
+version: "2.15"
+kind: "creator-template"
+name: "growth-experiment-runner"
+description: "Local-first growth experiment runner for X creators — reads creator-supplied hypothesis + audience signals (or seeded demo signals) and emits a 7/8-section structured experiment plan with 4 canonical Experiment Plan Score metrics (Hypothesis specificity / Single-axis isolation / Sample power / Risk avoidance), small-n paradox detection in BOTH the Plan Score AND Red Flags sections (avg Sample power < 40 AND avg Hypothesis specificity > 70), multi-variable guard (any experiment varying > 1 axis → excluded + Red Flag), 3-6 experiment cards each with hypothesis + axis + expected effect size + sample required + runtime + primary metric + success criteria, and mandatory bridges to analytics-summarizer + ab-test-suggester + content-idea-generator. Drafts only — never auto-runs experiments. Refuses financial / cashtag / investment / sponsorship / harassment / unsafe-experiment content. Built for X, Grok & the ecosystem community."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+metadata:
+  display_name: "Growth Experiment Runner"
+  tagline: "Testable hypotheses with the math that says whether you can detect the effect."
+  categories: ["creator", "growth", "experimentation"]
+  tags: ["creator-template", "cli-only", "drafts-only", "single-axis-isolation", "no-finance-content"]
+  created: "2026-05-05"
+  updated: "2026-05-05"
+
+install:
+  one_click: true
+  install_command: "grok-agent install growth-experiment-runner"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  appdata_folder: "grok-agent/growth-experiment-runner"
+  cache_folder: "grok-agent/growth-experiment-runner/cache"
+  log_folder: "grok-agent/growth-experiment-runner/logs"
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.4
+  max_tokens: 3072
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+
+tools:
+  - name: "generate_growth_experiment_plan"
+    type: "local_function"
+    description: "Produce a 7-section structured growth experiment plan (or 8-section when small-n paradox fires, multi-variable guard fires, or window=7d) with 4 canonical Experiment Plan Score metrics, weighted Plan Score, small-n paradox detection in BOTH the Plan Score section AND the Red Flags section, multi-variable guard (any experiment varying > 1 axis → excluded + Red Flag), 3-6 experiment cards each with hypothesis + axis + expected effect size + sample required + runtime + primary metric + success criteria, and mandatory bridges to analytics-summarizer + ab-test-suggester + content-idea-generator. Never auto-runs experiments. Refuses financial / cashtag / investment / sponsorship / harassment / unsafe-experiment content."
+    module: "growth_experiment_runner.run"
+    function: "generate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          x_handle:
+            type: "string"
+            description: "Creator's X handle (with or without @). Privacy anchor — only the creator's handle appears in the rendered output."
+          hypothesis_file:
+            type: "string"
+            description: "Optional path to a creator-supplied hypothesis bundle (JSON, local path only). Schema: {audience_size, baseline_metric_value, baseline_metric_name, candidate_experiments: [{hypothesis, axis_count, axis_label, expected_effect_pct, planned_runtime_days, primary_metric, hypothesis_specificity_score, single_axis_isolation_score, sample_power_score, risk_avoidance_score}]}. When omitted, the runner emits seeded demo data marked [demo experiment]."
+          audience_size:
+            type: "integer"
+            default: 12000
+            description: "Creator's reachable-audience size for sample-power calculations. Defaults to 12000 (mid-tier band)."
+          window:
+            type: "integer"
+            enum: [7, 30, 90]
+            default: 30
+            description: "Experiment-runtime window in days. 7-day window auto-triggers the Experiment Audit section (single-day variance dominates short-runtime tests)."
+          max_experiments:
+            type: "integer"
+            default: 4
+            description: "Target number of experiment cards to emit (clamped to [3, 6])."
+          power_floor:
+            type: "number"
+            default: 40.0
+            description: "Sample-power floor below which an experiment fires the small-n paradox / sample-power red flag."
+
+        required: ["x_handle"]
+
+constitution:
+  rules:
+    - "Drafts only. The runner emits an experiment plan the creator reads before running; it never auto-runs, auto-publishes, or auto-schedules experiments."
+    - "No fabricated statistics. Demo metrics carry an explicit [demo experiment — re-run with --hypothesis-file for real audience data] label so the creator never confuses demo output for real test data."
+    - "Surface the small-n paradox in BOTH the Experiment Plan Score section AND the Red Flags section whenever average Sample power is below 40 AND average Hypothesis specificity is above 70 (well-specified experiments that cannot statistically detect the predicted effect). Both conditions must hold — if only one fires, surface each in its own row instead."
+    - "Multi-variable guard: any experiment varying more than 1 axis → excluded from the experiment list and consolidated as a single Red Flag titled 'Multi-variable experiments excluded' with severity 'high' and a remediation step. This matches ab-test-suggester's single-axis isolation contract."
+    - "Risk-exclude guard: any experiment with risk_avoidance_score < 40 → excluded with a Red Flag titled 'High-risk experiments excluded'. Risk includes audience-distress patterns (e.g. negative-engagement experiments), policy-violation, and unsafe creator-burnout cadences."
+    - "Every output unconditionally includes bridges to analytics-summarizer (the experiment's primary metric is sourced + measured by analytics-summarizer) AND ab-test-suggester (variant generation when the hypothesis is content-shaped). These two bridges are never optional."
+    - "Privacy-first: no source-post handles, raw post text, or external URLs appear in the rendered output. Hypotheses and copy outlines are paraphrased only — never raw text or third-party handles."
+    - "Refuse financial / cashtag / investment / sponsorship / harassment / unsafe-experiment content. Forbidden tokens in hypothesis or axis labels trigger a hard refusal with the exact token surfaced to the operator."
+  hard_refusals:
+    - "auto-run, auto-publish, auto-schedule, or auto-queue any experiment on X without explicit creator consent"
+    - "generate financial, cashtag, investment, portfolio, ticker, or trading-experiment content of any kind"
+    - "generate sponsored-experiment content without explicit creator-supplied disclosure copy"
+    - "expose source-post X handles, raw post text, or external URLs in the rendered output"
+    - "scrape authenticated X content to seed audience signals"
+    - "generate experiments that target individuals for harassment, distress, or X-policy violations"
+    - "design experiments that knowingly run a creator past sustainable cadence"
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 30
+  scanner_severity_floor: "warn"
+  forbidden_actions:
+    - scrape_authenticated_x_content
+    - auto_run_experiment
+    - auto_publish_post
+    - auto_schedule_post
+    - generate_financial_content
+    - generate_unsanctioned_sponsored_content
+    - generate_harassment_content
+    - generate_unsafe_experiment_design
+    - expose_third_party_handles
+    - bypass_safety_scanner
+  cost_limits:
+    usd_per_session_max: 0.30
+    usd_per_day_max: 1.00
+    tokens_per_session_max: 60000
+    api_calls_per_session_max: 80
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "any export of the experiment plan to a path outside the agent AppData folder"
+      - "any future-version auto-run action (currently disabled in v1)"
+    timeout_seconds: 60
+  disclaimers:
+    not_financial_advice: false
+    not_tax_advice: false
+    real_world_action_consent: false
+
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"

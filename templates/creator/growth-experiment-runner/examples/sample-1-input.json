@@ -1,0 +1,94 @@
+{
+  "x_handle": "@JanSol0s",
+  "audience_size": 12000,
+  "window": 30,
+  "data_source": "demo",
+  "baseline_metric_name": "engagement_rate",
+  "baseline_metric_value": 2.4,
+  "previous_window_summary": {
+    "avg_hypothesis_specificity": 72.0,
+    "avg_single_axis_isolation": 82.0,
+    "avg_sample_power": 60.0,
+    "avg_risk_avoidance": 88.0
+  },
+  "candidate_experiments": [
+    {
+      "hypothesis": "Switching the opening hook from a question to a single concrete number raises engagement_rate by 0.4 percentage points",
+      "axis_count": 1,
+      "axis_label": "opening_hook_format",
+      "expected_effect_pct": 0.4,
+      "planned_runtime_days": 30,
+      "primary_metric": "engagement_rate",
+      "success_criteria": "engagement_rate uplift \u2265 0.4 pts vs the prior 30d baseline",
+      "hypothesis_specificity_score": 88,
+      "single_axis_isolation_score": 95,
+      "sample_power_score": 28,
+      "risk_avoidance_score": 92
+    },
+    {
+      "hypothesis": "Adding a one-line creator-experience anchor at the bottom of long threads raises thread_completion_rate by 1 percentage point",
+      "axis_count": 1,
+      "axis_label": "thread_anchor_position",
+      "expected_effect_pct": 1.0,
+      "planned_runtime_days": 30,
+      "primary_metric": "thread_completion_rate",
+      "success_criteria": "thread_completion_rate uplift \u2265 1.0 pt vs the prior 30d baseline",
+      "hypothesis_specificity_score": 82,
+      "single_axis_isolation_score": 90,
+      "sample_power_score": 30,
+      "risk_avoidance_score": 90
+    },
+    {
+      "hypothesis": "Moving image-post timing from afternoon to evening lifts impressions by 1 percentage point",
+      "axis_count": 1,
+      "axis_label": "image_post_time_tier",
+      "expected_effect_pct": 1.0,
+      "planned_runtime_days": 30,
+      "primary_metric": "impressions",
+      "success_criteria": "impressions uplift \u2265 1% vs the prior 30d baseline",
+      "hypothesis_specificity_score": 75,
+      "single_axis_isolation_score": 88,
+      "sample_power_score": 25,
+      "risk_avoidance_score": 88
+    },
+    {
+      "hypothesis": "Increasing posting cadence and switching the opening hook simultaneously will lift engagement_rate by 1 percentage point",
+      "axis_count": 2,
+      "axis_label": "cadence + opening_hook (two axes)",
+      "expected_effect_pct": 1.0,
+      "planned_runtime_days": 30,
+      "primary_metric": "engagement_rate",
+      "success_criteria": "engagement_rate uplift \u2265 1.0 pt",
+      "hypothesis_specificity_score": 70,
+      "single_axis_isolation_score": 25,
+      "sample_power_score": 35,
+      "risk_avoidance_score": 80
+    },
+    {
+      "hypothesis": "Running aggressive dunk-style quote-tweets on competitor posts raises follower_delta by 0.5 percentage points",
+      "axis_count": 1,
+      "axis_label": "quote_tweet_stance",
+      "expected_effect_pct": 0.5,
+      "planned_runtime_days": 30,
+      "primary_metric": "follower_delta",
+      "success_criteria": "follower_delta uplift \u2265 0.5 pts",
+      "hypothesis_specificity_score": 78,
+      "single_axis_isolation_score": 90,
+      "sample_power_score": 30,
+      "risk_avoidance_score": 25
+    },
+    {
+      "hypothesis": "Pinning the top weekly thread to the profile lifts reply_rate by 0.3 percentage points",
+      "axis_count": 1,
+      "axis_label": "pinned_post_format",
+      "expected_effect_pct": 0.3,
+      "planned_runtime_days": 30,
+      "primary_metric": "reply_rate",
+      "success_criteria": "reply_rate uplift \u2265 0.3 pt",
+      "hypothesis_specificity_score": 80,
+      "single_axis_isolation_score": 92,
+      "sample_power_score": 28,
+      "risk_avoidance_score": 90
+    }
+  ]
+}

@@ -2,29 +2,34 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — local-first analytics summarizer for X
-# creators. Reads creator-supplied X analytics (or seeded demo metrics
-# when no export is provided) and emits a 6/7-section structured period
-# summary with 4 canonical Period Performance metrics, vanity-metric
-# paradox detection, top-performing-content archetype surfacing, trend
-# bucketing, and >= 3 cross-template bridges. Drafts only — never
-# auto-publishes a single thing. Never fabricates statistical
-# significance.
+# Built to help xAI and Grok win — local-first analytics summarizer
+# for X creators. Reads a creator-supplied X analytics export (and
+# optional voice samples + 7-day trend snapshot) and emits a 6/7-section
+# structured period summary with 4 canonical metrics (Reach Score,
+# Engagement Velocity, Audience Quality, Content Resonance), vanity-
+# reach paradox detection (Reach Score > 80 AND Audience Quality < 50),
+# 10 tone-matched archetype tags shared with content-idea-generator
+# and reply-drafter, content-engagement prediction bands (never absolute
+# numbers fabricated), and >= 3 cross-template bridges that always
+# include content-idea-generator and thread-builder. Drafts only —
+# never auto-publishes; never trains on another creator's voice; never
+# generates monetization / sales / affiliate language unless the user
+# explicitly sets allow_monetization=true and requests it.
 
 version: "2.15"
 kind: "creator-template"
 name: "analytics-summarizer"
-description: "Local-first analytics summarizer for X creators — reads creator-supplied X analytics (or seeded demo metrics) and emits a 6/7-section period summary with 4 canonical Period Performance metrics (Impressions delta / Engagement rate / Follower delta / Content velocity), vanity-metric paradox detection, top-performing-content archetypes, trend bucketing (▲▲/▲/▬/▼/▼▼), and >= 3 cross-template bridges. Drafts only — never auto-publishes; never fabricates p-values or confidence intervals. Built to help xAI and Grok win."
+description: "Local-first analytics summarizer for X creators — reads a creator-supplied X analytics export (and optional voice samples + 7-day trend snapshot) and emits a 6/7-section structured period summary with 4 canonical metrics (Reach Score / Engagement Velocity / Audience Quality / Content Resonance), vanity-reach paradox detection (Reach Score > 80 AND Audience Quality < 50), 10 tone-matched archetype tags shared with content-idea-generator and reply-drafter, content-engagement prediction bands (never absolute fabricated numbers), and >= 3 cross-template bridges that always include content-idea-generator and thread-builder. Read-only — never auto-publishes; never fabricates p-values; never generates monetization / sales / affiliate language unless allow_monetization=true. Built to help xAI and Grok win."
 author: "@JanSol0s"
 license: "Apache-2.0"
 
 metadata:
   display_name: "Analytics Summarizer"
-  tagline: "Read your numbers honestly — vanity reach without engagement is not a win."
+  tagline: "Read your numbers honestly — vanity reach without audience quality is not a win."
   categories: ["creator", "analytics", "measurement"]
-  tags: ["creator-template", "cli-only", "drafts-only", "no-fabricated-stats"]
+  tags: ["creator-template", "cli-only", "read-only", "no-fabricated-stats", "no-other-voices", "consent-gated"]
   created: "2026-05-04"
-  updated: "2026-05-04"
+  updated: "2026-05-05"
 
 install:
   one_click: true
@@ -49,10 +54,19 @@ grok:
   system_prompt_file: "prompts/system.md"
   tool_calling: true
 
+real_time_x:
+  enabled: false
+  consent_required: true
+  triggers: []
+  posts: false
+  reply_only: false
+  max_posts_per_day: 0
+  notes: "v1 is read-only — analytics-summarizer never publishes anywhere. real_time_x.enabled is false. Future v2 may enable consented dashboard sharing; every action will require an explicit publish_to_x consent gate. The runner never auto-sends in v1."
+
 tools:
   - name: "generate_analytics_summary"
     type: "local_function"
-    description: "Produce a 6-section structured analytics period summary (or 7-section when red-flag count > 3 OR time_range='7d') with 4 canonical Period Performance metrics, weighted Performance score, vanity-metric paradox detection, 3-5 top-performing-content archetypes, trend bucketing across the 5-arrow vocabulary, and >= 3 cross-template bridges. Reads creator-supplied metrics; never fabricates X numbers."
+    description: "Produce a 6-section structured analytics period summary (or 7-section when red-flag count > 3 OR count >= 8 OR vanity-reach paradox fires OR data_source='demo' with no voice/trends) with 4-row Period Performance table (Reach Score / Engagement Velocity / Audience Quality / Content Resonance) carrying a weighted score, 3-10 paraphrased top-performing content archetype tags drawn from the 10 canonical tone-matched archetypes shared with content-idea-generator and reply-drafter, vanity-reach paradox detection (Reach Score > 80 AND Audience Quality < 50), per-row engagement prediction bands (range only — never absolute counts the runner cannot derive from the supplied metrics), and >= 3 cross-template bridges that always include content-idea-generator and thread-builder. Read-only — never auto-publishes; never generates monetization / sales / affiliate language unless allow_monetization=true and the creator explicitly requested it."
     module: "analytics_summarizer.run"
     function: "generate"
     parameters:
@@ -61,42 +75,77 @@ tools:
         properties:
           x_handle:
             type: "string"
-            description: "Creator's X handle (with or without @). Voice anchor for archetype paraphrasing."
+            description: "Creator's X handle (with or without @). The voice anchor for archetype paraphrasing and Content Resonance scoring; voice fidelity is measured against this handle's supplied samples — never another creator's posts."
+          niche:
+            type: "string"
+            description: "Creator's niche / topic anchor in plain text. Used to score Audience Quality (on-niche engagers vs drive-bys) and to paraphrase top-performing content archetypes inside the niche frame. Required so the vanity-reach paradox can fire when reach is high but the audience is off-niche."
           metrics_file:
             type: "string"
-            description: "Optional path to a creator-supplied X analytics export (JSON or CSV). When omitted the runner emits seeded demo metrics explicitly marked as such."
-          metric_focus:
-            type: "string"
-            enum: ["impressions", "engagement", "reach", "all"]
-            default: "all"
-            description: "Which canonical metric to emphasise in the headline + ranking. Default 'all' applies no nudge."
+            description: "Optional path to a creator-supplied X analytics export (JSON). When omitted the runner emits seeded demo metrics explicitly marked as such; the demo path is never confused with real analytics."
           time_range:
             type: "string"
             enum: ["7d", "30d", "90d"]
             default: "30d"
-            description: "Period covered by the summary. 7d auto-triggers the optional Period Audit section because the window is noisy."
+            description: "Period covered by the summary. 7d auto-triggers the optional Period Audit because the window is dominated by single-day variance."
           compare_to:
             type: "string"
             enum: ["previous_period", "benchmark"]
             default: "previous_period"
             description: "Comparison basis for delta calculation. 'previous_period' compares against the immediately preceding window of the same length; 'benchmark' compares against a niche-typical baseline."
+          count:
+            type: "integer"
+            minimum: 3
+            maximum: 10
+            default: 5
+            description: "Number of top-performing content archetype rows to surface (3-10). Default 5. Counts >= 8 auto-trigger the optional Period Audit because cognitive load on the creator rises sharply."
+          tone:
+            type: "string"
+            enum: ["punchy", "thoughtful", "data-led", "mixed"]
+            default: "mixed"
+            description: "Tone register to emphasise when paraphrasing top-performing content archetype labels. Same 4-tone vocabulary as content-idea-generator and reply-drafter so the daily creator loop pulls from one shared tone pool."
+          voice_samples:
+            type: "array"
+            items:
+              type: "string"
+            description: "Optional inline list of recent post bodies authored by --x-handle. Used to anchor Content Resonance scoring; the runner refuses to train on another creator's posts."
+          trends:
+            type: "array"
+            items:
+              type: "string"
+            description: "Optional list of last-7d niche trend phrases (strings). When supplied, archetype tags reference the actual trending surface rather than a niche-typical default."
+          engagement_baseline_pct:
+            type: "number"
+            default: 2.5
+            description: "Niche baseline engagement-rate percentage. Used to grade Engagement Velocity vs the niche cohort. Default 2.5 (cross-niche median); set higher for tight-niche creators with more substantive replies."
+          allow_monetization:
+            type: "boolean"
+            default: false
+            description: "Default false. When false, any analysis that would require revenue / paid-tier / sponsorship / affiliate / cashtag projections is refused and the run is routed at monetization-optimizer. Set true ONLY when the creator has explicitly requested a monetization-shaped read (e.g. analyzing the engagement curve around a paid drop). Even with allow_monetization=true the runner emits no financial advice — only on-brand engagement structure."
         required: ["x_handle"]
 
 constitution:
   rules:
-    - "Drafts only. The runner emits text the creator reads; the runner never auto-publishes, never auto-shares the analytics anywhere."
-    - "No fabricated statistics. The runner refuses to print p-values, confidence intervals, or absolute lift numbers it did not derive from the supplied input. Heuristics in the Statistical Honesty subsection are named as such."
-    - "Surface the vanity-metric paradox in BOTH the Period Performance section AND the Red Flags section whenever Impressions delta is above +20% AND Engagement rate is below the niche baseline (default niche baseline: 2.5%). The post got reach but the audience did not engage substantively — copy the cadence at your peril."
-    - "When `metrics_file` is omitted, the runner emits seeded demo metrics with an explicit `[demo metric — re-run with --metrics-file for real X data]` label so the creator never confuses the demo output for their actual analytics."
-    - "Top-performing-content archetypes are paraphrased categories (e.g. `long-form thread on niche pain-point`), never raw post URLs or full post text, unless the creator explicitly supplies them via `metrics_file`."
-    - "Every monetization-related recommendation derived from the analytics carries the Article V.1 'Not financial advice' banner verbatim."
-    - "Every analysis links to >= 3 cross-template bridges so the creator can wire the analytics into the next loop without leaving Grok Agent OS."
+    - "Read-only. The runner emits a structured period summary the creator reads; the runner never auto-publishes, never auto-shares the summary anywhere. v1 has real_time_x.enabled = false; any future v2 dashboard-share capability requires an explicit publish_to_x consent gate."
+    - "No fabricated statistics. The runner refuses to print p-values, confidence intervals, or absolute lift numbers it did not derive from the supplied input. Heuristics in the Statistical Honesty subsection are named as such; demo signals are labelled `[demo metric — re-run with --metrics-file for real X data]` so seeded runs can never be mistaken for real analytics."
+    - "Train Content Resonance scoring only on the creator's own posts. The runner refuses to score voice against samples authored by a different handle. The system prompt is unambiguous; the runner's contract is unambiguous; the manifest binds the unambiguous contract."
+    - "Surface the vanity-reach paradox in BOTH the Period Performance section AND the Red Flags section whenever Reach Score > 80 AND Audience Quality < 50 — high impressions with off-niche audience is the most common Type-I error in creator analytics, and it is the analytics analog of the vanity-hook paradox in content-idea-generator (P98) and reply-drafter (P99)."
+    - "Top-performing-content archetype tags are paraphrased from the 10 canonical tone-matched archetypes shared with content-idea-generator and reply-drafter: numbers-led-list, contrarian-thesis, first-person-rebuild, question-led-poll, tactical-playbook, story-cold-open, metric-receipt, synthesis-takedown, trend-aligned-riff, anti-pattern-warning. The runner refuses to paste raw post URLs or full post bodies into the summary unless the creator explicitly supplied them via --metrics-file."
+    - "Every analysis links to >= 3 cross-template bridges so the creator can wire the analytics into the next loop without leaving Grok Agent OS — bridges MUST include `content-idea-generator` (so the next anchor topic is sourced from what worked) and `thread-builder` (so the highest-EV archetype is promoted into a long-form anchor when the topic carries one)."
+    - "No monetization / sales / affiliate language by default. When `allow_monetization` is false (the default) the runner refuses to derive any revenue / paid-tier / sponsorship / ad-spend / affiliate / cashtag projection — it emits a structured refusal pointing the creator at `monetization-optimizer` and stops. The user must explicitly set `allow_monetization: true` to opt in, and even then no financial advice is generated — only on-brand engagement structure."
+    - "Audit auto-triggers when red-flag count > 3 OR count >= 8 OR the vanity-reach paradox fires OR data_source = demo with no voice samples and no trends file. Identical condition set to content-idea-generator (P98) and reply-drafter (P99) so the audit semantics are consistent across the daily creator loop."
+    - "Insight body cap of 280 characters. Every interpretation cell, every red-flag explanation, every recommendation line, and every Top-Performing Content paraphrase is enforced <= 280 characters at render time so the summary stays scannable and composer-ready. Identical cap to reply-drafter (P99) — long analytics commentary is out of scope; that work belongs to a future research-assistant template."
+    - "Engagement prediction bands are content-engagement only (impressions / replies / reposts / bookmarks pattern). The runner does NOT predict revenue, paid-tier conversions, or sponsorship dollars — that is `monetization-optimizer`'s job and explicitly out of scope here when allow_monetization=false."
+    - "Count cap. The runner never emits more than 10 top-performing content rows regardless of input — and >= 8 auto-triggers the Period Audit because cognitive load on the creator rises sharply."
   hard_refusals:
-    - "auto-publish or auto-share the analytics summary to any platform without an explicit consent gate"
-    - "fabricate p-values, confidence intervals, or absolute statistical significance numbers"
-    - "recommend algorithm-gaming tactics derived from the analytics (mass-engagement, hashtag stuffing, follow-trains)"
-    - "expose other creators' analytics or paste a non-creator's account export as if it belonged to --x-handle"
-    - "scrape authenticated X content to seed the metrics"
+    - "auto-publish, auto-share, or auto-DM the analytics summary to any platform without an explicit consent gate (v1 has no posting capability — all output is read-only)"
+    - "fabricate p-values, confidence intervals, or absolute statistical significance numbers the runner cannot derive from --metrics-file"
+    - "fabricate absolute engagement counts (likes / reposts / replies / bookmarks) for any row the runner cannot tie back to supplied input"
+    - "score Content Resonance against samples authored by a creator other than --x-handle"
+    - "expose another creator's analytics or paste a non-creator's account export as if it belonged to --x-handle"
+    - "emit more than 10 top-performing content rows in a single run"
+    - "generate any monetization / sales / sponsorship / affiliate / cashtag projection when allow_monetization is false (the default) — emit a structured refusal pointing at monetization-optimizer instead"
+    - "scrape authenticated X content to seed the metrics — the analytics export must be supplied by the creator"
+    - "predict revenue, paid-tier conversions, or sponsorship dollars (out of scope — see monetization-optimizer)"
 
 safety:
   pii_handling: "local-only"
@@ -107,6 +156,8 @@ safety:
     - impersonate_user_identity
     - bypass_safety_scanner
     - exfiltrate_user_data
+    - copy_competitor_signature_phrasing
+    - auto_publish_without_consent
   cost_limits:
     usd_per_session_max: 0.30
     usd_per_day_max: 1.00
@@ -116,12 +167,13 @@ safety:
     enabled: true
     confirm_before:
       - "any export of the analytics summary to a path outside the agent AppData folder"
-      - "any future-version auto-publish (currently disabled in v1)"
+      - "any future-version auto-share (currently disabled in v1)"
+      - "any analysis generated with allow_monetization=true (must be confirmed before render)"
     timeout_seconds: 60
   disclaimers:
-    not_financial_advice: true
+    not_financial_advice: false
     not_tax_advice: false
-    real_world_action_consent: false
+    real_world_action_consent: true
 
 dependencies:
   python:

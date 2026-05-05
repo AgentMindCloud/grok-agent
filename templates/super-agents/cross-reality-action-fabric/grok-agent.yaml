@@ -1,0 +1,409 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# ============================================================================
+# Cross-Reality Action Fabric — grok-agent.yaml v2.15 manifest
+# ============================================================================
+#
+# Super Agent #3 (the third and final flagship Super Agent in the Grok Agent
+# OS roadmap, after Living Narrative Fabric and Self-Evolving Personal OS).
+#
+# What it does
+# ------------
+# The Cross-Reality Action Fabric is the *bridge* between an X-native Grok
+# conversation and the user's real-world Windows machine + the public web.
+# Where Self-Evolving Personal OS reads, this agent acts.  Every action is
+# explicit, gated, reversible, and provenance-logged:
+#
+#   • Web automation via Stagehand (Browserbase-driven Chromium) — opens a
+#     visible window the user can watch and abort at any time.
+#   • Local Windows automation via signed PowerShell snippets the user
+#     reviews before approval (think: "set tomorrow's wallpaper", "queue
+#     this download", "open this file in Notepad++").
+#   • Real-world public APIs — weather, flight search, e-commerce price
+#     check, calendar holds — every call costs nothing, every payload is
+#     PII-redacted at the connector boundary.
+#   • X search via Grok 4.3 tool-calling — read-only by default; posting
+#     requires the `publish_to_x` consent gate AND a typed confirmation.
+#
+# The whole agent is built around one rule: it NEVER takes an action
+# without an explicit, scoped, typed user approval. See constitution.md.
+#
+# Built to help xAI and Grok win — Cross-Reality Action Fabric is the
+# missing "do something for me" layer that turns Grok from a chat partner
+# into a reliable Windows OS-level agent.
+# ============================================================================
+
+# ---------------------------------------------------------------------------
+# REQUIRED top-level
+# ---------------------------------------------------------------------------
+version: "2.15"
+kind: "super-agent"
+name: "cross-reality-action-fabric"
+description: >-
+  Bridge agent between X / Grok and the user's Windows machine + public web.
+  Every action is explicit, gated, reversible, and provenance-logged.
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+# ---------------------------------------------------------------------------
+# metadata: discovery + classification
+# ---------------------------------------------------------------------------
+metadata:
+  display_name: "Cross-Reality Action Fabric"
+  tagline: "Grok's hands on your Windows machine — explicit consent on every action."
+  categories: ["super-agent", "automation", "windows", "x-native"]
+  tags: ["stagehand", "powershell", "real-world-actions", "consent-gated", "rollback"]
+  homepage: "https://github.com/AgentMindCloud/grok-agent/tree/main/templates/super-agents/cross-reality-action-fabric"
+  repository: "https://github.com/AgentMindCloud/grok-agent"
+  language: "en"
+  created: "2026-05-05"
+  updated: "2026-05-05"
+
+# ---------------------------------------------------------------------------
+# install: how this agent is delivered to a user
+# ---------------------------------------------------------------------------
+install:
+  one_click: true
+  install_command: "grok install this"
+  prerequisites:
+    - "Windows 11 with PowerShell 7 (or 5.1)"
+    - "Python 3.12 in PATH"
+    - "Google Chrome (Stagehand drives Chrome in foreground mode)"
+    - "Optional: $env:OPENWEATHER_API_KEY for live weather lookups"
+    - "Optional: $env:LANGFUSE_PUBLIC_KEY + $env:LANGFUSE_SECRET_KEY for opt-in cloud tracing"
+
+# ---------------------------------------------------------------------------
+# windows: paths + execution profile
+# ---------------------------------------------------------------------------
+windows:
+  launcher: "launcher.ps1"
+  appdata_folder: "grok-agent/cross-reality-action-fabric"
+  config_folder: "grok-agent/cross-reality-action-fabric/config"
+  cache_folder: "grok-agent/cross-reality-action-fabric/cache"
+  log_folder: "grok-agent/cross-reality-action-fabric/logs"
+  defender_exclusion_recommended: false
+  registry_keys: []
+  min_powershell_version: "5.1"
+  requires_admin: false
+  chrome_only: true
+  no_install_dependencies: []
+
+# ---------------------------------------------------------------------------
+# grok: LLM settings
+# ---------------------------------------------------------------------------
+grok:
+  model: "grok-4.3"
+  temperature: 0.5
+  max_tokens: 6144
+  top_p: 1.0
+  system_prompt_file: "prompts/system.md"
+  user_template_file: "prompts/user_templates.md"
+  tool_calling: true
+  vision: false
+  streaming: true
+  fallback_model: null
+
+# ---------------------------------------------------------------------------
+# tools: cross-reality action surface
+# Five tool categories — every one returns a structured plan FIRST, then
+# executes only after the user's typed approval.  See constitution.md.
+# ---------------------------------------------------------------------------
+tools:
+  - name: "web_via_stagehand"
+    type: "local_function"
+    description: >-
+      Drive a visible Chrome window via Stagehand. The user sees every step,
+      can pause / abort, and the action plan is shown before execution.
+    module: "connectors.stagehand_client"
+    function: "execute_web_action"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          action_plan:
+            type: "string"
+            description: "Numbered, plain-language plan the user reviewed and approved."
+          consent_token:
+            type: "string"
+            description: "Scoped consent token returned by the HITL prompt."
+          max_steps:
+            type: "integer"
+            minimum: 1
+            maximum: 25
+        required: ["action_plan", "consent_token"]
+
+  - name: "windows_local"
+    type: "local_function"
+    description: >-
+      Run a *signed*, user-reviewed PowerShell snippet on the local Windows
+      machine. Snippet is shown verbatim before approval; rollback path is
+      mandatory for any state-changing call.
+    module: "connectors.windows_local_client"
+    function: "execute_local_action"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          script:
+            type: "string"
+            description: "Verbatim PowerShell snippet (no template expansion)."
+          rollback:
+            type: "string"
+            description: "Verbatim PowerShell snippet that undoes `script`."
+          consent_token:
+            type: "string"
+        required: ["script", "rollback", "consent_token"]
+
+  - name: "weather_lookup"
+    type: "public_api"
+    description: "Read-only weather forecast lookup for trip planning."
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          locale:
+            type: "string"
+          forecast_days:
+            type: "integer"
+            minimum: 1
+            maximum: 7
+        required: ["locale"]
+    api:
+      url: "https://api.openweathermap.org/data/2.5/forecast"
+      method: "GET"
+      auth: "api_key"
+      env_var: "OPENWEATHER_API_KEY"
+      rate_limit: 60
+      cache_ttl_seconds: 1800
+      retry: { attempts: 3, backoff: "exponential" }
+
+  - name: "flight_search"
+    type: "public_api"
+    description: "Read-only flight schedule + price lookup via OpenSky Network."
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          origin_iata:
+            type: "string"
+            minLength: 3
+            maxLength: 3
+          destination_iata:
+            type: "string"
+            minLength: 3
+            maxLength: 3
+          date_iso:
+            type: "string"
+        required: ["origin_iata", "destination_iata"]
+    api:
+      url: "https://opensky-network.org/api/flights/departure"
+      method: "GET"
+      auth: "none"
+      env_var: ""
+      rate_limit: 100
+      cache_ttl_seconds: 600
+      retry: { attempts: 2, backoff: "exponential" }
+
+  - name: "x_search"
+    type: "public_api"
+    description: >-
+      Read-only X search via Grok 4.3 tool-calling. Posting / DMs require
+      separate consent gates and are not callable from this tool.
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          query:
+            type: "string"
+          limit:
+            type: "integer"
+            minimum: 1
+            maximum: 50
+        required: ["query"]
+    api:
+      url: "via_grok_4.3"
+      method: "GET"
+      auth: "bearer"
+      env_var: "XAI_API_KEY"
+      rate_limit: 30
+      cache_ttl_seconds: 60
+
+# ---------------------------------------------------------------------------
+# public_apis: declared free/public integrations
+# ---------------------------------------------------------------------------
+public_apis:
+  - name: "openweather"
+    base_url: "https://api.openweathermap.org/data/2.5"
+    auth_env_var: "OPENWEATHER_API_KEY"
+    free_tier_quota: "60/min"
+    privacy: "no_pii_sent"
+  - name: "opensky_network"
+    base_url: "https://opensky-network.org/api"
+    auth: "none"
+    rate_limit: 100
+    privacy: "no_pii_sent"
+  - name: "x_search_via_grok"
+    base_url: "via_grok_4.3"
+    auth_env_var: "XAI_API_KEY"
+    privacy: "no_pii_sent"
+  - name: "stagehand_chromium"
+    base_url: "local://stagehand"
+    auth: "none"
+    privacy: "local_only"
+
+# ---------------------------------------------------------------------------
+# multi_agent: orchestrator + worker layout
+# ---------------------------------------------------------------------------
+multi_agent:
+  enabled: true
+  role: "orchestrator"
+  delegates_to:
+    - "web-action-worker"
+    - "local-windows-worker"
+    - "real-world-api-worker"
+    - "x-action-worker"
+  shared_memory: "mem0://cross-reality-action-fabric/shared"
+  message_bus: null
+  max_concurrent_workers: 3
+
+# ---------------------------------------------------------------------------
+# real_time_x: triggers on X
+# ---------------------------------------------------------------------------
+real_time_x:
+  enabled: true
+  consent_required: true
+  triggers: ["mention", "dm", "schedule"]
+  schedule_cron: "0 9 * * *"
+  posts: false
+  reply_only: true
+  max_posts_per_day: 5
+
+# ---------------------------------------------------------------------------
+# memory: long-term episodic + semantic store
+# ---------------------------------------------------------------------------
+memory:
+  enabled: true
+  provider: "mem0"
+  vector_store:
+    backend: "qdrant"
+    url: "http://localhost:6333"
+    collection: "cross-reality-action-fabric"
+  episodic: true
+  semantic: true
+  retention_days: 730
+
+# ---------------------------------------------------------------------------
+# provenance: every action must be traceable + reversible
+# ---------------------------------------------------------------------------
+provenance:
+  enabled: true
+  log_path: "$env:LOCALAPPDATA\\grok-agent\\cross-reality-action-fabric\\provenance.log"
+  cite_sources: true
+  versioned_synthesis: true
+  contradiction_detection: true
+  langfuse:
+    enabled: false
+    public_key_env_var: "LANGFUSE_PUBLIC_KEY"
+    secret_key_env_var: "LANGFUSE_SECRET_KEY"
+    host: "https://cloud.langfuse.com"
+
+# ---------------------------------------------------------------------------
+# constitution: hard rules + consent gates
+# Mirrors constitution.md exactly. Every super-agent kind requires this section.
+# ---------------------------------------------------------------------------
+constitution:
+  rules:
+    - "Rule 1 (Human approval): No action touches the real world, the user's Windows machine, or any X surface without an explicit typed approval scoped to that single action."
+    - "Rule 2 (Provenance mandatory): Every executed action writes one ProvenanceRecord with action_plan, consent_token, rollback snippet, started_at, finished_at, and outcome."
+    - "Rule 3 (Rollback): Every state-changing action carries a verbatim rollback snippet stored alongside the forward action; the agent MUST be able to undo any single step."
+    - "Rule 4 (No silent contradiction resolution): When two sources disagree on a fact the agent presents, both are surfaced with a contradiction flag — never silently picked."
+    - "Rule 5 (Windows-only execution): All local automation runs on Windows 11 + PowerShell. Bash, macOS, and Linux paths are not supported and are refused at the runtime layer."
+    - "Rule 6 (Privacy-first): User data lives under $env:LOCALAPPDATA\\grok-agent\\cross-reality-action-fabric\\. Cloud sync, telemetry, and Langfuse traces are opt-in; the agent defaults to local-only."
+  consent_gates:
+    - publish_to_x
+    - send_dm
+    - move_funds
+    - pay_real_money
+    - export_tax_report
+    - sync_to_cloud
+    - modify_local_files_outside_appdata
+    - publish_synthesis
+    - run_powershell_local
+    - run_web_action
+    - read_calendar
+    - read_email
+  hard_refusals:
+    - "Take any real-world action without an active typed user approval."
+    - "Move money or charge a card under any circumstance."
+    - "Modify files outside $env:LOCALAPPDATA\\grok-agent\\ without modify_local_files_outside_appdata."
+    - "Impersonate another X user, including for testing or comedy."
+    - "Disable, monkey-patch, or skip safety/scanner.py at runtime."
+    - "Bypass the rollback contract on any state-changing action."
+
+# ---------------------------------------------------------------------------
+# safety: PII handling + cost limits + HITL
+# ---------------------------------------------------------------------------
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 730
+  scanner_severity_floor: "warn"
+  forbidden_actions:
+    - scrape_authenticated_x_content
+    - impersonate_user_identity
+    - bypass_safety_scanner
+    - exfiltrate_user_data
+  cost_limits:
+    usd_per_session_max: 0.50
+    usd_per_day_max: 2.00
+    tokens_per_session_max: 300000
+    api_calls_per_session_max: 250
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "any constitution.consent_gates action"
+      - "any cost above $0.05"
+      - "any irreversible filesystem write"
+      - "any web action that submits a form"
+      - "any PowerShell snippet that mutates registry"
+    timeout_seconds: 60
+  disclaimers:
+    not_financial_advice: false
+    not_tax_advice: false
+    real_world_action_consent: true
+
+# ---------------------------------------------------------------------------
+# dependencies: pinned-floor Python + system requirements
+# ---------------------------------------------------------------------------
+dependencies:
+  python:
+    version: "^3.12"
+    packages:
+      - "streamlit ^1.33"
+      - "pandas ^2.2"
+      - "pydantic ^2.7"
+      - "pyyaml ^6.0"
+      - "requests ^2.31"
+  system:
+    - "powershell >= 5.1"
+    - "google-chrome (Stagehand)"
+  apis_required:
+    - "openweather"
+    - "opensky_network"
+    - "x_search_via_grok"
+    - "stagehand_chromium"
+
+# ---------------------------------------------------------------------------
+# evaluation: weekly self-improvement loop
+# ---------------------------------------------------------------------------
+evaluation:
+  enabled: true
+  promptfoo:
+    enabled: true
+    config: "eval/promptfoo.yaml"
+  deepeval:
+    enabled: true
+    suite: "eval/deepeval_suite.py"
+  langfuse_traces: false
+  weekly_loop: true

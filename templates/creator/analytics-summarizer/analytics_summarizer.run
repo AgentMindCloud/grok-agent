@@ -1,0 +1,1569 @@
+#!/usr/bin/env python3
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+"""Analytics Summarizer — runner (analytics_summarizer.run).
+
+CLI entry point + manifest binding for the ``analytics-summarizer``
+creator template (grok-agent.yaml v2.15, kind: creator-template,
+runtime: cli_only). The manifest binds ``module:
+analytics_summarizer.run`` ``function: generate``; both forms — direct
+script invocation and importlib-loaded function call — are supported.
+
+Reads a creator-supplied X analytics export (JSON) — or seeded demo
+metrics when no file is provided — and emits the strict 6/7-section
+period summary defined by the v2.15 system prompt:
+
+  1. Period Snapshot
+  2. Period Performance (4-row metric table on a 0-100 scale +
+     weighted Performance score)
+  3. Top-Performing Content (3-10 paraphrased archetypes, default 5,
+     mapped onto the 10 canonical archetype labels)
+  4. Trends (rising / stable / falling buckets, 5-arrow vocabulary)
+  5. Red Flags (2-3 cards; surfaces the vanity-reach paradox in
+     BOTH this section AND the Period Performance row when triggered)
+  6. Recommendations (3-5 next moves; mandatory bridges to
+     ``content-idea-generator`` AND ``thread-builder`` always present
+     plus 1+ rotating bridge from the 10-bridge set)
+  7. Confidence
+  + Optional Period Audit (auto-appended when ANY of: vanity-reach
+    paradox firing / count >= 8 / data_source='demo' with no
+    top_content anchors / time_range='7d').
+
+The 4 canonical Period Performance metrics (0-100 scale):
+
+  * Reach Score          - how widely posts spread relative to
+                           baseline (impression volume + impression
+                           delta).
+  * Engagement Velocity  - speed + intensity of substantive
+                           engagement per impression.
+  * Audience Quality     - whether the audience is the creator's
+                           actual people (repeat-engager %, niche
+                           overlap, substantive-reply ratio).
+  * Content Resonance    - whether content drives meaningful
+                           conversation (reply depth, quote-tweet
+                           ratio, save:repost ratio).
+
+Period Performance score (fixed formula, never overridden)::
+
+    round(0.30*AudienceQuality + 0.25*EngagementVelocity +
+          0.25*ContentResonance + 0.20*ReachScore)
+
+The vanity-reach paradox fires when:
+
+    Reach Score > 80  AND  Audience Quality < 50
+
+The paradox is surfaced in BOTH the Period Performance section
+(under the Reach Score row) AND the Red Flags section.
+
+Hard guarantees enforced by this runner:
+
+* Drafts only. Never auto-publishes anywhere.
+* No fabricated statistics. Demo metrics carry an explicit
+  ``[demo metric — re-run with --metrics-file for real X data]``
+  label so seeded demo runs cannot be mistaken for real analytics.
+* count clamps to [3, 10] (default 5); count >= 8 auto-triggers
+  the Period Audit section.
+* allow_monetization defaults to false; when false the runner
+  emits a structured refusal stub instead of any monetization
+  recommendation. When true, every monetization-touching line
+  carries the Article V.1 'Not financial advice' banner verbatim.
+* 280-character cap on every prose line in Period Performance /
+  Red Flags / Recommendations / Confidence (longer text is
+  truncated to 277 chars + ``…[capped]``).
+* Mandatory bridges to ``content-idea-generator`` AND
+  ``thread-builder`` in every Recommendations list (plus 1+
+  rotating bridge from the 10-bridge set, minimum 3 bridges total).
+* Top-Performing Content archetypes are paraphrased against the
+  10 canonical archetype labels — never raw URLs.
+* Saved output files prepend a 5-line Apache 2.0 HTML-comment
+  header.
+* Deterministic where possible: seeded by sha256(handle + metrics
+  + time_range + compare_to + count + allow_monetization).
+* Zero external network calls.
+
+PowerShell-only invocation examples (Windows 11):
+
+    # Real metrics (recommended — pass your X analytics export JSON)
+    python .\analytics_summarizer.run `
+      --x-handle JanSol0s `
+      --metrics-file $env:LOCALAPPDATA\grok-agent\analytics-summarizer\my-export.json `
+      --time-range 30d `
+      --compare-to previous_period `
+      --metric-focus all `
+      --count 5
+
+    # Vanity-reach paradox demo
+    python .\analytics_summarizer.run --x-handle JanSol0s --demo
+
+    # Healthy demo (no paradox)
+    python .\analytics_summarizer.run --x-handle habitstacker --demo-healthy
+
+    # 7d window (auto-triggers Period Audit)
+    python .\analytics_summarizer.run --x-handle JanSol0s --demo-7d-audit `
+      --time-range 7d --metric-focus engagement
+
+    # Enable monetization (replaces refusal stub with bridge + V.1 banner)
+    python .\analytics_summarizer.run --x-handle JanSol0s --demo --allow-monetization
+
+Manifest contract (the alias the v2.15 manifest binds to)::
+
+    generate = generate_analytics_summary
+
+Built to help xAI and Grok win — every X creator deserves an analytics
+layer that tells them when reach is real and when it's vanity.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import math
+import re
+import sys
+from dataclasses import dataclass, field
+from datetime import date, datetime, timezone
+from pathlib import Path
+from random import Random
+from typing import Optional
+
+# ---------------------------------------------------------------------------
+# Paths + constants
+# ---------------------------------------------------------------------------
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+SYSTEM_PROMPT_PATH = SCRIPT_DIR / "prompts" / "system.md"
+
+METRIC_NAMES = (
+    "Reach Score",
+    "Engagement Velocity",
+    "Audience Quality",
+    "Content Resonance",
+)
+
+# Per the v2.15 system prompt: Audience Quality weighted highest because
+# the right-people signal beats every other measure; Reach Score
+# weighted lowest because reach without the other three is vanity.
+PERFORMANCE_WEIGHTS = {
+    "Audience Quality": 0.30,
+    "Engagement Velocity": 0.25,
+    "Content Resonance": 0.25,
+    "Reach Score": 0.20,
+}
+
+# Healthy ranges per metric (per the v2.15 system prompt)
+HEALTHY_RANGES = {
+    "Reach Score": (40, 80),
+    "Engagement Velocity": (40, 75),
+    "Audience Quality": (50, 85),
+    "Content Resonance": (45, 80),
+}
+
+METRIC_FOCUS_OPTIONS = ("reach", "engagement", "audience", "resonance", "all")
+TIME_RANGE_OPTIONS = ("7d", "30d", "90d")
+COMPARE_OPTIONS = ("previous_period", "benchmark")
+
+# 5-arrow trend bucketing thresholds (sub-score POINT delta vs comparison)
+TREND_THRESHOLDS = {
+    "strong_rise": 15.0,
+    "rise": 4.0,
+    "stable": 4.0,
+    "fall": -15.0,
+}
+
+# Vanity-reach paradox thresholds
+PARADOX_REACH_FLOOR = 80.0
+PARADOX_AUDIENCE_CEILING = 50.0
+
+# count band
+COUNT_MIN = 3
+COUNT_MAX = 10
+COUNT_DEFAULT = 5
+
+# Insight prose cap
+INSIGHT_CHAR_CAP = 280
+
+# The 10 canonical archetype labels (verbatim — never invent an 11th)
+CANONICAL_ARCHETYPES = (
+    "Long-form thread on niche pain-point",
+    "Numbers-led explainer",
+    "Quote-tweet riff on niche peer's case study",
+    "Personal-story opener",
+    "Tactical how-to single post",
+    "Counter-take on consensus",
+    "Behind-the-scenes build log",
+    "Live-thread during a niche event",
+    "Resource-list / curated digest",
+    "Reply-stack on a competitor thread",
+)
+
+# Archetype-keyword map for free-text → canonical mapping
+ARCHETYPE_KEYWORDS = {
+    "Long-form thread on niche pain-point": (
+        "thread", "long-form", "deep-dive", "pain", "agent-eval", "failure",
+    ),
+    "Numbers-led explainer": (
+        "numbers", "data", "explainer", "benchmark", "metric", "stat",
+    ),
+    "Quote-tweet riff on niche peer's case study": (
+        "quote", "qrt", "riff", "peer", "case study",
+    ),
+    "Personal-story opener": (
+        "personal", "story", "anecdote", "shipping", "journey",
+    ),
+    "Tactical how-to single post": (
+        "how-to", "tactical", "guide", "single", "how to",
+    ),
+    "Counter-take on consensus": (
+        "counter", "contrarian", "consensus", "hot take", "disagree",
+    ),
+    "Behind-the-scenes build log": (
+        "behind", "build", "log", "bts", "wip", "ship log",
+    ),
+    "Live-thread during a niche event": (
+        "live", "event", "conference", "real-time",
+    ),
+    "Resource-list / curated digest": (
+        "list", "digest", "roundup", "curated", "resource",
+    ),
+    "Reply-stack on a competitor thread": (
+        "reply-stack", "competitor", "reply stack", "comment-stack",
+    ),
+}
+
+# Mandatory bridges (always present in Recommendations)
+MANDATORY_BRIDGES = ("content-idea-generator", "thread-builder")
+
+# 10-bridge rotating set (1+ picked alongside the 2 mandatory bridges)
+ROTATING_BRIDGES = (
+    "follower-quality-analyzer",
+    "ab-test-suggester",
+    "competitor-watch",
+    "brand-voice-trainer",
+    "cross-platform-reposter",
+    "content-recycler",
+    "comment-engagement-booster",
+    "hashtag-strategy-advisor",
+    "reply-drafter",
+    "monetization-optimizer",
+)
+
+# Disclaimers (verbatim — Constitution Article V.1)
+NOT_FINANCIAL_ADVICE = (
+    "> ⚠️ **Not financial advice.** This tool provides information only. "
+    "Always consult a licensed financial advisor before making decisions."
+)
+
+MONETIZATION_REFUSAL_STUB = (
+    "> 🚫 Monetization recommendation withheld. This run was invoked with "
+    "`allow_monetization=false` (the default).\n"
+    ">    Re-run with `--allow-monetization` if you want the "
+    "monetization-optimizer bridge surfaced —\n"
+    ">    every monetization-touching line still carries the Article V.1 "
+    "disclaimer verbatim."
+)
+
+DEMO_LABEL = "[demo metric — re-run with --metrics-file for real X data]"
+
+APACHE_HEADER_MD = (
+    "<!-- Copyright 2026 AgentMindCloud -->\n"
+    "<!-- Licensed under the Apache License, Version 2.0 -->\n"
+    "<!-- http://www.apache.org/licenses/LICENSE-2.0 -->\n"
+    "<!-- Built to help xAI and Grok win. -->\n"
+    "<!-- Generated by analytics_summarizer.run -->\n"
+)
+
+
+# ---------------------------------------------------------------------------
+# Demo metric seeds (deterministic — match committed examples bit-identically)
+# ---------------------------------------------------------------------------
+
+DEMO_PARADOX = {
+    "x_handle": "@JanSol0s",
+    "time_range": "30d",
+    "compare_to": "previous_period",
+    "metric_focus": "all",
+    "data_source": "demo",
+    "current_period": {
+        "impressions": 300000,
+        "prev_impressions": 70000,
+        "substantive_replies": 2200,
+        "reposts": 1500,
+        "bookmarks": 1500,
+        "repeat_engager_pct": 30.0,
+        "niche_overlap_pct": 40.0,
+        "substantive_reply_ratio_pct": 50.0,
+        "reply_depth_avg": 2.0,
+        "quote_tweet_ratio_pct": 20.0,
+        "save_to_repost_ratio": 1.2,
+    },
+    "previous_period": {
+        "impressions": 70000,
+        "prev_impressions": 60000,
+        "substantive_replies": 600,
+        "reposts": 400,
+        "bookmarks": 350,
+        "repeat_engager_pct": 50.0,
+        "niche_overlap_pct": 60.0,
+        "substantive_reply_ratio_pct": 58.0,
+        "reply_depth_avg": 2.0,
+        "quote_tweet_ratio_pct": 25.0,
+        "save_to_repost_ratio": 1.3,
+    },
+    "top_content": [
+        {
+            "archetype_label": "Long-form thread on agent-eval failure modes",
+            "format": "thread",
+            "impression_share_pct": 60.0,
+            "engagement_rate_pct": 1.4,
+        },
+        {
+            "archetype_label": "Quote-tweet riff on niche peer's case study",
+            "format": "quote-tweet",
+            "impression_share_pct": 12.0,
+            "engagement_rate_pct": 3.8,
+        },
+        {
+            "archetype_label": "Numbers-led explainer on benchmark drift",
+            "format": "single-post",
+            "impression_share_pct": 8.0,
+            "engagement_rate_pct": 4.2,
+        },
+        {
+            "archetype_label": "Behind-the-scenes build log on the v2.15 schema",
+            "format": "single-post",
+            "impression_share_pct": 6.0,
+            "engagement_rate_pct": 2.9,
+        },
+        {
+            "archetype_label": "Counter-take on consensus about agent benchmarks",
+            "format": "single-post",
+            "impression_share_pct": 5.0,
+            "engagement_rate_pct": 3.1,
+        },
+    ],
+}
+
+DEMO_HEALTHY = {
+    "x_handle": "@habitstacker",
+    "time_range": "30d",
+    "compare_to": "previous_period",
+    "metric_focus": "all",
+    "data_source": "demo",
+    "current_period": {
+        "impressions": 150000,
+        "prev_impressions": 125000,
+        "substantive_replies": 1200,
+        "reposts": 900,
+        "bookmarks": 900,
+        "repeat_engager_pct": 70.0,
+        "niche_overlap_pct": 75.0,
+        "substantive_reply_ratio_pct": 70.0,
+        "reply_depth_avg": 2.5,
+        "quote_tweet_ratio_pct": 30.0,
+        "save_to_repost_ratio": 1.75,
+    },
+    "previous_period": {
+        "impressions": 125000,
+        "prev_impressions": 110000,
+        "substantive_replies": 900,
+        "reposts": 700,
+        "bookmarks": 700,
+        "repeat_engager_pct": 65.0,
+        "niche_overlap_pct": 70.0,
+        "substantive_reply_ratio_pct": 70.0,
+        "reply_depth_avg": 2.2,
+        "quote_tweet_ratio_pct": 25.0,
+        "save_to_repost_ratio": 1.75,
+    },
+    "top_content": [
+        {
+            "archetype_label": "Tactical how-to on weekly habit stacks",
+            "format": "single-post",
+            "impression_share_pct": 22.0,
+            "engagement_rate_pct": 3.6,
+        },
+        {
+            "archetype_label": "Personal story opener on a 90-day streak",
+            "format": "thread",
+            "impression_share_pct": 18.0,
+            "engagement_rate_pct": 4.1,
+        },
+        {
+            "archetype_label": "Resource list / curated digest of tracking apps",
+            "format": "single-post",
+            "impression_share_pct": 14.0,
+            "engagement_rate_pct": 3.2,
+        },
+        {
+            "archetype_label": "Numbers-led explainer on adherence math",
+            "format": "single-post",
+            "impression_share_pct": 12.0,
+            "engagement_rate_pct": 3.5,
+        },
+        {
+            "archetype_label": "Behind-the-scenes log of the streak board build",
+            "format": "single-post",
+            "impression_share_pct": 9.0,
+            "engagement_rate_pct": 2.8,
+        },
+    ],
+}
+
+DEMO_7D_AUDIT = {
+    "x_handle": "@JanSol0s",
+    "time_range": "7d",
+    "compare_to": "previous_period",
+    "metric_focus": "engagement",
+    "data_source": "demo",
+    "current_period": {
+        "impressions": 190000,
+        "prev_impressions": 150000,
+        "substantive_replies": 1200,
+        "reposts": 900,
+        "bookmarks": 940,
+        "repeat_engager_pct": 55.0,
+        "niche_overlap_pct": 60.0,
+        "substantive_reply_ratio_pct": 60.0,
+        "reply_depth_avg": 2.0,
+        "quote_tweet_ratio_pct": 25.0,
+        "save_to_repost_ratio": 1.55,
+    },
+    "previous_period": {
+        "impressions": 170000,
+        "prev_impressions": 140000,
+        "substantive_replies": 900,
+        "reposts": 800,
+        "bookmarks": 800,
+        "repeat_engager_pct": 50.0,
+        "niche_overlap_pct": 60.0,
+        "substantive_reply_ratio_pct": 55.0,
+        "reply_depth_avg": 2.0,
+        "quote_tweet_ratio_pct": 22.0,
+        "save_to_repost_ratio": 1.45,
+    },
+    "top_content": [
+        {
+            "archetype_label": "Live-thread during the xAI dev event",
+            "format": "thread",
+            "impression_share_pct": 28.0,
+            "engagement_rate_pct": 2.4,
+        },
+        {
+            "archetype_label": "Reply-stack on a competitor thread on agent OS",
+            "format": "reply",
+            "impression_share_pct": 15.0,
+            "engagement_rate_pct": 2.8,
+        },
+        {
+            "archetype_label": "Numbers-led explainer on weekly impression mix",
+            "format": "single-post",
+            "impression_share_pct": 11.0,
+            "engagement_rate_pct": 2.1,
+        },
+    ],
+}
+
+
+# ---------------------------------------------------------------------------
+# Dataclasses
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class MetricRow:
+    name: str
+    score: int
+    prev_score: int
+    arrow: str
+    interpretation: str
+
+
+@dataclass
+class TopContent:
+    archetype_label: str
+    format: str
+    impression_share_pct: float
+    engagement_rate_pct: float
+
+
+@dataclass
+class RedFlag:
+    title: str
+    severity: str
+    explanation: str
+
+
+@dataclass
+class Recommendation:
+    text: str
+    bridge: str
+
+
+@dataclass
+class SummaryInputs:
+    x_handle: str
+    time_range: str
+    compare_to: str
+    metric_focus: str
+    count: int
+    allow_monetization: bool
+    data_source: str
+    metrics_path: Optional[str]
+    raw_payload: dict
+
+
+# ---------------------------------------------------------------------------
+# Metric computations
+# ---------------------------------------------------------------------------
+
+
+def compute_reach_score(impressions: int, prev_impressions: int) -> int:
+    """Reach Score on 0-100. Volume (log10) + delta blend.
+
+    vol_subscore  = clamp((log10(impressions) - 3.0) * 30, 0, 100)
+                    [10k → 0, 100k → 60, 1M → 90, 10M → 120 → clamped 100]
+    delta_subscore = clamp(50 + pct_change, 0, 100)
+                     [0% delta → 50, +50% → 100, -50% → 0]
+    final = round(0.6 * vol_subscore + 0.4 * delta_subscore)
+    """
+    vol = max(0.0, min(100.0, (math.log10(max(1, impressions)) - 3.0) * 30.0))
+    if prev_impressions <= 0:
+        delta_sub = 50.0
+    else:
+        pct = (impressions - prev_impressions) / prev_impressions * 100.0
+        delta_sub = max(0.0, min(100.0, 50.0 + pct))
+    return int(round(0.6 * vol + 0.4 * delta_sub))
+
+
+def compute_engagement_velocity(
+    substantive_replies: int,
+    reposts: int,
+    bookmarks: int,
+    impressions: int,
+) -> int:
+    """Engagement Velocity on 0-100. (substantive_replies + reposts + bookmarks) / impressions.
+
+    ratio_pct = (substantive + reposts + bookmarks) / impressions * 100
+    score     = clamp(ratio_pct * 30, 0, 100)
+    [1% ratio → 30, 2% → 60, 3.33% → 100]
+    """
+    if impressions <= 0:
+        return 0
+    ratio_pct = (substantive_replies + reposts + bookmarks) / impressions * 100.0
+    return int(round(max(0.0, min(100.0, ratio_pct * 30.0))))
+
+
+def compute_audience_quality(
+    repeat_engager_pct: float,
+    niche_overlap_pct: float,
+    substantive_reply_ratio_pct: float,
+) -> int:
+    """Audience Quality on 0-100. Weighted blend of right-people signals.
+
+    score = round(0.4 * repeat_engager_pct + 0.4 * niche_overlap_pct +
+                  0.2 * substantive_reply_ratio_pct)
+    """
+    raw = (
+        0.4 * repeat_engager_pct
+        + 0.4 * niche_overlap_pct
+        + 0.2 * substantive_reply_ratio_pct
+    )
+    return int(round(max(0.0, min(100.0, raw))))
+
+
+def compute_content_resonance(
+    reply_depth_avg: float,
+    quote_tweet_ratio_pct: float,
+    save_to_repost_ratio: float,
+) -> int:
+    """Content Resonance on 0-100. Average of three resonance sub-signals.
+
+    depth_sub = clamp(reply_depth_avg * 25, 0, 100)        [depth 4 → 100]
+    quote_sub = clamp(quote_tweet_ratio_pct * 1.5, 0, 100) [67% → 100]
+    save_sub  = clamp(save_to_repost_ratio * 50, 0, 100)   [2.0 → 100]
+    score     = round((depth_sub + quote_sub + save_sub) / 3)
+    """
+    depth_sub = max(0.0, min(100.0, reply_depth_avg * 25.0))
+    quote_sub = max(0.0, min(100.0, quote_tweet_ratio_pct * 1.5))
+    save_sub = max(0.0, min(100.0, save_to_repost_ratio * 50.0))
+    return int(round((depth_sub + quote_sub + save_sub) / 3.0))
+
+
+def compute_subscores(period: dict) -> dict:
+    """Compute all 4 sub-scores from a period block."""
+    rs = compute_reach_score(
+        int(period["impressions"]), int(period.get("prev_impressions", 0))
+    )
+    ev = compute_engagement_velocity(
+        int(period["substantive_replies"]),
+        int(period["reposts"]),
+        int(period["bookmarks"]),
+        int(period["impressions"]),
+    )
+    aq = compute_audience_quality(
+        float(period["repeat_engager_pct"]),
+        float(period["niche_overlap_pct"]),
+        float(period["substantive_reply_ratio_pct"]),
+    )
+    cr = compute_content_resonance(
+        float(period["reply_depth_avg"]),
+        float(period["quote_tweet_ratio_pct"]),
+        float(period["save_to_repost_ratio"]),
+    )
+    return {
+        "Reach Score": rs,
+        "Engagement Velocity": ev,
+        "Audience Quality": aq,
+        "Content Resonance": cr,
+    }
+
+
+def compute_performance_score(subscores: dict) -> int:
+    """Weighted Period Performance score on 0-100.
+
+    round(0.30*AudienceQuality + 0.25*EngagementVelocity +
+          0.25*ContentResonance + 0.20*ReachScore)
+    """
+    raw = sum(PERFORMANCE_WEIGHTS[name] * subscores[name] for name in METRIC_NAMES)
+    return int(round(raw))
+
+
+def trend_arrow(current: int, prev: int) -> str:
+    """Map sub-score POINT delta to one of {▲▲, ▲, ▬, ▼, ▼▼}."""
+    delta = current - prev
+    if delta > TREND_THRESHOLDS["strong_rise"]:
+        return "▲▲"
+    if delta >= TREND_THRESHOLDS["rise"]:
+        return "▲"
+    if delta >= -TREND_THRESHOLDS["stable"]:
+        return "▬"
+    if delta >= TREND_THRESHOLDS["fall"]:
+        return "▼"
+    return "▼▼"
+
+
+def paradox_active(subscores: dict) -> bool:
+    """Vanity-reach paradox: Reach Score > 80 AND Audience Quality < 50."""
+    return (
+        subscores["Reach Score"] > PARADOX_REACH_FLOOR
+        and subscores["Audience Quality"] < PARADOX_AUDIENCE_CEILING
+    )
+
+
+# ---------------------------------------------------------------------------
+# Archetype mapping
+# ---------------------------------------------------------------------------
+
+
+def map_to_canonical_archetype(free_text_label: str) -> str:
+    """Map a free-text archetype label onto the closest of the 10 canonical."""
+    haystack = free_text_label.lower()
+    best = None
+    best_hits = 0
+    for canonical, keywords in ARCHETYPE_KEYWORDS.items():
+        hits = sum(1 for kw in keywords if kw in haystack)
+        if hits > best_hits:
+            best = canonical
+            best_hits = hits
+    if best is None:
+        return CANONICAL_ARCHETYPES[0]
+    return best
+
+
+# ---------------------------------------------------------------------------
+# Insight prose (280-char cap)
+# ---------------------------------------------------------------------------
+
+
+def cap_insight(text: str) -> str:
+    """Cap insight prose at INSIGHT_CHAR_CAP characters."""
+    if len(text) <= INSIGHT_CHAR_CAP:
+        return text
+    return text[: INSIGHT_CHAR_CAP - len("…[capped]")] + "…[capped]"
+
+
+def reach_score_interpretation(score: int, demo_tag: str) -> str:
+    if score > PARADOX_REACH_FLOOR:
+        text = (
+            "Reach is elevated — verify the spike is from the creator's "
+            "primary niche, not a one-off viral hit pulling drive-by "
+            "accounts."
+        )
+    elif score >= 60:
+        text = (
+            "Reach is in the healthy band — durable distribution rather "
+            "than concentrated spike-driven impressions."
+        )
+    elif score >= 40:
+        text = (
+            "Reach is mid-band — distribution is steady but no breakout; "
+            "single-anchor pushes haven't broken through."
+        )
+    else:
+        text = (
+            "Reach is below the healthy floor — distribution is thin; "
+            "consider tighter niche-anchor cadence before scaling cadence "
+            "broadly."
+        )
+    if demo_tag:
+        text = f"{text} {demo_tag}"
+    return cap_insight(text)
+
+
+def engagement_velocity_interpretation(score: int, demo_tag: str) -> str:
+    if score >= 75:
+        text = (
+            "Engagement Velocity is strong — substantive engagement "
+            "outpaces impressions, audience is acting on the content."
+        )
+    elif score >= 40:
+        text = (
+            "Engagement Velocity is in the healthy band — substantive "
+            "replies, reposts, and bookmarks are landing per impression."
+        )
+    elif score >= 25:
+        text = (
+            "Engagement Velocity slipped below the healthy floor — reach "
+            "attracted drive-bys, not niche-active accounts."
+        )
+    else:
+        text = (
+            "Engagement Velocity is weak — substantive engagement per "
+            "impression is well under the niche baseline; audit hooks."
+        )
+    if demo_tag:
+        text = f"{text} {demo_tag}"
+    return cap_insight(text)
+
+
+def audience_quality_interpretation(score: int, demo_tag: str) -> str:
+    if score >= 75:
+        text = (
+            "Audience Quality is strong — repeat engagers and niche "
+            "overlap signal the right people are showing up."
+        )
+    elif score >= 50:
+        text = (
+            "Audience Quality is in the healthy band — niche overlap and "
+            "substantive-reply ratio support the creator's primary cluster."
+        )
+    elif score >= 35:
+        text = (
+            "Audience Quality is below the 50 floor; new followers don't "
+            "match the creator's primary niche — reach grew the wrong "
+            "audience."
+        )
+    else:
+        text = (
+            "Audience Quality is collapsing — repeat-engager and niche "
+            "overlap signals are both well below baseline; audit follower "
+            "cohort urgently."
+        )
+    if demo_tag:
+        text = f"{text} {demo_tag}"
+    return cap_insight(text)
+
+
+def content_resonance_interpretation(score: int, demo_tag: str) -> str:
+    if score >= 75:
+        text = (
+            "Content Resonance is strong — reply-depth and quote-tweet "
+            "ratio show meaningful conversation around posts."
+        )
+    elif score >= 45:
+        text = (
+            "Content Resonance is in the healthy band — reply-depth and "
+            "save:repost ratio support durable discussion."
+        )
+    elif score >= 30:
+        text = (
+            "Content Resonance is below the healthy band — reply-depth "
+            "and quote-tweet ratio both off the niche baseline."
+        )
+    else:
+        text = (
+            "Content Resonance is weak — content isn't sparking "
+            "substantive conversation; reply-depth and save:repost ratio "
+            "are both depressed."
+        )
+    if demo_tag:
+        text = f"{text} {demo_tag}"
+    return cap_insight(text)
+
+
+# ---------------------------------------------------------------------------
+# Output assembly
+# ---------------------------------------------------------------------------
+
+
+def normalize_handle(handle: str) -> str:
+    return handle if handle.startswith("@") else f"@{handle}"
+
+
+def clamp_count(count: int) -> int:
+    return max(COUNT_MIN, min(COUNT_MAX, count))
+
+
+def select_top_content(payload: dict, count: int) -> list[TopContent]:
+    raw_items = payload.get("top_content") or []
+    items: list[TopContent] = []
+    for raw in raw_items[:count]:
+        items.append(
+            TopContent(
+                archetype_label=map_to_canonical_archetype(raw["archetype_label"]),
+                format=raw.get("format", "single-post"),
+                impression_share_pct=float(raw.get("impression_share_pct", 0.0)),
+                engagement_rate_pct=float(raw.get("engagement_rate_pct", 0.0)),
+            )
+        )
+    return items
+
+
+def build_metric_rows(
+    current_subscores: dict, prev_subscores: dict, is_demo: bool
+) -> list[MetricRow]:
+    demo_tag = DEMO_LABEL if is_demo else ""
+    interp_fns = {
+        "Reach Score": reach_score_interpretation,
+        "Engagement Velocity": engagement_velocity_interpretation,
+        "Audience Quality": audience_quality_interpretation,
+        "Content Resonance": content_resonance_interpretation,
+    }
+    rows: list[MetricRow] = []
+    for name in METRIC_NAMES:
+        score = current_subscores[name]
+        prev = prev_subscores[name]
+        rows.append(
+            MetricRow(
+                name=name,
+                score=score,
+                prev_score=prev,
+                arrow=trend_arrow(score, prev),
+                interpretation=interp_fns[name](score, demo_tag),
+            )
+        )
+    return rows
+
+
+def build_red_flags(
+    rows: list[MetricRow], paradox: bool, top_content: list[TopContent]
+) -> list[RedFlag]:
+    flags: list[RedFlag] = []
+
+    if paradox:
+        flags.append(
+            RedFlag(
+                title="Vanity-reach paradox",
+                severity="high",
+                explanation=cap_insight(
+                    "Reach Score sits above the 80 floor while Audience "
+                    "Quality is below 50. The viral surface attracted "
+                    "drive-bys, not the creator's people. Remediation: "
+                    "inspect which post drove the spike; if it is not in "
+                    "the creator's primary niche, accept the period as a "
+                    "reach-only win and re-target next period."
+                ),
+            )
+        )
+
+    aq_row = next(r for r in rows if r.name == "Audience Quality")
+    if not paradox and aq_row.score < 50:
+        flags.append(
+            RedFlag(
+                title="Audience-quality drift",
+                severity="medium",
+                explanation=cap_insight(
+                    "Audience Quality is below the 50 floor; the audience "
+                    "engaging with posts is not the creator's primary "
+                    "niche. Remediation: vet the new cohort via "
+                    "follower-quality-analyzer before scaling cadence."
+                ),
+            )
+        )
+
+    cr_row = next(r for r in rows if r.name == "Content Resonance")
+    if cr_row.score < 45:
+        flags.append(
+            RedFlag(
+                title="Resonance softening",
+                severity="medium",
+                explanation=cap_insight(
+                    "Content Resonance is below the healthy band; "
+                    "reply-depth and quote-tweet ratio both signal "
+                    "shallow engagement. Remediation: pair next anchor "
+                    "with thread-builder to earn deeper conversation."
+                ),
+            )
+        )
+
+    if top_content and top_content[0].impression_share_pct >= 50.0:
+        flags.append(
+            RedFlag(
+                title="Single-post concentration",
+                severity="medium",
+                explanation=cap_insight(
+                    f"Top archetype drove "
+                    f"{top_content[0].impression_share_pct:.0f}% of period "
+                    f"impressions; one-post-dominance is fragile. "
+                    f"Remediation: re-source the next anchor in the same "
+                    f"cluster via content-idea-generator before the spike "
+                    f"decays."
+                ),
+            )
+        )
+
+    ev_row = next(r for r in rows if r.name == "Engagement Velocity")
+    if ev_row.score < 35 and not flags:
+        flags.append(
+            RedFlag(
+                title="Engagement-velocity weakness",
+                severity="medium",
+                explanation=cap_insight(
+                    "Engagement Velocity is below the niche baseline; "
+                    "substantive engagement per impression is depressed. "
+                    "Remediation: tighten hooks and add reply-drafter "
+                    "loop to seed substantive first replies."
+                ),
+            )
+        )
+
+    return flags[:3]
+
+
+def select_rotating_bridges(
+    inputs: SummaryInputs, rows: list[MetricRow], paradox: bool, n: int
+) -> list[str]:
+    """Pick up to n rotating bridges, deterministic via seed."""
+    seed = hashlib.sha256(
+        (
+            inputs.x_handle
+            + inputs.time_range
+            + inputs.compare_to
+            + str(inputs.count)
+            + str(inputs.allow_monetization)
+        ).encode("utf-8")
+    ).hexdigest()
+    rng = Random(seed)
+
+    priority: list[str] = []
+    if paradox:
+        priority.append("follower-quality-analyzer")
+    aq_row = next(r for r in rows if r.name == "Audience Quality")
+    if aq_row.score < 50 and "follower-quality-analyzer" not in priority:
+        priority.append("follower-quality-analyzer")
+    cr_row = next(r for r in rows if r.name == "Content Resonance")
+    if cr_row.score < 45 and "brand-voice-trainer" not in priority:
+        priority.append("brand-voice-trainer")
+    if "ab-test-suggester" not in priority:
+        priority.append("ab-test-suggester")
+    if "competitor-watch" not in priority:
+        priority.append("competitor-watch")
+
+    pool = [b for b in ROTATING_BRIDGES if b not in priority and b != "monetization-optimizer"]
+    rng.shuffle(pool)
+    ordered = priority + pool
+    return ordered[:n]
+
+
+def build_recommendations(
+    inputs: SummaryInputs,
+    rows: list[MetricRow],
+    paradox: bool,
+    top_content: list[TopContent],
+) -> list[Recommendation]:
+    recs: list[Recommendation] = []
+
+    quality_anchor = (
+        f"the period's quality win archetype "
+        f"({top_content[1].archetype_label})"
+        if len(top_content) >= 2
+        else "the period's quality win archetype"
+    )
+
+    recs.append(
+        Recommendation(
+            text=cap_insight(
+                f"Re-source the next anchor in the cluster of "
+                f"{quality_anchor} via content-idea-generator."
+            ),
+            bridge="content-idea-generator",
+        )
+    )
+    recs.append(
+        Recommendation(
+            text=cap_insight(
+                "Build the long-form thread that earns the audience the "
+                "period actually attracted via thread-builder."
+            ),
+            bridge="thread-builder",
+        )
+    )
+
+    rotating = select_rotating_bridges(inputs, rows, paradox, n=2)
+
+    rotating_blurbs = {
+        "follower-quality-analyzer": cap_insight(
+            "Vet the new follower cohort via follower-quality-analyzer "
+            "before assuming the reach grew the right audience."
+        ),
+        "ab-test-suggester": cap_insight(
+            "Promote the winning archetype into a structured A/B against "
+            "an alternate format via ab-test-suggester."
+        ),
+        "competitor-watch": cap_insight(
+            "Compare the period's metric mix against competitor patterns "
+            "via competitor-watch to confirm the read isn't niche-narrow."
+        ),
+        "brand-voice-trainer": cap_insight(
+            "Correlate voice signatures with the period's resonance "
+            "delta via brand-voice-trainer; voice drift often precedes "
+            "resonance drift."
+        ),
+        "cross-platform-reposter": cap_insight(
+            "Adapt the period's winning anchor into LinkedIn / "
+            "newsletter sections via cross-platform-reposter."
+        ),
+        "content-recycler": cap_insight(
+            "Recycle the top-performing post under a different angle "
+            "next quarter via content-recycler."
+        ),
+        "comment-engagement-booster": cap_insight(
+            "Pick which posts deserve a comment-stack push via "
+            "comment-engagement-booster based on the period's metric mix."
+        ),
+        "hashtag-strategy-advisor": cap_insight(
+            "Feed the winning tags from the period back into the next "
+            "post's strategy via hashtag-strategy-advisor."
+        ),
+        "reply-drafter": cap_insight(
+            "Engage substantively with the audience the period brought "
+            "in via reply-drafter."
+        ),
+    }
+
+    for bridge in rotating:
+        if len(recs) >= 4:  # reserve slot 5 for the monetization recommendation
+            break
+        if bridge == "monetization-optimizer":
+            continue
+        if bridge in rotating_blurbs:
+            recs.append(Recommendation(text=rotating_blurbs[bridge], bridge=bridge))
+
+    recs.append(
+        Recommendation(
+            text="__MONETIZATION_SLOT__",
+            bridge="monetization-optimizer",
+        )
+    )
+
+    return recs[:5]
+
+
+def audit_triggered(
+    inputs: SummaryInputs,
+    paradox: bool,
+    top_content: list[TopContent],
+) -> bool:
+    if paradox:
+        return True
+    if inputs.count >= 8:
+        return True
+    if inputs.data_source == "demo" and not top_content:
+        return True
+    if inputs.time_range == "7d":
+        return True
+    return False
+
+
+def render_period_audit(
+    inputs: SummaryInputs,
+    paradox: bool,
+    top_content: list[TopContent],
+    rows: list[MetricRow],
+) -> str:
+    triggers: list[str] = []
+    if paradox:
+        triggers.append("vanity-reach paradox firing")
+    if inputs.count >= 8:
+        triggers.append(f"count={inputs.count} (deep archetype read)")
+    if inputs.data_source == "demo" and not top_content:
+        triggers.append("demo data with no anchors supplied")
+    if inputs.time_range == "7d":
+        triggers.append("7-day window single-day variance")
+    triggers_line = "; ".join(triggers) if triggers else "audit threshold met"
+
+    if inputs.time_range == "7d":
+        window_line = (
+            "7-day windows are dominated by single-day variance — patterns "
+            "surfaced here may not survive a 30d re-read."
+        )
+        sample_line = (
+            "Re-run with --time-range 30d when 14 more days have passed."
+        )
+    elif inputs.time_range == "30d":
+        window_line = (
+            "30-day window covers the main signals; sufficient for "
+            "anchor-level archetype patterns."
+        )
+        sample_line = (
+            "Re-run at the same cadence next month to track durable "
+            "archetypes across rolling 30d windows."
+        )
+    else:
+        window_line = (
+            "90-day window is durable — patterns surfaced here are "
+            "structural, not single-spike-driven."
+        )
+        sample_line = (
+            "Re-run quarterly; pair with competitor-watch for relative "
+            "position context."
+        )
+
+    if inputs.data_source == "demo":
+        data_line = (
+            "Seeded demo metrics — re-run with --metrics-file pointing at "
+            "the actual X analytics export to lift confidence."
+        )
+    else:
+        data_line = (
+            "Real X analytics export — sub-scores derived from supplied "
+            "raw fields; no fabricated statistics."
+        )
+
+    if top_content and top_content[0].impression_share_pct >= 50.0:
+        variance_line = (
+            f"Top archetype drove "
+            f"{top_content[0].impression_share_pct:.0f}% of period "
+            f"impressions — single-day variance exposure is high."
+        )
+    else:
+        variance_line = (
+            "Period impressions distributed across multiple anchors — "
+            "single-day variance exposure is moderate."
+        )
+
+    cadence_line = (
+        "Weekly while building habit, otherwise monthly."
+        if inputs.time_range != "90d"
+        else "Quarterly; pair with quarterly retros for review-board cadence."
+    )
+
+    body = (
+        "## Period Audit (auto-triggered)\n\n"
+        f"- **Trigger(s)**: {triggers_line}\n"
+        f"- **Window adequacy**: {cap_insight(window_line)}\n"
+        f"- **Data source confidence**: {cap_insight(data_line)}\n"
+        f"- **Single-day variance exposure**: {cap_insight(variance_line)}\n"
+        f"- **Suggested next sample**: {cap_insight(sample_line)}\n"
+        f"- **Re-run cadence**: {cap_insight(cadence_line)}"
+    )
+    return body
+
+
+def render_recommendations(
+    recs: list[Recommendation], allow_monetization: bool
+) -> str:
+    lines: list[str] = []
+    for i, rec in enumerate(recs, start=1):
+        if rec.text == "__MONETIZATION_SLOT__":
+            if allow_monetization:
+                blurb = cap_insight(
+                    "Model the period's funnel — paid-tier conversion, "
+                    "sponsorship pricing — via monetization-optimizer."
+                )
+                lines.append(f"{i}. {blurb} — bridges to: `{rec.bridge}`")
+                lines.append("")
+                lines.append("   " + NOT_FINANCIAL_ADVICE)
+            else:
+                lines.append(f"{i}.")
+                for line in MONETIZATION_REFUSAL_STUB.split("\n"):
+                    lines.append("   " + line)
+            continue
+        lines.append(f"{i}. {rec.text} — bridges to: `{rec.bridge}`")
+
+    return "\n".join(lines)
+
+
+def render_period_snapshot(
+    inputs: SummaryInputs,
+    rows: list[MetricRow],
+    paradox: bool,
+) -> str:
+    rs = next(r for r in rows if r.name == "Reach Score")
+    aq = next(r for r in rows if r.name == "Audience Quality")
+    if paradox:
+        headline = (
+            f"{inputs.x_handle}: {inputs.time_range} period vs "
+            f"{inputs.compare_to} — vanity-reach paradox active; "
+            f"Reach Score {rs.score} but Audience Quality only {aq.score}."
+        )
+    else:
+        ev = next(r for r in rows if r.name == "Engagement Velocity")
+        cr = next(r for r in rows if r.name == "Content Resonance")
+        score = compute_performance_score(
+            {r.name: r.score for r in rows}
+        )
+        headline = (
+            f"{inputs.x_handle}: {inputs.time_range} period vs "
+            f"{inputs.compare_to} — Performance score {score}/100 "
+            f"(RS {rs.score} / EV {ev.score} / AQ {aq.score} / "
+            f"CR {cr.score})."
+        )
+
+    if inputs.data_source == "demo":
+        data_source_line = (
+            "seeded demo metrics — re-run with --metrics-file for real X data"
+        )
+    else:
+        data_source_line = (
+            f"real X export from --metrics-file {inputs.metrics_path or '<path>'}"
+        )
+
+    monetization_line = (
+        "enabled (V.1 banner attached to monetization lines)"
+        if inputs.allow_monetization
+        else "gated (default; refusal stub in Recommendations)"
+    )
+
+    return (
+        "## Period Snapshot\n"
+        f"**{cap_insight(headline)}**\n"
+        "\n"
+        f"- **Creator handle**: {inputs.x_handle}\n"
+        f"- **Time range**: {inputs.time_range}\n"
+        f"- **Comparison basis**: {inputs.compare_to}\n"
+        f"- **Metric focus**: {inputs.metric_focus}\n"
+        f"- **Archetype count**: {inputs.count}\n"
+        f"- **Monetization**: {monetization_line}\n"
+        f"- **Data source**: {data_source_line}"
+    )
+
+
+def render_period_performance(rows: list[MetricRow], paradox: bool) -> str:
+    body = [
+        "## Period Performance",
+        "",
+        "| Metric | Score | Trend | Interpretation |",
+        "|---|---|---|---|",
+    ]
+    for row in rows:
+        body.append(
+            f"| {row.name:<19} | {row.score:>3}/100 | {row.arrow} | "
+            f"{row.interpretation} |"
+        )
+    if paradox:
+        body.append("")
+        body.append(
+            "> ⚠️ paradox: reach spiked but audience quality is below 50 — "
+            "vanity reach without the right people."
+        )
+    body.append("")
+    score = compute_performance_score({r.name: r.score for r in rows})
+    body.append(f"**Period Performance score**: {score}/100")
+    return "\n".join(body)
+
+
+def render_top_content(items: list[TopContent], count: int) -> str:
+    lines = ["## Top-Performing Content (paraphrased — no raw URLs unless supplied)", ""]
+    if not items:
+        lines.append(
+            "*(no top-performing-content anchors supplied — re-run with "
+            "--metrics-file containing top_content[] for archetype "
+            "surfacing.)*"
+        )
+        return "\n".join(lines)
+
+    shown = items[:count]
+    for i, item in enumerate(shown, start=1):
+        summary = cap_insight(
+            f"{item.format}; drove {item.impression_share_pct:.0f}% of "
+            f"period impressions with {item.engagement_rate_pct:.1f}% "
+            f"engagement rate."
+        )
+        lines.append(f"{i}. **{item.archetype_label}** — {summary}")
+    if len(items) < count:
+        lines.append("")
+        lines.append(
+            f"*({len(items)} anchors supplied; count={count} requested. "
+            f"Re-run with more `top_content[]` entries in --metrics-file "
+            f"for a fuller archetype read.)*"
+        )
+    return "\n".join(lines)
+
+
+def render_trends(rows: list[MetricRow]) -> str:
+    rising = [r.name for r in rows if r.arrow in ("▲▲", "▲")]
+    stable = [r.name for r in rows if r.arrow == "▬"]
+    falling = [r.name for r in rows if r.arrow in ("▼", "▼▼")]
+
+    def bucket_line(items: list[str], label: str) -> str:
+        if not items:
+            return f"- **{label}**: none this period."
+        return f"- **{label}**: {', '.join(items)}."
+
+    return "\n".join(
+        [
+            "## Trends",
+            "",
+            bucket_line(rising, "Rising (▲▲ / ▲)"),
+            bucket_line(stable, "Stable (▬)"),
+            bucket_line(falling, "Falling (▼ / ▼▼)"),
+        ]
+    )
+
+
+def render_red_flags(flags: list[RedFlag]) -> str:
+    if not flags:
+        return (
+            "## Red Flags\n\n"
+            "- *(no red flags this period — all four metrics inside their "
+            "healthy bands; period reads as substantively healthy.)*"
+        )
+    lines = ["## Red Flags", ""]
+    for flag in flags:
+        lines.append(
+            f"- **{flag.title}** · severity: {flag.severity} — "
+            f"{flag.explanation}"
+        )
+    return "\n".join(lines)
+
+
+def render_confidence(
+    inputs: SummaryInputs, rows: list[MetricRow], paradox: bool
+) -> str:
+    if inputs.data_source == "demo":
+        level = "low"
+        reason = (
+            "Data source is seeded demo metrics — re-run with "
+            "--metrics-file pointing at the actual X analytics export to "
+            "lift confidence."
+        )
+    elif inputs.time_range == "7d":
+        level = "medium"
+        reason = (
+            "Real metrics over a 7-day window; single-day variance limits "
+            "confidence — re-run at 30d for durable signal."
+        )
+    elif paradox:
+        level = "medium"
+        reason = (
+            "Real metrics over the full window; vanity-reach paradox "
+            "narrows the read — pair with follower-quality-analyzer "
+            "to confirm cohort signal."
+        )
+    else:
+        level = "high"
+        reason = (
+            "Real metrics over the full window with all four sub-scores "
+            "in or above their healthy bands; no paradox active."
+        )
+    return f"## Confidence\nConfidence: {level} — {cap_insight(reason)}"
+
+
+# ---------------------------------------------------------------------------
+# Top-level generate (manifest binding)
+# ---------------------------------------------------------------------------
+
+
+def generate_analytics_summary(payload: dict) -> str:
+    """Manifest-bound entry point. Render the full markdown summary."""
+    inputs = _coerce_inputs(payload)
+
+    current_subscores = compute_subscores(inputs.raw_payload["current_period"])
+    prev_subscores = compute_subscores(inputs.raw_payload["previous_period"])
+
+    rows = build_metric_rows(
+        current_subscores, prev_subscores, is_demo=(inputs.data_source == "demo")
+    )
+    paradox = paradox_active(current_subscores)
+    top_content = select_top_content(inputs.raw_payload, inputs.count)
+    flags = build_red_flags(rows, paradox, top_content)
+    recs = build_recommendations(inputs, rows, paradox, top_content)
+
+    sections = [
+        render_period_snapshot(inputs, rows, paradox),
+        render_period_performance(rows, paradox),
+        render_top_content(top_content, inputs.count),
+        render_trends(rows),
+        render_red_flags(flags),
+        "## Recommendations\n\n"
+        + render_recommendations(recs, inputs.allow_monetization),
+        render_confidence(inputs, rows, paradox),
+    ]
+
+    if audit_triggered(inputs, paradox, top_content):
+        sections.append(render_period_audit(inputs, paradox, top_content, rows))
+
+    return "\n\n".join(sections) + "\n"
+
+
+generate = generate_analytics_summary  # manifest binding alias
+
+
+def _coerce_inputs(payload: dict) -> SummaryInputs:
+    handle = normalize_handle(payload["x_handle"])
+    time_range = payload.get("time_range", "30d")
+    if time_range not in TIME_RANGE_OPTIONS:
+        raise ValueError(f"time_range must be one of {TIME_RANGE_OPTIONS}")
+    compare_to = payload.get("compare_to", "previous_period")
+    if compare_to not in COMPARE_OPTIONS:
+        raise ValueError(f"compare_to must be one of {COMPARE_OPTIONS}")
+    metric_focus = payload.get("metric_focus", "all")
+    if metric_focus not in METRIC_FOCUS_OPTIONS:
+        raise ValueError(f"metric_focus must be one of {METRIC_FOCUS_OPTIONS}")
+    count = clamp_count(int(payload.get("count", COUNT_DEFAULT)))
+    allow_monetization = bool(payload.get("allow_monetization", False))
+    data_source = payload.get("data_source", "real")
+    metrics_path = payload.get("_metrics_path")
+    return SummaryInputs(
+        x_handle=handle,
+        time_range=time_range,
+        compare_to=compare_to,
+        metric_focus=metric_focus,
+        count=count,
+        allow_monetization=allow_monetization,
+        data_source=data_source,
+        metrics_path=metrics_path,
+        raw_payload=payload,
+    )
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
+
+
+def _build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="analytics_summarizer.run",
+        description=(
+            "Analytics Summarizer v2.15 — emits a 6/7-section structured "
+            "period summary using 4 canonical Period Performance metrics "
+            "(Reach Score / Engagement Velocity / Audience Quality / "
+            "Content Resonance) and the vanity-reach paradox. Drafts only."
+        ),
+    )
+    p.add_argument("--x-handle", required=False)
+    p.add_argument("--metrics-file", default=None)
+    p.add_argument("--time-range", choices=TIME_RANGE_OPTIONS, default=None)
+    p.add_argument("--compare-to", choices=COMPARE_OPTIONS, default=None)
+    p.add_argument("--metric-focus", choices=METRIC_FOCUS_OPTIONS, default=None)
+    p.add_argument(
+        "--count",
+        type=int,
+        default=None,
+        help=f"Archetype count [{COUNT_MIN}, {COUNT_MAX}]; default {COUNT_DEFAULT}.",
+    )
+    p.add_argument(
+        "--allow-monetization",
+        action="store_true",
+        help="Enable monetization recommendations (V.1 banner attached).",
+    )
+    p.add_argument("--demo", action="store_true", help="Vanity-reach paradox demo.")
+    p.add_argument(
+        "--demo-healthy", action="store_true", help="Healthy/balanced demo."
+    )
+    p.add_argument(
+        "--demo-7d-audit",
+        action="store_true",
+        help="7-day window demo (auto-triggers Period Audit).",
+    )
+    p.add_argument("--output", default=None, help="Save report to a path.")
+    p.add_argument(
+        "--no-banner", action="store_true", help="Suppress the runner banner."
+    )
+    p.add_argument(
+        "--show-system-prompt",
+        action="store_true",
+        help="Print loaded system-prompt path + size on stderr.",
+    )
+    return p
+
+
+def _resolve_payload(args: argparse.Namespace) -> dict:
+    if args.metrics_file:
+        path = Path(args.metrics_file)
+        with path.open("r", encoding="utf-8") as f:
+            payload = json.load(f)
+        payload["_metrics_path"] = str(path)
+    elif args.demo_healthy:
+        payload = json.loads(json.dumps(DEMO_HEALTHY))
+    elif args.demo_7d_audit:
+        payload = json.loads(json.dumps(DEMO_7D_AUDIT))
+    elif args.demo:
+        payload = json.loads(json.dumps(DEMO_PARADOX))
+    else:
+        raise SystemExit(
+            "error: provide --metrics-file <path> OR one of "
+            "--demo / --demo-healthy / --demo-7d-audit"
+        )
+
+    if args.x_handle:
+        payload["x_handle"] = args.x_handle
+    elif "x_handle" not in payload:
+        raise SystemExit("error: --x-handle is required")
+
+    if args.time_range is not None:
+        payload["time_range"] = args.time_range
+    payload.setdefault("time_range", "30d")
+    if args.compare_to is not None:
+        payload["compare_to"] = args.compare_to
+    payload.setdefault("compare_to", "previous_period")
+    if args.metric_focus is not None:
+        payload["metric_focus"] = args.metric_focus
+    payload.setdefault("metric_focus", "all")
+    if args.count is not None:
+        payload["count"] = args.count
+    payload.setdefault("count", COUNT_DEFAULT)
+    if args.allow_monetization:
+        payload["allow_monetization"] = True
+    payload.setdefault("allow_monetization", False)
+    return payload
+
+
+def _print_banner(payload: dict) -> None:
+    sys.stderr.write(
+        "[analytics_summarizer.run] Built to help xAI and Grok win — "
+        f"{payload['x_handle']} · {payload['time_range']} · "
+        f"{payload['compare_to']} · count={payload['count']} · "
+        f"allow_monetization={payload['allow_monetization']}\n"
+    )
+
+
+def _show_system_prompt() -> None:
+    if SYSTEM_PROMPT_PATH.exists():
+        size = SYSTEM_PROMPT_PATH.stat().st_size
+        sys.stderr.write(
+            f"[analytics_summarizer.run] system prompt: "
+            f"{SYSTEM_PROMPT_PATH} ({size} bytes)\n"
+        )
+    else:
+        sys.stderr.write(
+            f"[analytics_summarizer.run] WARNING: system prompt not found at "
+            f"{SYSTEM_PROMPT_PATH}\n"
+        )
+
+
+def main(argv: Optional[list[str]] = None) -> int:
+    args = _build_argparser().parse_args(argv)
+    payload = _resolve_payload(args)
+    if not args.no_banner:
+        _print_banner(payload)
+    if args.show_system_prompt:
+        _show_system_prompt()
+    output = generate_analytics_summary(payload)
+    if args.output:
+        out_path = Path(args.output)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        with out_path.open("w", encoding="utf-8") as f:
+            f.write(APACHE_HEADER_MD + "\n")
+            f.write(output)
+    else:
+        sys.stdout.write(output)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

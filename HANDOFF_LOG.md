@@ -115,6 +115,7 @@
 | P95 | Phase 3 | Monetization Optimizer runner + README + examples | templates/creator/monetization-optimizer/run.py, README.md, examples/ (3 pairs) | Matches P94 exactly; new phrasing + full disclaimers | ✅ done |
 | P96 | Phase 3 | Thread Builder manifest + system prompt | templates/creator/thread-builder/grok-agent.yaml, prompts/system.md | Matches P83/P85 v2.15 shape; new phrasing + strong bridges | ✅ done |
 | P97 | Phase 3 | Thread Builder runner + README + examples | templates/creator/thread-builder/run.py, README.md, examples/ (3 pairs) | Matches P96 exactly; new phrasing + strict caps + bridges | ✅ done |
+| P101 | Phase 3 | Build Analytics Summarizer — Runner + README + examples (Slot 2) | templates/creator/analytics-summarizer/analytics_summarizer.run, README.md, examples/ | Resolved P100 Slot 1/Slot 2 mismatch using new 4 metrics + vanity-reach paradox + weighted formula from P100; 19/20 creator templates now in progress | ✅ done |
 
 <!--
 ====================================================================

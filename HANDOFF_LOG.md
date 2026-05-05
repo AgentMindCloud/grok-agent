@@ -125,6 +125,7 @@
 | P128 | Phase 4 | Initialize Cross-Reality Action Fabric (manifest + constitution + folder) | grok-agent.yaml, constitution.md, README.md + folder skeleton | Foundation for final Super Agent with strict human-approval constitution | ✅ done |
 | P129 | Phase 4 | Build orchestration core for Cross-Reality Action Fabric | agent.py, graph.py, __init__.py | LangGraph with mandatory HITL approval gates + rollback for all real-world actions | ✅ done |
 | P130 | Phase 4 | Build memory layer for Cross-Reality Action Fabric | memory/mem0_setup.py, memory/qdrant_index.py, memory/__init__.py | Action history + approval records with consent gates and rollback provenance | ✅ done |
+| P131 | Phase 4 | Build provenance log + Langfuse hooks for Cross-Reality Action Fabric | provenance/log.py, provenance/langfuse_hooks.py, provenance/__init__.py | Action-specific provenance with consent_token + rollback chain + strict Langfuse opt-in | ✅ done |
 
 <!--
 ====================================================================

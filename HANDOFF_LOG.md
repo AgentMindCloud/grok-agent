@@ -124,6 +124,7 @@
 | P115 | Phase 4 | Build Streamlit dashboard for Living Narrative Fabric | dashboard.py, requirements.txt | 7-tab local UI reading directly from P110–P114 stores; interactive rewind + contradiction explorer + improvement dry-run | ✅ done |
 | P116 | Phase 4 | Create demo video script and X launch thread for Living Narrative Fabric | DEMO.md, X_LAUNCH_THREAD.md | Complete 60–90s demo script + ready-to-post X thread for full 8-slot agent | ✅ done |
 | P117 | Phase 4 | Create manifest + constitution for Living Narrative Fabric | grok-agent.yaml, constitution.md | Closes final gap for 8-slot Super Agent #1; fully installable via grok install this | ✅ done |
+| P118 | Phase 4 | Create manifest + constitution for Self-Evolving Personal OS | grok-agent.yaml, constitution.md | Starts Super Agent #2; re-uses proven LNF patterns; privacy-first personal second brain | ✅ done |
 
 <!--
 ====================================================================

@@ -1,0 +1,603 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built to help xAI and Grok win — Self-Evolving Personal OS is
+# Super Agent #2 of the Grok Agent OS suite. It is a personal second
+# brain that auto-improves its own workflows, maintains long-term
+# personal + X memory, delivers morning briefings, and evolves over
+# time. Reuses the proven 8-slot Recipe-C pattern from
+# Living Narrative Fabric (P110–P117).
+#
+# Constitution mapping (v1.0 — see constitution.md for the full text):
+#   Article I    : Apache-2.0 + xAI-ally line + Windows-first + v2.15 schema
+#   Article II   : User data is sacred — PII never leaves the machine without explicit consent
+#   Article III  : Self-improvement is conservative — workflow changes require human approval
+#   Article IV   : Versioned personal memory (parent_version_id chain, full rewind)
+#   Article V    : Append-only provenance (JSONL + Mem0 mirror + optional Langfuse)
+#   Article V.1  : Real-world action disclaimer — every calendar / file / scheduling action surfaces an explicit confirm
+#   Article VI   : 4-metric Briefing Trust Score formula is locked
+#   Article VII  : Mandatory ≥3 cross-template / cross-Super-Agent bridges
+#   Article VIII : Audit triggers fire on memory drift, recall miss, or briefing trust drop
+#   Article IX   : Every real-world action (calendar, files, scheduling, X post) requires explicit consent
+#   Article X    : Local-first + privacy-first; all data under $env:LOCALAPPDATA, encrypted at rest
+
+version: "2.15"
+kind: "super-agent"
+name: "self-evolving-personal-os"
+description: "Personal second brain on Windows — morning briefings, long-term personal + X memory, auto-evolving workflows, full rewind, and explicit-consent gates on every real-world action. Built to help xAI and Grok win."
+author: "@JanSol0s"
+license: "Apache-2.0"
+
+# ----------------------------------------------------------------------------
+# metadata: discovery + cataloguing
+# ----------------------------------------------------------------------------
+metadata:
+  display_name: "Self-Evolving Personal OS"
+  tagline: "Your second brain on Windows — auto-improving, never leaks."
+  categories: ["super-agent", "personal", "second-brain", "productivity"]
+  tags: ["streamlit", "mem0", "qdrant", "langfuse", "promptfoo", "deepeval", "windows-first", "privacy-first"]
+  language: "en"
+  homepage: "https://github.com/AgentMindCloud/grok-agent"
+  repository: "github.com/AgentMindCloud/grok-agent"
+  docs:       "github.com/AgentMindCloud/grok-agent/blob/main/templates/super-agents/self-evolving-personal-os/README.md"
+  demo_video: "templates/super-agents/self-evolving-personal-os/DEMO.md"
+
+# ----------------------------------------------------------------------------
+# install: the "grok install this" primitive
+# Paste this manifest into an X post; the install action triggers the
+# command below on the user's Windows 11 machine.
+# ----------------------------------------------------------------------------
+install:
+  one_click: true
+  install_command: "grok-agent install self-evolving-personal-os"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+ (PowerShell 7.x recommended)"
+    - "Google Chrome (latest)"
+  optional_prerequisites:
+    - "Node.js 20+ (only when opting into Mastra orchestration)"
+    - "Qdrant server (local docker run -p 6333:6333 qdrant/qdrant — falls back to in-process when missing)"
+    - "Langfuse account (only when LANGFUSE_PUBLIC_KEY + LANGFUSE_SECRET_KEY are set)"
+    - "Google Calendar OAuth token (only when GCAL_OAUTH_TOKEN is set)"
+    - "Gmail OAuth token (only when GMAIL_OAUTH_TOKEN is set)"
+    - "Obsidian vault path (only when OBSIDIAN_VAULT_PATH is set)"
+  one_command_install: |
+    git clone https://github.com/AgentMindCloud/grok-agent ;
+    cd grok-agent\templates\super-agents\self-evolving-personal-os ;
+    python -m pip install -r requirements.txt ;
+    streamlit run dashboard.py
+
+# ----------------------------------------------------------------------------
+# windows: Windows 11 specifics
+# ----------------------------------------------------------------------------
+windows:
+  launcher: "dashboard.py"
+  launch_command: "streamlit run dashboard.py"
+  appdata_folder:    "grok-agent/self-evolving-personal-os"
+  log_folder:        "grok-agent/self-evolving-personal-os/logs"
+  cache_folder:      "grok-agent/self-evolving-personal-os/cache"
+  provenance_folder: "grok-agent/self-evolving-personal-os/provenance"
+  eval_folder:       "grok-agent/self-evolving-personal-os/eval"
+  workflows_folder:  "grok-agent/self-evolving-personal-os/workflows"
+  briefings_folder:  "grok-agent/self-evolving-personal-os/briefings"
+  min_powershell_version: "5.1"
+  requires_admin:    false
+  chrome_only:       true
+  default_port:      8502  # one above Living Narrative Fabric's 8501 so both Super Agents coexist
+  scheduled_task:
+    enabled:    true
+    name:       "GrokAgent-PersonalOS-MorningBrief"
+    schedule:   "DAILY"
+    start_time: "07:00"
+    command:    "python -m self_evolving_personal_os.cli morning_brief"
+    consent_required: true
+  env_vars_optional:
+    - "XAI_API_KEY"
+    - "GCAL_OAUTH_TOKEN"
+    - "GMAIL_OAUTH_TOKEN"
+    - "OBSIDIAN_VAULT_PATH"
+    - "OPENWEATHERMAP_KEY"
+    - "NEWSAPI_KEY"
+    - "LANGFUSE_PUBLIC_KEY"
+    - "LANGFUSE_SECRET_KEY"
+    - "LANGFUSE_HOST"
+    - "QDRANT_URL"
+    - "MASTRA_HTTP_URL"
+
+# ----------------------------------------------------------------------------
+# grok: model + system-prompt configuration
+# ----------------------------------------------------------------------------
+grok:
+  model: "grok-4.3"
+  temperature: 0.4
+  max_tokens: 8192
+  system_prompt_file: "prompts/system.md"
+  user_template_file: "prompts/user_templates.md"
+  tool_calling: true
+  vision: false
+  personalisation:
+    style_anchor_file: "prompts/style_anchor.md"
+    workflow_journal:  "workflows/journal.jsonl"
+
+# ----------------------------------------------------------------------------
+# multi_agent: orchestration role + delegation
+# ----------------------------------------------------------------------------
+multi_agent:
+  role: "orchestrator"
+  delegates_to:
+    - "living-narrative-fabric"        # for public-narrative context
+    - "cross-reality-action-fabric"    # for the consent-gated action layer
+  shared_memory: "mem0://grok-agent-shared"
+  message_bus: null
+  max_concurrent_workers: 2
+
+# ----------------------------------------------------------------------------
+# public_apis: Slot-4 connectors — every external surface the agent can read
+# ----------------------------------------------------------------------------
+public_apis:
+  - name: "x_personal"
+    base_url: "via_grok_4.3"
+    auth_env_var: "XAI_API_KEY"
+    privacy: "user-scoped"          # only the authenticated user's mentions/DMs/lists/bookmarks
+    source_authority: 0.40
+    scope: ["mentions", "dms", "lists", "bookmarks"]
+  - name: "gcal"
+    base_url: "https://www.googleapis.com/calendar/v3"
+    auth_env_var: "GCAL_OAUTH_TOKEN"
+    auth: "optional"
+    privacy: "local-only"
+    source_authority: 0.95
+    default_mode: "read-only"
+  - name: "gmail"
+    base_url: "https://gmail.googleapis.com/gmail/v1"
+    auth_env_var: "GMAIL_OAUTH_TOKEN"
+    auth: "optional"
+    privacy: "local-only"
+    source_authority: 0.95
+    default_mode: "read-only"
+  - name: "local_notes"
+    base_url: "(local file system)"
+    auth_env_var: "OBSIDIAN_VAULT_PATH"
+    auth: "none"
+    privacy: "local-only"
+    source_authority: 1.00
+  - name: "weather"
+    base_url: "https://api.openweathermap.org/data/3.0"
+    auth_env_var: "OPENWEATHERMAP_KEY"
+    auth: "optional"
+    privacy: "no_pii_sent"
+    source_authority: 0.85
+  - name: "news_personal"
+    base_url: "https://newsapi.org/v2"
+    auth_env_var: "NEWSAPI_KEY"
+    auth: "optional"
+    privacy: "no_pii_sent"
+    source_authority: 0.65
+    scope: ["personalised"]            # filtered to the user's stored interest set
+
+# ----------------------------------------------------------------------------
+# memory: Slot 3 — Mem0 + Qdrant, but personal-scoped
+# ----------------------------------------------------------------------------
+memory:
+  enabled: true
+  provider: "mem0"
+  vector_store:
+    backend: "qdrant"
+    url: "http://localhost:6333"
+    collection_prefix: "self-evolving-personal-os"
+  episodic: true
+  semantic: true
+  procedural: true                    # LEARNED ROUTINES — unique to this agent
+  retention_days: 1825                # 5 years; user can shorten in dashboard Settings
+  encryption_at_rest: true            # DPAPI-backed when available
+  fallback:
+    structured: "sqlite"
+    vectors:    "in-process"
+    embeddings: "hash-stub"
+  personal_collections:
+    - "personal_notes"
+    - "personal_briefings"
+    - "personal_workflows"
+    - "personal_patterns"
+    - "x_personal_threads"
+
+# ----------------------------------------------------------------------------
+# provenance: Slot 5 — append-only JSONL + optional Langfuse
+# ----------------------------------------------------------------------------
+provenance:
+  enabled: true
+  log_path: "$env:LOCALAPPDATA\\grok-agent\\self-evolving-personal-os\\provenance\\events.jsonl"
+  cite_sources: true
+  versioned_synthesis: true
+  contradiction_detection: true
+  append_only: true
+  redact_pii_before_langfuse: true   # extra protection on top of Article X
+  langfuse:
+    enabled: false
+    public_key_env_var: "LANGFUSE_PUBLIC_KEY"
+    secret_key_env_var: "LANGFUSE_SECRET_KEY"
+    host: "https://cloud.langfuse.com"
+
+# ----------------------------------------------------------------------------
+# constitution: see constitution.md for the full text
+# ----------------------------------------------------------------------------
+constitution:
+  file: "constitution.md"
+  rules:
+    - "User data is sacred — PII never leaves the machine without explicit consent (Article II)."
+    - "Self-improvement is conservative — every workflow change requires human approval (Article III)."
+    - "Personal memory is versioned and rewindable (Article IV)."
+    - "Provenance is append-only — no mutations, no deletes (Article V)."
+    - "The 4-metric Briefing Trust Score formula is locked (Article VI)."
+    - "Every emitted briefing carries ≥3 cross-template bridges (Article VII)."
+    - "Audit triggers fire on memory drift, recall miss, or trust drop below 50 (Article VIII)."
+    - "Every real-world action (calendar, files, scheduling, X post) requires explicit consent (Article IX)."
+    - "All user data lives under $env:LOCALAPPDATA, encrypted at rest where the OS supports it (Article X)."
+  consent_gates:
+    - "publish_briefing"
+    - "modify_calendar"
+    - "send_email"
+    - "post_to_x"
+    - "send_dm"
+    - "modify_local_files_outside_appdata"
+    - "apply_workflow_change"
+    - "export_personal_log"
+    - "sync_to_cloud"
+  hard_refusals:
+    - "Send any user PII to a public API beyond what the connector explicitly declares."
+    - "Auto-apply workflow changes without explicit user approval."
+    - "Mutate or delete provenance events."
+    - "Take any real-world action without an explicit user click."
+    - "Post to X impersonating the user without per-post consent."
+
+# ----------------------------------------------------------------------------
+# safety: PII handling, retention, scanner severity, cost limits, HITL
+# ----------------------------------------------------------------------------
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 1825
+  scanner_severity_floor: "warn"
+  forbidden_actions:
+    - "scrape_authenticated_x_content"
+    - "impersonate_user_identity"
+    - "bypass_safety_scanner"
+    - "auto_apply_workflow_change"
+    - "leak_pii_to_langfuse"
+    - "mutate_provenance_events"
+  disclaimers:
+    real_world_action_consent: true   # Constitution Article V.3 / Article IX
+    not_financial_advice:      false  # this agent does not produce financial guidance
+    not_tax_advice:            false  # nor tax guidance
+    not_medical_advice:        true   # the morning brief touches calendar + lifestyle
+  cost_limits:
+    usd_per_session_max: 1.50
+    usd_per_day_max: 5.00
+    tokens_per_session_max: 300000
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "publish_briefing"
+      - "modify_calendar"
+      - "send_email"
+      - "post_to_x"
+      - "send_dm"
+      - "apply_workflow_change"
+      - "export_personal_log"
+      - "any cost above $0.50"
+
+# ----------------------------------------------------------------------------
+# evaluation: Slot 6 — Promptfoo + DeepEval weekly loop
+# ----------------------------------------------------------------------------
+evaluation:
+  enabled: true
+  promptfoo:
+    enabled: true
+    config: "eval/promptfoo.yaml"
+    test_count: 21
+    categories:
+      - "personal_recall"
+      - "briefing_quality"
+      - "workflow_evolution"
+      - "constitution"
+      - "audit"
+  deepeval:
+    enabled: true
+    suite: "eval/deepeval_suite.py"
+    metrics:
+      - "PersonalRecallAccuracy"
+      - "BriefingTrustScore"
+      - "WorkflowEvolutionSafety"
+      - "ConstitutionCompliance"
+    formula_weights:
+      PersonalRecallAccuracy:    0.30
+      BriefingTrustScore:        0.30
+      WorkflowEvolutionSafety:   0.25
+      ConstitutionCompliance:    0.15
+  langfuse_traces: true
+  weekly_loop: true
+  history_path: "$env:LOCALAPPDATA\\grok-agent\\self-evolving-personal-os\\eval\\history.sqlite3"
+
+# ----------------------------------------------------------------------------
+# briefing_trust: the canonical 4-metric formula (Article VI)
+# Locked at the manifest level so external tools can verify the orchestrator
+# never deviates without a manifest bump.
+# ----------------------------------------------------------------------------
+briefing_trust:
+  formula: "round(0.30·PersonalRecallAccuracy + 0.30·DataFreshness + 0.25·WorkflowFitScore + 0.15·NoiseFloor)"
+  weights:
+    Personal recall accuracy: 0.30
+    Data freshness:           0.30
+    Workflow fit score:       0.25
+    Noise floor:              0.15
+  audit_triggers:
+    recall_miss_gt:    3
+    sources_lt:        2
+    trust_score_lt:   50
+
+# ----------------------------------------------------------------------------
+# bridges: mandatory ≥3 cross-template / cross-Super-Agent links (Article VII)
+# ----------------------------------------------------------------------------
+bridges:
+  min_count: 3
+  links:
+    - "living-narrative-fabric"        # Super Agent #1 — public-narrative context for personal claims
+    - "cross-reality-action-fabric"    # Super Agent #3 — consent-gated action layer
+    - "content-idea-generator"         # creator template — personal observations → posts
+    - "reply-drafter"                  # creator template — drafts reply suggestions
+    - "dm-triager"                     # creator template — DM prioritisation
+    - "mention-summarizer"             # creator template — mention digest in morning brief
+    - "follower-quality-analyzer"      # creator template — relationship-graph signal
+
+# ----------------------------------------------------------------------------
+# tools: every Slot-2 → Slot-7 component the orchestrator calls
+# ----------------------------------------------------------------------------
+tools:
+  - name: "morning_brief"
+    type: "local_function"
+    description: "Generate the daily Morning Brief from personal memory + calendar + X mentions + weather + personalised news. Emits a versioned BriefingVersion."
+    module: "orchestrator"
+    function: "PersonalOS.morning_brief"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          for_date:   { type: "string", description: "ISO date (default: today)" }
+          time_zone:  { type: "string", default: "Asia/Ho_Chi_Minh" }
+          include:    { type: "array", items: { type: "string" }, default: ["calendar", "mentions", "news", "weather", "open_tasks"] }
+        required: []
+
+  - name: "remember_personal"
+    type: "local_function"
+    description: "Append-only store of a personal note, observation, or pattern. Carries full provenance (source, captured_at, source_id)."
+    module: "memory"
+    function: "PersonalMemoryStore.remember"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          subject:   { type: "string" }
+          predicate: { type: "string" }
+          value:     { type: "string" }
+          source:    { type: "string", description: "manual | x_personal | gcal | gmail | local_notes" }
+          source_id: { type: "string" }
+        required: ["subject", "predicate", "value", "source", "source_id"]
+
+  - name: "recall_personal"
+    type: "local_function"
+    description: "Retrieve from personal memory by subject, predicate, source, or vector similarity. Honors the retention window."
+    module: "memory"
+    function: "PersonalMemoryStore.recall"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          query:           { type: "string" }
+          since:           { type: "string", description: "ISO date" }
+          source_filter:   { type: "array", items: { type: "string" } }
+          k:               { type: "integer", default: 10 }
+        required: ["query"]
+
+  - name: "evolve_workflow"
+    type: "local_function"
+    description: "Analyse the workflow journal + recent briefings + procedural memory and emit a tuple[WorkflowSuggestion, ...]. Dry-run by default."
+    module: "eval"
+    function: "PersonalOSImprovementLoop.evolve_workflow"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          dry_run:           { type: "boolean", default: true }
+          horizon_days:      { type: "integer", default: 30 }
+          require_approval:  { type: "boolean", default: true }
+        required: []
+
+  - name: "apply_workflow_change"
+    type: "local_function"
+    description: "CONSENT-GATED. Apply a previously-emitted WorkflowSuggestion. Default dry_run=true; user must flip to false in the Improvements tab."
+    module: "eval"
+    function: "PersonalOSImprovementLoop.apply_workflow_change"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          suggestion_id: { type: "string" }
+          dry_run:       { type: "boolean", default: true }
+          rationale:     { type: "string" }
+        required: ["suggestion_id"]
+
+  - name: "rewind_briefing"
+    type: "local_function"
+    description: "Walk the parent_version_id chain back to a prior BriefingVersion. Append-only — never mutates."
+    module: "memory"
+    function: "PersonalMemoryStore.rewind_to_briefing"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          briefing_id: { type: "string" }
+        required: ["briefing_id"]
+
+  - name: "flag_pattern"
+    type: "local_function"
+    description: "Append-only flag against a recurring personal pattern (positive amplify or negative cease). Reason is mandatory."
+    module: "memory"
+    function: "PersonalMemoryStore.flag_pattern"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          pattern_id:  { type: "string" }
+          stance:      { type: "string", enum: ["amplify", "cease", "monitor"] }
+          reason:      { type: "string" }
+          flagged_by:  { type: "string", default: "user" }
+        required: ["pattern_id", "stance", "reason"]
+
+  - name: "export_personal_log"
+    type: "local_function"
+    description: "CONSENT-GATED. Render a Markdown personal-provenance report covering Brief Snapshot, Recall Trail, Workflow Evolution, Patterns Flagged, and Bridges."
+    module: "provenance"
+    function: "PersonalOSProvenance.export_report"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          briefing_id: { type: "string" }
+          format:      { type: "string", enum: ["markdown"], default: "markdown" }
+        required: ["briefing_id"]
+
+  - name: "x_personal_fetch"
+    type: "public_api"
+    module: "connectors.x_personal_client"
+    function: "XPersonalConnector.fetch"
+    api_ref: "x_personal"
+    description: "Pull the authenticated user's mentions / DMs / lists / bookmarks via Grok 4.3 tool-calling. Read-only; never posts."
+
+  - name: "gcal_fetch"
+    type: "public_api"
+    module: "connectors.gcal_client"
+    function: "GcalConnector.fetch"
+    api_ref: "gcal"
+    description: "Pull the user's Google Calendar events (read-only by default). All write paths flow through apply_workflow_change → consent gate."
+
+  - name: "gmail_fetch"
+    type: "public_api"
+    module: "connectors.gmail_client"
+    function: "GmailConnector.fetch"
+    api_ref: "gmail"
+    description: "Pull the user's Gmail headers + labels (read-only by default). Body is fetched lazily and never sent to a public LLM without consent."
+
+  - name: "local_notes_fetch"
+    type: "public_api"
+    module: "connectors.local_notes_client"
+    function: "LocalNotesConnector.fetch"
+    api_ref: "local_notes"
+    description: "Read the user's Obsidian vault / Markdown notes folder. Never writes; never moves files."
+
+  - name: "weather_fetch"
+    type: "public_api"
+    module: "connectors.weather_client"
+    function: "WeatherConnector.fetch"
+    api_ref: "weather"
+    description: "Pull the user's local weather forecast for the morning brief. PII-safe — only sends a coarse-grained location."
+
+  - name: "news_personal_fetch"
+    type: "public_api"
+    module: "connectors.news_personal_client"
+    function: "NewsPersonalConnector.fetch"
+    api_ref: "news_personal"
+    description: "Pull recent NewsAPI articles filtered to the user's stored interest set. Interests live locally and are never sent upstream."
+
+# ----------------------------------------------------------------------------
+# dependencies: Python deps mirrored from requirements.txt (Slot 2 ships these)
+# ----------------------------------------------------------------------------
+dependencies:
+  python:
+    version: ">=3.12,<3.13"
+    packages:
+      - "pydantic>=2.7,<3.0"
+      - "langgraph>=0.2.0,<1.0"
+      - "httpx>=0.27,<1.0"
+      - "pyyaml>=6.0,<7.0"
+      - "streamlit>=1.33,<2.0"
+      - "pandas>=2.2,<3.0"
+      - "plotly>=5.22,<6.0"
+  optional_packages:
+      - "mem0ai      # Slot 3 — falls back to direct SQLite when missing"
+      - "qdrant-client # Slot 3 — falls back to in-process cosine when missing"
+      - "sentence-transformers # Slot 3 — falls back to hash-stub embedding when missing"
+      - "google-api-python-client # Slot 4 — gcal_client, gmail_client; falls back to stub when missing"
+      - "google-auth-oauthlib # Slot 4 — OAuth flows for gcal/gmail"
+      - "requests   # Slot 4 — connectors fall back to deterministic stubs when missing"
+      - "langfuse   # Slot 5 — provenance becomes JSONL-only when missing"
+      - "deepeval   # Slot 6 — eval runs deterministic metrics only when missing"
+
+# ----------------------------------------------------------------------------
+# entry_points: structured map for the dashboard + CLI entries
+# ----------------------------------------------------------------------------
+entry_points:
+  cli:
+    - name: "morning_brief"
+      command: "python orchestrator.py morning_brief [--for-date <YYYY-MM-DD>] [--time-zone <tz>] [--out <path>]"
+    - name: "memory_smoke"
+      command: "python memory/__init__.py"
+    - name: "connectors_smoke"
+      command: "python connectors/__init__.py"
+    - name: "provenance_smoke"
+      command: "python provenance/__init__.py"
+    - name: "eval_smoke"
+      command: "python eval/__init__.py"
+    - name: "dashboard_smoke"
+      command: "python dashboard.py --smoke"
+  ui:
+    - name: "dashboard"
+      command: "streamlit run dashboard.py"
+      port: 8502
+      tabs:
+        - "Morning Brief"
+        - "Personal Memory"
+        - "Workflow Evolution"
+        - "Patterns"
+        - "Provenance"
+        - "Improvements"
+        - "Settings"
+
+# ----------------------------------------------------------------------------
+# files: every artifact this Super Agent will ship across its 8 slots
+# ----------------------------------------------------------------------------
+files:
+  manifest:    "grok-agent.yaml"
+  constitution: "constitution.md"
+  readme:      "README.md"
+  demo:        "DEMO.md"
+  launch:      "X_LAUNCH_THREAD.md"
+  requirements: "requirements.txt"
+  orchestrator:
+    - "orchestrator.py"
+    - "graph.py"
+  memory:
+    - "memory/__init__.py"
+    - "memory/mem0_setup.py"
+    - "memory/qdrant_index.py"
+  connectors:
+    - "connectors/__init__.py"
+    - "connectors/x_personal_client.py"
+    - "connectors/gcal_client.py"
+    - "connectors/gmail_client.py"
+    - "connectors/local_notes_client.py"
+    - "connectors/weather_client.py"
+    - "connectors/news_personal_client.py"
+  provenance:
+    - "provenance/__init__.py"
+    - "provenance/log.py"
+    - "provenance/langfuse_hooks.py"
+  eval:
+    - "eval/__init__.py"
+    - "eval/deepeval_suite.py"
+    - "eval/promptfoo.yaml"
+  dashboard:
+    - "dashboard.py"
+  workflows:
+    - "workflows/journal.jsonl"
+    - "workflows/style_anchor.md"

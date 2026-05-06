@@ -8,10 +8,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Smoke test for the Cross-Reality Action Fabric provenance layer (P131).
+"""Smoke test for the Cross-Reality Action Fabric provenance layer.
 
-Layered on top of the 221 prior P121–P130 checks. This suite adds 22
-new checks across five acceptance areas:
+Covers both the original P131 surface and the P142 action-centric
+extensions. Six acceptance areas, ~50 checks total:
 
 1. Schema + module surface — ActionProvenanceRecord shape, EVENT_KINDS
    coverage, ALL_RULE_NUMBERS, JSONL roundtrip, package re-exports.
@@ -26,6 +26,13 @@ new checks across five acceptance areas:
 5. Langfuse hooks — default backend is stub:offline; opt_in=True with
    no creds also returns the stub; mirror trace file populated; PII
    redacted on every span.
+6. **P142 action-centric API** — ProvenanceLogger subclass,
+   ProvenanceEntry Pydantic model, RollbackChain, log_action_event /
+   log_memory_event, query_by_action_id / query_by_consent_level /
+   query_by_date_range, reconstruct_rollback_chain, export_json /
+   export_markdown with clickable anchors, LangfuseHooks lifecycle
+   methods, attach_to_connectors auto-instrumentation, end-to-end
+   connector → provenance flow.
 
 Run on Windows (canonical):
 
@@ -44,6 +51,7 @@ import os
 import shutil
 import sys
 import traceback
+from datetime import datetime, timezone
 from pathlib import Path
 
 from graph import (  # type: ignore
@@ -56,23 +64,37 @@ from graph import (  # type: ignore
 )
 from memory import MEMORY_WRITE_GATE  # type: ignore
 from provenance import (  # type: ignore
+    ACTION_EVENT_KINDS,
     ALL_RULE_NUMBERS,
     ActionProvenanceRecord,
     EVENT_KINDS,
     LANGFUSE_BACKEND_NAME,
     LangfuseClient,
+    LangfuseHooks,
     LocalProvenanceLogger,
+    P142_SCHEMA_VERSION,
+    ProvenanceEntry,
+    ProvenanceLogger,
     ROLLBACK_OUTCOME,
+    RollbackChain,
+    attach_langfuse_hooks,
     attach_provenance,
+    attach_to_connectors,
     current_log_path,
+    export_audit_json,
+    export_audit_markdown,
     export_audit_report,
     get_default_logger,
     get_langfuse_client,
+    get_provenance_logger,
+    have_langfuse_credentials,
     reset_default_logger,
     reset_langfuse_client,
+    reset_provenance_logger,
     span_from_record,
     stub_trace_path,
     summarise_run,
+    trace_name_for_action,
 )
 
 
@@ -424,11 +446,344 @@ def test_langfuse_hooks() -> None:
         "(memory_ingest + provenance_ingest both present)")
 
 
+# -- Section S.2.6. P142 action-centric API ------------------------------
+
+def test_p142_action_centric_api() -> None:
+    print("[6/6] P142 action-centric API ------------------------------------")
+    reset_default_logger()
+    reset_provenance_logger()
+    reset_langfuse_client()
+    try:
+        shutil.rmtree(appdata_root(), ignore_errors=True)
+    except OSError:
+        pass
+
+    # 6.1 — module surface
+    if not issubclass(ProvenanceLogger, LocalProvenanceLogger):
+        _fail("ProvenanceLogger subclass",
+              "must subclass LocalProvenanceLogger")
+    _ok("ProvenanceLogger subclasses LocalProvenanceLogger (P142 keeps "
+        "P131 contract)")
+
+    if P142_SCHEMA_VERSION != "p142.v1":
+        _fail("P142_SCHEMA_VERSION", P142_SCHEMA_VERSION)
+    _ok(f"P142_SCHEMA_VERSION = {P142_SCHEMA_VERSION!r}")
+
+    if set(ACTION_EVENT_KINDS) != {
+        "approval_granted", "approval_refused",
+        "action_executed", "action_failed",
+        "rollback_executed", "rollback_failed",
+    }:
+        _fail("ACTION_EVENT_KINDS", str(ACTION_EVENT_KINDS))
+    _ok(f"ACTION_EVENT_KINDS lists exactly {sorted(ACTION_EVENT_KINDS)}")
+
+    if trace_name_for_action("act-xyz") != "crf-action-act-xyz":
+        _fail("trace_name_for_action",
+              trace_name_for_action("act-xyz"))
+    if trace_name_for_action("") != "crf-action-anonymous":
+        _fail("trace_name_for_action empty",
+              trace_name_for_action(""))
+    _ok("trace_name_for_action returns 'crf-action-{action_id}'")
+
+    if have_langfuse_credentials() and not (
+        os.environ.get("LANGFUSE_PUBLIC_KEY")
+        and os.environ.get("LANGFUSE_SECRET_KEY")
+    ):
+        _fail("have_langfuse_credentials", "false-positive")
+    _ok(f"have_langfuse_credentials() = {have_langfuse_credentials()}")
+
+    # 6.2 — factory + caching
+    log = get_provenance_logger(user_id="alice", refresh=True)
+    if not isinstance(log, ProvenanceLogger):
+        _fail("get_provenance_logger type", str(type(log)))
+    if log.user_id != "alice":
+        _fail("get_provenance_logger user_id", log.user_id)
+    cached = get_provenance_logger(user_id="alice")
+    if cached is not log:
+        _fail("get_provenance_logger caching", "returned different instance")
+    _ok("get_provenance_logger returns cached ProvenanceLogger singleton")
+
+    # 6.3 — log_action_event happy path
+    aid_1 = "act::p142::demo-1"
+    entry = log.log_action_event(
+        event_kind="approval_granted",
+        action_id=aid_1,
+        consent_token="ct-p142-1",
+        tool="weather_lookup",
+        consent_level="session",
+        rollback_id="rb-1",
+        before_state={"locale": "Hanoi"},
+        plan_id="plan-1",
+        step=1,
+    )
+    if not isinstance(entry, ProvenanceEntry):
+        _fail("log_action_event return type", str(type(entry)))
+    if entry.action_id != aid_1 or entry.consent_level != "session":
+        _fail("log_action_event payload",
+              f"got action_id={entry.action_id} level={entry.consent_level}")
+    _ok("log_action_event writes ProvenanceEntry with consent_level + "
+        "rollback_id + action_id")
+
+    # 6.4 — log_memory_event maps memory kinds → event_kind
+    log.log_memory_event(
+        kind="action", action_id=aid_1,
+        consent_token="ct-p142-1", tool="weather_lookup",
+        outcome="success", consent_level="session",
+        payload={"summary": "[stub] forecast OK"},
+    )
+    log.log_memory_event(
+        kind="rollback", action_id=aid_1, consent_token="ct-p142-1",
+        tool="weather_lookup", outcome="rolled_back",
+        consent_level="session", rollback_id="rb-1",
+        rollback_from=aid_1,
+    )
+    by_action = log.query_by_action_id(aid_1)
+    kinds_seen = {e.event_kind for e in by_action}
+    if "approval_granted" not in kinds_seen \
+            or "action_executed" not in kinds_seen \
+            or "rollback_executed" not in kinds_seen:
+        _fail("log_memory_event mapping", str(kinds_seen))
+    _ok(f"log_memory_event maps memory kinds → event_kinds correctly "
+        f"({sorted(kinds_seen)})")
+
+    # 6.5 — query_by_consent_level
+    log.log_action_event(
+        event_kind="action_executed",
+        action_id="act::persist-1",
+        consent_token="ct-persist", tool="x_search",
+        consent_level="persistent",
+        outcome="success",
+    )
+    persistent_only = log.query_by_consent_level("persistent")
+    if not persistent_only:
+        _fail("query_by_consent_level", "no rows")
+    if any(e.consent_level != "persistent" for e in persistent_only):
+        _fail("query_by_consent_level leak",
+              "non-persistent row surfaced")
+    _ok(f"query_by_consent_level('persistent') returns "
+        f"{len(persistent_only)} row(s) — all level-pure")
+
+    # 6.6 — query_by_date_range
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    in_range = log.query_by_date_range(today, today)
+    if len(in_range) < 4:
+        _fail("query_by_date_range",
+              f"expected ≥4 rows for today, got {len(in_range)}")
+    _ok(f"query_by_date_range({today}, {today}) returns "
+        f"{len(in_range)} row(s)")
+
+    swapped = log.query_by_date_range(today, today)
+    if [e.record_id for e in swapped] != [e.record_id for e in in_range]:
+        _fail("query_by_date_range swap", "auto-swap broke ordering")
+    _ok("query_by_date_range auto-swaps reversed args without errors")
+
+    # 6.7 — reconstruct_rollback_chain
+    chain = log.reconstruct_rollback_chain(aid_1)
+    if not isinstance(chain, RollbackChain):
+        _fail("reconstruct_rollback_chain type", str(type(chain)))
+    if chain.action_id != aid_1:
+        _fail("chain.action_id", chain.action_id)
+    if chain.approval is None or chain.forward_event is None \
+            or chain.rollback is None:
+        _fail("chain completeness",
+              f"approval={chain.approval is not None} "
+              f"forward={chain.forward_event is not None} "
+              f"rollback={chain.rollback is not None}")
+    if not chain.reversed:
+        _fail("chain.reversed", "rollback present but reversed=False")
+    _ok("reconstruct_rollback_chain returns RollbackChain with "
+        "approval + forward + rollback (reversed=True)")
+
+    # 6.8 — export_json
+    export = log.export_json(action_id=aid_1)
+    if export["schema_version"] != P142_SCHEMA_VERSION:
+        _fail("export_json schema_version", export["schema_version"])
+    if export["entry_count"] < 3:
+        _fail("export_json entries",
+              f"too few: {export['entry_count']}")
+    if not export["rollback_chains"]:
+        _fail("export_json chains", "no chains")
+    _ok(f"export_json(action_id) produces {export['entry_count']} "
+        f"entries + {len(export['rollback_chains'])} chain(s) + "
+        f"schema {export['schema_version']}")
+
+    full_export = log.export_json()
+    if full_export["scope"]["kind"] != "all":
+        _fail("export_json no-filter scope",
+              str(full_export["scope"]))
+    _ok("export_json with no filter exports the full audit trail")
+
+    # 6.9 — export_markdown with clickable anchors
+    md = log.export_markdown(action_id=aid_1)
+    if "# Cross-Reality Action Fabric — P142 Audit Export" not in md:
+        _fail("export_markdown header", "missing")
+    expected_anchor = f"#act-{aid_1.replace(':', '-')}"
+    if expected_anchor not in md:
+        _fail("export_markdown anchor",
+              f"missing '{expected_anchor}'")
+    if "Rollback chains" not in md or "Per-entry trail" not in md:
+        _fail("export_markdown sections",
+              "missing chain or trail section")
+    _ok(f"export_markdown emits clickable {expected_anchor} anchor + "
+        "Rollback/Trail sections")
+
+    # 6.10 — module-level export helpers
+    json_export = export_audit_json(action_id=aid_1, logger=log)
+    md_export   = export_audit_markdown(action_id=aid_1, logger=log)
+    if json_export["entry_count"] < 1 or "P142 Audit Export" not in md_export:
+        _fail("module-level exporters", "broken")
+    _ok("module-level export_audit_json + export_audit_markdown work")
+
+    # 6.11 — Pydantic ProvenanceEntry refuses non-string event_kind via
+    #          its parent (typing) and accepts a record-built instance.
+    rebuilt = ProvenanceEntry.from_record(log.query_by_run_id(log.run_id)[0])
+    if not isinstance(rebuilt, ProvenanceEntry):
+        _fail("ProvenanceEntry.from_record", str(type(rebuilt)))
+    _ok("ProvenanceEntry.from_record adapts the P131 dataclass")
+
+    # 6.12 — LangfuseHooks default + lifecycle methods
+    hooks = attach_langfuse_hooks(opt_in=False, refresh=True)
+    if not isinstance(hooks, LangfuseHooks):
+        _fail("attach_langfuse_hooks type", str(type(hooks)))
+    if hooks.opt_in or hooks.is_active:
+        _fail("LangfuseHooks default", "should be inert by default")
+    if hooks.backend_name != "stub:offline":
+        _fail("LangfuseHooks backend default", hooks.backend_name)
+    _ok("attach_langfuse_hooks(opt_in=False) returns inert "
+        "stub:offline hooks (Rule 6 default)")
+
+    span_start = hooks.on_action_start(
+        action_id="act::lf-1", tool="weather_lookup",
+        consent_token="ct-lf-1", consent_level="session",
+        description="forecast", rollback_id=None,
+    )
+    if not span_start or span_start.get("event_kind") != "action_started":
+        _fail("on_action_start", str(span_start))
+    _ok("LangfuseHooks.on_action_start returns an action_started span")
+
+    span_end = hooks.on_action_end(
+        action_id="act::lf-1", tool="weather_lookup",
+        outcome="success", consent_token="ct-lf-1",
+        consent_level="session", cost_usd=0.0,
+        outputs={"summary": "OK"},
+    )
+    if not span_end or span_end.get("event_kind") != "action_executed":
+        _fail("on_action_end", str(span_end))
+    _ok("LangfuseHooks.on_action_end returns an action_executed span")
+
+    span_app = hooks.on_approval(
+        action_id="act::lf-1", consent_token="ct-lf-1",
+        tool="weather_lookup", consent_level="session", scope="forecast",
+    )
+    if not span_app or span_app.get("event_kind") != "approval_granted":
+        _fail("on_approval", str(span_app))
+    _ok("LangfuseHooks.on_approval returns an approval_granted span")
+
+    span_rb = hooks.on_rollback(
+        action_id="act::lf-1", rollback_id="rb-lf-1",
+        tool="weather_lookup", consent_token="ct-lf-1",
+        outcome="rolled_back", rollback_script="echo undo",
+    )
+    if not span_rb or span_rb.get("event_kind") != "rollback_executed":
+        _fail("on_rollback", str(span_rb))
+    _ok("LangfuseHooks.on_rollback returns a rollback_executed span")
+
+    hooks.flush()
+    _ok("LangfuseHooks.flush is callable without raising")
+
+    # 6.13 — Empty action_id → no-op (defensive)
+    if hooks.on_action_start(
+        action_id="", tool="x", consent_token="t",
+    ) is not None:
+        _fail("hooks empty action_id", "should return None")
+    _ok("LangfuseHooks short-circuits on empty action_id (defensive)")
+
+    # 6.14 — attach_to_connectors auto-instruments + writes provenance
+    reset_provenance_logger()
+    try:
+        shutil.rmtree(appdata_root(), ignore_errors=True)
+    except OSError:
+        pass
+
+    from connectors import (  # type: ignore
+        build_connector_registry,
+    )
+    from memory import (  # type: ignore
+        get_action_memory_client,
+    )
+
+    consent = ConsentContext.from_iterable(
+        ("run_web_action", "run_powershell_local", MEMORY_WRITE_GATE),
+        consent_token="p142-attach",
+    )
+    mem_client = get_action_memory_client(
+        force_stub=True, consent=consent, refresh=True,
+    )
+    registry = build_connector_registry(
+        force_stub=True, consent=consent, memory_client=mem_client,
+    )
+    fresh_logger = get_provenance_logger(user_id="default", refresh=True)
+    fresh_hooks  = attach_langfuse_hooks(opt_in=False, refresh=True)
+    log_attached, hooks_attached = attach_to_connectors(
+        registry, logger=fresh_logger, hooks=fresh_hooks,
+    )
+    if log_attached is not fresh_logger:
+        _fail("attach_to_connectors logger", "wrong instance returned")
+    _ok("attach_to_connectors returns (logger, hooks) — same instances")
+
+    # Idempotency: a second attach is a no-op (no double-wrapping).
+    attach_to_connectors(registry, logger=fresh_logger, hooks=fresh_hooks)
+    _ok("attach_to_connectors is idempotent (re-instrument is a no-op)")
+
+    # End-to-end: one connector call should produce ≥3 provenance rows.
+    sh_result = registry.stagehand.execute_web_action(
+        action_plan="open feed and read",
+        consent_token="ct-attach-1",
+        rollback="navigate to home",
+        max_steps=2,
+    )
+    sh_aid = sh_result.provenance.action_id
+    rows = fresh_logger.query_by_action_id(sh_aid or "")
+    if len(rows) < 2:
+        _fail("attach end-to-end count",
+              f"expected ≥2 rows, got {len(rows)}")
+    if not any(r.event_kind == "approval_granted" for r in rows):
+        _fail("attach end-to-end approval",
+              "missing approval_granted")
+    if not any(r.event_kind == "action_executed" for r in rows):
+        _fail("attach end-to-end action",
+              "missing action_executed")
+    _ok(f"end-to-end: stagehand.execute_web_action wrote "
+        f"{len(rows)} provenance row(s) for action_id {sh_aid[:18] if sh_aid else 'n/a'}…")
+
+    # Rollback path also routes through provenance.
+    rb_result = registry.stagehand.execute_rollback(
+        rollback_script="navigate to home",
+        consent_token="ct-attach-1", action_id=sh_aid,
+        rollback_id="rb-attach-1",
+    )
+    if rb_result.outcome != "rolled_back":
+        _fail("attach rollback outcome", rb_result.outcome)
+    rows_after_rb = fresh_logger.query_by_action_id(sh_aid or "")
+    if not any(r.event_kind == "rollback_executed" for r in rows_after_rb):
+        _fail("attach rollback row",
+              "no rollback_executed row after execute_rollback")
+    _ok("attach_to_connectors captures rollback_executed rows too")
+
+    # 6.15 — chain after end-to-end
+    chain_e2e = fresh_logger.reconstruct_rollback_chain(sh_aid or "")
+    if not chain_e2e.reversed or chain_e2e.approval is None:
+        _fail("attach end-to-end chain",
+              f"reversed={chain_e2e.reversed} "
+              f"approval={chain_e2e.approval is not None}")
+    _ok("end-to-end RollbackChain has approval + forward + rollback")
+
+
 # -- Section S.3. Entry point ---------------------------------------------
 
 def main(argv: list[str] | None = None) -> int:  # noqa: ARG001
     print("=" * 70)
-    print("P131 Cross-Reality Action Fabric provenance smoke test")
+    print("P131 + P142 Cross-Reality Action Fabric provenance smoke test")
     print(f"Langfuse backend: {LANGFUSE_BACKEND_NAME}")
     print("=" * 70)
     try:
@@ -437,6 +792,7 @@ def main(argv: list[str] | None = None) -> int:  # noqa: ARG001
         test_attach_and_bulk_ingest()
         test_rollback_chain_across_runs()
         test_langfuse_hooks()
+        test_p142_action_centric_api()
     except SystemExit:
         print("=" * 70)
         print("RESULT: FAIL")
@@ -448,7 +804,8 @@ def main(argv: list[str] | None = None) -> int:  # noqa: ARG001
         print("RESULT: FAIL")
         return 1
     print("=" * 70)
-    print("RESULT: PASS — all 5 P131 acceptance areas covered")
+    print("RESULT: PASS — all 6 acceptance areas covered "
+          "(5 P131 + 1 P142 action-centric)")
     return 0
 
 

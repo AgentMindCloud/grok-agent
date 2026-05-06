@@ -101,6 +101,8 @@ __all__ = [
     "main",
     "register_connectors",
     "describe_connectors",
+    "register_provenance",
+    "describe_provenance",
 ]
 
 
@@ -530,6 +532,7 @@ def info(*, quiet: bool = False) -> dict:
     desc["appdata_root"]  = str(appdata_root())
     desc["all_gates"]     = list(ALL_GATES)
     desc["connectors"]    = describe_connectors()
+    desc["provenance"]    = describe_provenance()
     if not quiet:
         print(json.dumps(desc, indent=2, ensure_ascii=False, default=str))
     return desc
@@ -594,6 +597,81 @@ def describe_connectors() -> dict:
             "x_search":      registry.x_search.backend_name,
             "tools":         sorted(registry.all_clients().keys()),
             "memory_attached": registry.memory_client is not None,
+        }
+    except Exception as exc:  # pragma: no cover - defensive
+        return {"error": f"{type(exc).__name__}: {exc}"}
+
+
+# --- Section 4c. P142 provenance + Langfuse wiring (additive) -----------
+
+_PROVENANCE_LOGGER: Any = None
+_LANGFUSE_HOOKS:    Any = None
+
+
+def register_provenance(
+    *,
+    user_id:        str = "default",
+    langfuse_opt_in: bool = False,
+    refresh:        bool = False,
+    instrument:     bool = True,
+):
+    """Register the P142 :class:`ProvenanceLogger` and optional Langfuse
+    hooks, and (optionally) auto-instrument the active connector
+    registry so every connector call writes a provenance row.
+
+    Returns ``(logger, hooks)``. Callers can pass ``langfuse_opt_in=True``
+    after a positive user dialogue to switch the hooks from the offline
+    stub to the real backend (only effective when both
+    ``LANGFUSE_PUBLIC_KEY`` and ``LANGFUSE_SECRET_KEY`` are set —
+    otherwise the stub stays active).
+    """
+    global _PROVENANCE_LOGGER, _LANGFUSE_HOOKS
+    from provenance import (  # type: ignore
+        attach_langfuse_hooks,
+        attach_to_connectors,
+        get_provenance_logger,
+    )
+
+    if refresh or _PROVENANCE_LOGGER is None:
+        _PROVENANCE_LOGGER = get_provenance_logger(
+            user_id=user_id, refresh=refresh,
+        )
+    if refresh or _LANGFUSE_HOOKS is None or _LANGFUSE_HOOKS.opt_in != langfuse_opt_in:
+        _LANGFUSE_HOOKS = attach_langfuse_hooks(
+            opt_in=langfuse_opt_in, refresh=refresh,
+        )
+
+    if instrument:
+        registry = register_connectors(refresh=False)
+        attach_to_connectors(
+            registry,
+            logger=_PROVENANCE_LOGGER,
+            hooks=_LANGFUSE_HOOKS,
+            user_id=user_id,
+        )
+    return _PROVENANCE_LOGGER, _LANGFUSE_HOOKS
+
+
+def describe_provenance() -> dict:
+    """Return a small, JSON-serialisable summary of the active provenance
+    + Langfuse posture. Used by :func:`info`."""
+    try:
+        from provenance import (  # type: ignore
+            P142_SCHEMA_VERSION,
+            have_langfuse_credentials,
+            provenance_root,
+        )
+        logger = _PROVENANCE_LOGGER
+        hooks  = _LANGFUSE_HOOKS
+        return {
+            "schema":              P142_SCHEMA_VERSION,
+            "logger_attached":     logger is not None,
+            "logger_user_id":      getattr(logger, "user_id", None),
+            "log_root":            str(provenance_root()),
+            "langfuse_attached":   hooks is not None,
+            "langfuse_backend":    getattr(hooks, "backend_name", "stub:offline"),
+            "langfuse_active":     bool(getattr(hooks, "is_active", False)),
+            "langfuse_creds_set":  have_langfuse_credentials(),
         }
     except Exception as exc:  # pragma: no cover - defensive
         return {"error": f"{type(exc).__name__}: {exc}"}

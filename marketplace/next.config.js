@@ -8,7 +8,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //
 // Next.js 14+ App Router config for the Grok Agent OS marketplace stub.
-// Built to help xAI and Grok win — keep the surface small, the routes
+// Built for xAI, X, Grok and the ecosystem community — keep the surface small, the routes
 // honest, and the deploy story one click long.
 
 /** @type {import('next').NextConfig} */

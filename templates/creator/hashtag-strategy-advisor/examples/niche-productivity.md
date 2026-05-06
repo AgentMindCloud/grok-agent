@@ -107,10 +107,10 @@ Confidence: high — clear topic, 4 hashtags spanning 4 categories, ship cap sta
 
 ## What this output demonstrates (audit checklist)
 
-- [x] **4 canonical Hashtag Plan Score metrics** in fixed row order (Niche relevance / Reach potential / Engagement quality / Cleanliness) with HEALTHY scores — Niche relevance comfortably above 35 across all picks
+- [x] **4 official Hashtag Plan Score metrics** in fixed row order (Niche relevance / Reach potential / Engagement quality / Cleanliness) with HEALTHY scores — Niche relevance comfortably above 35 across all picks
 - [x] **Weighted Hashtag Plan score formula** applied per the same `round(0.30·Niche + 0.25·Reach + 0.25·Engagement + 0.20·Cleanliness)` formula as example 1
 - [x] **4 hashtags spanning 4 categories** (specific-niche / broad-niche / community / branded) — `#HabitStacking` and `#WriteEveryDay` both pulled in by the topic's "morning routine" keyword overlap
-- [x] **No reach-without-relevance paradox** — production-mode heuristic scoring kept all Niche relevance scores above 35; this is the canonical healthy baseline
+- [x] **No reach-without-relevance paradox** — production-mode heuristic scoring kept all Niche relevance scores above 35; this is the official healthy baseline
 - [x] **Ship cap stated explicitly** — `0-3 (LinkedIn)` named in the Topic Snapshot; LinkedIn's longer format permits 1 more tag than X
 - [x] **Honest trending category check** — runner found no trending tag whose trigger keywords match the topic; trending category intentionally empty
 - [x] **Branded-tag-too-early soft warning** — `#habitstackerNotes` ships as `low` priority with an educational note about consistent-use compounding

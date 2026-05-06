@@ -627,7 +627,7 @@ def _detect_pattern_for_group(
     skew_days = (max(times) - min(times)).total_seconds() / 86400.0
     recency = min(skew_days / 7.0, 1.0)
 
-    # Cross-source spread: distinct source count / 6 (the canonical fabric).
+    # Cross-source spread: distinct source count / 6 (the official fabric).
     sources = {i.source for i in group}
     cross = len(sources) / 6.0
 

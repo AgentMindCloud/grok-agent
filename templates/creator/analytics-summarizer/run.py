@@ -15,7 +15,7 @@ Built for xAI, X, Grok and the ecosystem community. ❤️
 
 This v1 runner is fully self-contained: it ships niche-aware offline metric
 bundles with deterministic top-3 performers per bucket, plus a strict 6-section
-synthesis pipeline that respects the 4 canonical metric rows and the 3+3
+synthesis pipeline that respects the 4 standard metric rows and the 3+3
 direction/magnitude vocabulary defined in `prompts/system.md` (auto-loaded).
 To wire to live Grok 4.3, replace the body of `generate_analytics_summary()`
 with a Grok call that consumes the system prompt and returns the same schema.
@@ -56,7 +56,7 @@ SYSTEM_PROMPT_PATH = Path(__file__).resolve().parent / "prompts" / "system.md"
 # Static data
 # ---------------------------------------------------------------------------
 
-CANONICAL_METRICS: Tuple[str, ...] = (
+STANDARD_METRICS: Tuple[str, ...] = (
     "impressions", "engagement", "reach", "follower_delta",
 )
 
@@ -296,7 +296,7 @@ def _bundle_for_bucket(bucket: str) -> Dict[str, Any]:
 
 
 def _records_from_bundle(bundle: Dict[str, Any], wanted: Optional[List[str]] = None) -> List[Dict[str, Any]]:
-    metric_names = wanted or list(CANONICAL_METRICS)
+    metric_names = wanted or list(STANDARD_METRICS)
     out: List[Dict[str, Any]] = []
     for name in metric_names:
         if name in bundle["metrics"]:
@@ -373,11 +373,11 @@ def _enriched_metric_rows(
     return rows
 
 
-def _ordered_canonical_rows(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    """Return rows in canonical order, with placeholders for missing metrics."""
+def _ordered_standard_rows(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Return rows in standard order, with placeholders for missing metrics."""
     by_metric = {r["metric"]: r for r in rows}
     out: List[Dict[str, Any]] = []
-    for name in CANONICAL_METRICS:
+    for name in STANDARD_METRICS:
         if name in by_metric:
             out.append(by_metric[name])
         else:
@@ -396,7 +396,7 @@ def _detect_garbage_batch(rows: List[Dict[str, Any]]) -> bool:
 
 
 def _build_trends(rows: List[Dict[str, Any]]) -> List[Dict[str, str]]:
-    """Generate 3-5 trends from the canonical metric rows."""
+    """Generate 3-5 trends from the standard metric rows."""
     by_metric = {r["metric"]: r for r in rows if r.get("current") is not None}
 
     trends: List[Dict[str, str]] = []
@@ -595,7 +595,7 @@ def _confidence_label(rows: List[Dict[str, Any]], top_posts: List[Dict[str, Any]
     else:
         label = "low"
     reason = (
-        f"{n_metrics}/4 canonical metrics present; {n_with_prev} with comparison baseline; "
+        f"{n_metrics}/4 standard metrics present; {n_with_prev} with comparison baseline; "
         f"{n_posts} top posts cited; compare_to={compare_to}."
     )
     return label, reason
@@ -621,7 +621,7 @@ def generate_analytics_summary(
       {
         "x_handle", "today", "metric_focus", "time_range", "compare_to",
         "niche_bucket", "niche_label",
-        "metric_rows" (4 canonical, possibly with placeholders),
+        "metric_rows" (4 official, possibly with placeholders),
         "trends" (3-5), "top_posts" (3 max),
         "recommendations" (3-5), "confidence_label", "confidence_reason",
         "benchmark_rows": [...] | None, "benchmark_source": str | None,
@@ -643,9 +643,9 @@ def generate_analytics_summary(
     niche_label = niche or _bundle_for_bucket(bucket).get("default_niche", "X creator")
 
     enriched = _enriched_metric_rows(metrics or [], compare_to)
-    canonical = _ordered_canonical_rows(enriched)
+    standard = _ordered_standard_rows(enriched)
 
-    if _detect_garbage_batch(canonical):
+    if _detect_garbage_batch(standard):
         return {
             "refused": True,
             "warning": (
@@ -657,25 +657,25 @@ def generate_analytics_summary(
             "metric_focus": metric_focus, "time_range": time_range,
             "compare_to": compare_to,
             "niche_bucket": bucket, "niche_label": niche_label,
-            "metric_rows": canonical, "trends": [],
+            "metric_rows": standard, "trends": [],
             "top_posts": top_posts or [], "recommendations": [],
             "confidence_label": "low",
             "confidence_reason": "garbage batch detected",
             "benchmark_rows": None, "benchmark_source": None,
         }
 
-    trends = _build_trends(canonical)
+    trends = _build_trends(standard)
     top_3 = _pick_top_3(top_posts or [])
     recommendations = _build_recommendations(
-        rows=canonical, trends=trends, top_posts=top_3,
+        rows=official, trends=trends, top_posts=top_3,
         niche_label=niche_label, bucket=bucket, rng=rng,
     )
-    conf_label, conf_reason = _confidence_label(canonical, top_3, compare_to)
+    conf_label, conf_reason = _confidence_label(official, top_3, compare_to)
 
     benchmark_rows: Optional[List[Dict[str, Any]]] = None
     benchmark_source: Optional[str] = None
     if compare_to == "benchmark":
-        benchmark_rows, benchmark_source = _build_benchmark_table(canonical, bucket)
+        benchmark_rows, benchmark_source = _build_benchmark_table(official, bucket)
 
     # Headline
     primary = next((t for t in trends if t.get("direction") == "up"), trends[0] if trends else None)
@@ -703,7 +703,7 @@ def generate_analytics_summary(
         "compare_to": compare_to,
         "niche_bucket": bucket,
         "niche_label": niche_label,
-        "metric_rows": canonical,
+        "metric_rows": standard,
         "trends": trends,
         "top_posts": top_3,
         "recommendations": recommendations,

@@ -25,7 +25,7 @@ Subcommands:
                       backend, default sources, source-read gates)
 - ``version``         print the agent version + backend names
 
-Run on Windows (canonical):
+Run on Windows (official):
 
 .. code-block:: powershell
 

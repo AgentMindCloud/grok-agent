@@ -284,7 +284,7 @@ The remediation in all three cases is the same. Replace the surface-flavoured me
 ## Red Flags
 
 - **Voice-drift paradox** · severity: high — 1 variant(s) — Linkedin variant 2 — show Platform fit above 70 while Voice fidelity sits below 40. The variant is platform-optimized at the cost of the creator's voice. *Remediation:* Re-anchor via `brand-voice-trainer` before shipping that variant; the alternate variants on the same platform preserve voice better.
-- **Attribution-erosion risk** · severity: medium — threads, bluesky de-prioritise outbound links and the source URL was not supplied — the X original may be hard to find from those variants. *Remediation:* Pin the source X post for 48h after cross-posting; pass `--post-url-or-text` with the canonical URL on the next run so the footer carries it.
+- **Attribution-erosion risk** · severity: medium — threads, bluesky de-prioritise outbound links and the source URL was not supplied — the X original may be hard to find from those variants. *Remediation:* Pin the source X post for 48h after cross-posting; pass `--post-url-or-text` with the official URL on the next run so the footer carries it.
 - **Cross-platform-cadence-fatigue** · severity: low — Shipping 4 platforms in the same 2-hour window can read as bot-like to overlap audiences. *Remediation:* Use `content-calendar-builder` to space the ship times by 2-4 hours.
 - **Hashtag-overload on LinkedIn variant 2** · severity: low — LinkedIn variant 2 carries 3+ hashtags; LinkedIn rewards 0-2 niche-relevant tags. *Remediation:* Strip to 1-2 niche-relevant hashtags before shipping.
 
@@ -313,7 +313,7 @@ Confidence: medium — 4 platforms is the upper end of single-run capacity; cons
 
 ## What this output demonstrates (audit checklist)
 
-- [x] **4 canonical Variant Score metrics** in fixed row order (Voice fidelity / Platform fit / Engagement potential / Attribution clarity) on every variant card
+- [x] **4 official Variant Score metrics** in fixed row order (Voice fidelity / Platform fit / Engagement potential / Attribution clarity) on every variant card
 - [x] **Weighted Variant score formula** `round(0.30·Voice + 0.30·Platform + 0.25·Engagement + 0.15·Attribution)` applied per card (e.g. LinkedIn variant 1: 0.30·88 + 0.30·72 + 0.25·70 + 0.15·90 = 26.4 + 21.6 + 17.5 + 13.5 = 79.0 → 79)
 - [x] **10 variants total** spanning all 4 platforms (3 LinkedIn / 3 Threads / 2 Bluesky / 2 Newsletter)
 - [x] **Voice-drift paradox** raised in BOTH the LinkedIn variant 2 card (under Voice fidelity) AND the Red Flags section (Voice < 40, Platform > 70 by design of the paradox profile)

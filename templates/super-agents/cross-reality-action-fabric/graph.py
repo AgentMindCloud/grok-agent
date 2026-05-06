@@ -472,7 +472,7 @@ def plan_actions(state: CrossRealityState) -> dict:
     force_stub   = bool(state.get("force_stub"))
     plan_id      = f"plan-{uuid.uuid4().hex[:12]}"
 
-    # If the caller pre-populated state['plan'] (the canonical path for
+    # If the caller pre-populated state['plan'] (the official path for
     # ``approve_pending`` and ``rollback_last``), this node is a pass-
     # through: we record a provenance row but do not overwrite the plan.
     existing = state.get("plan") or {}

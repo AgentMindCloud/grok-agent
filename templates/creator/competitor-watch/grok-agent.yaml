@@ -4,7 +4,7 @@
 #
 # Built for xAI, X, Grok and the ecosystem community — local-first competitor monitoring for X
 # creators. Reads a creator's stated competitors and emits a 6/7-section
-# structured watch report with 4 canonical Watch Score metrics, paraphrased
+# structured watch report with 4 official Watch Score metrics, paraphrased
 # competitor profile cards, content gaps, growth opportunities, and >= 3
 # cross-template bridges. Defaults to local-only — never scrapes
 # authenticated content, never exposes competitor follower PII.
@@ -12,7 +12,7 @@
 version: "2.15"
 kind: "creator-template"
 name: "competitor-watch"
-description: "Aggregate competitor monitoring for X creators — 4 canonical Watch Score metrics (Audience overlap / Content velocity / Growth signal / Monetization activity), 3-5 paraphrased competitor profile cards, 3-5 content gaps + 3-5 growth opportunities, cadence-fatigue paradox detection, and >= 3 cross-template bridges. Surfaces named competitors only when explicitly passed as input — never their followers, never their DMs, never their PII. Built for xAI, X, Grok and the ecosystem community. ❤️"
+description: "Aggregate competitor monitoring for X creators — 4 official Watch Score metrics (Audience overlap / Content velocity / Growth signal / Monetization activity), 3-5 paraphrased competitor profile cards, 3-5 content gaps + 3-5 growth opportunities, cadence-fatigue paradox detection, and >= 3 cross-template bridges. Surfaces named competitors only when explicitly passed as input — never their followers, never their DMs, never their PII. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 
@@ -50,7 +50,7 @@ grok:
 tools:
   - name: "generate_competitor_watch"
     type: "local_function"
-    description: "Produce a 6-section structured competitor-watch report (or 7-section when red-flag count > 3 OR competitor handle count < 2) with 4 canonical Watch Score metrics per competitor, 3-5 paraphrased profile cards, 3-5 content gaps, 3-5 growth opportunities, cadence-fatigue paradox detection, and >= 3 cross-template bridges. Names only the competitors the creator explicitly supplied — never their followers, never their DMs."
+    description: "Produce a 6-section structured competitor-watch report (or 7-section when red-flag count > 3 OR competitor handle count < 2) with 4 official Watch Score metrics per competitor, 3-5 paraphrased profile cards, 3-5 content gaps, 3-5 growth opportunities, cadence-fatigue paradox detection, and >= 3 cross-template bridges. Names only the competitors the creator explicitly supplied — never their followers, never their DMs."
     module: "competitor_watch.run"
     function: "generate"
     parameters:
@@ -77,7 +77,7 @@ tools:
             type: "string"
             enum: ["content", "growth", "monetization", "all"]
             default: "all"
-            description: "Which of the 4 canonical Watch Score metrics to emphasise in the headline and recommendations."
+            description: "Which of the 4 official Watch Score metrics to emphasise in the headline and recommendations."
         required: ["x_handle"]
 
 constitution:

@@ -9,7 +9,7 @@ This package is the durable, semantic-search-capable replacement for the
 default ``InMemoryMemoryStore`` shipped with P110's orchestration core.
 It composes two siblings:
 
-* ``mem0_setup.Mem0NarrativeStore`` — the canonical structured store
+* ``mem0_setup.Mem0NarrativeStore`` — the standard structured store
   (Mem0 primary, direct SQLite fallback). Owns the SynthesisVersion
   blob + indexed relational rows for fast lookup by source_id, topic,
   and parent_version_id.
@@ -224,7 +224,7 @@ class Mem0QdrantStore:
     # ---- Protocol-required (4) -------------------------------------------
 
     def remember(self, version: SynthesisVersion) -> None:
-        """Persist a SynthesisVersion to the canonical store + vector index.
+        """Persist a SynthesisVersion to the official store + vector index.
 
         Order of operations:
 
@@ -237,7 +237,7 @@ class Mem0QdrantStore:
 
         If step 1 raises, steps 2-4 never run. If any of steps 2-4 raises
         on a vector backend issue (e.g. Qdrant unreachable), we propagate
-        so the caller knows the indexing was partial — but the canonical
+        so the caller knows the indexing was partial — but the official
         SQLite write is already durable.
         """
 
@@ -420,7 +420,7 @@ def build_memory_store(
         When ``sentence-transformers`` is not installed, the index falls
         through to the deterministic hash-stub embedding.
     sqlite_filename :
-        Filename for the canonical SQLite store, relative to
+        Filename for the official SQLite store, relative to
         ``<appdata_root>/mem0/``.
     """
 

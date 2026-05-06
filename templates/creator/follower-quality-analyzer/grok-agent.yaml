@@ -9,7 +9,7 @@
 version: "2.15"
 kind: "creator-template"
 name: "follower-quality-analyzer"
-description: "Aggregate follower-quality scoring for X creators — 4 canonical metrics, paraphrased top-follower archetypes, bot-engagement paradox detection, and ≥3 cross-template bridges. Aggregate-only privacy. Built for xAI, X, Grok and the ecosystem community. ❤️"
+description: "Aggregate follower-quality scoring for X creators — 4 standard metrics, paraphrased top-follower archetypes, bot-engagement paradox detection, and ≥3 cross-template bridges. Aggregate-only privacy. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 
@@ -47,7 +47,7 @@ grok:
 tools:
   - name: "generate_follower_quality_analysis"
     type: "local_function"
-    description: "Produce a 6-section structured follower-quality analysis (or 7-section when red-flag count > 3 OR sample size < 50) with 4 canonical aggregate metrics, paraphrased top-follower archetypes, bot-engagement paradox detection, and ≥3 cross-template bridges. Never exposes individual follower PII."
+    description: "Produce a 6-section structured follower-quality analysis (or 7-section when red-flag count > 3 OR sample size < 50) with 4 official aggregate metrics, paraphrased top-follower archetypes, bot-engagement paradox detection, and ≥3 cross-template bridges. Never exposes individual follower PII."
     module: "follower_quality_analyzer.run"
     function: "generate"
     parameters:
@@ -72,7 +72,7 @@ tools:
             type: "string"
             enum: ["engagement", "authenticity", "growth_potential", "all"]
             default: "all"
-            description: "Which of the 4 canonical metrics to emphasise in the headline and recommendations."
+            description: "Which of the 4 standard metrics to emphasise in the headline and recommendations."
         required: ["x_handle"]
 
 constitution:

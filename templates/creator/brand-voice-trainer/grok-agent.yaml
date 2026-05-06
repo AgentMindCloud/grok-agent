@@ -6,7 +6,7 @@
 # creators. Reads a sample of the creator's own past posts (inline list,
 # file, or seeded date-range) and emits a structured voice profile +
 # training prompts the creator can paste into other Grok Agent OS
-# templates. 4 canonical Voice Profile metrics, generic-polish paradox
+# templates. 4 official Voice Profile metrics, generic-polish paradox
 # detection, sample-size refusal, and >= 3 cross-template bridges.
 # Drafts only — never auto-publishes a single thing.
 
@@ -51,7 +51,7 @@ grok:
 tools:
   - name: "generate_voice_profile"
     type: "local_function"
-    description: "Produce a 6-section structured voice-profile report (or 7-section when red-flag count > 3 OR sample size < 10) with 4 canonical Voice Profile metrics (Tone consistency / Structure consistency / Vocabulary distinctiveness / Voice cohesion), tone / structure / vocabulary signature subsections, 3-5 training prompts, generic-polish paradox detection, and >= 3 cross-template bridges. Trains only on the creator's own posts."
+    description: "Produce a 6-section structured voice-profile report (or 7-section when red-flag count > 3 OR sample size < 10) with 4 official Voice Profile metrics (Tone consistency / Structure consistency / Vocabulary distinctiveness / Voice cohesion), tone / structure / vocabulary signature subsections, 3-5 training prompts, generic-polish paradox detection, and >= 3 cross-template bridges. Trains only on the creator's own posts."
     module: "brand_voice_trainer.run"
     function: "generate"
     parameters:
@@ -76,7 +76,7 @@ tools:
             type: "string"
             enum: ["tone", "structure", "vocabulary", "all"]
             default: "all"
-            description: "Which of the 3 canonical signature dimensions to emphasise (the 4th metric, Voice cohesion, is always reported)."
+            description: "Which of the 3 official signature dimensions to emphasise (the 4th metric, Voice cohesion, is always reported)."
           output_format:
             type: "string"
             enum: ["analysis", "training_prompts", "both"]

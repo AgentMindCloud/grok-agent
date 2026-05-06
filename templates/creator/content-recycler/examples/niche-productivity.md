@@ -185,7 +185,7 @@ Confidence: medium — average Recycle score 71/100; widen / pick a sharper angl
 
 ## What this output demonstrates (audit checklist)
 
-- [x] **4 canonical Recycle Score metrics** in fixed row order (Freshness lift / Format fit / Engagement potential / Differentiation) on every variant card
+- [x] **4 official Recycle Score metrics** in fixed row order (Freshness lift / Format fit / Engagement potential / Differentiation) on every variant card
 - [x] **Weighted Recycle score formula** `round(0.30·Freshness + 0.25·Format + 0.25·Engagement + 0.20·Differentiation)` applied per card — Freshness weighted highest
 - [x] **4 variants total** — one per single-format (tweet / thread / carousel / newsletter), correctly emitting variant-1 profiles when `--target-format all`
 - [x] **Recycle Angle Analysis** section explains the auto-picked angle, why it fits the source's structural shape, what changes vs original, and what stays the same

@@ -26,9 +26,9 @@
 | # | Title | Key files | One-line decision |
 |---|---|---|---|
 | P1 | Bootstrap repo with CLAUDE.md, LICENSE, .gitignore | `CLAUDE.md`, `LICENSE`, `.gitignore` | LICENSE was already full Apache 2.0; .gitignore already had Grok-specific section |
-| P2 | Create canonical directory structure | `.github/`, `cli/`, `docs/live-validator/`, `safety/`, `scripts/`, `spec/v2.{14,15}/`, `templates/{finance,creator,x-native,general,super-agents}/` | 12 empty placeholders + 7 `.gitkeep` + 1 note (spec/v2.14/README.md); `scripts/` included per PROJECT_DNA.md even though prompt §4 omitted it |
+| P2 | Create official directory structure | `.github/`, `cli/`, `docs/live-validator/`, `safety/`, `scripts/`, `spec/v2.{14,15}/`, `templates/{finance,creator,x-native,general,super-agents}/` | 12 empty placeholders + 7 `.gitkeep` + 1 note (spec/v2.14/README.md); `scripts/` included per PROJECT_DNA.md even though prompt §4 omitted it |
 | P3 | Permanent CLAUDE.md instruction file | `CLAUDE.md` (full rewrite, 15 sections) | Established explicit precedence rule (CLAUDE.md > matching skill > CONSTRAINTS/PROJECT_DNA > active prompt) |
-| P4 | v2.15 unified manifest schema | `spec/v2.15/grok-agent.yaml` (596 lines) | "Schema-by-example" YAML reference doc with inline `# REQUIRED · type · default` annotations + 3 commented canonical examples + v2.14 backwards-compat appendix |
+| P4 | v2.15 unified manifest schema | `spec/v2.15/grok-agent.yaml` (596 lines) | "Schema-by-example" YAML reference doc with inline `# REQUIRED · type · default` annotations + 3 commented reference examples + v2.14 backwards-compat appendix |
 | P5 | Windows PowerShell CLI | `cli/grok-agent.ps1` (~750 lines) | 6 commands (help/new/install/validate/list/run); two-tier validation (PS surface check + Python deep delegate); 3 install paths (file/folder, `-Yaml`, `-FromStdin`) |
 | P6 | Python Pydantic v2 deep validator | `cli/grok-agent.py` (633 lines) | Mirrors every v2.15 section; `extra="forbid"` so typos surface; cross-field validators for tools/posts-consent/super-agent constitution+provenance/vision-analyzer; sysexit codes 0/65/66/69/70 |
 | P7 | Safety scanner + Constitution v1.0 | `safety/scanner.py` (489 lines), `safety/constitution.md` (332 lines) | 15 named checks (I.1–VII), Constitution articles map 1:1 to scanner findings, scanner exits 1 only on errors (warns non-blocking) |

@@ -1489,7 +1489,7 @@ def build_argparser() -> argparse.ArgumentParser:
         prog="trend-aligned-poster",
         description=(
             "Read creator-supplied X trend data (or seeded demo trends) and emit a 7/8-section "
-            "trend-aligned post plan with 4 canonical Trend Alignment Plan Score metrics, "
+            "trend-aligned post plan with 4 official Trend Alignment Plan Score metrics, "
             "trend-chasing paradox detection, off-niche guard (trend_match >= 75 AND "
             "niche_fit < floor → excluded + Red Flag), 3–5 trend watchlist entries, "
             "4–6 post ideas with predicted engagement bands, and mandatory bridges to "
@@ -1532,7 +1532,7 @@ def build_argparser() -> argparse.ArgumentParser:
     p.add_argument("--no-banner", action="store_true", help="Suppress the runner banner on stdout.")
     p.add_argument(
         "--demo", action="store_true",
-        help="Run with the canonical trend-chasing paradox + off-niche guard demo trends.",
+        help="Run with the official trend-chasing paradox + off-niche guard demo trends.",
     )
     p.add_argument(
         "--demo-healthy", action="store_true",

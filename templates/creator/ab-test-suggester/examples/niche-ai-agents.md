@@ -120,7 +120,7 @@ Confidence: medium — Test Plan score 62/100 — solid direction; tighten focus
 
 ## What this output demonstrates (audit checklist)
 
-- [x] **4 canonical Test Plan Score metrics** in fixed row order (Variant clarity / Test isolation / Sample feasibility / Decision actionability)
+- [x] **4 official Test Plan Score metrics** in fixed row order (Variant clarity / Test isolation / Sample feasibility / Decision actionability)
 - [x] **Weighted Test Plan score formula** `round(0.30·Clarity + 0.25·Isolation + 0.25·Sample + 0.20·Decision)` — Clarity weighted highest
 - [x] **3 variants** (1 control + 2 treatments) with single-axis Diff lines naming the ONE thing that changed (the headline)
 - [x] **Multi-variable paradox** raised in BOTH the Test Plan section AND the Red Flags section because demo-mode pins scoring to the paradox profile

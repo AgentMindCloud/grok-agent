@@ -4,7 +4,7 @@
 """Cross-tool writer — X Money Vision Analyzer → X Money Companion Dashboard.
 
 This is the ONLY Constitution-permitted write path between Grok Agent OS
-tools (Article III). It opens Tool #1's SQLite at the canonical AppData
+tools (Article III). It opens Tool #1's SQLite at the official AppData
 path and appends rows into ``transactions`` with ``source='vision'`` and
 ``receipt_image_path`` set to the local image — no other cross-tool writes
 are permitted by the manifest.

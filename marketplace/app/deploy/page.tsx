@@ -388,7 +388,7 @@ function DeployForm() {
             </div>
           )}
           <p className="meta">
-            Validate with the canonical CLI before shipping:{' '}
+            Validate with the primary CLI before shipping:{' '}
             <code>python cli/grok-agent.py validate grok-agent.yaml</code>
           </p>
         </>

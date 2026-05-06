@@ -97,7 +97,7 @@ Confidence: medium — 24 posts give a directional read; scale to 30+ to lift to
 
 ## What this output demonstrates (audit checklist)
 
-- [x] **4 canonical Voice Profile metrics** in fixed row order (Tone consistency / Structure consistency / Vocabulary distinctiveness / Voice cohesion)
+- [x] **4 official Voice Profile metrics** in fixed row order (Tone consistency / Structure consistency / Vocabulary distinctiveness / Voice cohesion)
 - [x] **Weighted Voice Profile score formula** `round(0.30·Tone + 0.20·Structure + 0.25·Vocabulary + 0.25·Cohesion)` — Tone weighted highest, Structure weighted lowest
 - [x] **3 signature subsections** (Tone / Structure / Vocabulary) with verbatim n-grams from the sample (signature phrases extracted from posts that recur in 2+ posts)
 - [x] **Generic-polish paradox** raised in BOTH the Voice Profile section (under the metric table) AND the Red Flags section (Cohesion > 70 AND Distinctiveness < 35)

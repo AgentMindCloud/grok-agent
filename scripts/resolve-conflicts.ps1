@@ -13,8 +13,8 @@
 #     carries Super Agent #1 (Living Narrative Fabric), 25 brand-new
 #     files that don't exist anywhere on main. These come in as PURE
 #     ADDS (no conflict). The branch ALSO carries 5 older self-evolving-
-#     personal-os files that conflict with the canonical P121-P127
-#     version on main — for those, `-X ours` keeps main's canonical
+#     personal-os files that conflict with the official P121-P127
+#     version on main — for those, `-X ours` keeps main's official
 #     version and discards the branch's older parallel version.
 #
 #   * The other 4 low-priority branches (content-idea-generator,
@@ -23,7 +23,7 @@
 #     templates that the active branch already superseded on main. We
 #     merge them with `-X ours` for historical-record completeness;
 #     no actual file content changes (every conflict resolves to
-#     main's canonical version).
+#     main's authoritative version).
 #
 # Usage (PowerShell on Windows 11):
 #

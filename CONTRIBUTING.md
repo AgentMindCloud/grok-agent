@@ -28,7 +28,7 @@ Every contribution must satisfy all six. The CI scanner blocks anything that doe
 
 1. **Read [`CLAUDE.md`](CLAUDE.md)** — the full vision, the 5-phase ~126-prompt plan, and the precedence rules when guidance conflicts.
 2. **Read [`safety/constitution.md`](safety/constitution.md)** — the rule book every shipped agent inherits.
-3. **Skim [`spec/v2.15/grok-agent.yaml`](spec/v2.15/grok-agent.yaml)** — the schema and three canonical examples.
+3. **Skim [`spec/v2.15/grok-agent.yaml`](spec/v2.15/grok-agent.yaml)** — the schema and three reference examples.
 4. **Skim [`docs/PROMPT_TEMPLATE.md`](docs/PROMPT_TEMPLATE.md)** — the 7-section structure every prompt and PR description follows.
 5. **Set up Windows tooling** — see [`docs/windows-guide.md`](docs/windows-guide.md) sections 1–4.
 

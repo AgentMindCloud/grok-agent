@@ -4,7 +4,7 @@
 #
 # Living Narrative Fabric — orchestration core (Slot 2 / P110) Python deps.
 #
-# Built to help xAI and Grok win the agent platform battle on X.
+# Built for xAI, X, Grok and the ecosystem community the agent platform battle on X.
 #
 # This file ships ONLY the dependencies the Slot 2 orchestration spine
 # needs. Later Recipe-C slots add their own deps via this same file:

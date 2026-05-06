@@ -43,7 +43,7 @@ def appdata_root() -> Path:
 
 
 def companion_db_path() -> Path:
-    """Tool #1's canonical SQLite path — the cross-tool write target."""
+    """Tool #1's official SQLite path — the cross-tool write target."""
     if os.name == "nt":
         base = os.environ.get("LOCALAPPDATA") or str(Path.home() / "AppData" / "Local")
         return Path(base) / "grok-agent" / "x-money-companion-dashboard" / "data.db"
@@ -411,7 +411,7 @@ with tab_import:
     disclaimer_banner(include_tax=True)
     st.header("📤 Import to Tool #1")
     st.caption(
-        "_The X Money Companion Dashboard (Tool #1) is the canonical local store. "
+        "_The X Money Companion Dashboard (Tool #1) is the official local store. "
         "This tab is the **only** Constitution-permitted cross-tool write path._"
     )
 

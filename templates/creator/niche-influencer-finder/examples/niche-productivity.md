@@ -104,7 +104,7 @@ Confidence: high — 3 keywords cover the niche cleanly and 2 tiers are represen
 
 ## What this output demonstrates (audit checklist)
 
-- [x] **4 canonical Match Score metrics** in fixed row order (Authority / Engagement / Audience fit / Collaboration potential) on every Top-Influencer card
+- [x] **4 official Match Score metrics** in fixed row order (Authority / Engagement / Audience fit / Collaboration potential) on every Top-Influencer card
 - [x] **Weighted Match score formula** `round(0.30A + 0.25E + 0.25F + 0.20C)` applied per card (e.g. Indie LLM-infra founder: 0.30·85 + 0.25·57 + 0.25·82 + 0.20·70 = 25.5 + 14.25 + 20.5 + 14 = 74.25 → 74)
 - [x] **5 Top-Influencer cards** spanning the 2 in-band tiers (2 Micro, 3 Mid) — Macro intentionally excluded by the `--max-followers 200000` cap
 - [x] **Engagement-pod paradox** raised in BOTH the archetype card (under the Engagement row) AND the Red Flags section (Engagement-pod regular: Authority 40 < 50, Engagement 77 > 70)

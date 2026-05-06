@@ -126,7 +126,7 @@ Confidence: high — clear topic, 5 hashtags spanning 3 categories, ship cap sta
 
 ## What this output demonstrates (audit checklist)
 
-- [x] **4 canonical Hashtag Plan Score metrics** in fixed row order (Niche relevance / Reach potential / Engagement quality / Cleanliness)
+- [x] **4 official Hashtag Plan Score metrics** in fixed row order (Niche relevance / Reach potential / Engagement quality / Cleanliness)
 - [x] **Weighted Hashtag Plan score formula** `round(0.30·Niche + 0.25·Reach + 0.25·Engagement + 0.20·Cleanliness)` — Niche relevance weighted highest
 - [x] **5 hashtags spanning 3 categories** (specific-niche × 3, broad-niche × 1, branded × 1) — runner ensures category spread when topic + library permit
 - [x] **Reach-without-relevance paradox** raised in BOTH the `#AI` recommendation card (under Reach potential) AND the Red Flags section (Reach 90, Niche relevance below 35)

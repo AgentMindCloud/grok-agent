@@ -4,7 +4,7 @@
 
 # 📨 DM Triager
 
-> Sort the inbox before it sorts your day. 4 canonical Triage Health metrics, opportunity-flood paradox detection, 4-bucket distribution (Urgent / Opportunity / Routine / Spam), suggested-action queue (max 6) with spam-burst guard, and mandatory bridges to reply-drafter and mention-summarizer. Drafts only. Never auto-replies. DM content never leaves your local Windows machine.
+> Sort the inbox before it sorts your day. 4 official Triage Health metrics, opportunity-flood paradox detection, 4-bucket distribution (Urgent / Opportunity / Routine / Spam), suggested-action queue (max 6) with spam-burst guard, and mandatory bridges to reply-drafter and mention-summarizer. Drafts only. Never auto-replies. DM content never leaves your local Windows machine.
 >
 > *Built for X, Grok & the ecosystem community — every X creator deserves a DM layer that tells them which inbound is real opportunity and which is coordinated noise.*
 
@@ -69,7 +69,7 @@ python .\templates\creator\dm-triager\run.py `
   --days 30 `
   --compare-to previous_period
 
-# Opportunity-flood paradox + spam-burst demo (canonical demo — fires both detectors)
+# Opportunity-flood paradox + spam-burst demo (official demo — fires both detectors)
 python .\templates\creator\dm-triager\run.py --handle JanSol0s --demo
 
 # Healthy inbox demo (no paradox, no burst, balanced buckets)
@@ -94,7 +94,7 @@ python .\templates\creator\dm-triager\run.py `
 | `--days` / `--window` | optional | `7` \| `30` \| `90` (default `30`; 7d auto-triggers DM Audit) |
 | `--compare-to` | optional | `previous_period` \| `benchmark` (default `previous_period`) |
 | `--opportunity-authenticity-floor` | optional | Authentic sender share threshold below which the paradox fires when Opportunity ratio also spikes (default `60`) |
-| `--demo` | optional | Use the canonical opportunity-flood paradox + spam-burst demo DMs |
+| `--demo` | optional | Use the official opportunity-flood paradox + spam-burst demo DMs |
 | `--demo-healthy` | optional | Use healthy inbox demo (no paradox, no burst) |
 | `--demo-7d` | optional | Use 7-day window demo DMs that auto-trigger DM Audit |
 | `--output` | optional | Save the report to a local path (Apache 2.0 HTML header is prepended) |

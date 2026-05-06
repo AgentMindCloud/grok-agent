@@ -4,7 +4,7 @@
 
 # 🧪 AB Test Suggester
 
-> Turn any post idea into a ready-to-run A/B test plan with 2-3 variants isolated to a single test dimension (headline / visual / cta / timing). 4 canonical Test Plan Score metrics, multi-variable paradox detection, statistical heuristics (no fabricated p-values), explicit cannibalization disclosure, ≥3 cross-template bridges. Drafts only. Single-axis by default.
+> Turn any post idea into a ready-to-run A/B test plan with 2-3 variants isolated to a single test dimension (headline / visual / cta / timing). 4 official Test Plan Score metrics, multi-variable paradox detection, statistical heuristics (no fabricated p-values), explicit cannibalization disclosure, ≥3 cross-template bridges. Drafts only. Single-axis by default.
 >
 > *Built for xAI, X, Grok and the ecosystem community the platform battle on X — every X creator deserves a tester that decides on signal, not vibes.*
 
@@ -109,7 +109,7 @@ python .\templates\creator\ab-test-suggester\run.py `
 | `--post-idea-or-url` | yes (or `--demo` / `--demo-productivity`) | Either an `x.com` URL or the literal idea text |
 | `--test-focus` | optional | `headline` \| `visual` \| `cta` \| `timing` \| `all` (default `headline`) |
 | `--num-variants` | optional | 2 or 3 (default 2) |
-| `--demo` | optional | Use the canonical AI demo idea; pins paradox profile educationally |
+| `--demo` | optional | Use the official AI demo idea; pins paradox profile educationally |
 | `--demo-productivity` | optional | Use a productivity demo idea; healthy single-axis (no paradox) |
 | `--output` | optional | Save the report to a path (Apache 2.0 HTML header is prepended) |
 | `--no-banner` | optional | Suppress the runner banner on stdout |

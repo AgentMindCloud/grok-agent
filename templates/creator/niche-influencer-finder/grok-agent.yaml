@@ -4,7 +4,7 @@
 #
 # Built for xAI, X, Grok and the ecosystem community — local-first niche-influencer discovery for
 # X creators. Surfaces 3-5 paraphrased influencer archetypes that match the
-# creator's niche keywords, with 4 canonical match scores, collaboration
+# creator's niche keywords, with 4 official match scores, collaboration
 # angles, and cross-template bridges. Aggregate-only — output never names
 # a real account, so the creator stays in control of who they actually
 # reach out to.
@@ -12,7 +12,7 @@
 version: "2.15"
 kind: "creator-template"
 name: "niche-influencer-finder"
-description: "Aggregate niche-influencer discovery for X creators — 4 canonical match scores (Authority / Engagement / Audience fit / Collaboration potential), 3-5 paraphrased archetype cards across Micro / Mid / Macro tiers, 3-5 collaboration opportunities, and >= 3 cross-template bridges. Aggregate-only — never names a real account. Built for xAI, X, Grok and the ecosystem community. ❤️"
+description: "Aggregate niche-influencer discovery for X creators — 4 official match scores (Authority / Engagement / Audience fit / Collaboration potential), 3-5 paraphrased archetype cards across Micro / Mid / Macro tiers, 3-5 collaboration opportunities, and >= 3 cross-template bridges. Aggregate-only — never names a real account. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 
@@ -50,7 +50,7 @@ grok:
 tools:
   - name: "generate_niche_influencer_recommendations"
     type: "local_function"
-    description: "Produce a 6-section structured niche-influencer discovery report (or 7-section when red-flag count > 3 OR niche keyword count < 2) with 4 canonical match scores per archetype, 3-5 paraphrased influencer cards across Micro / Mid / Macro tiers, 3-5 collaboration opportunities, and >= 3 cross-template bridges. Never names a real account."
+    description: "Produce a 6-section structured niche-influencer discovery report (or 7-section when red-flag count > 3 OR niche keyword count < 2) with 4 official match scores per archetype, 3-5 paraphrased influencer cards across Micro / Mid / Macro tiers, 3-5 collaboration opportunities, and >= 3 cross-template bridges. Never names a real account."
     module: "niche_influencer_finder.run"
     function: "generate"
     parameters:
@@ -77,7 +77,7 @@ tools:
             type: "string"
             enum: ["engagement", "authority", "collaboration_potential", "all"]
             default: "all"
-            description: "Which of the 4 canonical scores to emphasise in the headline and recommendations."
+            description: "Which of the 4 official scores to emphasise in the headline and recommendations."
         required: ["x_handle", "niche_keywords"]
 
 constitution:

@@ -36,7 +36,7 @@ A `git fetch --all --prune` surfaced `origin/claude/grok-agent-os-blueprint-Fpsr
 5. Re-ran the §15 sanity checks: `cli/grok-agent.py validate spec/v2.15/grok-agent.yaml` → `OK Valid v2.15 manifest`; `safety/scanner.py scan-all templates/` → 8 manifests, 0 findings
 6. Appended a `MERGE` row to `HANDOFF_LOG.md` with commit `a24c9ca`
 
-**After the rescue, main was the canonical branch.** All 24 Phase 2 prompts then landed on `main` directly (per the user's option (a)).
+**After the rescue, main was the official branch.** All 24 Phase 2 prompts then landed on `main` directly (per the user's option (a)).
 
 ### 2b. Phase 2 — X Money Suite (P19–P42)
 
@@ -129,7 +129,7 @@ If any of these fails the pre-output checklist → fix before submitting.
 
 ---
 
-## 6. The 5 canonical-vs-prose-name divergences (a pattern to expect)
+## 6. The 5 official-vs-prose-name divergences (a pattern to expect)
 
 Across P19/P25/P31/P37 the user's prompt §4 said `kind: finance-dashboard` (or `tool`) but each tool had a **more-specific v2.15 enum value** that triggers stricter validation rules:
 
@@ -266,7 +266,7 @@ Optional but useful skills (auto-load on file work):
 - **AppData paths in Python:** the Phase 2 pattern is the cross-platform `appdata_root()` resolver in each `data/__init__.py` (Windows `LOCALAPPDATA` → Linux `~/.local/share` fallback). Reuse this verbatim.
 - **Disclaimer wording** is exact and lives in Constitution Article V — copy it verbatim, don't paraphrase. Creator templates that don't touch money/tax may not need V.1+V.2 (Article V auto-application table per kind).
 - **UTF-8-no-BOM** when writing YAML/MD from PowerShell — use the `Write-Utf8NoBom` helper in `cli/grok-agent.ps1`.
-- **`kind: creator-template`** is the canonical v2.15 enum value for Phase 3 templates (don't use `agent` even if the prompt prose says so).
+- **`kind: creator-template`** is the official v2.15 enum value for Phase 3 templates (don't use `agent` even if the prompt prose says so).
 
 ---
 

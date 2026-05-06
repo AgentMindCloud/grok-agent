@@ -18,7 +18,7 @@ adds 14 checks covering the four P124 acceptance areas:
 3. graph.py wrapper produces records on every node + final run_complete
 4. export_audit_report Markdown shape + PII redaction at write time
 
-Run on Windows (canonical):
+Run on Windows (official):
 
 .. code-block:: powershell
 
@@ -266,7 +266,7 @@ def test_audit_export_and_pii() -> None:
     md = export_audit_report()
     if not md.startswith("# Self-Evolving Personal OS — Provenance Audit"):
         _fail("md header", md[:80])
-    _ok("export_audit_report starts with the canonical Markdown header")
+    _ok("export_audit_report starts with the official Markdown header")
     if "## Per-node trail" not in md:
         _fail("md section", "missing per-node trail")
     _ok("Markdown report includes the per-node trail section")
@@ -301,7 +301,7 @@ def test_audit_export_and_pii() -> None:
               "sources_seen", "stub", "errors", "confidences"):
         if k not in summary:
             _fail(f"summary[{k}]", "missing")
-    _ok("summarise_run returns the canonical 8-field digest")
+    _ok("summarise_run returns the official 8-field digest")
 
     # CSV-friendly: confidence breakdown is monotonic.
     if not summary["confidences"]:

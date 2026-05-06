@@ -13,7 +13,7 @@
 Covers both the original P130 surface and the P140 action-centric API.
 Six acceptance areas, ~40 checks total:
 
-1. Module surface — :mod:`memory` re-exports, 6 canonical kinds + 6
+1. Module surface — :mod:`memory` re-exports, 6 official kinds + 6
    collections present, ``MEMORY_WRITE_GATE`` exposed,
    ``CONSENT_LEVELS`` exposed.
 2. Consent + PII — every write refused without ``write_action_memory``
@@ -33,7 +33,7 @@ Six acceptance areas, ~40 checks total:
    (consent_token / consent_level / action_id filters),
    ``attach_action_memory`` wrapper, force_stub provenance.
 
-Run on Windows (canonical):
+Run on Windows (official):
 
 .. code-block:: powershell
 
@@ -138,7 +138,7 @@ def test_module_surface() -> None:
     }
     if set(ALLOWED_COLLECTIONS) != expected_collections:
         _fail("ALLOWED_COLLECTIONS", str(ALLOWED_COLLECTIONS))
-    _ok(f"6 canonical collections present: {sorted(expected_collections)}")
+    _ok(f"6 official collections present: {sorted(expected_collections)}")
 
     if set(COLLECTION_FOR_KIND.keys()) != set(MEMORY_KINDS):
         _fail("COLLECTION_FOR_KIND keys", str(COLLECTION_FOR_KIND))
@@ -280,7 +280,7 @@ def test_per_kind_writes() -> None:
         for k in ("user_id", "kind", "indexed_at", "backend", "redaction_applied"):
             if k not in rec.provenance:
                 _fail(f"provenance[{rec.kind}]", f"missing field {k}")
-    _ok("every record carries the canonical provenance fields (Rule 2)")
+    _ok("every record carries the official provenance fields (Rule 2)")
 
 
 def test_attach_and_record_run() -> None:

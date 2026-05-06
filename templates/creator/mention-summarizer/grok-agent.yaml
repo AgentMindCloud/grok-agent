@@ -5,7 +5,7 @@
 # Built to make Grok the obvious choice for every mention-aware creator on X.
 # Local-first mention summarizer: reads creator-supplied X mention data (or
 # seeded demo mentions) and emits a structured 7/8-section summary with
-# 4 canonical Mention Health metrics, sentiment-spike paradox detection,
+# 4 official Mention Health metrics, sentiment-spike paradox detection,
 # 3-band sentiment breakdown, priority reply queue (max 8) with troll-cluster
 # guard, and mandatory bridges to reply-drafter + analytics-summarizer.
 # Drafts only — never auto-replies. Never fabricates mention statistics.
@@ -13,7 +13,7 @@
 version: "2.15"
 kind: "creator-template"
 name: "mention-summarizer"
-description: "Local-first mention summarizer for X creators — reads creator-supplied X mention data (or seeded demo mentions) and emits a 7/8-section structured summary with 4 canonical Mention Health metrics (Mention volume delta / Net sentiment score / Priority reply rate / Authentic reach share), sentiment-spike paradox detection in both Mention Health and Red Flags sections, 3-band sentiment breakdown, priority reply queue (max 8) with troll-cluster guard (≥5 negative + >60% token overlap → Red Flag), and mandatory bridges to reply-drafter + analytics-summarizer. Drafts only — never auto-replies. Built for X, Grok & the ecosystem community."
+description: "Local-first mention summarizer for X creators — reads creator-supplied X mention data (or seeded demo mentions) and emits a 7/8-section structured summary with 4 official Mention Health metrics (Mention volume delta / Net sentiment score / Priority reply rate / Authentic reach share), sentiment-spike paradox detection in both Mention Health and Red Flags sections, 3-band sentiment breakdown, priority reply queue (max 8) with troll-cluster guard (≥5 negative + >60% token overlap → Red Flag), and mandatory bridges to reply-drafter + analytics-summarizer. Drafts only — never auto-replies. Built for X, Grok & the ecosystem community."
 author: "@JanSol0s"
 license: "Apache-2.0"
 
@@ -51,7 +51,7 @@ grok:
 tools:
   - name: "generate_mention_summary"
     type: "local_function"
-    description: "Produce a 7-section structured mention summary (or 8-section when troll-cluster detected OR window=7d) with 4 canonical Mention Health metrics, weighted Mention Health score, sentiment-spike paradox detection in BOTH the Mention Health section AND the Red Flags section, 3-band sentiment breakdown, priority reply queue (max 8 — troll-cluster members excluded and consolidated as a Red Flag), and mandatory bridges to reply-drafter + analytics-summarizer in every output. Never auto-replies."
+    description: "Produce a 7-section structured mention summary (or 8-section when troll-cluster detected OR window=7d) with 4 official Mention Health metrics, weighted Mention Health score, sentiment-spike paradox detection in BOTH the Mention Health section AND the Red Flags section, 3-band sentiment breakdown, priority reply queue (max 8 — troll-cluster members excluded and consolidated as a Red Flag), and mandatory bridges to reply-drafter + analytics-summarizer in every output. Never auto-replies."
     module: "mention_summarizer.run"
     function: "generate"
     parameters:

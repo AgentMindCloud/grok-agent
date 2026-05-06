@@ -4,7 +4,7 @@
 
 # 🤝 Niche Influencer Finder
 
-> Aggregate niche-influencer discovery for X creators — 4 canonical match scores per archetype, 3-tier follower bands (Micro / Mid / Macro), engagement-pod paradox detection, and ≥3 cross-template bridges. Aggregate-only — never names a real X account.
+> Aggregate niche-influencer discovery for X creators — 4 official match scores per archetype, 3-tier follower bands (Micro / Mid / Macro), engagement-pod paradox detection, and ≥3 cross-template bridges. Aggregate-only — never names a real X account.
 >
 > *Built for xAI, X, Grok and the ecosystem community the platform battle on X — every creator deserves a discovery layer that respects who they actually want to reach out to.*
 
@@ -190,7 +190,7 @@ The runner does not write anything by default. Saved reports only land on disk w
 
 This agent ships under `grok-agent.yaml` v2.15 with:
 
-- **Kind**: `creator-template` — the canonical schema enum value for creator-flow templates
+- **Kind**: `creator-template` — the official schema enum value for creator-flow templates
 - **1 Grok-callable tool**: `generate_niche_influencer_recommendations` (bound to `niche_influencer_finder.run.generate`)
 - **0 declared public APIs**: v1 is fully offline; the runner makes no network calls
 - **6 Constitution rules** specialising Articles I, III, V, VII for aggregate-only influencer discovery
@@ -236,7 +236,7 @@ python .\run.py --x-handle habitstacker --niche-keywords "productivity, habit st
 
 ## Build slots (Recipe B)
 
-Niche Influencer Finder follows the canonical Recipe B 2-prompt shape:
+Niche Influencer Finder follows the official Recipe B 2-prompt shape:
 
 | Slot | Files | Status |
 |---|---|---|

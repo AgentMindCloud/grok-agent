@@ -4,7 +4,7 @@
 
 # 📊 Analytics Summarizer
 
-> Read your X analytics honestly: 4 canonical Period Performance metrics on a 0-100 scale (Reach Score / Engagement Velocity / Audience Quality / Content Resonance), the **vanity-reach paradox** (Reach Score > 80 AND Audience Quality < 50), 5-arrow trend bucketing, mandatory bridges to `content-idea-generator` + `thread-builder`, and a structured monetization refusal path. Drafts only. Never auto-publishes. Never fabricates statistics.
+> Read your X analytics honestly: 4 official Period Performance metrics on a 0-100 scale (Reach Score / Engagement Velocity / Audience Quality / Content Resonance), the **vanity-reach paradox** (Reach Score > 80 AND Audience Quality < 50), 5-arrow trend bucketing, mandatory bridges to `content-idea-generator` + `thread-builder`, and a structured monetization refusal path. Drafts only. Never auto-publishes. Never fabricates statistics.
 >
 > *Shipped to help xAI and Grok win the platform battle — every X creator deserves an analytics layer that tells them when reach is real and when it's vanity.*
 
@@ -36,7 +36,7 @@ The report shape is the same every time:
 
 1. **Period Snapshot** — one-sentence headline + 7-bullet metadata including the explicit data-source line, archetype count, and monetization gate state
 2. **Period Performance** — 4-row metric table on a 0-100 scale (Reach Score / Engagement Velocity / Audience Quality / Content Resonance) + weighted Period Performance score `round(0.30·AudienceQuality + 0.25·EngagementVelocity + 0.25·ContentResonance + 0.20·ReachScore)`
-3. **Top-Performing Content** — 3-10 paraphrased archetypes (default 5; mapped onto the 10 canonical archetype labels; no raw URLs unless explicitly supplied)
+3. **Top-Performing Content** — 3-10 paraphrased archetypes (default 5; mapped onto the 10 official archetype labels; no raw URLs unless explicitly supplied)
 4. **Trends** — rising / stable / falling buckets across the 5-arrow vocabulary (▲▲ / ▲ / ▬ / ▼ / ▼▼)
 5. **Red Flags** — 2-3 cards with severity, surfaces the **vanity-reach paradox** in BOTH this section AND the Period Performance row when triggered
 6. **Recommendations** — 3-5 next moves; mandatory bridges to `content-idea-generator` AND `thread-builder` always present, plus 1+ rotating bridge from the 10-bridge set, plus a monetization slot that resolves to either the `monetization-optimizer` bridge (with V.1 banner) or the structured refusal stub
@@ -106,7 +106,7 @@ python .\templates\creator\analytics-summarizer\analytics_summarizer.run `
 | `--compare-to` | optional | `previous_period` \| `benchmark` (default `previous_period`) |
 | `--count` | optional | Archetype count, clamped to `[3, 10]` (default `5`; count >= 8 auto-triggers Period Audit) |
 | `--allow-monetization` | optional | Off by default. When set, replaces the refusal stub with the `monetization-optimizer` bridge + V.1 banner |
-| `--demo` | optional | Use the canonical paradox-firing demo metrics |
+| `--demo` | optional | Use the official paradox-firing demo metrics |
 | `--demo-healthy` | optional | Use healthy/balanced demo metrics (no paradox) |
 | `--demo-7d-audit` | optional | Use 7d-window demo metrics that auto-trigger Period Audit |
 | `--output` | optional | Save the report to a path (Apache 2.0 HTML header is prepended) |
@@ -156,7 +156,7 @@ The runner accepts a JSON file shaped like the bundled examples (`examples/sampl
   },
   "top_content": [
     {
-      "archetype_label": "<paraphrased category — runner maps onto the 10 canonical labels>",
+      "archetype_label": "<paraphrased category — runner maps onto the 10 official labels>",
       "format": "thread | single-post | quote-tweet | reply | live | carousel",
       "impression_share_pct": <float, percent of period impressions>,
       "engagement_rate_pct": <float, percent>
@@ -169,7 +169,7 @@ If `data_source` is `"demo"` the runner labels every metric as a demo placeholde
 
 ---
 
-## The 4 canonical Period Performance metrics (always exactly these 4 rows, 0-100 scale)
+## The 4 official Period Performance metrics (always exactly these 4 rows, 0-100 scale)
 
 | # | Metric | What it measures | Healthy range |
 |---|---|---|---|
@@ -222,7 +222,7 @@ Every Recommendations list MUST include both:
 
 Plus 1+ rotating bridge from the 10-bridge set (`reply-drafter`, `monetization-optimizer`, `ab-test-suggester`, `competitor-watch`, `brand-voice-trainer`, `cross-platform-reposter`, `content-recycler`, `comment-engagement-booster`, `hashtag-strategy-advisor`, `follower-quality-analyzer`) for a minimum of **3 bridges total**.
 
-These two are non-negotiable because the canonical creator loop is `measure → next anchor → next thread`, and skipping either breaks the loop.
+These two are non-negotiable because the official creator loop is `measure → next anchor → next thread`, and skipping either breaks the loop.
 
 ### Monetization slot (gated by `allow_monetization`)
 
@@ -241,7 +241,7 @@ Every interpretation line in Period Performance / Red Flags / Recommendations / 
 
 ---
 
-## The 10 canonical content archetypes (verbatim — never renamed across the suite)
+## The 10 official content archetypes (verbatim — never renamed across the suite)
 
 The Top-Performing Content section paraphrases each post into one of these archetype labels (the creator's free-text `archetype_label` is mapped onto the closest match):
 

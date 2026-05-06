@@ -1464,7 +1464,7 @@ def build_argparser() -> argparse.ArgumentParser:
         prog="mention-summarizer",
         description=(
             "Read creator-supplied X mention data (or seeded demo mentions) and emit a "
-            "7/8-section mention summary with 4 canonical Mention Health metrics, "
+            "7/8-section mention summary with 4 official Mention Health metrics, "
             "sentiment-spike paradox detection, 3-band sentiment breakdown, priority "
             "reply queue (max 8) with troll-cluster guard, and mandatory bridges to "
             "reply-drafter + analytics-summarizer. Drafts only."
@@ -1498,7 +1498,7 @@ def build_argparser() -> argparse.ArgumentParser:
     p.add_argument("--no-banner", action="store_true", help="Suppress the runner banner on stdout.")
     p.add_argument(
         "--demo", action="store_true",
-        help="Run with the canonical paradox-firing + troll-cluster demo mentions.",
+        help="Run with the official paradox-firing + troll-cluster demo mentions.",
     )
     p.add_argument(
         "--demo-healthy", action="store_true",

@@ -5,7 +5,7 @@
 # RFC: Adopt Grok Agent OS as the Reference Distribution + Runtime Layer for Grok-Powered Agents on X
 
 > **One-line ask.** Adopt `grok-agent.yaml` v2.15 as the reference open
-> standard for Grok-powered agents on X, and feature the canonical
+> standard for Grok-powered agents on X, and feature the official
 > `grok install this` install primitive in xAI documentation.
 >
 > **Status.** Apache-2.0, public, working. Three flagship Super Agents
@@ -48,7 +48,7 @@ We're asking xAI to:
 
 In return: every install of a Grok Agent OS agent runs **only** Grok
 4.3 by default, every manifest validates with `python cli/grok-agent.py
-validate`, and every creator on X gets one canonical answer to "how do
+validate`, and every creator on X gets one official answer to "how do
 I ship an agent on X?" — your platform, your model, with the safety
 contract pre-wired.
 
@@ -70,7 +70,7 @@ disclaimers, no path for a non-technical creator to ship an agent
 safely. The result: real Grok-quality work doesn't reach real users.
 
 This is a coordination problem. The fix is one open standard plus one
-canonical install primitive — the combination of which lives in this
+official install primitive — the combination of which lives in this
 repo today.
 
 ---
@@ -136,7 +136,7 @@ safety record by association.
 - Three Super Agents have full Promptfoo + DeepEval suites and pass
   weekly self-improvement loops.
 - The marketplace generator emits a v2.15-valid manifest for all 8
-  declared kinds (verified by the canonical Pydantic validator).
+  declared kinds (verified by the official Pydantic validator).
 - CI is green on `main`.
 
 We are not asking xAI to invest engineering effort to make this exist.
@@ -174,7 +174,7 @@ But:
   the Grok defaults intact.
 
 We'd much rather build this for you than watch it drift to a competing
-ecosystem. The whole point is that the canonical answer to "how do I
+ecosystem. The whole point is that the official answer to "how do I
 ship a Grok-powered agent on X?" should live inside the X + Grok
 sphere.
 

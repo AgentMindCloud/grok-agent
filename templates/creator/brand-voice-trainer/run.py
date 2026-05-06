@@ -1331,7 +1331,7 @@ def build_argparser() -> argparse.ArgumentParser:
         "--demo",
         action="store_true",
         help=(
-            "Run with the canonical 24-post generic-polish sample — no inputs required. "
+            "Run with the official 24-post generic-polish sample — no inputs required. "
             "Demo pins the score profile to the generic-polish paradox so the rule "
             "always demonstrates."
         ),

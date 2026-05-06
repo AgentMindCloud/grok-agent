@@ -31,7 +31,7 @@ from typing import Any
 from . import provenance_log_path
 
 # Naming note: the v2.15 manifest declares the parameter as ``ticker`` (the
-# financial-canonical term). The user-prompt prose calls it ``symbol`` —
+# financial-official term). The user-prompt prose calls it ``symbol`` —
 # we go with ``ticker`` so Grok's tool-call against the manifest schema
 # binds correctly at runtime.
 

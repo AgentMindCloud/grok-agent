@@ -5,7 +5,7 @@
 # Built for X, Grok & the ecosystem community — local-first content idea
 # generator for X creators. Reads creator-supplied performance + voice
 # signals (or seeded demo signals when nothing is supplied) and emits a
-# 7/8-section structured idea batch with 4 canonical Idea Plan Score
+# 7/8-section structured idea batch with 4 official Idea Plan Score
 # metrics, derivative-and-thin paradox detection, 4-6 idea cards (single
 # / thread / quote-tweet / image-post / reply-thread), per-idea niche
 # fit + originality + voice fidelity scores, and mandatory bridges to
@@ -16,7 +16,7 @@
 version: "2.15"
 kind: "creator-template"
 name: "content-idea-generator"
-description: "Local-first content idea generator for X creators — reads creator-supplied performance + voice signals (or seeded demo signals) and emits a 7/8-section structured idea batch with 4 canonical Idea Plan Score metrics (Niche fit / Voice fidelity / Originality / Engageability), derivative-and-thin paradox detection in BOTH the Plan Score AND Red Flags sections (avg Originality < 40 AND avg Voice fidelity < 60), 4-6 idea cards across single / thread / quote-tweet / image-post / reply-thread formats, per-idea niche fit + originality + voice fidelity scores, and mandatory bridges to analytics-summarizer + brand-voice-trainer + thread-builder. Drafts only — never auto-publishes. Refuses financial / cashtag / investment / sponsorship / harassment content. Built for X, Grok & the ecosystem community."
+description: "Local-first content idea generator for X creators — reads creator-supplied performance + voice signals (or seeded demo signals) and emits a 7/8-section structured idea batch with 4 official Idea Plan Score metrics (Niche fit / Voice fidelity / Originality / Engageability), derivative-and-thin paradox detection in BOTH the Plan Score AND Red Flags sections (avg Originality < 40 AND avg Voice fidelity < 60), 4-6 idea cards across single / thread / quote-tweet / image-post / reply-thread formats, per-idea niche fit + originality + voice fidelity scores, and mandatory bridges to analytics-summarizer + brand-voice-trainer + thread-builder. Drafts only — never auto-publishes. Refuses financial / cashtag / investment / sponsorship / harassment content. Built for X, Grok & the ecosystem community."
 author: "@JanSol0s"
 license: "Apache-2.0"
 

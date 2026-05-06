@@ -62,7 +62,7 @@ The synthesis output mirrors the consistent style introduced in P98–P102
 (analytics-summarizer, comment-engagement-booster, hashtag-strategy-advisor,
 ab-test-suggester, monetization-optimizer):
 
-* **4 canonical Synthesis Confidence metrics** with a fixed weighted
+* **4 official Synthesis Confidence metrics** with a fixed weighted
   formula:
   ``round(0.30·SourceDiversity_norm + 0.30·ProvenanceCompleteness_norm +
           0.25·CrossSourceAgreement_norm + 0.15·RecencyCoverage_norm)``.
@@ -719,7 +719,7 @@ def _node_score_confidence(state: dict) -> dict:
     time_range: str = state["time_range"]
     raw_items: list[SourceItem] = state["raw_items"]
 
-    # Source diversity: distinct sources / 6 (the canonical fabric size). 0–1.
+    # Source diversity: distinct sources / 6 (the official fabric size). 0–1.
     diversity = min(len(set(sources_called)) / 6.0, 1.0)
 
     # Provenance completeness: fraction of claims with non-empty source_id.
@@ -894,7 +894,7 @@ def render_synthesis_markdown(
     *,
     prior_version: Optional[SynthesisVersion] = None,
 ) -> str:
-    """Render a SynthesisVersion to the canonical 7/8-section markdown.
+    """Render a SynthesisVersion to the official 7/8-section markdown.
 
     Style is locked to the P98–P102 paradox-pattern + dual-surface +
     weighted-formula + bridges + audit-trigger format.
@@ -1191,7 +1191,7 @@ class LivingNarrativeFabric:
         *,
         compare_to_parent: bool = True,
     ) -> str:
-        """Render a SynthesisVersion to the canonical markdown report."""
+        """Render a SynthesisVersion to the official markdown report."""
 
         prior: Optional[SynthesisVersion] = None
         if compare_to_parent and version.parent_version_id:
@@ -1363,7 +1363,7 @@ class LivingNarrativeFabric:
 
 
 def _default_stub_sources() -> tuple[SourceClient, ...]:
-    """The 6 canonical Living Narrative Fabric sources, all stubbed for Slot 2."""
+    """The 6 official Living Narrative Fabric sources, all stubbed for Slot 2."""
 
     return tuple(
         StubSourceClient(name=name)
@@ -1381,7 +1381,7 @@ def _build_arg_parser() -> argparse.ArgumentParser:
         prog="orchestrator",
         description=(
             "Living Narrative Fabric — Orchestration Core (Slot 2). "
-            "Runs the multi-source synthesis DAG and prints the canonical "
+            "Runs the multi-source synthesis DAG and prints the official "
             "markdown report to stdout."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,

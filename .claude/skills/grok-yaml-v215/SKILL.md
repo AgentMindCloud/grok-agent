@@ -1,11 +1,11 @@
 ---
 name: grok-yaml-v215
-description: Use this skill whenever working with `grok-agent.yaml` files in the AgentMindCloud/grok-agent repository — creating new manifests for X Money tools, creator templates, x-native agents, general agents, or Super Agents; validating existing manifests; debugging schema errors; converting v2.14 manifests to v2.15; writing the canonical schema in `spec/v2.15/`; or building Pydantic validation models. Triggers on any task involving the v2.15 manifest format, the unified schema, the public_api tool type, the windows extension section, the multi_agent block, the real_time_x section, the Agent Constitution rules, or any phrase like "build manifest", "validate yaml", "create grok-agent.yaml", "extend schema", "v2.14 to v2.15".
+description: Use this skill whenever working with `grok-agent.yaml` files in the AgentMindCloud/grok-agent repository — creating new manifests for X Money tools, creator templates, x-native agents, general agents, or Super Agents; validating existing manifests; debugging schema errors; converting v2.14 manifests to v2.15; writing the official schema in `spec/v2.15/`; or building Pydantic validation models. Triggers on any task involving the v2.15 manifest format, the unified schema, the public_api tool type, the windows extension section, the multi_agent block, the real_time_x section, the Agent Constitution rules, or any phrase like "build manifest", "validate yaml", "create grok-agent.yaml", "extend schema", "v2.14 to v2.15".
 ---
 
 # grok-yaml-v215
 
-Canonical reference for the v2.15 manifest schema. Every agent in the platform declares one of these. The schema is the heart of the project — get this right and every downstream prompt is easier.
+primary reference for the v2.15 manifest schema. Every agent in the platform declares one of these. The schema is the heart of the project — get this right and every downstream prompt is easier.
 
 ## Core principles
 
@@ -166,7 +166,7 @@ dependencies:
     - "powershell >= 5.1"
 ```
 
-## Three canonical examples (copy and adapt)
+## Three reference examples (copy and adapt)
 
 ### Example 1: Minimal agent (smallest valid manifest)
 ```yaml

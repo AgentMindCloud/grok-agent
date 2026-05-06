@@ -73,7 +73,7 @@ from typing import Optional
 SCRIPT_DIR = Path(__file__).resolve().parent
 SYSTEM_PROMPT_PATH = SCRIPT_DIR / "prompts" / "system.md"
 
-# The 4 canonical Variant Score metrics, in fixed render order.
+# The 4 official Variant Score metrics, in fixed render order.
 SCORE_METRICS = (
     "Voice fidelity",
     "Platform fit",
@@ -875,7 +875,7 @@ def build_red_flags(
                 ),
                 remediation=(
                     "Pin the source X post for 48h after cross-posting; pass `--post-url-or-text` "
-                    "with the canonical URL on the next run so the footer carries it."
+                    "with the official URL on the next run so the footer carries it."
                 ),
             )
         )
@@ -1390,7 +1390,7 @@ def build_argparser() -> argparse.ArgumentParser:
         "--demo",
         action="store_true",
         help=(
-            "Run with the canonical demo source post — no --post-url-or-text required. "
+            "Run with the official demo source post — no --post-url-or-text required. "
             "LinkedIn variant 2 is pinned to the voice-drift paradox profile so the rule always demonstrates."
         ),
     )

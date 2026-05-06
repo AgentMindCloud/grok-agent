@@ -26,7 +26,7 @@ checks. This suite adds 14 new checks across four areas:
    carries a ``redaction_applied`` provenance flag and ``stub`` honours
    the sidebar toggle.
 
-Run on Windows (canonical):
+Run on Windows (official):
 
 .. code-block:: powershell
 
@@ -139,7 +139,7 @@ def test_module_surface() -> None:
         "Provenance Audit", "Self-Improve",
     ]:
         _fail("TAB_TITLES order", str(_dash.TAB_TITLES))
-    _ok("dashboard advertises exactly 5 tabs in the canonical order")
+    _ok("dashboard advertises exactly 5 tabs in the standard order")
 
     # Module imports cleanly without Streamlit
     if _dash.STREAMLIT_AVAILABLE not in (True, False):
@@ -238,7 +238,7 @@ def test_actions_and_pii() -> None:
               "promptfoo", "deepeval", "suggestions"):
         if k not in payload:
             _fail(f"improve[{k}]", "missing")
-    _ok("build_improve_payload returns the canonical 10-field shape")
+    _ok("build_improve_payload returns the official 10-field shape")
 
     if not payload["force_stub"]:
         _fail("improve.force_stub", "expected True")

@@ -4,7 +4,7 @@
 
 # 👥 Follower Quality Analyzer
 
-> Aggregate follower-quality scoring for X creators — 4 canonical metrics, paraphrased top-follower archetypes, bot-engagement paradox detection, and ≥3 cross-template bridges. Aggregate-only, local-first, zero individual PII in the output.
+> Aggregate follower-quality scoring for X creators — 4 standard metrics, paraphrased top-follower archetypes, bot-engagement paradox detection, and ≥3 cross-template bridges. Aggregate-only, local-first, zero individual PII in the output.
 >
 > *Built for xAI, X, Grok and the ecosystem community the platform battle on X — every creator deserves to see their real audience without exposing a single handle.*
 
@@ -33,8 +33,8 @@ A **CLI-only creator-template** (`grok-agent.yaml` v2.15, `kind: creator-templat
 The report is the same shape every time:
 
 1. **Headline** — one-sentence takeaway, focus-aware
-2. **Quality Scores** — exactly 4 canonical metrics (Engagement quality / Authenticity / Niche alignment / Growth potential), each 0–100 with interpretation + 30-day trend arrow
-3. **Top Followers** — 3–5 paraphrased archetype cards (`Daily-engaging niche peer`, `Long-tenure quiet builder`, etc.) — never a named account — each with one of the 6 canonical action verbs (`Engage`, `Spotlight`, `Collaborate`, `Reply`, `Monitor`, `Cultivate`)
+2. **Quality Scores** — exactly 4 standard metrics (Engagement quality / Authenticity / Niche alignment / Growth potential), each 0–100 with interpretation + 30-day trend arrow
+3. **Top Followers** — 3–5 paraphrased archetype cards (`Daily-engaging niche peer`, `Long-tenure quiet builder`, etc.) — never a named account — each with one of the 6 official action verbs (`Engage`, `Spotlight`, `Collaborate`, `Reply`, `Monitor`, `Cultivate`)
 4. **Red Flags** — 2–3 cards with severity, surfaces the **bot-engagement paradox** in BOTH this section AND the Quality Scores section when it triggers (Authenticity < 80 AND Engagement quality > niche median)
 5. **Recommendations** — 3–5 next moves, each linking to ≥3 distinct cross-template bridges in `templates/creator/`
 6. **Confidence** — `high | medium | low` with the reason
@@ -197,7 +197,7 @@ The runner does not write anything by default. Saved reports only land on disk w
 
 This agent ships under `grok-agent.yaml` v2.15 with:
 
-- **Kind**: `creator-template` — the canonical schema enum value for templates that target creator workflows
+- **Kind**: `creator-template` — the official schema enum value for templates that target creator workflows
 - **1 Grok-callable tool**: `generate_follower_quality_analysis` (bound to `follower_quality_analyzer.run.generate`)
 - **0 declared public APIs**: v1 is fully offline; the runner makes no network calls
 - **6 Constitution rules** specialising Articles I, III, V, VII for aggregate-only follower analysis
@@ -247,7 +247,7 @@ python .\run.py --x-handle habitstacker --follower-file .\sample.txt --focus all
 
 ## Build slots (Recipe B)
 
-Follower Quality Analyzer follows the canonical Recipe B 2-prompt shape:
+Follower Quality Analyzer follows the official Recipe B 2-prompt shape:
 
 | Slot | Files | Status |
 |---|---|---|

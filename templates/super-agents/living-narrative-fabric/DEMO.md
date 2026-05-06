@@ -186,7 +186,7 @@ Chrome auto-focuses on `http://localhost:8501`. The sidebar shows:
 **Narration**
 
 > "Versioned synthesis means you can rewind to any prior state. Memory
-> is canonical SQLite, semantic search via Qdrant — both fully local."
+> is official SQLite, semantic search via Qdrant — both fully local."
 
 ---
 

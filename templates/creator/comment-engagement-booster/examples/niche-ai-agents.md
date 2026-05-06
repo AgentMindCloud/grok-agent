@@ -113,7 +113,7 @@ Confidence: medium — average Comment Plan score 72/100 — solid direction; ti
 
 ## What this output demonstrates (audit checklist)
 
-- [x] **4 canonical Comment Plan Score metrics** in fixed row order (Hook strength / Conversation potential / Voice fidelity / Distinct angle)
+- [x] **4 official Comment Plan Score metrics** in fixed row order (Hook strength / Conversation potential / Voice fidelity / Distinct angle)
 - [x] **Weighted Comment Plan score formula** `round(0.30·Hook + 0.25·Conversation + 0.25·Voice + 0.20·Distinct)` — Hook strength weighted highest
 - [x] **4 distinct question variants** (clarifying / provocative / story-anchored / tactical) — each angle name visible in the variant heading
 - [x] **Hook-without-substance paradox** raised in BOTH the Variant 2 card (under Conversation potential) AND the Red Flags section because the demo pins variant 2 to the paradox profile

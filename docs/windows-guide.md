@@ -4,7 +4,7 @@
 
 # Windows Guide — Grok Agent OS
 
-> **Built for xAI, X, Grok and the ecosystem community. ❤️** This guide is the canonical, end-to-end Windows 11 walkthrough for installing, validating, running, and troubleshooting Grok agents. Every command on this page is PowerShell. There are no macOS or Linux instructions here, by design.
+> **Built for xAI, X, Grok and the ecosystem community. ❤️** This guide is the official, end-to-end Windows 11 walkthrough for installing, validating, running, and troubleshooting Grok agents. Every command on this page is PowerShell. There are no macOS or Linux instructions here, by design.
 
 ---
 
@@ -93,7 +93,7 @@ From the `grok-agent` repo root:
 # Print scanner version + every Constitution check it enforces
 python safety\scanner.py info
 
-# Validate the canonical v2.15 schema file (sanity check)
+# Validate the official v2.15 schema file (sanity check)
 .\cli\grok-agent.ps1 validate spec\v2.15\grok-agent.yaml
 ```
 
@@ -299,7 +299,7 @@ python safety\scanner.py scan path\to\grok-agent.yaml --severity-floor info
 
 ### "ValidationError: Extra inputs are not permitted"
 
-Your manifest contains a key that v2.15 doesn't define. The error message names the field. Either remove the key or check `spec\v2.15\grok-agent.yaml` for the canonical name (typo / hyphen-vs-underscore is a common cause).
+Your manifest contains a key that v2.15 doesn't define. The error message names the field. Either remove the key or check `spec\v2.15\grok-agent.yaml` for the standard name (typo / hyphen-vs-underscore is a common cause).
 
 ### A v2.14 manifest doesn't validate
 

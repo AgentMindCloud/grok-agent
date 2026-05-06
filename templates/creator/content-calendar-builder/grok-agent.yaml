@@ -5,7 +5,7 @@
 # Built for X, Grok & the ecosystem community — local-first content
 # calendar builder for X creators. Reads creator-supplied cadence + niche
 # + voice profile + analytics signals (or seeded demo signals) and emits
-# a 7/8-section structured calendar with 4 canonical Calendar Plan Score
+# a 7/8-section structured calendar with 4 official Calendar Plan Score
 # metrics, over-scheduling paradox detection, format-streak guard,
 # 4-12 weeks × 3-14 slots/week (clamped to creator's cadence), per-slot
 # day + time-of-week + format + archetype + niche fit + predicted
@@ -16,7 +16,7 @@
 version: "2.15"
 kind: "creator-template"
 name: "content-calendar-builder"
-description: "Local-first content calendar builder for X creators — reads creator-supplied cadence + niche + voice profile + analytics signals (or seeded demo signals) and emits a 7/8-section structured calendar with 4 canonical Calendar Plan Score metrics (Cadence sustainability / Niche fit / Voice fidelity / Variety), over-scheduling paradox detection in BOTH the Plan Score AND Red Flags sections (avg Cadence sustainability < 50 AND posts_per_week > 7), format-streak guard (≥ 3 consecutive same-format slots → Red Flag), 4-12 weeks × 3-14 slots/week (clamped to creator's cadence), per-slot day + time-of-week + format + archetype + niche fit + predicted engagement, and mandatory bridges to analytics-summarizer + brand-voice-trainer + content-idea-generator. Drafts only — never auto-publishes. Refuses financial / cashtag / investment / sponsorship / harassment content. Built for X, Grok & the ecosystem community."
+description: "Local-first content calendar builder for X creators — reads creator-supplied cadence + niche + voice profile + analytics signals (or seeded demo signals) and emits a 7/8-section structured calendar with 4 official Calendar Plan Score metrics (Cadence sustainability / Niche fit / Voice fidelity / Variety), over-scheduling paradox detection in BOTH the Plan Score AND Red Flags sections (avg Cadence sustainability < 50 AND posts_per_week > 7), format-streak guard (≥ 3 consecutive same-format slots → Red Flag), 4-12 weeks × 3-14 slots/week (clamped to creator's cadence), per-slot day + time-of-week + format + archetype + niche fit + predicted engagement, and mandatory bridges to analytics-summarizer + brand-voice-trainer + content-idea-generator. Drafts only — never auto-publishes. Refuses financial / cashtag / investment / sponsorship / harassment content. Built for X, Grok & the ecosystem community."
 author: "@JanSol0s"
 license: "Apache-2.0"
 
@@ -54,7 +54,7 @@ grok:
 tools:
   - name: "generate_content_calendar"
     type: "local_function"
-    description: "Produce a 7-section structured content calendar (or 8-section when over-scheduling paradox fires, format-streak guard fires, or weeks=1) with 4 canonical Calendar Plan Score metrics, weighted Plan Score, over-scheduling paradox detection in BOTH the Plan Score section AND the Red Flags section, format-streak guard (≥ 3 consecutive same-format slots → Red Flag), 4-12 weeks × 3-14 slots/week (clamped to creator's cadence), per-slot day + time-of-week + format + archetype + niche fit + predicted engagement bands, and mandatory bridges to analytics-summarizer + brand-voice-trainer + content-idea-generator. Never auto-publishes. Refuses financial / cashtag / investment / sponsorship / harassment content."
+    description: "Produce a 7-section structured content calendar (or 8-section when over-scheduling paradox fires, format-streak guard fires, or weeks=1) with 4 official Calendar Plan Score metrics, weighted Plan Score, over-scheduling paradox detection in BOTH the Plan Score section AND the Red Flags section, format-streak guard (≥ 3 consecutive same-format slots → Red Flag), 4-12 weeks × 3-14 slots/week (clamped to creator's cadence), per-slot day + time-of-week + format + archetype + niche fit + predicted engagement bands, and mandatory bridges to analytics-summarizer + brand-voice-trainer + content-idea-generator. Never auto-publishes. Refuses financial / cashtag / investment / sponsorship / harassment content."
     module: "content_calendar_builder.run"
     function: "generate"
     parameters:

@@ -57,7 +57,7 @@ Phase 2 and Phase 3 deliberately overlap (days 35–56) — once at least one X 
 | # | Deliverable | Path |
 |---|---|---|
 | 1 | Repo bootstrap | `CLAUDE.md`, `LICENSE`, `.gitignore` |
-| 2 | Canonical directory structure | `templates/`, `cli/`, `safety/`, `spec/`, `docs/`, `scripts/`, `.github/` |
+| 2 | official directory structure | `templates/`, `cli/`, `safety/`, `spec/`, `docs/`, `scripts/`, `.github/` |
 | 3 | Permanent ground-truth instruction file | `CLAUDE.md` |
 | 4 | Unified manifest schema | `spec/v2.15/grok-agent.yaml` |
 | 5 | Windows PowerShell CLI | `cli/grok-agent.ps1` |

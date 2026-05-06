@@ -111,10 +111,10 @@ Confidence: high — single-axis test on cta, clear idea, sample feasible, decis
 
 ## What this output demonstrates (audit checklist)
 
-- [x] **4 canonical Test Plan Score metrics** in fixed row order with HEALTHY scores — Variant clarity in the high-70s, Test isolation in the high-70s, no paradox fires
+- [x] **4 official Test Plan Score metrics** in fixed row order with HEALTHY scores — Variant clarity in the high-70s, Test isolation in the high-70s, no paradox fires
 - [x] **Weighted Test Plan score formula** `round(0.30·Clarity + 0.25·Isolation + 0.25·Sample + 0.20·Decision)` applied per the same formula as example 1
 - [x] **3 variants** (1 control + 2 treatments) with single-axis Diff lines naming the ONE thing that changed (the closing CTA)
-- [x] **No multi-variable paradox** in this run — single-axis isolation kept Test isolation above 70, so the rule doesn't fire (this is the canonical healthy baseline)
+- [x] **No multi-variable paradox** in this run — single-axis isolation kept Test isolation above 70, so the rule doesn't fire (this is the official healthy baseline)
 - [x] **Equivalent rule surfaced** — Cannibalization-on-same-audience flag fires because the variants ship to the same followers (system-prompt-required disclosure)
 - [x] **Success Metrics** with primary metric (profile-visit rate), 2 secondary metrics, and explicit decision rule
 - [x] **Statistical Notes** named as heuristics — sample / duration / significance are rules-of-thumb only

@@ -114,7 +114,7 @@ If you are tempted to write one of these, the prompt or the output is too broad 
 
 ---
 
-## 5. Canonical file tree
+## 5. official file tree
 
 Every prompt must reference and respect this tree. Folders may be created lazily when a phase reaches them, but layout never changes.
 
@@ -405,7 +405,7 @@ Never use past tense ("added X"), generic verbs ("update stuff"), or commits mis
 | `CLAUDE.md` (this file) | Ground truth for every contributor and AI |
 | `LICENSE` | Apache 2.0 full text |
 | `HANDOFF_LOG.md` | State tracker — which prompts have completed |
-| `docs/PROJECT_DNA.md` | Canonical facts: file tree, stack, phases, glossary, deliverables |
+| `docs/PROJECT_DNA.md` | Official facts: file tree, stack, phases, glossary, deliverables |
 | `docs/PROMPT_TEMPLATE.md` | Exact 7-section structure every prompt must follow |
 | `docs/CONSTRAINTS.md` | Hard Six + Soft Rules + forbidden phrases |
 | `docs/PARAMETERIZED_RECIPES.md` | Recipes A (X Money), B (Creator), C (Super Agent) |

@@ -4,7 +4,7 @@
 
 # 🧵 Thread Builder
 
-> Draft 3-5 ready-to-post X threads in the creator's voice, score them with 4 canonical Thread Plan metrics, surface the hook-without-payoff paradox, ship 4-6 alternate hooks (≤ 240 chars each), forecast content-engagement bands (never absolute counts), and bridge into ≥ 3 sister templates — always including `analytics-summarizer` and `content-idea-generator`. Drafts only. Never auto-publishes. Never copies competitors.
+> Draft 3-5 ready-to-post X threads in the creator's voice, score them with 4 official Thread Plan metrics, surface the hook-without-payoff paradox, ship 4-6 alternate hooks (≤ 240 chars each), forecast content-engagement bands (never absolute counts), and bridge into ≥ 3 sister templates — always including `analytics-summarizer` and `content-idea-generator`. Drafts only. Never auto-publishes. Never copies competitors.
 >
 > *Built for X, Grok & the ecosystem community — every X creator deserves a long-form drafting layer that earns the read instead of clickbaiting it.*
 
@@ -37,7 +37,7 @@ The report shape is the same every time:
 1. **Thread Snapshot** — one-sentence headline + 6-bullet metadata including the explicit data-source line
 2. **Thread Plan Performance** — 4-row metric table (Hook strength / Narrative arc coherence / Voice fidelity / Predicted engagement) + weighted Thread Plan score `round(0.30·Hook + 0.25·Arc + 0.25·Voice + 0.20·PredictedEngagement)`
 3. **Thread Variants (3-5; drafts only)** — each with a per-variant header `(Hook X · Arc X · Voice X)`, a `Hook (Post 1)` line ≤ 240 chars, a numbered `Arc beats` list, and a `Why this lands` 2-line case
-4. **Hook Variations** — 4 alternates for `variant_count ≤ 4`, 6 alternates when `variant_count = 5`, each ≤ 240 chars, drawn from the canonical style set (`numbers-led` · `contrarian-claim` · `question-led` · `story-cold-open` · `list-tease` · `personal-anecdote`)
+4. **Hook Variations** — 4 alternates for `variant_count ≤ 4`, 6 alternates when `variant_count = 5`, each ≤ 240 chars, drawn from the official style set (`numbers-led` · `contrarian-claim` · `question-led` · `story-cold-open` · `list-tease` · `personal-anecdote`)
 5. **Engagement Forecast** — `low` / `medium` / `high` band + sub-score + drivers + `Anchored to analytics-summarizer?` + `Highest-EV variant`
 6. **Red Flags** — 2-5 cards with severity, surfaces the **hook-without-payoff paradox** in BOTH this section AND the Thread Plan Performance row when triggered
 7. **Recommendations** — 3-5 next moves, ≥ 3 distinct cross-template bridges, `analytics-summarizer` + `content-idea-generator` always present
@@ -54,7 +54,7 @@ The report shape is the same every time:
 python .\templates\creator\thread-builder\run.py --x-handle JanSol0s --demo
 ```
 
-That prints the canonical 3-variant healthy demo report (analytical / personal / tactical registers on `agent-eval failure modes`) straight to the terminal.
+That prints the standard 3-variant healthy demo report (analytical / personal / tactical registers on `agent-eval failure modes`) straight to the terminal.
 
 ### Option A — `grok install this` (one-click on X)
 
@@ -83,7 +83,7 @@ python .\templates\creator\thread-builder\run.py --x-handle JanSol0s --demo
 # Hook-without-payoff paradox demo (Variant 1 rigged Hook 88 + Arc 42)
 python .\templates\creator\thread-builder\run.py --x-handle JanSol0s --demo-paradox
 
-# 5-variant cap demo (auto-triggers Thread Audit; all 4 canonical registers)
+# 5-variant cap demo (auto-triggers Thread Audit; all 4 standard registers)
 python .\templates\creator\thread-builder\run.py --x-handle habitstacker --demo-five-variants
 
 # Save the report to the agent's AppData folder (Apache 2.0 HTML header is prepended)
@@ -105,7 +105,7 @@ python .\templates\creator\thread-builder\run.py `
 | `--thread-length` | optional | `short` (5 posts) \| `medium` (8) \| `long` (12); default `medium` |
 | `--tone` (alias `--tone-focus`) | optional | `analytical` \| `personal` \| `tactical` \| `narrative` \| `all`; default `all` |
 | `--input-file` | optional | Path to a brief-bundle JSON (encapsulates topic + voice + analytics + counts) |
-| `--demo` | optional | Canonical 3-variant healthy demo (`agent-eval failure modes`) |
+| `--demo` | optional | standard 3-variant healthy demo (`agent-eval failure modes`) |
 | `--demo-paradox` | optional | Paradox-firing demo (`creator burnout patterns`, Variant 1 rigged Hook 88 + Arc 42) |
 | `--demo-five-variants` | optional | 5-variant cap demo (`weekly maker rituals`, all 4 registers) |
 | `--output` | optional | Save the rendered report to a path (Apache 2.0 HTML header prepended) |
@@ -259,8 +259,8 @@ The value the runner adds in v1:
 1. The 4-metric weighted scoring with explicit per-variant Hook / Arc / Voice rows
 2. The hook-without-payoff paradox detection (firing in both required places)
 3. The 5-arrow trend bucketing with 60 / 50 healthy floors
-4. The 4 canonical tone registers, with the runner enforcing diversity when `tone_focus = all`
-5. The Hook Variations bank (4-6 alternates ≤ 240 chars each, drawn from the canonical style set)
+4. The 4 official tone registers, with the runner enforcing diversity when `tone_focus = all`
+5. The Hook Variations bank (4-6 alternates ≤ 240 chars each, drawn from the official style set)
 6. The hard variant cap of 5 + hard hook cap of 240
 7. The monetization-topic guard with structured refusal + mandatory bridges
 8. The mandatory `analytics-summarizer` + `content-idea-generator` bridges in every render

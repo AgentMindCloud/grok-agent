@@ -53,5 +53,5 @@
 
 ## Confidence
 
-high -- 4/4 canonical metrics present; 4 with comparison baseline; 3 top posts cited; compare_to=previous_period.
+high -- 4/4 standard metrics present; 4 with comparison baseline; 3 top posts cited; compare_to=previous_period.
 

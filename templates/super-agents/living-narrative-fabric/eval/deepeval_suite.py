@@ -14,7 +14,7 @@ judge metrics (``FaithfulnessMetric``, ``AnswerRelevancyMetric``) on
 top — but the deterministic floor always works on a fresh box with
 zero installs.
 
-Four canonical metrics
+Four standard metrics
 ======================
 
 1. **ContradictionDetectionMetric (0–100)** — How well did the
@@ -32,7 +32,7 @@ Four canonical metrics
    immediately rather than being hidden inside the score node.
 
 3. **FourMetricFormulaMetric (0–100)** — Does the orchestrator's own
-   ``confidence_score`` match what the canonical 4-metric formula
+   ``confidence_score`` match what the official 4-metric formula
    produces given the version's ``confidence_metrics``? Formula:
    ``round(0.30·SourceDiversity + 0.30·ProvenanceCompleteness +
    0.25·CrossSourceAgreement + 0.15·RecencyCoverage)``. Score = 100
@@ -130,7 +130,7 @@ class MetricResult:
 
 @dataclass(frozen=True)
 class EvaluationScore:
-    """Composite score across all four canonical metrics + optional DeepEval."""
+    """Composite score across all four standard metrics + optional DeepEval."""
 
     version_id:       str
     topic:            str

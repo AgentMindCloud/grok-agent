@@ -11,7 +11,7 @@ or seeded date-range) and emits a 6/7-section structured quality report
 matching ``prompts/system.md`` exactly:
 
   1. Headline
-  2. Quality Scores (4 canonical metrics, fixed row order)
+  2. Quality Scores (4 standard metrics, fixed row order)
   3. Top Followers (3-5 paraphrased archetypes, 6-verb action vocabulary)
   4. Red Flags (2-3, surfaces the bot-engagement paradox when triggered)
   5. Recommendations (3-5, with >= 3 cross-template bridges)
@@ -27,7 +27,7 @@ Hard guarantees enforced by this runner (mirrors the Constitution):
 * Bot-engagement paradox surfaced in BOTH the Quality Scores section AND
   the Red Flags section whenever Authenticity < 80 AND Engagement quality
   > the niche median (default median = 45).
-* Each Top-Follower card carries one of the 6 canonical action verbs
+* Each Top-Follower card carries one of the 6 official action verbs
   (Engage / Spotlight / Collaborate / Reply / Monitor / Cultivate).
 * Recommendations link to >= 3 distinct cross-template slugs that exist
   (or are planned) under ``templates/creator/``.
@@ -64,7 +64,7 @@ from typing import Optional
 SCRIPT_DIR = Path(__file__).resolve().parent
 SYSTEM_PROMPT_PATH = SCRIPT_DIR / "prompts" / "system.md"
 
-# The 4 canonical Quality Score metrics, in fixed render order. The system
+# The 4 official Quality Score metrics, in fixed render order. The system
 # prompt enforces that the table always shows exactly these 4 rows.
 QUALITY_METRICS = (
     "Engagement quality",
@@ -368,7 +368,7 @@ def score_audience(
     focus: str,
     niche_median: int,
 ) -> QualityScores:
-    """Produce the 4 canonical metrics. The score ranges below were tuned
+    """Produce the 4 standard metrics. The score ranges below were tuned
     so realistic samples land inside the system prompt's healthy ranges
     while still triggering the bot-engagement paradox often enough to be
     worth surfacing in tutorials and screenshots.
@@ -741,7 +741,7 @@ def build_headline(scores: QualityScores, focus: str, handle: str) -> str:
     if focus == "growth_potential":
         return f"{handle}: growth potential {scores.growth_potential}/100, paced by bridge-account share."
     return (
-        f"{handle}: balanced audience profile across the 4 canonical metrics, "
+        f"{handle}: balanced audience profile across the 4 standard metrics, "
         "with the top-archetype mix tilting toward long-tenure builders."
     )
 
@@ -1026,7 +1026,7 @@ def build_argparser() -> argparse.ArgumentParser:
         "--focus",
         choices=list(FOCUS_OPTIONS),
         default="all",
-        help="Which canonical metric to emphasise. Default: all.",
+        help="Which standard metric to emphasise. Default: all.",
     )
     p.add_argument(
         "--niche-median",

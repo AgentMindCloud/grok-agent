@@ -5,7 +5,7 @@
 
 Built for xAI, X, Grok and the ecosystem community. ❤️
 
-This module is the canonical local-first half of the Trust Engine. It
+This module is the official local-first half of the Trust Engine. It
 owns the append-only JSONL provenance log at
 ``<appdata>/provenance/events.jsonl`` and mirrors every write into the
 ``Mem0QdrantStore.audit_trail`` table (when a real ``version_id`` is
@@ -212,7 +212,7 @@ def _classify_event(event_type: str) -> str:
 
 @dataclass
 class LocalProvenanceLog:
-    """The local-first canonical provenance log.
+    """The local-first official provenance log.
 
     The composite in ``__init__.py`` holds an instance of this class as
     its ``local`` field. Slots 6 / 7 talk to the composite; this class
@@ -406,7 +406,7 @@ class LocalProvenanceLog:
         """Append-only flag of an existing contradiction.
 
         Mirrors the flag into ``Mem0QdrantStore.append_flag`` when a store
-        is wired so the contradiction-flags table stays the canonical
+        is wired so the contradiction-flags table stays the official
         per-contradiction view; the JSONL log keeps the global timeline.
         Returns the flag_id when a store is wired, or an event_id when not.
         """

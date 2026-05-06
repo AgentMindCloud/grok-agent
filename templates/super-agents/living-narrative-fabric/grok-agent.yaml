@@ -280,7 +280,7 @@ evaluation:
   history_path: "$env:LOCALAPPDATA\\grok-agent\\living-narrative-fabric\\eval\\history.sqlite3"
 
 # ----------------------------------------------------------------------------
-# synthesis_confidence: the canonical 4-metric formula (Article VI)
+# synthesis_confidence: the official 4-metric formula (Article VI)
 # Locked at the manifest level so external tools can verify the orchestrator
 # never deviates without a manifest bump.
 # ----------------------------------------------------------------------------

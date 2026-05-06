@@ -215,7 +215,7 @@ out, before pressing Enter.
 ### 10/10 — Closing
 
 ```
-10/ Built to help @xai and @grok win — the missing "do something for
+10/ Built for xAI, X, Grok and the ecosystem community — the missing "do something for
 me" layer for every agent on X.
 
 Every action requires explicit consent. The agent never acts
@@ -283,7 +283,7 @@ Apache 2.0. Port 8506.
 github.com/AgentMindCloud/grok-agent #GrokAgentOS
 ```
 
-This is a fallback. The 10-tweet ladder is the canonical launch path.
+This is a fallback. The 10-tweet ladder is the official launch path.
 
 ---
 

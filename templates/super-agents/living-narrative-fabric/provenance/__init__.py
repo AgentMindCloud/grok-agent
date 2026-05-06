@@ -9,7 +9,7 @@ This package is the durable, exportable, optionally-cloud-mirrored
 replacement for the default ``NoopProvenanceLogger`` shipped with
 P110's orchestration core. It composes two siblings:
 
-* :class:`provenance.log.LocalProvenanceLog` — the canonical local-first
+* :class:`provenance.log.LocalProvenanceLog` — the official local-first
   append-only JSONL stream at ``<appdata>/provenance/events.jsonl``,
   mirrored into the ``Mem0QdrantStore.audit_trail`` table whenever a
   real ``version_id`` is in scope.
@@ -181,7 +181,7 @@ class LivingNarrativeFabricProvenance:
     # ---- Protocol-required (3) ------------------------------------------
 
     def log_event(self, event_type: str, payload: dict) -> None:
-        # Local first — JSONL is the canonical record.
+        # Local first — JSONL is the official record.
         self.local.log_event(event_type, payload)
         # Langfuse second — best-effort cloud mirror.
         try:

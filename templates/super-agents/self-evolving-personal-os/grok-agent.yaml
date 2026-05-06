@@ -320,7 +320,7 @@ evaluation:
   history_path: "$env:LOCALAPPDATA\\grok-agent\\self-evolving-personal-os\\eval\\history.sqlite3"
 
 # ----------------------------------------------------------------------------
-# briefing_trust: the canonical 4-metric formula (Article VI)
+# briefing_trust: the official 4-metric formula (Article VI)
 # Locked at the manifest level so external tools can verify the orchestrator
 # never deviates without a manifest bump.
 # ----------------------------------------------------------------------------

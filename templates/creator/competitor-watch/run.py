@@ -76,7 +76,7 @@ from typing import Optional
 SCRIPT_DIR = Path(__file__).resolve().parent
 SYSTEM_PROMPT_PATH = SCRIPT_DIR / "prompts" / "system.md"
 
-# The 4 canonical Watch Score metrics, in fixed render order. The system
+# The 4 official Watch Score metrics, in fixed render order. The system
 # prompt enforces that every Competitor Profile card always shows exactly
 # these 4 rows, in this order.
 SCORE_METRICS = (
@@ -583,7 +583,7 @@ def build_content_gaps(
         ),
         ContentGap(
             "Niche-anchor cross-link gap",
-            "Competitors regularly link out to canonical niche resources in their threads.",
+            "Competitors regularly link out to official niche resources in their threads.",
             "Linking out builds provenance and signals authority faster than insular threads.",
         ),
     )
@@ -638,7 +638,7 @@ def build_growth_opportunities(
             "Diversification protects engagement on platform algorithm shifts.",
         ),
         "Niche-anchor cross-link gap": GrowthOpportunity(
-            "Cross-link 1 canonical niche resource per thread",
+            "Cross-link 1 official niche resource per thread",
             "Pick from the creator's brand-voice approved sources.",
             "Builds provenance + reciprocal-link surface with niche peers.",
         ),
@@ -1146,7 +1146,7 @@ def render_no_competitors_guidance(handle: str, time_range: str) -> str:
         f"or `--competitor-file <path>`, or pass `--demo` for a 4-handle worked example. "
         f"Watch window remains {time_range}.\n\n"
         "## Recommendations\n"
-        "1. Re-run with `--demo` to see the canonical 4-competitor output — "
+        "1. Re-run with `--demo` to see the official 4-competitor output — "
         "bridges to: `research-assistant`\n"
         "2. Add the creator's 3-5 most relevant niche peers and re-run with `--time-range 30d` — "
         "bridges to: `niche-influencer-finder`\n"
@@ -1300,7 +1300,7 @@ def build_argparser() -> argparse.ArgumentParser:
         "--focus",
         choices=list(FOCUS_OPTIONS),
         default="all",
-        help="Which canonical metric to emphasise in headline + recommendations. Default all.",
+        help="Which standard metric to emphasise in headline + recommendations. Default all.",
     )
     p.add_argument(
         "--output",

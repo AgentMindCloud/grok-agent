@@ -4,7 +4,7 @@
 
 # 🔁 Cross-Platform Reposter
 
-> Turn a single X post into 2-3 high-fidelity variants per target platform — LinkedIn, Threads, Bluesky, Newsletter — with 4 canonical Variant Score metrics, voice-drift paradox detection, and ≥3 cross-template bridges. Drafts only. Attribution always preserved.
+> Turn a single X post into 2-3 high-fidelity variants per target platform — LinkedIn, Threads, Bluesky, Newsletter — with 4 official Variant Score metrics, voice-drift paradox detection, and ≥3 cross-template bridges. Drafts only. Attribution always preserved.
 >
 > *Built for xAI, X, Grok and the ecosystem community the platform battle on X — every X creator deserves a cross-poster that respects their voice and their attribution, not an auto-publisher that flattens both.*
 
@@ -52,7 +52,7 @@ The voice-drift paradox is the headline insight this template exists for: a vari
 python .\templates\creator\cross-platform-reposter\run.py --x-handle JanSol0s --demo --include-visual
 ```
 
-That prints the 8-section report (4 platforms triggers Adaptation Audit) straight to your terminal, using the canonical demo source post that the system prompt's worked example references. Add `--no-banner` to suppress the runner banner if you want clean stdout for piping.
+That prints the 8-section report (4 platforms triggers Adaptation Audit) straight to your terminal, using the official demo source post that the system prompt's worked example references. Add `--no-banner` to suppress the runner banner if you want clean stdout for piping.
 
 ### Option A — `grok-agent install` (recommended)
 
@@ -93,7 +93,7 @@ python .\templates\creator\cross-platform-reposter\run.py `
 | `--target-platforms` | optional | Comma-separated: `linkedin`, `threads`, `bluesky`, `newsletter`, `all` (default `all`) |
 | `--tone` | optional | `match-source` \| `professional` \| `casual` \| `thoughtful` \| `punchy` (default `match-source`) |
 | `--include-visual` | optional | Append a 1-line visual / image / chart suggestion per variant |
-| `--demo` | optional | Use the canonical demo source post; LinkedIn variant 2 is pinned to the voice-drift paradox profile so the rule always demonstrates |
+| `--demo` | optional | Use the official demo source post; LinkedIn variant 2 is pinned to the voice-drift paradox profile so the rule always demonstrates |
 | `--output` | optional | Save the report to a path (Apache 2.0 HTML header is prepended) |
 | `--no-banner` | optional | Suppress the runner banner on stdout |
 | `--show-system-prompt` | optional | Print loaded system-prompt path + size on stderr (debugging) |
@@ -246,7 +246,7 @@ Until then, treat the variant body as a *scaffold* the creator polishes — the 
 
 ## Build slots (Recipe B)
 
-Cross-Platform Reposter follows the canonical Recipe B 2-prompt shape:
+Cross-Platform Reposter follows the official Recipe B 2-prompt shape:
 
 | Slot | Files | Status |
 |---|---|---|

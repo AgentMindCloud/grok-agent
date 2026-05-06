@@ -1,11 +1,11 @@
 ---
 name: x-money-tool-recipe
-description: Use this skill whenever building, extending, or debugging any of the four X Money tools — `x-money-companion-dashboard`, `x-smart-cashtag-alpha-engine`, `x-creator-payout-optimizer`, or `x-money-vision-analyzer` — or when creating a new finance-dashboard / alpha-engine / creator-payout-optimizer / vision-analyzer kind agent. Triggers on phrases like "build x-money-*", "add to companion dashboard", "cashtag tool", "payout optimizer", "vision analyzer", or any task in `templates/finance/`. The skill encodes the canonical 6-file pattern every X Money tool follows so you don't reinvent structure on each tool.
+description: Use this skill whenever building, extending, or debugging any of the four X Money tools — `x-money-companion-dashboard`, `x-smart-cashtag-alpha-engine`, `x-creator-payout-optimizer`, or `x-money-vision-analyzer` — or when creating a new finance-dashboard / alpha-engine / creator-payout-optimizer / vision-analyzer kind agent. Triggers on phrases like "build x-money-*", "add to companion dashboard", "cashtag tool", "payout optimizer", "vision analyzer", or any task in `templates/finance/`. The skill encodes the reference 6-file pattern every X Money tool follows so you don't reinvent structure on each tool.
 ---
 
 # x-money-tool-recipe
 
-The canonical pattern for X Money tools. All 4 tools share the same skeleton — the differences are content, not architecture. Use this skill to ensure consistency across the suite.
+The reference pattern for X Money tools. All 4 tools share the same skeleton — the differences are content, not architecture. Use this skill to ensure consistency across the suite.
 
 ## The 6-file pattern
 
@@ -41,7 +41,7 @@ templates/finance/{slug}/
 
 **Cross-tool integration**: Tool #4 (Vision Analyzer) MUST write directly into Tool #1's SQLite at `$env:LOCALAPPDATA\grok-agent\x-money-companion-dashboard\data.db`. Use `data/import_receipts.py` in Tool #1 to receive.
 
-## Canonical templates (use these as base, parameterize per tool)
+## Official templates (use these as base, parameterize per tool)
 
 ### `grok-agent.yaml` template
 
@@ -141,7 +141,7 @@ st.title("💸 {DISPLAY_NAME}")
 st.caption("Built for xAI, X, Grok and the ecosystem community. ❤️")
 disclaimer_banner()
 
-# Tab navigation (6 tabs is canonical for Tool #1; adjust per tool)
+# Tab navigation (6 tabs is official for Tool #1; adjust per tool)
 tab_overview, tab_transactions, tab_analytics, tab_grok, tab_export, tab_alerts = st.tabs([
     "📊 Overview",
     "💳 Transactions",
@@ -376,7 +376,7 @@ def import_to_companion_dashboard(parsed_receipt: dict) -> int:
         return cursor.lastrowid
 ```
 
-This is the canonical pattern — direct SQLite writes, no API layer between tools, local-first.
+This is the reference pattern — direct SQLite writes, no API layer between tools, local-first.
 
 ## Streamlit Cloud deployment notes
 

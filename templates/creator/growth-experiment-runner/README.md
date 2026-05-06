@@ -5,7 +5,7 @@
 # Growth Experiment Runner
 
 > **Built for X, Grok & the ecosystem community.**
-> Local-first growth experiment runner for X creators. Reads creator-supplied hypothesis bundle (or seeded demo signals) and emits a structured 7/8-section experiment plan with 4 canonical Experiment Plan Score metrics, the **small-n paradox** surfaced in BOTH the Plan Score table AND Red Flags whenever it fires, the **multi-variable guard** that excludes any experiment varying > 1 axis, the **risk-exclude guard** that excludes unsafe experiment designs, 3–6 experiment cards each with hypothesis + axis + expected effect + sample required + runtime + primary metric + success criteria, and unconditional bridges to `analytics-summarizer` + `ab-test-suggester` in every output.
+> Local-first growth experiment runner for X creators. Reads creator-supplied hypothesis bundle (or seeded demo signals) and emits a structured 7/8-section experiment plan with 4 official Experiment Plan Score metrics, the **small-n paradox** surfaced in BOTH the Plan Score table AND Red Flags whenever it fires, the **multi-variable guard** that excludes any experiment varying > 1 axis, the **risk-exclude guard** that excludes unsafe experiment designs, 3–6 experiment cards each with hypothesis + axis + expected effect + sample required + runtime + primary metric + success criteria, and unconditional bridges to `analytics-summarizer` + `ab-test-suggester` in every output.
 
 > ⚠️ **No financial, cashtag, investment, sponsorship, harassment, or unsafe-experiment content.** The runner refuses these on every input field.
 
@@ -17,7 +17,7 @@
 
 A deterministic Python runner bound to a v2.15 `creator-template` manifest. Given a creator's X handle plus an audience size (and optionally a hypothesis bundle file), it produces a 7-section markdown plan (8 sections when the Experiment Audit auto-triggers).
 
-- **4 canonical Experiment Plan Score metrics** — Hypothesis specificity / Single-axis isolation / Sample power / Risk avoidance, weights 0.30 / 0.25 / 0.25 / 0.20.
+- **4 official Experiment Plan Score metrics** — Hypothesis specificity / Single-axis isolation / Sample power / Risk avoidance, weights 0.30 / 0.25 / 0.25 / 0.20.
 - **Small-n paradox** dual-surface — when avg Sample power < 40 AND avg Hypothesis specificity > 70, the paradox fires in BOTH the Plan Score table AND a high-severity Red Flag.
 - **Multi-variable guard** — any experiment with `axis_count > 1` → excluded (matches `ab-test-suggester`'s single-axis isolation contract).
 - **Risk-exclude guard** — any experiment with `risk_avoidance_score < 40` → excluded.

@@ -4,7 +4,7 @@
 
 # 📈 Trend-Aligned Poster
 
-> Ride the trend without losing your voice — or your niche. 4 canonical Trend Alignment Plan Score metrics, trend-chasing paradox detection, off-niche guard that excludes brand-diluting ideas before they reach the queue, 4–6 post ideas with engagement bands and template bridges, and mandatory bridges to content-idea-generator and thread-builder. Drafts only. Never auto-publishes. Trend data never leaves your local Windows machine.
+> Ride the trend without losing your voice — or your niche. 4 official Trend Alignment Plan Score metrics, trend-chasing paradox detection, off-niche guard that excludes brand-diluting ideas before they reach the queue, 4–6 post ideas with engagement bands and template bridges, and mandatory bridges to content-idea-generator and thread-builder. Drafts only. Never auto-publishes. Trend data never leaves your local Windows machine.
 >
 > *Built for X, Grok & the ecosystem community — we're ecosystem allies helping every X creator ride trends without sacrificing the niche signal that makes their audience sticky.*
 
@@ -71,7 +71,7 @@ python .\templates\creator\trend-aligned-poster\run.py `
   --days 30 `
   --compare-to previous_period
 
-# Trend-chasing paradox + off-niche guard demo (canonical demo — fires both detectors)
+# Trend-chasing paradox + off-niche guard demo (official demo — fires both detectors)
 python .\templates\creator\trend-aligned-poster\run.py --handle JanSol0s --demo
 
 # Healthy trend alignment demo (no paradox, no off-niche exclusion)
@@ -97,7 +97,7 @@ python .\templates\creator\trend-aligned-poster\run.py `
 | `--compare-to` | optional | `previous_period` \| `benchmark` (default `previous_period`) |
 | `--niche-fit-floor` | optional | Niche fit threshold (0–100) below which the paradox fires when avg Trend match > 75 (default `40`); also governs the off-niche guard |
 | `--target-idea-count` | optional | Target post ideas to emit after the off-niche filter, clamped to [4, 6] (default `5`) |
-| `--demo` | optional | Use the canonical trend-chasing paradox + off-niche guard demo trends |
+| `--demo` | optional | Use the official trend-chasing paradox + off-niche guard demo trends |
 | `--demo-healthy` | optional | Use healthy trend demo data (no paradox, no off-niche exclusion) |
 | `--demo-7d` | optional | Use 7-day window demo trends (auto-triggers Trend Audit + near-paradox watch) |
 | `--output` | optional | Save the report to a local path (Apache 2.0 HTML header is prepended) |

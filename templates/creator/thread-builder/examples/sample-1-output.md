@@ -139,5 +139,5 @@ Confidence: low — data source is seeded demo voice — re-run with --voice-sam
 - **Voice-sample adequacy**: no --voice-samples-file supplied — Voice fidelity uses register defaults; re-run with samples to lift the score.
 - **Analytics anchoring**: no --analytics-file attached; Predicted engagement is niche-typical, not creator-specific.
 - **Variant cognitive load**: 3 variants is inside the safe band (3-4).
-- **Tone-register diversity**: 3 of 4 canonical registers represented (analytical, personal, tactical).
+- **Tone-register diversity**: 3 of 4 standard registers represented (analytical, personal, tactical).
 - **Re-run cadence**: draft → publish → analytics-summarizer in 7d → re-run thread-builder for the next anchor in the same cluster.

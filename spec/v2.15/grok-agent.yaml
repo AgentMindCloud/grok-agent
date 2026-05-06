@@ -6,7 +6,7 @@
 # grok-agent.yaml — Unified Manifest Schema v2.15
 # ============================================================================
 #
-# This file is the canonical reference for the v2.15 manifest schema. Every
+# This file is the primary reference for the v2.15 manifest schema. Every
 # agent, X Money tool, creator template, and Super Agent in this repo declares
 # a manifest that conforms to this shape.
 #
@@ -23,7 +23,7 @@
 # ----------------------------------------------------------------------------
 # 1. The first half is the SCHEMA: every field documented inline, with
 #    required/optional status, type, default, and a one-line purpose.
-# 2. The second half is THREE CANONICAL EXAMPLES (minimal agent, X Money
+# 2. The second half is THREE reference examples (minimal agent, X Money
 #    finance-dashboard, super-agent). Copy + adapt them when authoring a new
 #    manifest.
 # 3. v2.14 manifests are 100% accepted — v2.15 is purely additive. To "upgrade"
@@ -377,7 +377,7 @@ evaluation:
   weekly_loop: false                   # OPTIONAL · bool · default false · run weekly improvement loop
 
 # ============================================================================
-# CANONICAL EXAMPLES
+# reference examples
 # Three minimal but complete manifests showing the most common shapes. Copy
 # the one closest to your agent and adapt. None of these examples invent fields
 # beyond the schema above.

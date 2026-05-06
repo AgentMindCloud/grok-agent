@@ -102,10 +102,10 @@ Confidence: high — clear post, 3 distinct variants under 240 chars each, avera
 
 ## What this output demonstrates (audit checklist)
 
-- [x] **4 canonical Comment Plan Score metrics** with HEALTHY scores — Hook strength in the 70s, Conversation potential in the 70-80s, no paradox fires
+- [x] **4 official Comment Plan Score metrics** with HEALTHY scores — Hook strength in the 70s, Conversation potential in the 70-80s, no paradox fires
 - [x] **Weighted Comment Plan score formula** `round(0.30·Hook + 0.25·Conversation + 0.25·Voice + 0.20·Distinct)` applied per the same formula as example 1
 - [x] **3 distinct story variants** (personal anecdote / mirror case / counter-anecdote) — each with a different framing of the underlying observation
-- [x] **No hook-without-substance paradox** in this run — story-angle variants typically score high on Conversation potential, which is the canonical healthy baseline
+- [x] **No hook-without-substance paradox** in this run — story-angle variants typically score high on Conversation potential, which is the official healthy baseline
 - [x] **Comment-length cap enforced** — every variant body is under the 240-char ceiling
 - [x] **Anti-spam token-overlap check** passes — three story variants are written from genuinely different vantage points (own experience / different domain / contrary outcome)
 - [x] **Engagement Tips** section names concrete posting moves

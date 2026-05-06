@@ -14,7 +14,7 @@ Layered on top of the 249 prior P121–P131 checks. This suite adds 18
 new checks across four acceptance areas:
 
 1. Module / file surface — eval/promptfoo.yaml + eval/deepeval_suite.py
-   + eval/__init__.py present, parseable, advertise the canonical
+   + eval/__init__.py present, parseable, advertise the official
    public surface (16 names, 6 metric classes, 8 Promptfoo test cases,
    ≥ 6 SUGGESTION_LIBRARY entries).
 2. Six DeepEval metrics — every metric class scores in [0,1], the
@@ -28,7 +28,7 @@ new checks across four acceptance areas:
    ``plan_id`` prefixed ``eval::``), persists JSON + Markdown reports
    under ``eval/`` AppData, and the suggestions are human-review-gated.
 
-Run on Windows (canonical):
+Run on Windows (official):
 
 .. code-block:: powershell
 
@@ -149,7 +149,7 @@ def test_module_surface() -> None:
 
     if len(SUGGESTION_LIBRARY) < 6:
         _fail("SUGGESTION_LIBRARY size", str(len(SUGGESTION_LIBRARY)))
-    _ok(f"SUGGESTION_LIBRARY has {len(SUGGESTION_LIBRARY)} canonical entries")
+    _ok(f"SUGGESTION_LIBRARY has {len(SUGGESTION_LIBRARY)} official entries")
 
     for name in (
         "ActionQuality", "ApprovalCompliance", "RollbackSuccess",
@@ -160,7 +160,7 @@ def test_module_surface() -> None:
     ):
         if not hasattr(_eval_pkg, name):
             _fail(f"eval.{name}", "missing")
-    _ok(f"eval package re-exports the canonical 13-item public surface")
+    _ok(f"eval package re-exports the official 13-item public surface")
 
 
 def test_metrics_scoring() -> None:

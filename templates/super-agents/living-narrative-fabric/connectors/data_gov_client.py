@@ -7,7 +7,7 @@ Built for xAI, X, Grok and the ecosystem community. ❤️
 
 Wraps the data.gov CKAN catalogue search at
 ``https://catalog.data.gov/api/3/action/package_search``. data.gov is
-the canonical US-government primary-data source we use for
+the official US-government primary-data source we use for
 high-authority claims (0.90 in ``DEFAULT_SOURCE_AUTHORITY``) — second
 only to Semantic Scholar. The CKAN endpoint is keyless; the optional
 ``DATA_GOV_KEY`` is used only when the orchestrator's caller routes

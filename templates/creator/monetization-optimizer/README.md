@@ -4,7 +4,7 @@
 
 # 💸 Monetization Optimizer
 
-> Plan your X creator runway honestly: 4 canonical Monetization Plan Score metrics, single-channel-dependence paradox detection, wide-band earnings forecasts (never point estimates), paraphrased sponsorship archetypes, tax & expense reserve notes, and ≥3 cross-template bridges that turn the plan into next moves. Drafts only. Never auto-publishes. Never gives financial or tax advice.
+> Plan your X creator runway honestly: 4 official Monetization Plan Score metrics, single-channel-dependence paradox detection, wide-band earnings forecasts (never point estimates), paraphrased sponsorship archetypes, tax & expense reserve notes, and ≥3 cross-template bridges that turn the plan into next moves. Drafts only. Never auto-publishes. Never gives financial or tax advice.
 >
 > *Built for X, Grok & the ecosystem community — every X creator deserves a monetization layer that catches the concentration cliff before it catches them.*
 
@@ -105,7 +105,7 @@ python .\templates\creator\monetization-optimizer\run.py `
 | `--channel-focus` | optional | `paid_tier` \| `creator_fund` \| `sponsorships` \| `digital_products` \| `affiliate` \| `all` (default `all`) |
 | `--jurisdiction` | optional | ISO country code (e.g. `VN`, `US`, `SG`) used to caveat the tax/expense notes |
 | `--concentration-threshold` | optional | Top-channel-share threshold for the paradox (default `0.60`) |
-| `--demo` | optional | Use the canonical paradox-firing demo signals |
+| `--demo` | optional | Use the official paradox-firing demo signals |
 | `--demo-healthy` | optional | Use healthy-stack demo signals (diversified, no paradox) |
 | `--demo-365d-audit` | optional | Use 365d-horizon thin-data demo signals that auto-trigger the Plan Audit |
 | `--output` | optional | Save the report to a path (Apache 2.0 HTML header is prepended) |
@@ -151,7 +151,7 @@ The runner accepts a JSON file shaped like the bundled examples (`examples/sampl
 
 If `data_source` is `"demo"` the runner labels every signal as a demo placeholder. Set it to `"real"` (or omit it) when supplying actual ledger data so the report's Plan Snapshot says `real revenue ledger from --revenue-file`.
 
-The recommended source for `channels[*].gross_90d` is the X Money Companion Dashboard's local SQLite (`templates/finance/x-money-companion-dashboard/`) — that Phase 2 tool is the canonical revenue-ledger surface for Grok Agent OS, and this runner is built to read its export shape.
+The recommended source for `channels[*].gross_90d` is the X Money Companion Dashboard's local SQLite (`templates/finance/x-money-companion-dashboard/`) — that Phase 2 tool is the official revenue-ledger surface for Grok Agent OS, and this runner is built to read its export shape.
 
 ---
 
@@ -168,7 +168,7 @@ The recommended source for `channels[*].gross_90d` is the X Money Companion Dash
 
 ## The 5-channel mix
 
-Every recommendation in the Recommendations section is tagged with one channel from this canonical set. The runner enforces diversification across the recommendation list (no more than 2 recommendations against the same channel unless that channel is explicitly the `--channel-focus`):
+Every recommendation in the Recommendations section is tagged with one channel from this official set. The runner enforces diversification across the recommendation list (no more than 2 recommendations against the same channel unless that channel is explicitly the `--channel-focus`):
 
 | Channel | What it is | Typical effort |
 |---|---|---|

@@ -34,7 +34,7 @@ Phase-3 completion against the 20-template target: **50% fully complete · 0% Sl
 
 ## Per-template status
 
-The canonical Recipe-B build order from `docs/PARAMETERIZED_RECIPES.md` (easiest-first) is the column ordering below. Status is derived directly from `ls templates/creator/<slug>/`.
+The official Recipe-B build order from `docs/PARAMETERIZED_RECIPES.md` (easiest-first) is the column ordering below. Status is derived directly from `ls templates/creator/<slug>/`.
 
 | # | Slug | Manifest | System prompt | Runner | README | Examples | Status |
 |---|---|---|---|---|---|---|---|
@@ -201,7 +201,7 @@ That's **22 prompts** of remaining Slot-1/Slot-2 work to bring Phase 3 to 20/20.
 ```
 Phase 3 (Creator Distribution Flywheel) target: 50 prompts
    - 20 templates × 2 (Recipe B Slot 1 + Slot 2) = 40
-   - 5 program-setup prompts (P43–P47 in canonical plan, but the orchestrator's actual numbering shifted)
+   - 5 program-setup prompts (P43–P47 in official plan, but the orchestrator's actual numbering shifted)
    - 5 program-launch prompts (P88–P92)
 
 Current state on `main` (post-P84):

@@ -111,7 +111,7 @@ Confidence: high — 4 competitors over 30d cover content + growth + monetizatio
 
 ## What this output demonstrates (audit checklist)
 
-- [x] **4 canonical Watch Score metrics** in fixed row order (Audience overlap / Content velocity / Growth signal / Monetization activity) on every Competitor Profile card
+- [x] **4 official Watch Score metrics** in fixed row order (Audience overlap / Content velocity / Growth signal / Monetization activity) on every Competitor Profile card
 - [x] **Weighted Watch score formula** `round(0.30 * Overlap + 0.25 * Content + 0.25 * Growth + 0.20 * Monetization)` applied per card (e.g. @deepworkdaily: 0.30·72 + 0.25·60 + 0.25·70 + 0.20·25 = 21.6 + 15 + 17.5 + 5 = 59.1 → 59)
 - [x] **4 Competitor Profile cards** — exactly the handles supplied via `--competitor-handles`, no fabricated rivals
 - [x] **Cadence-fatigue paradox** raised in BOTH the profile card (under Content velocity) AND the Red Flags section (@routinemaster: Content 72 > 70, Growth 27 < 30)

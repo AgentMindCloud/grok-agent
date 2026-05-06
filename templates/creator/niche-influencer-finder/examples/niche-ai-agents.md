@@ -104,7 +104,7 @@ Confidence: high — 3 keywords cover the niche cleanly and 3 tiers are represen
 
 ## What this output demonstrates (audit checklist)
 
-- [x] **4 canonical Match Score metrics** in fixed row order (Authority / Engagement / Audience fit / Collaboration potential) on every Top-Influencer card
+- [x] **4 official Match Score metrics** in fixed row order (Authority / Engagement / Audience fit / Collaboration potential) on every Top-Influencer card
 - [x] **Weighted Match score formula** `round(0.30A + 0.25E + 0.25F + 0.20C)` applied per card (e.g. Newsletter operator: 0.30·79 + 0.25·51 + 0.25·75 + 0.20·82 = 23.7 + 12.75 + 18.75 + 16.4 = 71.6 → 72)
 - [x] **5 Top-Influencer cards** spanning all 3 tiers (2 Micro, 2 Mid, 1 Macro) — exceeds the "≥ 2 tiers when band allows" rule
 - [x] **Engagement-pod paradox** raised in BOTH the archetype card (under the Engagement row) AND the Red Flags section (AI-influencer commentator: Authority 47 < 50, Engagement 76 > 70)

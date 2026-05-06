@@ -12,7 +12,7 @@
 
 This module is the **scoring half** of the weekly self-improvement loop.
 It pairs with :mod:`eval.promptfoo.yaml` (the structural-assertion half)
-and produces five quantitative metrics — every metric in the canonical
+and produces five quantitative metrics — every metric in the official
 0.0 – 1.0 range — that the :mod:`agent` ``improve`` subcommand turns
 into concrete, human-review-gated prompt deltas.
 
@@ -21,7 +21,7 @@ The five metrics:
 - :class:`ProvenanceScore`       fraction of nodes that emitted a complete
                                  ProvenanceRecord (P124 schema)
 - :class:`MemoryRelevance`       cosine-style hit-rate of the memory
-                                 search against canonical query topics
+                                 search against official query topics
 - :class:`PIISafety`             0.0 if any raw PII pattern leaked into
                                  the brief; 1.0 if every PII field is
                                  either redacted or absent
@@ -549,7 +549,7 @@ class OverallSelfImprovement:
 
 
 def run_deepeval_metrics(out: dict) -> list[MetricResult]:
-    """Score the brief on all five canonical metrics."""
+    """Score the brief on all five standard metrics."""
     component_metrics: list[MetricResult] = [
         ProvenanceScore().measure(out),
         MemoryRelevance().measure(out),
@@ -562,7 +562,7 @@ def run_deepeval_metrics(out: dict) -> list[MetricResult]:
 
 # --- Section 6. Suggestion library + builder -----------------------------
 
-# Canonical suggestion templates. Each entry maps a metric name + score
+# Official suggestion templates. Each entry maps a metric name + score
 # threshold to a concrete prompt-delta the human reviewer can copy /
 # accept / reject. Suggestions are *human-review-gated* by design:
 # this code never auto-applies anything. The return shape is JSON-safe.
@@ -859,7 +859,7 @@ def promptfoo_stub_provider(prompt: str, options: dict | None = None) -> str:
 
     Promptfoo's "custom provider" runs this function and treats its
     return value as the model output. We hand back the JSON of a fresh
-    daily-brief so every YAML assert can resolve against canonical
+    daily-brief so every YAML assert can resolve against official
     structure without a real LLM call.
     """
     out = build_brief_for_eval(force_stub=True)

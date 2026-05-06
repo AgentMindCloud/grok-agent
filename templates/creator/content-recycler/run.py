@@ -1385,7 +1385,7 @@ def build_argparser() -> argparse.ArgumentParser:
         "--demo",
         action="store_true",
         help=(
-            "Run with the canonical demo source post — no --old-post-url-or-text required. "
+            "Run with the official demo source post — no --old-post-url-or-text required. "
             "Variant 2 of any single-format run is pinned to the stale-rehash paradox profile "
             "so the rule always demonstrates."
         ),

@@ -7,7 +7,7 @@ The non-negotiable facts about the Grok Agent Platform. Treat these as ground tr
 - **Repo**: `github.com/AgentMindCloud/grok-agent`
 - **Org**: `AgentMindCloud` (creator: `@JanSol0s`)
 - **Codename**: Grok Agent OS
-- **Tagline**: "The canonical standards + distribution layer that makes Grok the easiest, most powerful, and most magical platform for deploying agents on X."
+- **Tagline**: "The official standards + distribution layer that makes Grok the easiest, most powerful, and most magical platform for deploying agents on X."
 - **License**: Apache 2.0 (everywhere, no exceptions)
 - **Manifest version**: `grok-agent.yaml` v2.15 (100% backwards compat with v2.14)
 
@@ -31,7 +31,7 @@ The non-negotiable facts about the Grok Agent Platform. Treat these as ground tr
 | Marketplace (Phase 5) | Next.js on Vercel |
 | Execution env | GitHub Codespaces or Actions (no local Python builds required) |
 
-## File tree (canonical — every prompt references this)
+## File tree (official — every prompt references this)
 
 ```
 grok-agent/

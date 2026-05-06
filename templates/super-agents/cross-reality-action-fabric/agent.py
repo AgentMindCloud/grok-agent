@@ -24,7 +24,7 @@ Subcommands
                          offline; use ``--auto-approve`` only in CI to
                          skip the typed-approval prompt.
 - ``execute-action``     Run a single ad-hoc request through the loop
-                         (the canonical path for "Grok says do X").
+                         (the official path for "Grok says do X").
 - ``search``             Run the read-only ``x_search`` tool and print
                          hits — no consent token needed.
 - ``approve-pending``    Print the pending plan with a numbered approval
@@ -365,7 +365,7 @@ def approve_pending(
     """Approve the pending plan (typed at the HITL prompt) and re-run.
 
     ``accept_steps`` selects which step indices to approve; ``None``
-    means "all remaining". This is the canonical typed-approval path —
+    means "all remaining". This is the official typed-approval path —
     the runtime mints one consent_token per accepted step and re-invokes
     the graph from the start, which finds the pre-existing tokens and
     advances past the HITL gate cleanly.

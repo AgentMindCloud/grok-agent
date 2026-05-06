@@ -158,7 +158,7 @@ exposes rewind controls.
 
 ## Article V — Provenance Is Append-Only
 
-1. The canonical provenance log is the JSONL stream at
+1. The official provenance log is the JSONL stream at
    `$env:LOCALAPPDATA\grok-agent\self-evolving-personal-os\provenance\events.jsonl`.
 2. Every event is appended exactly once. There is **no** update
    path, **no** delete path, and **no** truncation.
@@ -168,7 +168,7 @@ exposes rewind controls.
    underlying `Pattern` row is never mutated.
 5. Optional Langfuse mirror writes are best-effort and pass through
    the PII redactor first — a Langfuse failure never poisons the
-   canonical JSONL write.
+   official JSONL write.
 
 ### Article V.1 — Real-World Action Disclaimer
 
@@ -223,7 +223,7 @@ tabs renders the formula as a footnote on every chart.
 
 Every emitted briefing carries at least
 `MIN_BRIDGES_PER_BRIEFING = 3` cross-template / cross-Super-Agent
-slugs from the canonical bridges list:
+slugs from the official bridges list:
 
 * `living-narrative-fabric`         — Super Agent #1, public context for personal claims
 * `cross-reality-action-fabric`     — Super Agent #3, the action layer
@@ -343,7 +343,7 @@ and re-imported (never redefined) by every slot module of this
 agent. Each callsite that raises it is documented in the Article
 above that motivates the rule.
 
-The four canonical metrics this agent tracks via
+The four standard metrics this agent tracks via
 `eval/deepeval_suite.py` are:
 
 | Metric                       | Weight | Article | Threshold |
@@ -386,7 +386,21 @@ Future amendments require:
 2. A matching bump in `grok-agent.yaml:constitution.rules` (if rules change).
 3. A passing eval run from
    `PersonalOSImprovementLoop.run_weekly_eval` confirming all four
-   canonical metrics still pass at the new thresholds.
+   standard metrics still pass at the new thresholds.
+
+---
+
+## Article VII.1 — Registry-Backed Citation Contracts
+
+All cross-agent citations are formally encoded in
+[`templates/super-agents/_bridges/registry.json`](../_bridges/registry.json) (v1.0+).
+The registry defines which Super Agents this agent may cite, what type
+of citation (data, action, synthesis, contradiction-flag, or memory),
+and which consent gates control each citation. The registry enforces
+Article VII (≥3 bridges per briefing) and ensures `reciprocal: true`
+citations are mutually acknowledged. Every morning briefing carries
+references to at least three agents listed in this registry; the
+safety scanner verifies these references at briefing publication time.
 
 ---
 

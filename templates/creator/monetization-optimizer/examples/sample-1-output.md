@@ -117,7 +117,7 @@ Confidence: low — data source is seeded demo signals — re-run with --revenue
 ## Plan Audit (auto-triggered)
 
 - **Window adequacy**: 90d horizon with 90d of input history — sufficient for the patterns surfaced.
-- **Channel coverage**: 4 of 5 canonical channels active in the input — acceptable
+- **Channel coverage**: 4 of 5 official channels active in the input — acceptable
 - **Forecast band width**: Demo placeholders present; runner cannot speak to real-creator confidence until --revenue-file is supplied.
 - **Jurisdiction acknowledgment**: VN-resident creator persona is the primary user of Grok Agent OS; treaty / withholding caveats apply.
 - **Sponsorship-pipeline visibility**: Sponsorship-pipeline rows present in input — recommendations are anchored.

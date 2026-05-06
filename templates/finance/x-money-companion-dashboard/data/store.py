@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 """SQLite store for the X Money Companion Dashboard.
 
-Owns the canonical schema (4 tables: ``schema_meta``, ``transactions``,
+Owns the official schema (4 tables: ``schema_meta``, ``transactions``,
 ``alerts``, ``insights``), an idempotent migration runner, CRUD helpers,
 and three of the five manifest-declared tool functions
 (``categorize_transaction``, ``build_tax_export``, ``summarize_alerts``).

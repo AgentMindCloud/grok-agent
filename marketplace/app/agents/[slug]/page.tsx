@@ -7,69 +7,77 @@
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //
-// Per-agent detail route. Renders any catalogued agent with its manifest
-// path, capabilities, and consent gates, and offers "Deploy a copy" /
-// "Share on X" call-to-actions. Built for xAI, X, Grok and the ecosystem community. ❤️
+// Per-agent detail route. Renders any catalogued agent with its
+// manifest path, install command, tags, and one-click "Deploy a copy"
+// + "Share on X" call-to-actions. Reads the catalogue directly from
+// lib/manifests.ts (no legacy adapter shim).
 
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { FEATURED_AGENTS, getFeaturedAgent } from '../../../lib/agents';
+import { findAgentBySlug, loadAllAgents } from '../../../lib/manifests';
 import {
   buildDeepLink,
   buildDeployToXUrl,
   ManifestKind,
 } from '../../../lib/manifest';
+import { FLAGSHIP_NUMBERS, TIER_LABELS } from '../../../lib/types';
 
 interface PageProps {
   params: { slug: string };
 }
 
 export function generateStaticParams() {
-  return FEATURED_AGENTS.map((agent) => ({ slug: agent.slug }));
+  return loadAllAgents().map((agent) => ({ slug: agent.slug }));
 }
 
 export function generateMetadata({ params }: PageProps): Metadata {
-  const agent = getFeaturedAgent(params.slug);
+  const agent = findAgentBySlug(params.slug);
   if (!agent) {
     return { title: 'Agent not found · Grok Agent OS' };
   }
-  const titlePrefix =
-    agent.number != null ? `Super Agent #${agent.number} — ` : '';
+  const number = FLAGSHIP_NUMBERS[agent.slug];
+  const titlePrefix = number != null ? `Super Agent #${number} — ` : '';
   return {
-    title: `${titlePrefix}${agent.name} · Grok Agent OS`,
-    description: agent.tagline,
+    title: `${titlePrefix}${agent.displayName} · Grok Agent OS`,
+    description: agent.tagline || agent.description,
   };
 }
 
 export default function AgentDetailPage({ params }: PageProps) {
-  const agent = getFeaturedAgent(params.slug);
+  const agent = findAgentBySlug(params.slug);
   if (!agent) {
     notFound();
   }
 
-  const folder = agent.manifestPath.split('/').slice(0, -1).join('/');
-  const manifestUrl = `https://github.com/AgentMindCloud/grok-agent/blob/main/${agent.manifestPath}`;
-  const folderUrl = `https://github.com/AgentMindCloud/grok-agent/tree/main/${folder}`;
-  const constitutionUrl = agent.constitutionPath
-    ? `https://github.com/AgentMindCloud/grok-agent/blob/main/${agent.constitutionPath}`
-    : null;
+  const number = FLAGSHIP_NUMBERS[agent.slug];
+  const folder = agent.folderPath;
+  const manifestUrl = agent.githubManifestUrl;
+  const folderUrl = agent.githubFolderUrl;
 
   const deployHref = buildDeepLink({
     name: agent.slug,
     kind: agent.kind as ManifestKind,
-    description: agent.tagline,
+    description: agent.tagline || agent.description,
     author: '@JanSol0s',
-    defaultPort: agent.port ?? 8510,
-    consentGates: agent.consentGates,
+    defaultPort: 8510,
+    consentGates: [],
     realTimeX: false,
   });
 
   const tweetUrl = buildDeployToXUrl({
     slug: agent.slug,
-    description: agent.tagline,
+    description: agent.tagline || agent.description,
     pageUrl: folderUrl,
   });
+
+  const capabilities =
+    agent.tags.length > 0
+      ? agent.tags.slice(0, 5)
+      : agent.multiAgentAgents.slice(0, 5);
+
+  const cost =
+    agent.costLimitUsd != null ? `$${agent.costLimitUsd.toFixed(2)}` : '—';
 
   return (
     <main>
@@ -77,39 +85,27 @@ export default function AgentDetailPage({ params }: PageProps) {
         <Link href="/">← Back to marketplace</Link>
       </p>
       <span className="banner" style={{ display: 'inline-block' }}>
-        {agent.number != null
-          ? `Super Agent #${agent.number}`
-          : `Kind: ${agent.kind}`}
-        {agent.port ? <> · port {agent.port}</> : null}
-        {' · status '}
-        <strong>{agent.status}</strong>
+        {number != null
+          ? `Super Agent #${number}`
+          : TIER_LABELS[agent.tier]}
+        {' · cost cap '}
+        <strong>{cost}</strong>
       </span>
-      <h1 style={{ marginTop: 16 }}>{agent.name}</h1>
-      <p className="tagline">{agent.tagline}</p>
+      <h1 style={{ marginTop: 16 }}>{agent.displayName}</h1>
+      <p className="tagline">{agent.tagline || agent.description}</p>
 
       <h2 className="section">What it does</h2>
       <p>{agent.description}</p>
 
-      <h2 className="section">Capabilities</h2>
-      <ul>
-        {agent.capabilities.map((cap) => (
-          <li key={cap}>{cap}</li>
-        ))}
-      </ul>
-
-      <h2 className="section">Consent gates ({agent.consentGates.length})</h2>
-      <p className="meta">
-        Every gate below requires an explicit, scoped, typed user approval
-        at runtime. The agent never persists "remember my choice" toggles.
-      </p>
-      {agent.consentGates.length === 0 ? (
-        <p>
-          <em>None declared — this agent emits drafts only.</em>
-        </p>
-      ) : (
-        <pre className="manifest">
-          <code>{agent.consentGates.map((g) => `- ${g}`).join('\n')}</code>
-        </pre>
+      {capabilities.length > 0 && (
+        <>
+          <h2 className="section">Capabilities</h2>
+          <ul>
+            {capabilities.map((cap) => (
+              <li key={cap}>{cap}</li>
+            ))}
+          </ul>
+        </>
       )}
 
       <h2 className="section">Source on GitHub</h2>
@@ -120,14 +116,6 @@ export default function AgentDetailPage({ params }: PageProps) {
           </a>{' '}
           — v2.15 manifest
         </li>
-        {agent.constitutionPath && constitutionUrl ? (
-          <li>
-            <a href={constitutionUrl} target="_blank" rel="noreferrer noopener">
-              {agent.constitutionPath}
-            </a>{' '}
-            — agent Constitution
-          </li>
-        ) : null}
         <li>
           <a href={folderUrl} target="_blank" rel="noreferrer noopener">
             {folder}/
@@ -140,10 +128,7 @@ export default function AgentDetailPage({ params }: PageProps) {
       <pre className="manifest">
         <code>
           {`cd ${folder.replace(/\//g, '\\')}\n`}
-          {'python -m pip install -r requirements.txt\n'}
-          {agent.port
-            ? `streamlit run dashboard.py --server.port ${agent.port}`
-            : 'python run.py --help'}
+          {agent.installCommand}
         </code>
       </pre>
 

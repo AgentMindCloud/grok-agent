@@ -530,7 +530,7 @@ def span_from_record(record: Any) -> dict:
     """Adapt a P124 :class:`provenance.log.ProvenanceRecord` to Langfuse.
 
     Used by :mod:`graph` so the same wrapper that writes the JSONL row
-    can pass the canonical dict through to whichever Langfuse backend
+    can pass the official dict through to whichever Langfuse backend
     (real or stub) the user has opted into.
     """
     return {

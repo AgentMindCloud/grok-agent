@@ -6,7 +6,7 @@
 # creators. Reads a parent X post (and optional voice samples + 7-day
 # trend snapshot + analytics signals) and emits a 6/7-section
 # structured reply plan with 3-10 ready-to-post reply drafts (default
-# 5), 4 canonical Reply Plan Score metrics, vanity-hook paradox
+# 5), 4 official Reply Plan Score metrics, vanity-hook paradox
 # detection (Trend alignment > 80 AND Niche fit < 50), 10 tone-matched
 # archetypes shared with content-idea-generator, content-engagement
 # prediction bands (never absolute numbers), and >= 3 cross-template
@@ -18,7 +18,7 @@
 version: "2.15"
 kind: "creator-template"
 name: "reply-drafter"
-description: "Local-first reply drafter for X creators — reads a parent X post / thread (and optional voice samples + 7-day trend snapshot + analytics signals) and emits a 6/7-section structured reply plan with 3-10 ready-to-post reply drafts (default 5), 4 canonical Reply Plan Score metrics (Niche fit / Trend alignment / Voice fidelity / Predicted engagement), vanity-hook paradox detection (Trend alignment > 80 AND Niche fit < 50), 10 tone-matched archetypes shared with content-idea-generator, content-engagement prediction bands (never absolute numbers), and >= 3 cross-template bridges that always include analytics-summarizer and thread-builder. Drafts only — never auto-publishes; never trains on another creator's voice; never generates monetization / sales / affiliate language unless the user explicitly requests it. Built for xAI, X, Grok and the ecosystem community. ❤️"
+description: "Local-first reply drafter for X creators — reads a parent X post / thread (and optional voice samples + 7-day trend snapshot + analytics signals) and emits a 6/7-section structured reply plan with 3-10 ready-to-post reply drafts (default 5), 4 official Reply Plan Score metrics (Niche fit / Trend alignment / Voice fidelity / Predicted engagement), vanity-hook paradox detection (Trend alignment > 80 AND Niche fit < 50), 10 tone-matched archetypes shared with content-idea-generator, content-engagement prediction bands (never absolute numbers), and >= 3 cross-template bridges that always include analytics-summarizer and thread-builder. Drafts only — never auto-publishes; never trains on another creator's voice; never generates monetization / sales / affiliate language unless the user explicitly requests it. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 
@@ -125,7 +125,7 @@ constitution:
     - "Surface the vanity-hook paradox in BOTH the Reply Plan Performance section AND the Red Flags section whenever any draft has Trend alignment > 80 AND Niche fit < 50 — a reply that rides the parent post's trending surface for the wrong audience is the most common Type-I error in creator engagement (carry-over from content-idea-generator P98)."
     - "Every reply draft is paraphrased to the creator's voice — never copy-pasted from competitors and never a sycophantic echo of the parent post. The runner refuses to suggest copying a competitor's signature phrasing or simply restating the parent's argument."
     - "Every analysis links to >= 3 cross-template bridges so the creator can wire the reply into the next loop without leaving Grok Agent OS — bridges MUST include `analytics-summarizer` (so the post-reply read is structured) and `thread-builder` (so a high-EV reply can be promoted into a long-form anchor when the topic carries one)."
-    - "10 tone-matched archetypes shared with content-idea-generator. Every draft is tagged with one archetype from the canonical set: numbers-led-list, contrarian-thesis, first-person-rebuild, question-led-poll, tactical-playbook, story-cold-open, metric-receipt, synthesis-takedown, trend-aligned-riff, anti-pattern-warning. The runner picks the per-tone subset deterministically so the same input always yields the same reply set."
+    - "10 tone-matched archetypes shared with content-idea-generator. Every draft is tagged with one archetype from the official set: numbers-led-list, contrarian-thesis, first-person-rebuild, question-led-poll, tactical-playbook, story-cold-open, metric-receipt, synthesis-takedown, trend-aligned-riff, anti-pattern-warning. The runner picks the per-tone subset deterministically so the same input always yields the same reply set."
     - "No monetization / sales / affiliate language by default. When `allow_monetization` is false (the default) the runner refuses to generate any reply that contains revenue, paid-tier, sponsorship, ad-spend, affiliate, or cashtag scope — it emits a structured refusal that points the creator at `monetization-optimizer` and stops. The user must explicitly set `allow_monetization: true` to opt in, and even then no financial advice is generated — only on-brand reply structure."
     - "Audit auto-triggers when red-flag count > 3 OR count >= 8 OR the vanity-hook paradox fires OR data_source = demo with no voice samples and no trends file. Identical condition set to content-idea-generator P98 so the audit semantics are consistent across the daily creator loop."
     - "Reply character cap of 280 (X's default reply-body cap). Every draft body is enforced <= 280 characters at render time. Threaded multi-post replies are out of scope for v1 — that work belongs to `thread-builder`."

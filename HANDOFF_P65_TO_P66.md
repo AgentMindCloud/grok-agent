@@ -88,7 +88,7 @@ python run.py --x-handle @test --follower-sample "..." --focus all --sample-size
 
 The prior 11 runners share an identical architecture. Pick the closest match:
 
-- **Closest analog: `analytics-summarizer/run.py`** — same 4-canonical-row table pattern, qualitative-only scoring, cross-template bridges
+- **Closest analog: `analytics-summarizer/run.py`** — same 4-official-row table pattern, qualitative-only scoring, cross-template bridges
 - **Closest privacy analog: `dm-triager/run.py`** — aggregate-only / paraphrase-only architecture; relevant because P65 is also privacy-aware
 - **Generic Slot-2 pattern: any of P44/P46/P48/P50/P52/P54/P56/P58/P60/P62/P64**
 
@@ -115,7 +115,7 @@ If any of these fail, stop and investigate before P66.
 ## 6. Critical reads (in priority order)
 
 1. **`templates/creator/follower-quality-analyzer/grok-agent.yaml`** — P65 manifest with the 12-rule constitution and the manifest schema P66 must consume
-2. **`templates/creator/follower-quality-analyzer/prompts/system.md`** — P65 system prompt; defines the exact 6-section output schema, 4 canonical metrics, 6-verb action vocabulary, and ≥3 cross-template bridges
+2. **`templates/creator/follower-quality-analyzer/prompts/system.md`** — P65 system prompt; defines the exact 6-section output schema, 4 standard metrics, 6-verb action vocabulary, and ≥3 cross-template bridges
 3. **`templates/creator/analytics-summarizer/run.py`** — closest architectural analog (4-row metric table + qualitative scoring + cross-template bridges)
 
 Optional supporting reads:
@@ -165,7 +165,7 @@ This mirrors `dm-triager`'s privacy architecture exactly.
 When P66 is done, the next prompt-row in `HANDOFF_LOG.md` will be:
 
 ```
-| P66 | Phase 3 | Follower Quality Analyzer runner + README + examples | templates/creator/follower-quality-analyzer/run.py, README.md, examples/ | Deterministic offline runner matching P44–P64 quality bar + P65 system prompt schema + 4-canonical-metric table + aggregate-only privacy + cross-template bridges | ✅ done |
+| P66 | Phase 3 | Follower Quality Analyzer runner + README + examples | templates/creator/follower-quality-analyzer/run.py, README.md, examples/ | Deterministic offline runner matching P44–P64 quality bar + P65 system prompt schema + 4-official-metric table + aggregate-only privacy + cross-template bridges | ✅ done |
 ```
 
 After P66, the project will be at **23/40 P-prompts of the 20-template flywheel = 57.5% complete**, twelve templates fully shipped end-to-end. The 13th template (`niche-influencer-finder`) starts at P67.

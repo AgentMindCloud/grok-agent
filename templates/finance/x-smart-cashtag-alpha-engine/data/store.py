@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 """SQLite store for the X Smart Cashtag Alpha Engine.
 
-Owns the canonical schema (5 tables: ``schema_meta``, ``cashtags``,
+Owns the official schema (5 tables: ``schema_meta``, ``cashtags``,
 ``watchlist``, ``alpha_reports``, ``portfolio_simulations``), an
 idempotent migration runner, CRUD helpers, and three of the five
 manifest-declared tool functions: ``track_cashtag``, ``simulate_portfolio``,

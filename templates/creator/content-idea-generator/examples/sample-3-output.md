@@ -136,5 +136,5 @@ Confidence: medium — one anchor file attached; Idea Plan score 72/100. Re-run 
 - **Trend anchoring**: real trends supplied — Trend alignment is anchored to the actual 7d niche surface.
 - **Analytics anchoring**: no --analytics-file attached; Predicted engagement is niche-typical, not creator-specific.
 - **Idea cognitive load**: 5 ideas is inside the safe band (3-7).
-- **Archetype diversity**: 5 of 10 canonical archetypes represented.
+- **Archetype diversity**: 5 of 10 official archetypes represented.
 - **Re-run cadence**: draft → publish → analytics-summarizer in 7d → re-run content-idea-generator for the next daily cycle.

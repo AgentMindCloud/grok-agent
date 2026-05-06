@@ -5,7 +5,7 @@
 # Grok Agent OS
 
 > **Built for xAI, X, Grok and the ecosystem community. ❤️**
-> The canonical open standard + Windows-first distribution layer that makes Grok the easiest, most powerful, and most magical platform for deploying agents.
+> the official open standard + Windows-first distribution layer that makes Grok the easiest, most powerful, and most magical platform for deploying agents.
 
 `AgentMindCloud/grok-agent` is the missing OS layer for Grok agents. One YAML manifest (`grok-agent.yaml` v2.15) plus one command (`grok install this` or `.\cli\grok-agent.ps1 install`) gets a Grok-powered agent installed safely on Windows 11 with full provenance, public-API power, and the disclaimers required by the Agent Constitution.
 
@@ -82,7 +82,7 @@ The CLI validates against v2.15, runs the Constitution scanner, and on success c
 | `cli/grok-agent.py` | Pydantic v2 deep validator (called from the PS CLI) |
 | `safety/scanner.py` | Agent Constitution enforcer (15 named checks) |
 | `safety/constitution.md` | The Agent Constitution v1.0 |
-| `spec/v2.15/grok-agent.yaml` | Canonical schema (v2.15 unified) |
+| `spec/v2.15/grok-agent.yaml` | official schema (v2.15 unified) |
 | `spec/v2.14/` | Reference-only snapshot of the prior schema |
 | `templates/finance/` | X Money tools (dashboard, alpha engine, payout optimizer, vision analyzer) |
 | `templates/creator/` | 20+ creator templates (Phase 3) |
@@ -91,7 +91,7 @@ The CLI validates against v2.15, runs the Constitution scanner, and on success c
 | `CLAUDE.md` | Ground-truth instruction file for any AI working on this repo |
 | `HANDOFF_LOG.md` | State tracker — which prompts have completed |
 
-For the full canonical tree see [`PROJECT_DNA.md`](PROJECT_DNA.md).
+For the full official tree see [`PROJECT_DNA.md`](PROJECT_DNA.md).
 
 ---
 

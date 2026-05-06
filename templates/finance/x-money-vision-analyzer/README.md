@@ -107,7 +107,7 @@ These follow Constitution Article VII (local-first, privacy-first) and the repo-
 | 📜 **History** | Past parses + import status + the provenance log surface | V.1 |
 | ⚙️ **Settings** | API key, redaction policy, cloud-sync opt-in (default off) | V.1 |
 
-Tabs land in Slot 2 / P32 (Streamlit skeleton). The 6-tab shape adapts Recipe A's canonical layout for the vision-tool surface; fewer real-time elements than Tool #2, more emphasis on review-before-write.
+Tabs land in Slot 2 / P32 (Streamlit skeleton). The 6-tab shape adapts Recipe A's official layout for the vision-tool surface; fewer real-time elements than Tool #2, more emphasis on review-before-write.
 
 ---
 
@@ -134,7 +134,7 @@ If the user installs both tools, drag-drop a receipt → the Vision Analyzer par
 
 This agent ships under `grok-agent.yaml` v2.15 with:
 
-- **Kind**: `vision-analyzer` — the canonical schema enum value for image-/document-parsing agents. (Your prompt §4 said `finance-dashboard`; both are valid v2.15 kinds and both auto-apply V.1+V.2 disclaimers per Article V, but `vision-analyzer` is the more accurate enum: the v2.15 cross-field validator *requires* `grok.vision: true` for `kind: vision-analyzer`, which is exactly the validator-level enforcement of "this is a vision tool" — and matches the recipe-skill table.)
+- **Kind**: `vision-analyzer` — the official schema enum value for image-/document-parsing agents. (Your prompt §4 said `finance-dashboard`; both are valid v2.15 kinds and both auto-apply V.1+V.2 disclaimers per Article V, but `vision-analyzer` is the more accurate enum: the v2.15 cross-field validator *requires* `grok.vision: true` for `kind: vision-analyzer`, which is exactly the validator-level enforcement of "this is a vision tool" — and matches the recipe-skill table.)
 - **`grok.vision: true`** declared (mandatory for this kind)
 - **5 Grok-callable tools**: `parse_receipt`, `parse_statement`, `import_to_companion_dashboard`, `validate_extraction`, `categorize_parsed_receipt`
 - **1 declared public API**: `grok_vision` (via Grok 4.3) with `privacy: "image_redacted_on_send"`

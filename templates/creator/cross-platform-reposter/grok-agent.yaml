@@ -5,14 +5,14 @@
 # Built for xAI, X, Grok and the ecosystem community — local-first cross-platform repost helper
 # for X creators. Adapts a single X post into 2-3 high-fidelity variants
 # per target platform (LinkedIn / Threads / Bluesky / Newsletter) with
-# 4 canonical Variant Score metrics, voice-drift paradox detection, and
+# 4 official Variant Score metrics, voice-drift paradox detection, and
 # >= 3 cross-template bridges. Stays local — never auto-publishes,
 # never crosses a platform without explicit user consent.
 
 version: "2.15"
 kind: "creator-template"
 name: "cross-platform-reposter"
-description: "Local-first cross-platform repost helper for X creators — turns a single X post into 2-3 variants per target platform (LinkedIn / Threads / Bluesky / Newsletter) with 4 canonical Variant Score metrics (Voice fidelity / Platform fit / Engagement potential / Attribution clarity), platform adaptations, voice-drift paradox detection, and >= 3 cross-template bridges. Drafts only — never auto-publishes. Built for xAI, X, Grok and the ecosystem community. ❤️"
+description: "Local-first cross-platform repost helper for X creators — turns a single X post into 2-3 variants per target platform (LinkedIn / Threads / Bluesky / Newsletter) with 4 official Variant Score metrics (Voice fidelity / Platform fit / Engagement potential / Attribution clarity), platform adaptations, voice-drift paradox detection, and >= 3 cross-template bridges. Drafts only — never auto-publishes. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 

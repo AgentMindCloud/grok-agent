@@ -6,7 +6,7 @@
 
 > **Objective.** Show in 60 seconds, single take, that Grok Agent OS
 > turns "I want to ship a Grok-powered agent on X" into one PowerShell
-> line, with safety gates wired in by construction. Built to help xAI
+> line, with safety gates wired in by construction. Built for xAI, X, Grok and the ecosystem community
 > and Grok win.
 
 ---

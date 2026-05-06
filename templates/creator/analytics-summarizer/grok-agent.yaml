@@ -5,7 +5,7 @@
 # Built for xAI, X, Grok and the ecosystem community — local-first analytics summarizer for X
 # creators. Reads creator-supplied X analytics (or seeded demo metrics
 # when no export is provided) and emits a 6/7-section structured period
-# summary with 4 canonical Period Performance metrics (Reach Score /
+# summary with 4 official Period Performance metrics (Reach Score /
 # Engagement Velocity / Audience Quality / Content Resonance), the
 # vanity-reach paradox (Reach Score > 80 AND Audience Quality < 50),
 # weighted Performance score, top-performing-content archetype
@@ -17,7 +17,7 @@
 version: "2.15"
 kind: "creator-template"
 name: "analytics-summarizer"
-description: "Local-first analytics summarizer for X creators — reads creator-supplied X analytics (or seeded demo metrics) and emits a 6/7-section period summary with 4 canonical Period Performance metrics (Reach Score / Engagement Velocity / Audience Quality / Content Resonance), the vanity-reach paradox (Reach Score > 80 AND Audience Quality < 50), weighted Performance score (0.30·AudienceQuality + 0.25·EngagementVelocity + 0.25·ContentResonance + 0.20·ReachScore), top-performing-content archetypes, trend bucketing (▲▲/▲/▬/▼/▼▼), mandatory bridges to content-idea-generator + thread-builder, and structured monetization refusal. Drafts only — never auto-publishes; never fabricates p-values or confidence intervals. Built for xAI, X, Grok and the ecosystem community. ❤️"
+description: "Local-first analytics summarizer for X creators — reads creator-supplied X analytics (or seeded demo metrics) and emits a 6/7-section period summary with 4 official Period Performance metrics (Reach Score / Engagement Velocity / Audience Quality / Content Resonance), the vanity-reach paradox (Reach Score > 80 AND Audience Quality < 50), weighted Performance score (0.30·AudienceQuality + 0.25·EngagementVelocity + 0.25·ContentResonance + 0.20·ReachScore), top-performing-content archetypes, trend bucketing (▲▲/▲/▬/▼/▼▼), mandatory bridges to content-idea-generator + thread-builder, and structured monetization refusal. Drafts only — never auto-publishes; never fabricates p-values or confidence intervals. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 
@@ -62,7 +62,7 @@ real_time_x:
 tools:
   - name: "generate_analytics_summary"
     type: "local_function"
-    description: "Produce a 6-section structured analytics period summary (or 7-section when red-flag count >= 3, time_range='7d', count >= 8, OR data_source='demo' with no anchors) with 4 canonical Period Performance metrics (Reach Score / Engagement Velocity / Audience Quality / Content Resonance), weighted Performance score (0.30·AQ + 0.25·EV + 0.25·CR + 0.20·RS), the vanity-reach paradox (RS > 80 AND AQ < 50), 3-10 (default 5) top-performing-content archetypes, trend bucketing across the 5-arrow vocabulary, mandatory bridges to content-idea-generator + thread-builder, and a structured monetization refusal path when allow_monetization is false. Reads creator-supplied metrics; never fabricates X numbers."
+    description: "Produce a 6-section structured analytics period summary (or 7-section when red-flag count >= 3, time_range='7d', count >= 8, OR data_source='demo' with no anchors) with 4 official Period Performance metrics (Reach Score / Engagement Velocity / Audience Quality / Content Resonance), weighted Performance score (0.30·AQ + 0.25·EV + 0.25·CR + 0.20·RS), the vanity-reach paradox (RS > 80 AND AQ < 50), 3-10 (default 5) top-performing-content archetypes, trend bucketing across the 5-arrow vocabulary, mandatory bridges to content-idea-generator + thread-builder, and a structured monetization refusal path when allow_monetization is false. Reads creator-supplied metrics; never fabricates X numbers."
     module: "analytics_summarizer.run"
     function: "generate"
     parameters:
@@ -82,7 +82,7 @@ tools:
             type: "string"
             enum: ["reach", "engagement", "audience", "resonance", "all"]
             default: "all"
-            description: "Which canonical metric to emphasise in the headline + ranking. Default 'all' applies no nudge."
+            description: "Which standard metric to emphasise in the headline + ranking. Default 'all' applies no nudge."
           time_range:
             type: "string"
             enum: ["7d", "30d", "90d"]
@@ -112,7 +112,7 @@ constitution:
     - "Surface the vanity-reach paradox in BOTH the Period Performance section AND the Red Flags section whenever Reach Score is above 80 AND Audience Quality is below 50. Reach without audience quality is vanity — copy that cadence at your peril."
     - "When `metrics_file` is omitted, the runner emits seeded demo metrics with an explicit `[demo metric — re-run with --metrics-file for real X data]` label so the creator never confuses the demo output for their actual analytics."
     - "Top-performing-content archetypes are paraphrased categories (e.g. `long-form thread on niche pain-point`), never raw post URLs or full post text, unless the creator explicitly supplies them via `metrics_file`."
-    - "Every analysis includes mandatory bridges to `content-idea-generator` and `thread-builder` — these are the canonical 'measure → next anchor → next thread' loop closers and never get omitted."
+    - "Every analysis includes mandatory bridges to `content-idea-generator` and `thread-builder` — these are the official 'measure → next anchor → next thread' loop closers and never get omitted."
     - "Monetization recommendations are gated by `allow_monetization`. When false (default), the runner emits a structured refusal stub. When true, every monetization-derived line carries the Article V.1 'Not financial advice' banner verbatim."
     - "Insight prose is capped at 280 characters per line; longer narrative is truncated to the cap with a `…[capped]` marker so the creator can paste cleanly into a brief or X draft."
   hard_refusals:

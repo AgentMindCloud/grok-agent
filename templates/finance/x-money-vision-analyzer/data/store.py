@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 """SQLite store for the X Money Vision Analyzer.
 
-Owns the canonical schema (5 tables: ``schema_meta``, ``receipts``,
+Owns the official schema (5 tables: ``schema_meta``, ``receipts``,
 ``parsed_items``, ``contradictions``, ``import_log``), an idempotent
 migration runner, CRUD helpers, and three of the five manifest-declared
 tool functions: ``parse_receipt``, ``validate_extraction``, and

@@ -1228,7 +1228,7 @@ def build_argparser() -> argparse.ArgumentParser:
         "--demo",
         action="store_true",
         help=(
-            "Run with the canonical AI-niche demo post. Pins variant 2 to the "
+            "Run with the official AI-niche demo post. Pins variant 2 to the "
             "hook-without-substance paradox profile so the rule reliably demonstrates."
         ),
     )

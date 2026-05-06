@@ -95,7 +95,7 @@ __all__ = [
 DEFAULT_VECTOR_DIM = 384
 _HASH_SALT = "grok-agent.cross-reality-action-fabric.qdrant.v1"
 
-#: The six canonical memory categories the action fabric tracks.
+#: The six official memory categories the action fabric tracks.
 #: P140 added ``outcome`` for storing real-world results of executed
 #: actions; the other five are stable from P130.
 MEMORY_KINDS: tuple[str, ...] = (

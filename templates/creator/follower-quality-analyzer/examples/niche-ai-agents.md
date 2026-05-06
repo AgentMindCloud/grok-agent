@@ -72,7 +72,7 @@ Confidence: medium — 100 samples support engagement + authenticity reliably; g
 
 ## What this output demonstrates (audit checklist)
 
-- [x] **4 canonical metrics** in fixed row order (Engagement quality / Authenticity / Niche alignment / Growth potential)
+- [x] **4 standard metrics** in fixed row order (Engagement quality / Authenticity / Niche alignment / Growth potential)
 - [x] **Bot-engagement paradox** raised in BOTH the Quality Scores section AND the Red Flags section (Authenticity 76 < 80, Engagement quality 72 > median 45)
 - [x] **4 paraphrased Top-Follower cards** with 4 distinct verbs from the 6-verb vocabulary (Monitor, Reply, Collaborate, Spotlight)
 - [x] **2 Red Flag cards** with severity (Bot-engagement paradox = high, Niche dilution = medium)

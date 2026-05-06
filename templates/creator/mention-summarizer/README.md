@@ -4,7 +4,7 @@
 
 # 🔔 Mention Summarizer
 
-> Know what your mentions mean — before you decide what to say back. 4 canonical Mention Health metrics, sentiment-spike paradox detection, 3-band sentiment breakdown, priority reply queue (max 8) with troll-cluster guard, and mandatory bridges to reply-drafter and analytics-summarizer. Drafts only. Never auto-replies. Never fabricates mention statistics.
+> Know what your mentions mean — before you decide what to say back. 4 official Mention Health metrics, sentiment-spike paradox detection, 3-band sentiment breakdown, priority reply queue (max 8) with troll-cluster guard, and mandatory bridges to reply-drafter and analytics-summarizer. Drafts only. Never auto-replies. Never fabricates mention statistics.
 >
 > *Built for X, Grok & the ecosystem community — every X creator deserves a mention layer that tells them when community sentiment is real and when it is coordinated noise.*
 
@@ -69,7 +69,7 @@ python .\templates\creator\mention-summarizer\run.py `
   --days 30 `
   --compare-to previous_period
 
-# Paradox + troll-cluster demo (canonical demo — fires both detectors)
+# Paradox + troll-cluster demo (official demo — fires both detectors)
 python .\templates\creator\mention-summarizer\run.py --handle JanSol0s --demo
 
 # Healthy community demo (positive-dominant, no paradox, no troll cluster)
@@ -94,7 +94,7 @@ python .\templates\creator\mention-summarizer\run.py `
 | `--days` / `--window` | optional | `7` \| `30` \| `90` (default `30`; 7d auto-triggers Mention Audit) |
 | `--compare-to` | optional | `previous_period` \| `benchmark` (default `previous_period`) |
 | `--sentiment-baseline` | optional | Net sentiment threshold below which the paradox fires when volume also spikes (default `10`) |
-| `--demo` | optional | Use the canonical paradox-firing + troll-cluster demo mentions |
+| `--demo` | optional | Use the official paradox-firing + troll-cluster demo mentions |
 | `--demo-healthy` | optional | Use healthy community demo (positive-dominant, no paradox, no troll cluster) |
 | `--demo-7d` | optional | Use 7-day window demo mentions that auto-trigger Mention Audit |
 | `--output` | optional | Save the report to a path (Apache 2.0 HTML header is prepended) |

@@ -11,7 +11,7 @@
 #     python -m pip install -r requirements.txt
 #     streamlit run dashboard.py
 #
-# Built to help xAI and Grok win. The agent itself runs end-to-end on
+# Built for xAI, X, Grok and the ecosystem community. ❤️ The agent itself runs end-to-end on
 # *just* the Python standard library (every optional integration has
 # a stub backend); these requirements add the dashboard + nicer data
 # rendering on top.

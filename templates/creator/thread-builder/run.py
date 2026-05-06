@@ -103,7 +103,7 @@ THREAD_LENGTH_OPTIONS = ("short", "medium", "long")
 THREAD_LENGTH_POSTS = {"short": 5, "medium": 8, "long": 12}
 
 TONE_FOCUS_OPTIONS = ("analytical", "personal", "tactical", "narrative", "all")
-CANONICAL_REGISTERS = ("analytical", "personal", "tactical", "narrative")
+STANDARD_REGISTERS = ("analytical", "personal", "tactical", "narrative")
 
 VARIANT_MIN = 3
 VARIANT_MAX = 5
@@ -433,11 +433,11 @@ def _select_registers(variant_count: int, tone_focus: str) -> list[str]:
             f"variant_count must be {VARIANT_MIN}-{VARIANT_MAX}, got {variant_count}"
         )
     if tone_focus == "all":
-        ordered = list(CANONICAL_REGISTERS)
+        ordered = list(STANDARD_REGISTERS)
         if variant_count <= 4:
             return ordered[:variant_count]
         return ordered + ["analytical"]  # 5th variant repeats the highest-arc register
-    if tone_focus not in CANONICAL_REGISTERS:
+    if tone_focus not in STANDARD_REGISTERS:
         raise ValueError(
             f"tone_focus must be one of {TONE_FOCUS_OPTIONS}, got {tone_focus!r}"
         )
@@ -1076,7 +1076,7 @@ def _render_thread_audit(
     )
     registers = sorted({v.register for v in variants})
     register_line = (
-        f"{len(registers)} of 4 canonical registers represented "
+        f"{len(registers)} of 4 standard registers represented "
         f"({', '.join(registers)})."
     )
     return "\n".join([
@@ -1407,7 +1407,7 @@ def build_argparser() -> argparse.ArgumentParser:
         description=(
             "Read a creator-supplied topic / goal (and optional voice samples + "
             "analytics export) and emit a 6/7-section thread plan with 3-5 "
-            "ready-to-post variants, 4 canonical Thread Plan Score metrics, "
+            "ready-to-post variants, 4 standard Thread Plan Score metrics, "
             "hook-without-payoff paradox detection, 4-6 alternate hooks, and "
             ">= 3 cross-template bridges (mandatory: analytics-summarizer + "
             "content-idea-generator). Drafts only — never auto-publishes."
@@ -1434,7 +1434,7 @@ def build_argparser() -> argparse.ArgumentParser:
     p.add_argument("--no-banner", action="store_true",
                    help="Suppress the runner banner on stdout.")
     p.add_argument("--demo", action="store_true",
-                   help="Run with the canonical 3-variant demo (agent-eval failure modes).")
+                   help="Run with the standard 3-variant demo (agent-eval failure modes).")
     p.add_argument("--demo-paradox", action="store_true",
                    help="Run with the hook-without-payoff paradox demo.")
     p.add_argument("--demo-five-variants", action="store_true",

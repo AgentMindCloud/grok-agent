@@ -130,5 +130,5 @@ Confidence: low — data source is seeded archetype defaults — re-run with --v
 - **Trend anchoring**: no --trends-file supplied — Trend alignment uses archetype defaults.
 - **Analytics anchoring**: no --analytics-file attached; Predicted engagement is niche-typical, not creator-specific.
 - **Idea cognitive load**: 5 ideas is inside the safe band (3-7).
-- **Archetype diversity**: 5 of 10 canonical archetypes represented.
+- **Archetype diversity**: 5 of 10 official archetypes represented.
 - **Re-run cadence**: draft → publish → analytics-summarizer in 7d → re-run content-idea-generator for the next daily cycle.

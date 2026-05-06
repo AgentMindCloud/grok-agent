@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 """SQLite store for the X Creator Payout Optimizer.
 
-Owns the canonical schema (5 tables: ``schema_meta``, ``forecasts``,
+Owns the official schema (5 tables: ``schema_meta``, ``forecasts``,
 ``content_ideas``, ``tax_estimates``, ``roi_records``), an idempotent
 migration runner, CRUD helpers, and three of the five manifest-declared
 tool functions: ``forecast_earnings``, ``estimate_tax_burden``, and

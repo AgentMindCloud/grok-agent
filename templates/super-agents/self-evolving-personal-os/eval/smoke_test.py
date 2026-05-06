@@ -25,7 +25,7 @@ suite adds 17 new checks covering the four P125 acceptance areas:
    JSON + Markdown report under ``eval/`` AppData; force_stub stays
    pass-through; suggestions are human-review-gated.
 
-Run on Windows (canonical):
+Run on Windows (official):
 
 .. code-block:: powershell
 
@@ -150,7 +150,7 @@ def test_module_surface() -> None:
 
     if len(SUGGESTION_LIBRARY) < 4:
         _fail("SUGGESTION_LIBRARY size", str(len(SUGGESTION_LIBRARY)))
-    _ok(f"SUGGESTION_LIBRARY has {len(SUGGESTION_LIBRARY)} canonical entries")
+    _ok(f"SUGGESTION_LIBRARY has {len(SUGGESTION_LIBRARY)} official entries")
 
     for name in (
         "ProvenanceScore", "MemoryRelevance", "PIISafety",
@@ -161,7 +161,7 @@ def test_module_surface() -> None:
     ):
         if not hasattr(_eval_pkg, name):
             _fail(f"eval.{name}", "missing")
-    _ok("eval package re-exports the canonical 12-item public surface")
+    _ok("eval package re-exports the official 12-item public surface")
 
 
 def test_metrics_scoring() -> None:
@@ -333,7 +333,7 @@ def test_cli_end_to_end() -> None:
         _fail("agent run-log", "no improve action recorded")
     _ok("agent run-log records the improve action")
 
-    # CLI subprocess test via subprocess.run — the canonical PowerShell entry.
+    # CLI subprocess test via subprocess.run — the official PowerShell entry.
     here = Path(__file__).resolve().parent.parent
     proc = subprocess.run(
         [sys.executable, "agent.py", "improve", "--stub", "--quiet"],

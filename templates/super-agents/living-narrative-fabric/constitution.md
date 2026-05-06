@@ -130,7 +130,7 @@ Explorer and Provenance Reports tabs both expose rewind controls.
 
 ## Article V — Provenance Is Append-Only
 
-1. The canonical provenance log is the JSONL stream at
+1. The official provenance log is the JSONL stream at
    `$env:LOCALAPPDATA\grok-agent\living-narrative-fabric\provenance\events.jsonl`.
 2. Every event is appended exactly once. There is **no** update
    path, **no** delete path, and **no** truncation.
@@ -140,7 +140,7 @@ Explorer and Provenance Reports tabs both expose rewind controls.
    `contradiction_flags` table; the underlying `Contradiction` row
    is never mutated.
 5. Optional Langfuse mirror writes are best-effort — a Langfuse
-   failure never poisons the canonical JSONL write.
+   failure never poisons the official JSONL write.
 
 ### Article V.1 — Article V.1 Disclaimer
 
@@ -196,7 +196,7 @@ Pipeline tabs renders the formula as a footnote on every chart.
 
 Every emitted synthesis carries at least
 `MIN_BRIDGES_PER_SYNTHESIS = 3` cross-template / cross-Super-Agent
-slugs from the canonical bridges list:
+slugs from the official bridges list:
 
 * `self-evolving-personal-os`
 * `cross-reality-action-fabric`
@@ -296,7 +296,7 @@ The `ConstitutionViolation(RuntimeError)` exception is defined once
 in `orchestrator.py:362` and re-imported (never redefined) by every
 slot module. Each callsite that raises it is documented in the
 Article above that motivates the rule. A test in
-`eval/deepeval_suite.py` re-derives all four canonical metrics
+`eval/deepeval_suite.py` re-derives all four standard metrics
 (`ContradictionDetection`, `ProvenanceCompleteness`,
 `FourMetricFormula`, `ConstitutionCompliance`) and surfaces a
 weighted overall score; the dashboard's Improvements tab renders
@@ -330,8 +330,23 @@ Future amendments require:
 1. A new entry in this table with a one-line summary.
 2. A matching bump in `grok-agent.yaml:constitution.rules` (if rules change).
 3. A passing eval run from `SelfImprovementLoop.run_weekly_eval`
-   confirming all four canonical metrics still pass at the new
+   confirming all four standard metrics still pass at the new
    thresholds.
+
+---
+
+## Article VII.1 — Registry-Backed Citation Contracts
+
+All cross-agent citations are formally encoded in
+[`templates/super-agents/_bridges/registry.json`](../_bridges/registry.json) (v1.0+).
+The registry defines which Super Agents this agent may cite, what type
+of citation (data, action, synthesis, contradiction-flag, or memory),
+and which consent gates control each citation. The registry enforces
+Article VII (≥3 bridges per synthesis) and ensures `reciprocal: true`
+citations are mutually acknowledged. The safety scanner verifies at
+install time that every bridge listed in this agent's `grok-agent.yaml`
+exists as a forward entry in the registry; reciprocal entries must
+have a matching reverse entry in the cited agent's block.
 
 ---
 

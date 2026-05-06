@@ -695,7 +695,7 @@ class BaseConnector:
         return [], {"stub_reason": "not implemented"}, 0.0
 
     def _normalize(self, item: dict) -> dict:
-        """Map the raw API shape onto the connector's canonical schema."""
+        """Map the raw API shape onto the connector's official schema."""
         return dict(item)
 
     # -- Private helpers ----------------------------------------------------

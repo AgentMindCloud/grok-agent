@@ -1,0 +1,264 @@
+{
+  "_copyright": "Copyright 2026 AgentMindCloud. Licensed under the Apache License, Version 2.0 — http://www.apache.org/licenses/LICENSE-2.0",
+  "registry_version": "1.0.0",
+  "effective_date": "2026-05-06",
+  "description": "Cross-citation contract binding the seven Super Agents. Encodes which agents may cite which others, the consent gates that guard each citation, and the citation type (data, action, synthesis, contradiction-flag, memory).",
+  "flagships": [
+    "living-narrative-fabric",
+    "self-evolving-personal-os",
+    "cross-reality-action-fabric"
+  ],
+  "lighters": [
+    "agent-swarm-with-shared-memory",
+    "provenance-first-trust-engine",
+    "narrative-contradiction-detector",
+    "zero-config-i-want-to-agent"
+  ],
+  "citation_types": {
+    "data": "Read-only data flow; no mutation. Used for context, sources, confidence scores.",
+    "action": "Action delegation; always gated by real-world action consent gates. Used for orchestrator -> executor bridges.",
+    "synthesis": "Synthesis output from one agent consumed as input to another. Always gated by publish_synthesis or equivalent.",
+    "contradiction-flag": "Explicit surface of conflicting information. Gated by publish_synthesis; never silently resolved.",
+    "memory": "Episodic or semantic memory access across agents; append-only; never mutates."
+  },
+  "agents": {
+    "living-narrative-fabric": {
+      "role": "orchestrator",
+      "kind": "super-agent",
+      "min_bridges": 3,
+      "delegates_to": ["self-evolving-personal-os", "cross-reality-action-fabric"],
+      "citations_to": {
+        "self-evolving-personal-os": {
+          "citation_type": "synthesis",
+          "purpose": "personalises each synthesis with personal context",
+          "consent_gates": ["publish_synthesis"],
+          "reciprocal": true,
+          "weight": 0.9
+        },
+        "cross-reality-action-fabric": {
+          "citation_type": "action",
+          "purpose": "turns synthesis into real-world action",
+          "consent_gates": ["publish_synthesis"],
+          "reciprocal": true,
+          "weight": 0.8
+        },
+        "agent-swarm-with-shared-memory": {
+          "citation_type": "data",
+          "purpose": "collective intelligence on complex topics",
+          "consent_gates": ["publish_synthesis"],
+          "reciprocal": false,
+          "weight": 0.6
+        },
+        "provenance-first-trust-engine": {
+          "citation_type": "data",
+          "purpose": "verifiable confidence scores per claim",
+          "consent_gates": ["publish_synthesis"],
+          "reciprocal": false,
+          "weight": 0.7
+        },
+        "narrative-contradiction-detector": {
+          "citation_type": "contradiction-flag",
+          "purpose": "actively surfaces contradictions across sources",
+          "consent_gates": ["publish_synthesis"],
+          "reciprocal": false,
+          "weight": 0.85
+        }
+      }
+    },
+    "self-evolving-personal-os": {
+      "role": "orchestrator",
+      "kind": "super-agent",
+      "min_bridges": 3,
+      "delegates_to": ["living-narrative-fabric", "cross-reality-action-fabric"],
+      "citations_to": {
+        "living-narrative-fabric": {
+          "citation_type": "synthesis",
+          "purpose": "public narrative context for personal claims",
+          "consent_gates": ["publish_briefing"],
+          "reciprocal": true,
+          "weight": 0.9
+        },
+        "cross-reality-action-fabric": {
+          "citation_type": "action",
+          "purpose": "consent-gated action layer for workflow changes",
+          "consent_gates": ["apply_workflow_change"],
+          "reciprocal": true,
+          "weight": 0.85
+        },
+        "agent-swarm-with-shared-memory": {
+          "citation_type": "memory",
+          "purpose": "shared memory for workflow evolution insights",
+          "consent_gates": ["publish_briefing"],
+          "reciprocal": false,
+          "weight": 0.5
+        },
+        "provenance-first-trust-engine": {
+          "citation_type": "data",
+          "purpose": "verifiable trust scores for briefing claims",
+          "consent_gates": ["publish_briefing"],
+          "reciprocal": false,
+          "weight": 0.7
+        }
+      }
+    },
+    "cross-reality-action-fabric": {
+      "role": "orchestrator",
+      "kind": "super-agent",
+      "min_bridges": 3,
+      "delegates_to": ["web-action-worker", "local-windows-worker", "real-world-api-worker", "x-action-worker"],
+      "citations_to": {
+        "living-narrative-fabric": {
+          "citation_type": "data",
+          "purpose": "synthesis context for action planning",
+          "consent_gates": ["publish_synthesis"],
+          "reciprocal": true,
+          "weight": 0.75
+        },
+        "self-evolving-personal-os": {
+          "citation_type": "memory",
+          "purpose": "personal memory context for workflow actions",
+          "consent_gates": ["run_powershell_local"],
+          "reciprocal": true,
+          "weight": 0.8
+        },
+        "provenance-first-trust-engine": {
+          "citation_type": "data",
+          "purpose": "confidence verification before real-world action",
+          "consent_gates": ["run_web_action", "run_powershell_local"],
+          "reciprocal": false,
+          "weight": 0.65
+        },
+        "narrative-contradiction-detector": {
+          "citation_type": "contradiction-flag",
+          "purpose": "surface conflicting information before acting",
+          "consent_gates": ["publish_synthesis"],
+          "reciprocal": false,
+          "weight": 0.75
+        }
+      }
+    },
+    "agent-swarm-with-shared-memory": {
+      "role": "orchestrator",
+      "kind": "super-agent",
+      "min_bridges": 2,
+      "shared_memory_url": "mem0://grok-agent-shared",
+      "citations_to": {
+        "living-narrative-fabric": {
+          "citation_type": "synthesis",
+          "purpose": "public narratives for swarm debate context",
+          "consent_gates": ["publish_synthesis"],
+          "reciprocal": false,
+          "weight": 0.6
+        },
+        "provenance-first-trust-engine": {
+          "citation_type": "data",
+          "purpose": "confidence scores for swarm claims",
+          "consent_gates": ["publish_synthesis"],
+          "reciprocal": false,
+          "weight": 0.65
+        },
+        "narrative-contradiction-detector": {
+          "citation_type": "contradiction-flag",
+          "purpose": "surface disagreements in swarm debate",
+          "consent_gates": ["publish_synthesis"],
+          "reciprocal": false,
+          "weight": 0.7
+        }
+      }
+    },
+    "provenance-first-trust-engine": {
+      "role": "orchestrator",
+      "kind": "super-agent",
+      "min_bridges": 2,
+      "shared_memory_url": "mem0://grok-agent-shared",
+      "citations_to": {
+        "living-narrative-fabric": {
+          "citation_type": "synthesis",
+          "purpose": "claims to decompose and score",
+          "consent_gates": ["publish_synthesis"],
+          "reciprocal": false,
+          "weight": 0.7
+        },
+        "narrative-contradiction-detector": {
+          "citation_type": "contradiction-flag",
+          "purpose": "identify conflicting sources before scoring",
+          "consent_gates": ["publish_synthesis"],
+          "reciprocal": false,
+          "weight": 0.65
+        }
+      }
+    },
+    "narrative-contradiction-detector": {
+      "role": "orchestrator",
+      "kind": "super-agent",
+      "min_bridges": 2,
+      "shared_memory_url": "mem0://grok-agent-shared",
+      "citations_to": {
+        "living-narrative-fabric": {
+          "citation_type": "synthesis",
+          "purpose": "claims to scan for contradictions",
+          "consent_gates": ["publish_synthesis"],
+          "reciprocal": false,
+          "weight": 0.75
+        },
+        "provenance-first-trust-engine": {
+          "citation_type": "data",
+          "purpose": "source authority scores for contradiction severity",
+          "consent_gates": ["publish_synthesis"],
+          "reciprocal": false,
+          "weight": 0.6
+        }
+      }
+    },
+    "zero-config-i-want-to-agent": {
+      "role": "orchestrator",
+      "kind": "super-agent",
+      "min_bridges": 2,
+      "shared_memory_url": "mem0://grok-agent-shared",
+      "citations_to": {
+        "cross-reality-action-fabric": {
+          "citation_type": "action",
+          "purpose": "executes assembled action plans with consent gates",
+          "consent_gates": ["any_real_world_action"],
+          "reciprocal": false,
+          "weight": 0.8
+        },
+        "living-narrative-fabric": {
+          "citation_type": "synthesis",
+          "purpose": "gathers narrative context for goal planning",
+          "consent_gates": ["publish_synthesis"],
+          "reciprocal": false,
+          "weight": 0.5
+        }
+      }
+    }
+  },
+  "reciprocity_rule": {
+    "article": "Article VII (Bridges Are Mandatory)",
+    "description": "When Agent A cites Agent B with reciprocal: true, Agent B may cite Agent A back with the same citation type and matching consent gates. This ensures bidirectional flow across flagship pairs.",
+    "enforcement": "The safety scanner verifies all reciprocal=true entries have matching reverse entries in the cited agent's citations_to block."
+  },
+  "transitive_citation_rules": {
+    "rule_1": "Agent A may cite Agent B's synthesis of Agent C if and only if Agent B is authorised to cite Agent C. No transitive shortcuts.",
+    "rule_2": "Contradiction flags are not transitive — only direct source detection triggers a flag. Agent A cannot raise a flag about Agent B raising a flag.",
+    "rule_3": "Action citations must complete inline — Agent A -> Agent B -> Agent C action chains are not allowed. Agent A may call Agent B, but Agent B must not delegate further to Agent C unless explicitly authorised in this registry."
+  },
+  "consent_gate_mapping": {
+    "publish_synthesis": "The user explicitly approves publishing a synthesis that cites external agents. Gated at the dashboard or CLI level.",
+    "publish_briefing": "The user explicitly approves publishing a briefing that cites external agents.",
+    "apply_workflow_change": "The user explicitly approves applying a workflow suggestion that may involve external agent citations.",
+    "any_real_world_action": "The user explicitly approves any real-world action (PowerShell, web automation, X post, file modification).",
+    "run_powershell_local": "The user explicitly approves running a signed PowerShell snippet; may involve citations to other agents' advice.",
+    "run_web_action": "The user explicitly approves running a web automation action; may cite external synthesis or data.",
+    "export_provenance_log": "The user explicitly approves exporting the provenance log, which may reference other agents."
+  },
+  "versioning": {
+    "version": "1.0.0",
+    "release_date": "2026-05-06",
+    "migration_path": "Supersedes the ad-hoc bridges block in each grok-agent.yaml. Safety scanner validates all grok-agent.yaml bridge entries against this registry at install time.",
+    "future_bumps": [
+      "MINOR: Adding a new lighter agent or changing citation weights",
+      "MAJOR: Removing a flagship, changing reciprocity semantics, or tightening transitive rules"
+    ]
+  }
+}

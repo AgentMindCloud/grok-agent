@@ -34,7 +34,7 @@ See [`constitution.md`](./constitution.md) for the six enforceable Rules.
 
 ## Install (Windows 11, PowerShell)
 
-The canonical one-line install — paste-able into a Grok reply on X:
+The official one-line install — paste-able into a Grok reply on X:
 
 ```powershell
 grok install this

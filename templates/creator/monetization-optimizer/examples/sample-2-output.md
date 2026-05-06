@@ -15,7 +15,7 @@
 | Channel focus | `all` |
 | Jurisdiction | `US` |
 | Data source | seeded demo signals |
-| Single-channel-dependence paradox? | **No** — top channel (sponsorships) is 35% of 90d revenue (well below the 60% concentration threshold); all 5 canonical channels active; reserve at 25% within typical heuristics |
+| Single-channel-dependence paradox? | **No** — top channel (sponsorships) is 35% of 90d revenue (well below the 60% concentration threshold); all 5 official channels active; reserve at 25% within typical heuristics |
 
 To regenerate:
 
@@ -111,7 +111,7 @@ Confidence: low — data source is seeded demo signals — re-run with --revenue
 ## Plan Audit (auto-triggered)
 
 - **Window adequacy**: 90d horizon with 180d of input history — sufficient for the patterns surfaced.
-- **Channel coverage**: 5 of 5 canonical channels active in the input — acceptable
+- **Channel coverage**: 5 of 5 official channels active in the input — acceptable
 - **Forecast band width**: Demo placeholders present; runner cannot speak to real-creator confidence until --revenue-file is supplied.
 - **Jurisdiction acknowledgment**: Jurisdiction US declared; jurisdiction-specific tax filings require a locally-licensed professional.
 - **Sponsorship-pipeline visibility**: Sponsorship-pipeline rows present in input — recommendations are anchored.

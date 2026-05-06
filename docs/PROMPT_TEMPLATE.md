@@ -11,7 +11,7 @@ The exact shape every Claude Code prompt this skill generates must follow. Stick
 
 ## 1. Context
 
-You are working on `AgentMindCloud/grok-agent` — the canonical Grok Agent Platform repo. Stack: Windows 11 + PowerShell + Python 3.12 + Streamlit + grok-agent.yaml v2.15.
+You are working on `AgentMindCloud/grok-agent` — the official Grok Agent Platform repo. Stack: Windows 11 + PowerShell + Python 3.12 + Streamlit + grok-agent.yaml v2.15.
 
 Already built (from HANDOFF_LOG.md):
 - {Bullet list of relevant prior prompts and what they produced — only the relevant ones, not the full history}
@@ -93,7 +93,7 @@ Bootstrap the repository with the three files that govern every subsequent promp
 - "Built for xAI, X, Grok and the ecosystem community" line in CLAUDE.md
 - Windows 11 + PowerShell only
 - No partial code — full files only
-- CLAUDE.md must enumerate the canonical file tree (see PROJECT_DNA)
+- CLAUDE.md must enumerate the official file tree (see PROJECT_DNA)
 
 ## 4. Files to create/modify
 
@@ -107,7 +107,7 @@ Use the CLAUDE.md and .gitignore content from section "1. CLAUDE.md (Updated, Pu
 
 ## 6. Acceptance criteria
 
-- [ ] `CLAUDE.md` exists and includes the canonical file tree
+- [ ] `CLAUDE.md` exists and includes the official file tree
 - [ ] `LICENSE` contains complete Apache 2.0 text (no truncation)
 - [ ] `.gitignore` covers Python, Windows, Streamlit, secrets, IDEs
 - [ ] All files committed

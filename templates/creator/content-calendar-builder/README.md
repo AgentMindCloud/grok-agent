@@ -5,7 +5,7 @@
 # Content Calendar Builder
 
 > **Built for X, Grok & the ecosystem community.**
-> Local-first content calendar builder for X creators. Reads creator-supplied cadence + niche + optional voice + analytics signals (or seeded demo signals) and emits a structured 7/8-section calendar with 4 canonical Calendar Plan Score metrics, the **over-scheduling paradox** surfaced in BOTH the Plan Score table AND Red Flags whenever it fires, the **format-streak guard** that flags ≥3 consecutive same-format slots, the **variety floor** that flags low format diversity, voice-drift candidates flagged inline, 4–12 weeks × 3–14 slots/week organised by week, and unconditional bridges to `analytics-summarizer` + `brand-voice-trainer` in every output.
+> Local-first content calendar builder for X creators. Reads creator-supplied cadence + niche + optional voice + analytics signals (or seeded demo signals) and emits a structured 7/8-section calendar with 4 official Calendar Plan Score metrics, the **over-scheduling paradox** surfaced in BOTH the Plan Score table AND Red Flags whenever it fires, the **format-streak guard** that flags ≥3 consecutive same-format slots, the **variety floor** that flags low format diversity, voice-drift candidates flagged inline, 4–12 weeks × 3–14 slots/week organised by week, and unconditional bridges to `analytics-summarizer` + `brand-voice-trainer` in every output.
 
 > ⚠️ **No financial, cashtag, investment, sponsorship, or harassment content.** The runner errors out on forbidden tokens in any niche, archetype, or slot field.
 
@@ -17,7 +17,7 @@
 
 A deterministic Python runner bound to a v2.15 `creator-template` manifest. Given a creator's X handle, cadence, and weeks, it produces a 7-section markdown calendar (8 sections when the Calendar Audit auto-triggers).
 
-- **4 canonical Calendar Plan Score metrics** — Cadence sustainability / Niche fit / Voice fidelity / Variety, weights 0.30 / 0.25 / 0.25 / 0.20.
+- **4 official Calendar Plan Score metrics** — Cadence sustainability / Niche fit / Voice fidelity / Variety, weights 0.30 / 0.25 / 0.25 / 0.20.
 - **Over-scheduling paradox** dual-surface — when avg Cadence sustainability < 50 AND posts_per_week > 7, the paradox fires in BOTH the Plan Score table AND a high-severity Red Flag.
 - **Format-streak guard** — ≥ 3 consecutive same-format slots → medium-severity Red Flag (slots stay in calendar, only flagged).
 - **Variety floor** — below the configured `--variety-floor` distinct format types → medium-severity Red Flag.

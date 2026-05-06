@@ -8,7 +8,7 @@ Built for xAI, X, Grok and the ecosystem community. ❤️
 This package wires Promptfoo + DeepEval into a weekly self-improvement
 loop the user can run on Windows with one PowerShell command. It:
 
-* Re-runs the 4 deterministic canonical metrics on every persisted
+* Re-runs the 4 deterministic standard metrics on every persisted
   ``SynthesisVersion`` (or one explicitly passed by the caller):
   ContradictionDetection / ProvenanceCompleteness / FourMetricFormula /
   ConstitutionCompliance — see ``deepeval_suite.py`` for the formulas.
@@ -510,7 +510,7 @@ _SUGGESTION_TEMPLATES = {
         "title":      "Re-anchor the 4-metric formula",
         "rationale":  (
             "The orchestrator's reported confidence_score diverges from the "
-            "canonical formula 0.30·SourceDiversity + 0.30·ProvenanceCompleteness "
+            "official formula 0.30·SourceDiversity + 0.30·ProvenanceCompleteness "
             "+ 0.25·CrossSourceAgreement + 0.15·RecencyCoverage."
         ),
         "suggested_change": (
@@ -1077,7 +1077,7 @@ def run_smoke_test(*, verbose: bool = True) -> None:
     3. ``suggest_prompt_updates`` returns a tuple (possibly empty).
     4. ``apply_improvements(dry_run=True)`` writes a Markdown preview
        file under ``<appdata>/eval/improvements/``.
-    5. ``apply_improvements(dry_run=False)`` writes the canonical
+    5. ``apply_improvements(dry_run=False)`` writes the official
        Markdown file.
     6. ``run_weekly_eval`` end-to-end: synthesizes, scores, runs
        Promptfoo, generates suggestions, persists history.

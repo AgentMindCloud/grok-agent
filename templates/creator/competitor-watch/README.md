@@ -4,7 +4,7 @@
 
 # 🛰️ Competitor Watch
 
-> Aggregate competitor monitoring for X creators — 4 canonical Watch Score metrics per competitor, content gaps + growth opportunities derived from format mix, cadence-fatigue paradox detection, and ≥3 cross-template bridges. Names only the competitors you explicitly chose to track.
+> Aggregate competitor monitoring for X creators — 4 official Watch Score metrics per competitor, content gaps + growth opportunities derived from format mix, cadence-fatigue paradox detection, and ≥3 cross-template bridges. Names only the competitors you explicitly chose to track.
 >
 > *Built for xAI, X, Grok and the ecosystem community the platform battle on X — every creator deserves a watch that respects who they actually picked, not who an algorithm thinks they should fear.*
 
@@ -189,7 +189,7 @@ The runner does not write anything by default. Saved reports only land on disk w
 
 This agent ships under `grok-agent.yaml` v2.15 with:
 
-- **Kind**: `creator-template` — the canonical schema enum value for creator-flow templates
+- **Kind**: `creator-template` — the official schema enum value for creator-flow templates
 - **1 Grok-callable tool**: `generate_competitor_watch` (bound to `competitor_watch.run.generate`)
 - **0 declared public APIs**: v1 is fully offline; the runner makes no network calls
 - **6 Constitution rules** specialising Articles I, III, V, VII for named-competitor monitoring
@@ -235,7 +235,7 @@ python .\run.py --x-handle habitstacker --competitor-handles "@deepworkdaily,@ro
 
 ## Build slots (Recipe B)
 
-Competitor Watch follows the canonical Recipe B 2-prompt shape:
+Competitor Watch follows the official Recipe B 2-prompt shape:
 
 | Slot | Files | Status |
 |---|---|---|

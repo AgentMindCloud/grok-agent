@@ -593,7 +593,7 @@ def have_langfuse_credentials() -> bool:
 
 
 def trace_name_for_action(action_id: str) -> str:
-    """Return the canonical trace name for one action_id.
+    """Return the official trace name for one action_id.
 
     Matches the contract from P142's prompt: ``crf-action-{action_id}``.
     """

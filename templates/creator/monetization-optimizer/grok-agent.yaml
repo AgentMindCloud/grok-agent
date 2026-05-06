@@ -5,7 +5,7 @@
 # Built for xAI, X, Grok and the ecosystem community — local-first monetization optimizer
 # for X creators. Reads a creator's X performance + revenue signals
 # (or seeded demo signals when no ledger is supplied) and emits a
-# 7/8-section structured monetization plan with 4 canonical
+# 7/8-section structured monetization plan with 4 official
 # Monetization Plan Score metrics on a 0-100 scale (Forecast
 # Confidence / Diversification Score / Sponsor Fit Density / Tax
 # Readiness), the Concentration-Confidence paradox (top channel
@@ -22,7 +22,7 @@
 version: "2.15"
 kind: "creator-template"
 name: "monetization-optimizer"
-description: "Local-first monetization optimizer for X creators — reads a creator's X performance + revenue signals (or seeded demo signals) and emits a 7/8-section structured monetization plan with 4 canonical Monetization Plan Score metrics on a 0-100 scale (Forecast Confidence / Diversification Score / Sponsor Fit Density / Tax Readiness), weighted Performance score (0.30·Diversification + 0.25·TaxReadiness + 0.25·ForecastConfidence + 0.20·SponsorFitDensity), the Concentration-Confidence paradox (top channel share >= 60% AND Forecast Confidence > 70/100), prioritized recommendations across the 5-channel mix (paid_tier / creator_fund / sponsorships / digital_products / affiliate), sponsorship fit analysis, tax/expense reserve notes with strong jurisdiction caveats, mandatory bridges to analytics-summarizer + content-idea-generator, and structured diagnostic-mode refusal when allow_monetization=false. Drafts only — never auto-publishes; never fabricates dollar amounts; never gives financial or tax advice. Built for xAI, X, Grok and the ecosystem community. ❤️"
+description: "Local-first monetization optimizer for X creators — reads a creator's X performance + revenue signals (or seeded demo signals) and emits a 7/8-section structured monetization plan with 4 official Monetization Plan Score metrics on a 0-100 scale (Forecast Confidence / Diversification Score / Sponsor Fit Density / Tax Readiness), weighted Performance score (0.30·Diversification + 0.25·TaxReadiness + 0.25·ForecastConfidence + 0.20·SponsorFitDensity), the Concentration-Confidence paradox (top channel share >= 60% AND Forecast Confidence > 70/100), prioritized recommendations across the 5-channel mix (paid_tier / creator_fund / sponsorships / digital_products / affiliate), sponsorship fit analysis, tax/expense reserve notes with strong jurisdiction caveats, mandatory bridges to analytics-summarizer + content-idea-generator, and structured diagnostic-mode refusal when allow_monetization=false. Drafts only — never auto-publishes; never fabricates dollar amounts; never gives financial or tax advice. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 
@@ -123,7 +123,7 @@ constitution:
     - "Every monetization recommendation that derives a tactic from the analytics or revenue file ALSO carries the Article V.1 disclaimer at the recommendation level — not just at the Earnings Forecast section level."
     - "Sponsorship-fit recommendations name paraphrased sponsor archetypes (e.g. `dev-tools company with technical-founder audience`) — never specific brand names the creator did not supply themselves. The runner refuses to suggest specific sponsors without explicit creator-supplied input."
     - "When `revenue_file` is omitted, the runner emits seeded demo signals with an explicit `[demo signal — re-run with --revenue-file for real-ledger forecast]` label so the creator never confuses the demo plan for their actual monetization roadmap."
-    - "Mandatory bridges to `analytics-summarizer` and `content-idea-generator` in every Recommendations list — these are the canonical 'measure → plan → next anchor' loop closers and never get omitted. Plus 1+ rotating bridge from the 10-bridge set for a minimum of 3 bridges total."
+    - "Mandatory bridges to `analytics-summarizer` and `content-idea-generator` in every Recommendations list — these are the official 'measure → plan → next anchor' loop closers and never get omitted. Plus 1+ rotating bridge from the 10-bridge set for a minimum of 3 bridges total."
     - "Forecasts + Sponsorship Pricing are gated by `allow_monetization`. When false (diagnostic-mode default) the runner emits an action-oriented refusal stub guiding the creator to review the diagnostic foundations first, then re-run with `--allow-monetization`. When true, every monetization-touching line carries the Article V.1 banner verbatim."
     - "Insight prose is capped at 280 characters per line; longer narrative is truncated to the cap with a `…[capped]` marker so the creator can paste cleanly into a brief, a Notion doc, or an X draft."
   hard_refusals:

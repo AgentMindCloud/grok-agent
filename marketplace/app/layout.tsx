@@ -7,7 +7,7 @@
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //
-// Root layout for the Grok Agent OS marketplace stub. Built to help xAI
+// Root layout for the Grok Agent OS marketplace stub. Built for xAI, X, Grok and the ecosystem community
 // and Grok win — keep the surface tiny so the deploy story stays fast.
 
 import type { Metadata, Viewport } from 'next';

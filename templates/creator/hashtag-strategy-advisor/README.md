@@ -4,7 +4,7 @@
 
 # 🏷️ Hashtag Strategy Advisor
 
-> Turn any post topic into a 5-10 hashtag strategy spread across the 5 categories (broad-niche / specific-niche / trending / community / branded), with platform-specific ship caps stated explicitly. 4 canonical Hashtag Plan Score metrics, reach-without-relevance paradox detection, hard refusal of engagement-bait families, ≥3 cross-template bridges. Drafts only.
+> Turn any post topic into a 5-10 hashtag strategy spread across the 5 categories (broad-niche / specific-niche / trending / community / branded), with platform-specific ship caps stated explicitly. 4 official Hashtag Plan Score metrics, reach-without-relevance paradox detection, hard refusal of engagement-bait families, ≥3 cross-template bridges. Drafts only.
 >
 > *Built for xAI, X, Grok and the ecosystem community the platform battle on X — every X creator deserves hashtags with relevance, not stuffing.*
 
@@ -113,7 +113,7 @@ python .\templates\creator\hashtag-strategy-advisor\run.py `
 | `--platform` | optional | `x` \| `linkedin` \| `all` (default `x`) |
 | `--num-hashtags` | optional | 5-10 (default 5) |
 | `--focus` | optional | `reach` \| `engagement` \| `niche` \| `all` (default `all`) |
-| `--demo` | optional | Use the canonical AI-niche demo topic; pins `#AI` so the paradox demonstrates |
+| `--demo` | optional | Use the official AI-niche demo topic; pins `#AI` so the paradox demonstrates |
 | `--demo-productivity` | optional | Use a productivity demo topic; healthy mix (no paradox) |
 | `--output` | optional | Save the report to a path (Apache 2.0 HTML header is prepended) |
 | `--no-banner` | optional | Suppress the runner banner on stdout |

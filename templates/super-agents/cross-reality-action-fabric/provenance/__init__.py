@@ -34,7 +34,7 @@ deeper module paths.
 
 It exposes two attach helpers:
 
-- :func:`attach_provenance` — the canonical P131 bridge that wires the
+- :func:`attach_provenance` — the official P131 bridge that wires the
   logger + (optional) memory into :func:`graph.run_action_loop`.
 - :func:`attach_to_connectors` — P142 helper that auto-instruments a
   :class:`connectors.ConnectorRegistry` so every connector call writes

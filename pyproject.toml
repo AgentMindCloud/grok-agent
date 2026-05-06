@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built for xAI, X, Grok and the ecosystem community — the canonical open standard + Windows-first
+# Built for xAI, X, Grok and the ecosystem community — the official open standard + Windows-first
 # distribution layer for Grok agents on X.
 
 [build-system]
@@ -15,7 +15,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "grok-agent"
 version = "0.1.0"
-description = "Built for xAI, X, Grok and the ecosystem community — the canonical open standard + Windows-first distribution layer for Grok agents on X."
+description = "Built for xAI, X, Grok and the ecosystem community — the official open standard + Windows-first distribution layer for Grok agents on X."
 readme = "README.md"
 requires-python = ">=3.12"
 license = {file = "LICENSE"}

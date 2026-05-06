@@ -1164,7 +1164,7 @@ def build_argparser() -> argparse.ArgumentParser:
         "--demo",
         action="store_true",
         help=(
-            "Run with the canonical AI-niche demo idea. Pins scoring to the multi-variable "
+            "Run with the official AI-niche demo idea. Pins scoring to the multi-variable "
             "paradox profile so the rule reliably demonstrates."
         ),
     )

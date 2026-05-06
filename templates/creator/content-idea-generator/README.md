@@ -78,7 +78,7 @@ python .\templates\creator\content-idea-generator\run.py `
   --trends-file       $env:LOCALAPPDATA\grok-agent\content-idea-generator\trends.json `
   --analytics-file    $env:LOCALAPPDATA\grok-agent\analytics-summarizer\last30.json
 
-# Punchy demo (canonical 5-idea, no anchors)
+# Punchy demo (official 5-idea, no anchors)
 python .\templates\creator\content-idea-generator\run.py --x-handle JanSol0s --demo
 
 # Anchored demo (voice + trends + analytics; high-confidence run)
@@ -106,7 +106,7 @@ python .\templates\creator\content-idea-generator\run.py `
 | `--trends-file` | optional | Path to a JSON list of last-7d niche trends (strings) |
 | `--analytics-file` | optional | Path to an `analytics-summarizer` JSON export (anchors Predicted engagement) |
 | `--input-file` | optional | Path to a brief bundle JSON (encapsulates niche + voice + trends + analytics + score overrides) |
-| `--demo` | optional | Use the canonical 5-idea punchy-tone demo (`agent-eval tooling for X creators`) |
+| `--demo` | optional | Use the official 5-idea punchy-tone demo (`agent-eval tooling for X creators`) |
 | `--demo-anchored` | optional | Use the high-confidence demo (voice + trends + analytics anchors) |
 | `--demo-paradox` | optional | Use the vanity-hook paradox demo (auto-triggers Idea Audit) |
 | `--output` | optional | Save the report to a path (Apache 2.0 HTML header is prepended) |

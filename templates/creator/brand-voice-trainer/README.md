@@ -4,7 +4,7 @@
 
 # 🎙️ Brand Voice Trainer
 
-> Read a sample of your own past X posts and emit a structured voice profile + 3-5 training prompts you can paste into other Grok Agent OS templates. 4 canonical Voice Profile metrics, generic-polish paradox detection, sample-size double gate, ≥3 cross-template bridges. Drafts only. Trains only on your own voice.
+> Read a sample of your own past X posts and emit a structured voice profile + 3-5 training prompts you can paste into other Grok Agent OS templates. 4 official Voice Profile metrics, generic-polish paradox detection, sample-size double gate, ≥3 cross-template bridges. Drafts only. Trains only on your own voice.
 >
 > *Built for xAI, X, Grok and the ecosystem community the platform battle on X — every X creator deserves a trainer that sharpens their voice instead of flattening it into niche-default.*
 
@@ -102,7 +102,7 @@ python .\templates\creator\brand-voice-trainer\run.py `
 | `--date-range` | yes (alt) | ISO date range used as deterministic seed when no inline sample is provided |
 | `--voice-focus` | optional | `tone` \| `structure` \| `vocabulary` \| `all` (default `all`) |
 | `--output-format` | optional | `analysis` \| `training_prompts` \| `both` (default `both`) |
-| `--demo` | optional | Use the canonical 24-post generic-polish demo sample (paradox-pinned) |
+| `--demo` | optional | Use the official 24-post generic-polish demo sample (paradox-pinned) |
 | `--demo-productivity` | optional | Use the 8-post productivity demo sample (Voice Audit-triggered) |
 | `--output` | optional | Save the report to a path (Apache 2.0 HTML header is prepended) |
 | `--no-banner` | optional | Suppress the runner banner on stdout |
@@ -246,7 +246,7 @@ The value the runner adds in v1:
 
 ## Build slots (Recipe B)
 
-Brand Voice Trainer follows the canonical Recipe B 2-prompt shape:
+Brand Voice Trainer follows the official Recipe B 2-prompt shape:
 
 | Slot | Files | Status |
 |---|---|---|

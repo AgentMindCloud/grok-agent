@@ -4,7 +4,7 @@
 
 # ♻️ Content Recycler
 
-> Turn an old X post you authored into 2-3 high-quality variants tuned to a chosen format (tweet / thread / carousel / newsletter / all) under a chosen recycle angle (update / expand / threadify / repurpose / auto). 4 canonical Recycle Score metrics, stale-rehash paradox detection, ≥3 cross-template bridges. Drafts only. Attribution stamp always preserved.
+> Turn an old X post you authored into 2-3 high-quality variants tuned to a chosen format (tweet / thread / carousel / newsletter / all) under a chosen recycle angle (update / expand / threadify / repurpose / auto). 4 official Recycle Score metrics, stale-rehash paradox detection, ≥3 cross-template bridges. Drafts only. Attribution stamp always preserved.
 >
 > *Built for xAI, X, Grok and the ecosystem community the platform battle on X — every X creator deserves a recycler that compounds their back catalog without copy-pasting them.*
 
@@ -101,7 +101,7 @@ python .\templates\creator\content-recycler\run.py `
 | `--recycle-angle` | optional | `update` \| `expand` \| `threadify` \| `repurpose` \| `auto` (default `auto` — runner picks) |
 | `--target-format` | optional | `tweet` \| `thread` \| `carousel` \| `newsletter` \| `all` (default `thread`) |
 | `--original-post-date` | optional | ISO date (`YYYY-MM-DD`); preserved in the attribution stamp |
-| `--demo` | optional | Use the canonical demo source post; variant 2 of any single-format run is pinned to the paradox profile so the rule always demonstrates |
+| `--demo` | optional | Use the official demo source post; variant 2 of any single-format run is pinned to the paradox profile so the rule always demonstrates |
 | `--output` | optional | Save the report to a path (Apache 2.0 HTML header is prepended) |
 | `--no-banner` | optional | Suppress the runner banner on stdout |
 | `--show-system-prompt` | optional | Print loaded system-prompt path + size on stderr (debugging) |
@@ -255,7 +255,7 @@ Until then, treat the variant body as a *scaffold* the creator polishes — the 
 
 ## Build slots (Recipe B)
 
-Content Recycler follows the canonical Recipe B 2-prompt shape:
+Content Recycler follows the official Recipe B 2-prompt shape:
 
 | Slot | Files | Status |
 |---|---|---|

@@ -6,14 +6,14 @@
 # for X creators. Reads a post topic (or text) and emits a 6/7-section
 # structured hashtag strategy with 5-10 scored recommendations spread
 # across the 5-category mix (broad-niche / specific-niche / trending /
-# community / branded), 4 canonical Hashtag Plan Score metrics,
+# community / branded), 4 official Hashtag Plan Score metrics,
 # reach-without-relevance paradox detection, anti-engagement-bait refusal,
 # and >= 3 cross-template bridges. Drafts only — never auto-publishes.
 
 version: "2.15"
 kind: "creator-template"
 name: "hashtag-strategy-advisor"
-description: "Local-first hashtag strategy advisor for X creators — turns a post topic into a 6/7-section strategy with 5-10 hashtags scored across 4 canonical metrics (Niche relevance / Reach potential / Engagement quality / Cleanliness), spread across the 5-category mix (broad-niche / specific-niche / trending / community / branded), with reach-without-relevance paradox detection, anti-engagement-bait refusal, platform-specific count caps (X 0-2 / LinkedIn 0-3), and >= 3 cross-template bridges. Drafts only — never auto-publishes. Built for xAI, X, Grok and the ecosystem community. ❤️"
+description: "Local-first hashtag strategy advisor for X creators — turns a post topic into a 6/7-section strategy with 5-10 hashtags scored across 4 standard metrics (Niche relevance / Reach potential / Engagement quality / Cleanliness), spread across the 5-category mix (broad-niche / specific-niche / trending / community / branded), with reach-without-relevance paradox detection, anti-engagement-bait refusal, platform-specific count caps (X 0-2 / LinkedIn 0-3), and >= 3 cross-template bridges. Drafts only — never auto-publishes. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 
@@ -79,7 +79,7 @@ tools:
             type: "string"
             enum: ["reach", "engagement", "niche", "all"]
             default: "all"
-            description: "Which canonical metric to emphasise in the headline + ranking. 'all' applies no nudge."
+            description: "Which standard metric to emphasise in the headline + ranking. 'all' applies no nudge."
         required: ["x_handle", "post_topic_or_text"]
 
 constitution:
@@ -88,7 +88,7 @@ constitution:
     - "No engagement-bait hashtags. The runner refuses to recommend `#FollowForFollow`, `#Like4Like`, `#FF`, `#TeamFollowBack`, mass-trending-misuse tags, or any pattern an X policy review would treat as algorithm gaming."
     - "Surface the reach-without-relevance paradox in BOTH the Hashtag Plan section AND the Red Flags section whenever Reach potential > 70 AND Niche relevance < 35 (the hashtag has audience but it's the wrong audience — drive-bys, not the creator's people)."
     - "Platform-specific count caps. Recommend up to `num_hashtags` for analysis, but explicitly state the SHIP cap (X = 0-2 hashtags per post, LinkedIn = 0-3 per post). Over-stuffing the post is its own anti-pattern."
-    - "No misleading category claims. Every recommended hashtag is tagged with one of the 5 canonical categories (broad-niche / specific-niche / trending / community / branded) and the tag is honest — a hashtag is only `trending` if it has documented current velocity, not because the creator wishes it were."
+    - "No misleading category claims. Every recommended hashtag is tagged with one of the 5 official categories (broad-niche / specific-niche / trending / community / branded) and the tag is honest — a hashtag is only `trending` if it has documented current velocity, not because the creator wishes it were."
     - "Every monetization-related hashtag recommendation (paid-tier launch, sponsored content, creator-fund-style hashtags) carries the Article V.1 'Not financial advice' banner verbatim."
     - "Every analysis links to >= 3 cross-template bridges so the creator can wire the strategy into the next loop without leaving Grok Agent OS."
   hard_refusals:

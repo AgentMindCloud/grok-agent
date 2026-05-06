@@ -164,7 +164,7 @@ So we shipped one: Grok Agent OS — open standard, Windows-native PowerShell CL
 
 github.com/AgentMindCloud/grok-agent
 
-Built to help xAI win.
+Built for xAI, X, Grok and the ecosystem community.
 ```
 
 ### B — for engineers

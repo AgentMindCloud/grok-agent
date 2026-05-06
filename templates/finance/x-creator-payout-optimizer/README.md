@@ -107,7 +107,7 @@ These follow Constitution Article VII (local-first, privacy-first) and the repo-
 | 💰 **Content ROI** | Per-topic profitability — Tool #1 revenue × Tool #4 receipt costs in one view | V.1 + V.2 |
 | ⚙️ **Settings** | API keys, default jurisdiction, cross-tool source paths, cloud-sync opt-in (default off) | V.1 |
 
-Tabs land in Slot 2 / P38 (Streamlit skeleton). The 6-tab shape adapts Recipe A's canonical layout for the creator-payout surface — heavier on synthesis (forecast / ROI) than on ingestion.
+Tabs land in Slot 2 / P38 (Streamlit skeleton). The 6-tab shape adapts Recipe A's official layout for the creator-payout surface — heavier on synthesis (forecast / ROI) than on ingestion.
 
 ---
 
@@ -147,7 +147,7 @@ Tool #3 ── reads  (receipts/items)  ──► Tool #4
 
 This agent ships under `grok-agent.yaml` v2.15 with:
 
-- **Kind**: `creator-payout-optimizer` — the canonical schema enum value for this exact tool category. (Your prompt §4 said `finance-dashboard`; both are valid v2.15 kinds and both auto-apply V.1 disclaimers per Article V, but `creator-payout-optimizer` is the more accurate enum and matches the recipe-skill table for this slug; V.2 is mandatory in this manifest regardless because the tax estimator is a primary feature, not a side feature.)
+- **Kind**: `creator-payout-optimizer` — the official schema enum value for this exact tool category. (Your prompt §4 said `finance-dashboard`; both are valid v2.15 kinds and both auto-apply V.1 disclaimers per Article V, but `creator-payout-optimizer` is the more accurate enum and matches the recipe-skill table for this slug; V.2 is mandatory in this manifest regardless because the tax estimator is a primary feature, not a side feature.)
 - **5 Grok-callable tools**: `forecast_earnings`, `optimize_content_topic`, `estimate_tax_burden`, `fetch_x_metrics`, `analyze_content_roi`
 - **3 declared public APIs**: `x_search` (via Grok 4.3), `yfinance`, `newsapi` — all `privacy: "no_pii_sent"`
 - **`pii_handling: "local-only"`** — this tool reads but does not send PII to any cloud (vision is the only X Money tool with `redacted-cloud`)

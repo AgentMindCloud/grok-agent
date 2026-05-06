@@ -35,7 +35,7 @@ def appdata_root() -> Path:
 
 
 def db_path() -> Path:
-    """Canonical SQLite path for the dashboard."""
+    """Official SQLite path for the dashboard."""
     return appdata_root() / "data.db"
 
 

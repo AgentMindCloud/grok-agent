@@ -1460,7 +1460,7 @@ def build_argparser() -> argparse.ArgumentParser:
         prog="dm-triager",
         description=(
             "Read creator-supplied X DM data (or seeded demo DMs) and emit a 7/8-section "
-            "DM triage report with 4 canonical Triage Health metrics, opportunity-flood "
+            "DM triage report with 4 official Triage Health metrics, opportunity-flood "
             "paradox detection, 4-bucket distribution (Urgent / Opportunity / Routine / "
             "Spam), suggested-action queue (max 6) with spam-burst guard, and mandatory "
             "bridges to reply-drafter + mention-summarizer. Drafts only. DM content "
@@ -1495,7 +1495,7 @@ def build_argparser() -> argparse.ArgumentParser:
     p.add_argument("--no-banner", action="store_true", help="Suppress the runner banner on stdout.")
     p.add_argument(
         "--demo", action="store_true",
-        help="Run with the canonical opportunity-flood paradox + spam-burst demo DMs.",
+        help="Run with the official opportunity-flood paradox + spam-burst demo DMs.",
     )
     p.add_argument(
         "--demo-healthy", action="store_true",

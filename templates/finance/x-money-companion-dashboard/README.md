@@ -115,7 +115,7 @@ These follow Constitution Article VII (local-first, privacy-first) and the repo-
 | 📤 **Tax Export** | Build consent-gated CSV / PDF report for your accountant | V.1 + V.2 |
 | 🔔 **Alerts** | In-app warnings for unusual spend or missing data | V.1 |
 
-The 6-tab layout is the Recipe A canonical shape — every X Money tool inherits it where the tabs make sense.
+The 6-tab layout is the Recipe A official shape — every X Money tool inherits it where the tabs make sense.
 
 ---
 
@@ -135,7 +135,7 @@ is enforced by the importer's pre-write check (Slot 4 / P22 deliverable).
 
 This agent ships under `grok-agent.yaml` v2.15 with:
 
-- **Kind**: `finance-dashboard` — the canonical schema enum value for the V.1 + V.2 auto-disclaimer mapping. (There is no `tool` kind in the v2.15 enum; `finance-dashboard` is correct.)
+- **Kind**: `finance-dashboard` — the official schema enum value for the V.1 + V.2 auto-disclaimer mapping. (There is no `tool` kind in the v2.15 enum; `finance-dashboard` is correct.)
 - **5 Grok-callable tools**: `categorize_transaction`, `fetch_market_quote`, `fetch_relevant_news`, `build_tax_export`, `summarize_alerts`
 - **3 declared public APIs**: `yfinance`, `newsapi`, `x_search` (via Grok 4.3) — all `privacy: "no_pii_sent"`
 - **6 Constitution rules** specializing Articles I, IV, V, VII for finance use

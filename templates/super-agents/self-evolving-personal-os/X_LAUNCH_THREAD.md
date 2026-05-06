@@ -228,7 +228,7 @@ out, before pressing Enter.
 ### 10/10 — Closing
 
 ```
-10/ Built to help @xai and @grok win — the personal OS layer xAI
+10/ Built for xAI, X, Grok and the ecosystem community — the personal OS layer xAI
 hasn't shipped yet.
 
 Star ⭐, fork 🍴, PRs welcome.
@@ -295,7 +295,7 @@ github.com/AgentMindCloud/grok-agent #GrokAgentOS
 
 **Character count check:** 252 / 280 ✅
 
-This is a fallback only. The 10-tweet ladder is the canonical launch
+This is a fallback only. The 10-tweet ladder is the official launch
 path.
 
 ---

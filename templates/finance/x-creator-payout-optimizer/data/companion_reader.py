@@ -50,7 +50,7 @@ def _open_readonly(path: Path) -> sqlite3.Connection:
 
 
 def is_installed() -> bool:
-    """Whether Tool #1's SQLite exists at the canonical path."""
+    """Whether Tool #1's SQLite exists at the official path."""
     return companion_db_path().exists()
 
 

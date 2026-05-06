@@ -76,7 +76,7 @@ from typing import Optional
 SCRIPT_DIR = Path(__file__).resolve().parent
 SYSTEM_PROMPT_PATH = SCRIPT_DIR / "prompts" / "system.md"
 
-# The 4 canonical Match Score metrics, in fixed render order. The system
+# The 4 official Match Score metrics, in fixed render order. The system
 # prompt enforces that every Top-Influencer card always shows exactly these
 # 4 rows, in this order.
 SCORE_METRICS = (
@@ -95,7 +95,7 @@ MATCH_SCORE_WEIGHTS = {
     "Collaboration potential": 0.20,
 }
 
-# The 6 canonical first-move formats. Top-Influencer cards must end with
+# The 6 official first-move formats. Top-Influencer cards must end with
 # exactly one of these, and Collaboration Opportunities use them as the
 # format slot.
 FIRST_MOVE_VERBS = (
@@ -1327,7 +1327,7 @@ def build_argparser() -> argparse.ArgumentParser:
         "--focus",
         choices=list(FOCUS_OPTIONS),
         default="all",
-        help="Which canonical metric to emphasise. Default: all.",
+        help="Which standard metric to emphasise. Default: all.",
     )
     p.add_argument(
         "--output",

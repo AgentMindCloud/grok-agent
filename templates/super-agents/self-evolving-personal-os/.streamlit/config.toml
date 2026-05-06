@@ -14,7 +14,7 @@
 port = 8505
 
 # Headless = false: Streamlit will try to open the user's default
-# browser when the dashboard starts. This is the canonical Windows
+# browser when the dashboard starts. This is the official Windows
 # experience; CI runners can override with `--server.headless true`.
 headless = false
 

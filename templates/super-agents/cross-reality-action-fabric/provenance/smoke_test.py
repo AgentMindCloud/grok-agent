@@ -34,7 +34,7 @@ extensions. Six acceptance areas, ~50 checks total:
    methods, attach_to_connectors auto-instrumentation, end-to-end
    connector → provenance flow.
 
-Run on Windows (canonical):
+Run on Windows (official):
 
 .. code-block:: powershell
 
@@ -145,7 +145,7 @@ def test_schema_and_surface() -> None:
     }
     if set(EVENT_KINDS) != expected_kinds:
         _fail("EVENT_KINDS", str(EVENT_KINDS))
-    _ok(f"EVENT_KINDS lists exactly {len(expected_kinds)} canonical events")
+    _ok(f"EVENT_KINDS lists exactly {len(expected_kinds)} official events")
 
     if set(ALL_RULE_NUMBERS) != {1, 2, 3, 4, 5, 6}:
         _fail("ALL_RULE_NUMBERS", str(ALL_RULE_NUMBERS))
@@ -163,7 +163,7 @@ def test_schema_and_surface() -> None:
     ):
         if name not in globals():
             _fail(f"package re-export[{name}]", "missing")
-    _ok("package re-exports the 6 canonical names")
+    _ok("package re-exports the 6 standard names")
 
     # JSONL roundtrip.
     rec = ActionProvenanceRecord(
@@ -307,7 +307,7 @@ def test_attach_and_bulk_ingest() -> None:
     ):
         if k not in summary:
             _fail(f"summary[{k}]", "missing")
-    _ok("summarise_run returns the canonical 12-field digest")
+    _ok("summarise_run returns the official 12-field digest")
 
     # Happy path has zero rule violations now (Rule 3 fixed).
     if summary["rule_violations"]:
@@ -435,7 +435,7 @@ def test_langfuse_hooks() -> None:
               "inputs", "outputs", "rule_compliance"):
         if k not in span:
             _fail(f"span_from_record[{k}]", "missing")
-    _ok("span_from_record returns the canonical 13-field span dict")
+    _ok("span_from_record returns the official 13-field span dict")
 
     # provenance_ingest coexists with memory_ingest from P130.
     if "memory_ingest" not in out:

@@ -109,7 +109,7 @@ These follow Constitution Article VII (local-first, privacy-first) and the repo-
 | 🎯 **Portfolio Simulator** | What-if positions, hypothetical P&L over a date window | V.1 + V.2 |
 | 🌊 **Trending** | Top cashtags trending on X right now via `x_search` | V.1 |
 
-Tabs land in Slot 2 / P26 (Streamlit skeleton). The 6-tab shape adapts Recipe A's canonical layout for the alpha-engine surface.
+Tabs land in Slot 2 / P26 (Streamlit skeleton). The 6-tab shape adapts Recipe A's official layout for the alpha-engine surface.
 
 ---
 
@@ -120,7 +120,7 @@ This engine **composes on top of** the X Money Companion Dashboard (Tool #1). Wh
 - Read the user's transaction history from Tool #1's SQLite to seed the Portfolio Simulator with real positions (read-only, no schema modification)
 - Export current holdings to Tool #1's `transactions` table via a planned `export_holdings_to_companion_dashboard` function — consent-gated and audit-logged
 
-This is the inverse direction from Tool #4 → Tool #1: the alpha engine reads from Tool #1, the vision analyzer (Tool #4) writes into Tool #1. Tool #1 remains the canonical local store for X Money state.
+This is the inverse direction from Tool #4 → Tool #1: the alpha engine reads from Tool #1, the vision analyzer (Tool #4) writes into Tool #1. Tool #1 remains the official local store for X Money state.
 
 ---
 
@@ -128,7 +128,7 @@ This is the inverse direction from Tool #4 → Tool #1: the alpha engine reads f
 
 This agent ships under `grok-agent.yaml` v2.15 with:
 
-- **Kind**: `alpha-engine` — the canonical schema enum value for cashtag / market-intelligence tools. (Your prompt §4 said `finance-dashboard`; both are valid v2.15 kinds and both auto-apply V.1+V.2 disclaimers per Article V, but `alpha-engine` is the more accurate enum for narrative-momentum + signal use cases — and matches what the Phase 1 P12 starter and the recipe-skill table both already use.)
+- **Kind**: `alpha-engine` — the official schema enum value for cashtag / market-intelligence tools. (Your prompt §4 said `finance-dashboard`; both are valid v2.15 kinds and both auto-apply V.1+V.2 disclaimers per Article V, but `alpha-engine` is the more accurate enum for narrative-momentum + signal use cases — and matches what the Phase 1 P12 starter and the recipe-skill table both already use.)
 - **5 Grok-callable tools**: `track_cashtag`, `fetch_cashtag_quote`, `fetch_cashtag_news`, `generate_alpha_report`, `simulate_portfolio`
 - **4 declared public APIs**: `yfinance`, `coingecko`, `newsapi`, `x_search` (via Grok 4.3) — all `privacy: "no_pii_sent"`
 - **`real_time_x` enabled** with `cashtag_change` + `schedule` triggers, weekday cron `0 9,17 * * 1-5`, and `posts: false` / `max_posts_per_day: 0` — the engine watches but never publishes

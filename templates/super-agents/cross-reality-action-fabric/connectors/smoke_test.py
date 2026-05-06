@@ -28,7 +28,7 @@ Six acceptance areas, ~30 checks total:
    sharing the same ``action_id``; rollback writes one
    ``add_rollback_record`` row.
 
-Run on Windows (canonical):
+Run on Windows (official):
 
 .. code-block:: powershell
 

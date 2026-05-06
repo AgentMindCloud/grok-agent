@@ -102,7 +102,7 @@ Confidence: low — 8 posts are inside the audit band (< 10) — Voice Audit aut
 
 ## What this output demonstrates (audit checklist)
 
-- [x] **4 canonical Voice Profile metrics** in fixed row order (Tone consistency / Structure consistency / Vocabulary distinctiveness / Voice cohesion) with heuristic scoring on real sample content
+- [x] **4 official Voice Profile metrics** in fixed row order (Tone consistency / Structure consistency / Vocabulary distinctiveness / Voice cohesion) with heuristic scoring on real sample content
 - [x] **Weighted Voice Profile score formula** `round(0.30·Tone + 0.20·Structure + 0.25·Vocabulary + 0.25·Cohesion)` applied to actual post content
 - [x] **3 signature subsections** (Tone / Structure / Vocabulary) — verbatim n-grams extracted from the 8 productivity posts (e.g. recurring phrases that appear in 2+ posts)
 - [x] **5 Training Prompts**, each naming a destination cross-template slug (`content-idea-generator`, `thread-builder`, `cross-platform-reposter`, `content-recycler`, `reply-drafter`)

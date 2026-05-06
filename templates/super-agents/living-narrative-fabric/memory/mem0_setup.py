@@ -5,7 +5,7 @@
 
 Built for xAI, X, Grok and the ecosystem community. ❤️
 
-This module is the canonical structured-memory tier for the Living Narrative
+This module is the standard structured-memory tier for the Living Narrative
 Fabric Super Agent. It owns the durable persistence of every
 ``SynthesisVersion`` the orchestrator produces — full JSON blob plus
 indexed relational rows for the rich-API methods in ``memory/__init__.py``
@@ -18,7 +18,7 @@ Layered fallback (mirrors P110's runtime selector pattern)
 1. **Mem0 + SQLite history** (preferred) — when ``mem0`` (PyPI ``mem0ai``)
    is importable, ``Mem0NarrativeStore`` constructs a ``mem0.Memory`` with
    a SQLite history backend pointed at the same database file we write to
-   directly. Mem0 gets the canonical SynthesisVersion blob via
+   directly. Mem0 gets the official SynthesisVersion blob via
    ``_mem0_client.add(...)``; we still maintain the indexed relational
    rows ourselves because Mem0's free-text search is not the right tool
    for "claims by source_id" lookups.
@@ -319,7 +319,7 @@ class AuditEntry:
 
 
 # ---------------------------------------------------------------------------
-# Mem0NarrativeStore — the canonical structured tier
+# Mem0NarrativeStore — the standard structured tier
 # ---------------------------------------------------------------------------
 
 

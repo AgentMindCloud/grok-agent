@@ -15,7 +15,7 @@ adds 50 checks covering the orchestration core's seven acceptance areas:
 
 1. Module / package surface — :mod:`graph`, :mod:`agent`,
    ``__init__`` re-exports, ``BACKEND_NAME`` selection.
-2. Graph structure — five nodes, four canonical edges, the conditional
+2. Graph structure — five nodes, four official edges, the conditional
    edge after ``evolve_workflows``, the entry point ``ingest_all_sources``.
 3. State construction — ``build_state`` produces the expected default
    shape; consent is honoured; ``force_stub`` propagates.
@@ -32,7 +32,7 @@ adds 50 checks covering the orchestration core's seven acceptance areas:
    ``agent.search_memory`` finds the rows the brief just wrote,
    ``agent.info`` returns the static graph description.
 
-Run on Windows (canonical):
+Run on Windows (official):
 
 .. code-block:: powershell
 
@@ -140,7 +140,7 @@ def test_module_surface() -> None:
     ):
         if name not in src:
             _fail(f"__init__.py re-export[{name}]", "name not present in package init")
-    _ok("__init__.py re-exports the canonical Personal OS surface")
+    _ok("__init__.py re-exports the official Personal OS surface")
 
     if _graph.BACKEND_NAME not in {"langgraph", "stub:sequential"}:
         _fail("BACKEND_NAME", f"unexpected value: {_graph.BACKEND_NAME!r}")
@@ -171,7 +171,7 @@ def test_graph_structure() -> None:
     ]:
         if (src, dst) not in edges:
             _fail("graph.edges", f"missing edge {(src, dst)}")
-    _ok("4 canonical sequential edges present (ingest→remember→evolve, brief→output→END)")
+    _ok("4 official sequential edges present (ingest→remember→evolve, brief→output→END)")
 
     cond_edges = [e for e in desc["edges"] if any("conditional" in str(p) for p in e)]
     if len(cond_edges) != 2:

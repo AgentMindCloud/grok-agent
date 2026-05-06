@@ -154,7 +154,7 @@ Confidence: medium — average Recycle score 62/100; widen / pick a sharper angl
 
 ## What this output demonstrates (audit checklist)
 
-- [x] **4 canonical Recycle Score metrics** in fixed row order (Freshness lift / Format fit / Engagement potential / Differentiation) on every variant card
+- [x] **4 official Recycle Score metrics** in fixed row order (Freshness lift / Format fit / Engagement potential / Differentiation) on every variant card
 - [x] **Weighted Recycle score formula** `round(0.30·Freshness + 0.25·Format + 0.25·Engagement + 0.20·Differentiation)` applied per card — Freshness weighted highest
 - [x] **3 thread variants** spanning expand-deep (variant 1, score in the mid-70s) / stale-rehash paradox (variant 2, score in the mid-40s) / counter-take (variant 3, score in the high-60s)
 - [x] **Stale-rehash paradox** raised in BOTH the Thread variant 2 card (under Freshness lift) AND the Red Flags section (Freshness < 35, Format fit > 70 by design of the paradox profile)

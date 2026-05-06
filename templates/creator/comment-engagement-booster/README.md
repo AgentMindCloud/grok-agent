@@ -4,7 +4,7 @@
 
 # 💬 Comment Engagement Booster
 
-> Turn any post into 3-5 distinct, on-voice comment variants under 240 chars each, spanning a chosen boost focus (question / controversy / story / poll / all). 4 canonical Comment Plan Score metrics, hook-without-substance paradox detection, anti-spam token-overlap guard, ≥3 cross-template bridges. Drafts only. Never mass-identical.
+> Turn any post into 3-5 distinct, on-voice comment variants under 240 chars each, spanning a chosen boost focus (question / controversy / story / poll / all). 4 official Comment Plan Score metrics, hook-without-substance paradox detection, anti-spam token-overlap guard, ≥3 cross-template bridges. Drafts only. Never mass-identical.
 >
 > *Built for xAI, X, Grok and the ecosystem community the platform battle on X — every X creator deserves comments with substance, not stuffing.*
 
@@ -108,7 +108,7 @@ python .\templates\creator\comment-engagement-booster\run.py `
 | `--post-url-or-text` | yes (or `--demo` / `--demo-productivity`) | Either an `x.com` URL or the literal post text |
 | `--boost-focus` | optional | `question` \| `controversy` \| `story` \| `poll` \| `all` (default `question`) |
 | `--num-comments` | optional | 3–5 (default 3) |
-| `--demo` | optional | Use the canonical AI-niche demo post; pins variant 2 to the paradox profile educationally |
+| `--demo` | optional | Use the official AI-niche demo post; pins variant 2 to the paradox profile educationally |
 | `--demo-productivity` | optional | Use a productivity demo post; healthy variants (no paradox) |
 | `--output` | optional | Save the report to a path (Apache 2.0 HTML header is prepended) |
 | `--no-banner` | optional | Suppress the runner banner on stdout |

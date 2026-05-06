@@ -5,7 +5,7 @@
 # Built for X, Grok & the ecosystem community — local-first thread
 # builder for X creators. Reads a topic / goal (and optional voice
 # samples + analytics signals) and emits a 6/7-section structured
-# thread plan with 3-5 ready-to-post thread variants, 4 canonical
+# thread plan with 3-5 ready-to-post thread variants, 4 official
 # Thread Plan Score metrics, hook-without-payoff paradox detection,
 # 4-6 alternate hook variations, predicted engagement bands (content
 # engagement, never financial), and >= 3 cross-template bridges that
@@ -15,7 +15,7 @@
 version: "2.15"
 kind: "creator-template"
 name: "thread-builder"
-description: "Local-first thread builder for X creators — reads a topic / goal (and optional voice samples + analytics signals) and emits a 6/7-section structured thread plan with 3-5 ready-to-post thread variants, 4 canonical Thread Plan Score metrics (Hook strength / Narrative arc coherence / Voice fidelity / Predicted engagement), hook-without-payoff paradox detection, 4-6 alternate hook variations, content-engagement prediction bands (never absolute numbers), and >= 3 cross-template bridges that always include analytics-summarizer and content-idea-generator. Drafts only — never auto-publishes; never invents engagement absolutes; never trains on another creator's voice. Built for X, Grok & the ecosystem community."
+description: "Local-first thread builder for X creators — reads a topic / goal (and optional voice samples + analytics signals) and emits a 6/7-section structured thread plan with 3-5 ready-to-post thread variants, 4 standard Thread Plan Score metrics (Hook strength / Narrative arc coherence / Voice fidelity / Predicted engagement), hook-without-payoff paradox detection, 4-6 alternate hook variations, content-engagement prediction bands (never absolute numbers), and >= 3 cross-template bridges that always include analytics-summarizer and content-idea-generator. Drafts only — never auto-publishes; never invents engagement absolutes; never trains on another creator's voice. Built for X, Grok & the ecosystem community."
 author: "@JanSol0s"
 license: "Apache-2.0"
 

@@ -1,0 +1,60 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Schema-drift detector — validates that the Pydantic models in
+# cli/grok-agent.py stay in sync with spec/v2.15/grok-agent.yaml +
+# spec/v2.15/windows-extensions.yaml. Blocks PRs that introduce
+# undocumented or orphaned schema fields.
+
+name: Schema Drift Detection
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: schema-drift-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  drift:
+    name: Detect Pydantic <-> spec drift
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install 'pydantic>=2.7,<3' 'pyyaml>=6.0'
+
+      - name: Run schema drift check (warn-only until v0.2)
+        # The drift detector exits 1 on any drift; we currently swallow
+        # that and surface a GitHub warning annotation instead, because
+        # there is pre-existing drift across ~10 spec sections that needs
+        # spec-yaml documentation work to close. Once those are
+        # documented in spec/v2.15/grok-agent.yaml, drop the `|| echo`
+        # tail and the step becomes blocking.
+        run: |
+          python scripts/check_schema_drift.py \
+            || echo "::warning::Schema drift detected. See report above. Will become a hard failure in workflow v0.2."
+
+      - name: Drift detection summary
+        if: success()
+        run: |
+          echo "::notice::Schema drift detector ran successfully (warn-only mode)."

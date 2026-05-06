@@ -272,7 +272,7 @@ class LocalNotesClient(BaseConnector):
     # -- Section L.4. Normalization + validation --------------------------
 
     def _normalize(self, item: dict) -> dict:
-        # Filesystem fetch already returns canonical-shape rows.
+        # Filesystem fetch already returns standard-shape rows.
         return dict(item)
 
     def validate_response(self, payload: Any) -> tuple[bool, str | None]:

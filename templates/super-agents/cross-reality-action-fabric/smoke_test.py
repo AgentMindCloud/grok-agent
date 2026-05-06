@@ -27,7 +27,7 @@ suite adds 21 new checks across five acceptance areas:
    approve-pending / rollback-last / info / version all exit 0; the
    gate-block → approve-pending round-trip works.
 
-Run on Windows (canonical):
+Run on Windows (official):
 
 .. code-block:: powershell
 
@@ -88,7 +88,7 @@ def test_module_and_graph_structure() -> None:
     ):
         if not hasattr(_graph, name) and not hasattr(_agent, name):
             _fail(f"name {name}", "missing from graph/agent")
-    _ok("graph + agent expose the canonical 25-name public surface")
+    _ok("graph + agent expose the official 25-name public surface")
 
     if list(_graph.ALLOWED_TOOLS) != [
         "web_via_stagehand", "windows_local",

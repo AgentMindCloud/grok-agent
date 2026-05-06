@@ -213,7 +213,7 @@ class XPersonalClient(BaseConnector):
     # -- Section X.4. Normalization + validation --------------------------
 
     def _normalize(self, item: dict) -> dict:
-        # Canonical schema: every X-personal row has at minimum
+        # official schema: every X-personal row has at minimum
         # {id, kind, created_at_or_received_at, ...surface-specific...}.
         out = dict(item)
         out.setdefault("kind", "mention")

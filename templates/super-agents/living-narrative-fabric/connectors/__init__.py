@@ -165,7 +165,7 @@ class Provenance:
     source:          str       # the connector name (e.g. "newsapi")
     source_id:       str       # the upstream id (e.g. NewsAPI article URL)
     retrieved_at:    datetime  # when this connector fetched the item
-    url:             Optional[str]  # canonical URL when available
+    url:             Optional[str]  # official URL when available
     raw_snippet:     str       # short excerpt from the upstream body
     stub:            bool      # True when the connector is in stub mode
     cache_hit:       bool      # True when served from local cache

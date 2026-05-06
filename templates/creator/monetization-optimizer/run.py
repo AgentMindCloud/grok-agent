@@ -1337,7 +1337,7 @@ def _render_plan_audit(
         )
 
     coverage_line = (
-        f"{view.active_channels} of {len(CHANNELS)} canonical channels active in the input — "
+        f"{view.active_channels} of {len(CHANNELS)} official channels active in the input — "
         + ("acceptable" if view.active_channels >= 3 else "thin; activate dormant channels before pricing changes.")
     )
 
@@ -1528,7 +1528,7 @@ def build_argparser() -> argparse.ArgumentParser:
         prog="monetization-optimizer",
         description=(
             "Read a creator's X revenue ledger (or seeded demo signals) and emit a "
-            "7/8-section monetization plan with 4 canonical metrics, single-channel-dependence "
+            "7/8-section monetization plan with 4 standard metrics, single-channel-dependence "
             "paradox detection, sponsorship fit analysis, tax & expense notes, and >= 3 "
             "cross-template bridges. Drafts only. Never financial or tax advice."
         ),
@@ -1566,7 +1566,7 @@ def build_argparser() -> argparse.ArgumentParser:
     )
     p.add_argument("--output", help="Optional path to save the rendered report.")
     p.add_argument("--no-banner", action="store_true", help="Suppress the runner banner on stdout.")
-    p.add_argument("--demo", action="store_true", help="Run with the canonical paradox-firing demo signals.")
+    p.add_argument("--demo", action="store_true", help="Run with the official paradox-firing demo signals.")
     p.add_argument("--demo-healthy", action="store_true", help="Run with healthy-stack demo signals (diversified, no paradox).")
     p.add_argument("--demo-365d-audit", action="store_true", help="Run with 365d-horizon thin-data demo signals that auto-trigger the Plan Audit.")
     p.add_argument("--show-system-prompt", action="store_true", help="Print system prompt path + size on stderr.")

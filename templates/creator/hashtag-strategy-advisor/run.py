@@ -1385,7 +1385,7 @@ def build_argparser() -> argparse.ArgumentParser:
         "--focus",
         choices=list(FOCUS_OPTIONS),
         default="all",
-        help="Which canonical metric to emphasise. Default 'all' applies no nudge.",
+        help="Which standard metric to emphasise. Default 'all' applies no nudge.",
     )
     p.add_argument("--output", help="Optional path to save the rendered report.")
     p.add_argument("--no-banner", action="store_true", help="Suppress the runner banner on stdout.")
@@ -1393,7 +1393,7 @@ def build_argparser() -> argparse.ArgumentParser:
         "--demo",
         action="store_true",
         help=(
-            "Run with the canonical AI-niche demo topic. Forces #AI into the set "
+            "Run with the official AI-niche demo topic. Forces #AI into the set "
             "with low Niche relevance so the reach-without-relevance paradox demonstrates."
         ),
     )

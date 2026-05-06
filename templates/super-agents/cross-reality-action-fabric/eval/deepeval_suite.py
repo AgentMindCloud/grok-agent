@@ -13,7 +13,7 @@
 This module is the **scoring half** of the weekly self-improvement
 loop. It pairs with :mod:`eval.promptfoo` (the structural-assertion
 half) and produces six quantitative metrics — every metric in the
-canonical 0.0 – 1.0 range — that the :mod:`agent` ``improve``
+official 0.0 – 1.0 range — that the :mod:`agent` ``improve``
 subcommand turns into concrete, human-review-gated prompt deltas.
 
 The six metrics:
@@ -573,7 +573,7 @@ class OverallActionImprovement:
 
 
 def run_deepeval_metrics(out: dict) -> list[MetricResult]:
-    """Score the run on all six canonical metrics."""
+    """Score the run on all six standard metrics."""
     component_metrics: list[MetricResult] = [
         ActionQuality().measure(out),
         ApprovalCompliance().measure(out),

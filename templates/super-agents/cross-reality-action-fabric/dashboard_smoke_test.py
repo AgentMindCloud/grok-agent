@@ -16,7 +16,7 @@ new checks across five acceptance areas:
 1. Module / file surface — dashboard.py + requirements.txt +
    .streamlit/config.toml exist with the right shape (Apache 2.0
    header, ecosystem-ally line, port 8506, no telemetry, 6 tabs in
-   canonical order).
+   standard order).
 2. Pure-Python data helpers — build_overview_payload, build_plan_
    payload, build_pending_payload, build_history_payload,
    build_provenance_payload, build_improve_payload all return the
@@ -31,7 +31,7 @@ new checks across five acceptance areas:
 5. V.3 banner + bash-leak guard — dashboard.py contains the exact
    Article V.3 wording AND no bash-only commands.
 
-Run on Windows (canonical):
+Run on Windows (official):
 
 .. code-block:: powershell
 
@@ -131,7 +131,7 @@ def test_module_and_file_surface() -> None:
         "Action History", "Provenance Audit", "Self-Improve",
     ]:
         _fail("TAB_TITLES order", str(_dash.TAB_TITLES))
-    _ok("dashboard advertises exactly 6 tabs in the canonical order")
+    _ok("dashboard advertises exactly 6 tabs in the standard order")
 
     if not isinstance(_dash.STREAMLIT_AVAILABLE, bool):
         _fail("STREAMLIT_AVAILABLE", "must be a bool")
@@ -155,7 +155,7 @@ def test_data_helpers() -> None:
     ):
         if k not in payload:
             _fail(f"overview[{k}]", "missing")
-    _ok("build_overview_payload returns the canonical 17-field shape")
+    _ok("build_overview_payload returns the official 17-field shape")
 
     if set(payload["rows_per_kind"].keys()) != set(MEMORY_KINDS):
         _fail("rows_per_kind keys", str(payload["rows_per_kind"]))
@@ -226,7 +226,7 @@ def test_action_runners() -> None:
         f"{out['provenance']['successful']} successes")
 
     # Populate memory via the P130 attach_memory_store wrapper (the
-    # CLI's daily_plan doesn't write memory — that's the canonical
+    # CLI's daily_plan doesn't write memory — that's the official
     # split: CLI runs are pure graph executions; memory is opt-in via
     # attach_memory_store). The dashboard's Action History tab assumes
     # the user has gone through that wrapper at least once.
@@ -271,7 +271,7 @@ def test_action_runners() -> None:
     ):
         if k not in improve_payload:
             _fail(f"improve[{k}]", "missing")
-    _ok("build_improve_payload returns the canonical 10-field shape")
+    _ok("build_improve_payload returns the official 10-field shape")
 
 
 def test_rollback_chain_visualizer() -> None:

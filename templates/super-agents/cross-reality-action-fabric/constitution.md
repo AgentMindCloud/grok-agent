@@ -315,4 +315,20 @@ The current version is **1.0** (initial release, 2026-05-05).
 
 ---
 
+## Appendix D — Registry-Backed Citation Contracts
+
+All cross-agent citations are formally encoded in
+[`templates/super-agents/_bridges/registry.json`](../_bridges/registry.json) (v1.0+).
+The registry defines which Super Agents this agent may cite for
+context, data, or action delegation, and which consent gates control
+each citation. Every action plan may cite Living Narrative Fabric or
+Provenance-First Trust Engine for synthesis context (gated by
+`publish_synthesis`), and cross-references to Narrative Contradiction
+Detector output to surface conflicting information before user
+approval. The registry ensures this agent never executes an action
+without citing relevant synthesis, memory, or contradiction context
+where applicable.
+
+---
+
 > Built for xAI, X, Grok and the ecosystem community. ❤️

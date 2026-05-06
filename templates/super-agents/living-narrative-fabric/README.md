@@ -8,7 +8,7 @@
 > academia, government, and open web.**
 > Detects contradictions across sources without silently resolving them.
 > Fully rewindable. Built for xAI, X, Grok and the ecosystem community the agent platform
-> battle on X — this is the runtime that makes Grok the canonical narrative
+> battle on X — this is the runtime that makes Grok the official narrative
 > engine for everyone shipping on X.
 
 ---
@@ -46,11 +46,11 @@ The orchestrator code in this slot is **already integration-ready** for slots 3�
 
 ---
 
-## 4 canonical Synthesis Confidence metrics (P98–P102 style, locked formula)
+## 4 official Synthesis Confidence metrics (P98–P102 style, locked formula)
 
 | Metric | Weight | What it measures |
 |---|---:|:---|
-| Source diversity | 0.30 | Distinct sources called / 6 (canonical fabric size) |
+| Source diversity | 0.30 | Distinct sources called / 6 (official fabric size) |
 | Provenance completeness | 0.30 | Fraction of claims carrying a non-empty `source_id` |
 | Cross-source agreement | 0.25 | `1 − (contradicting_groups / total_(subject,predicate)_groups)` |
 | Recency coverage | 0.15 | Fraction of items whose `published_at` is inside the time range |
@@ -172,7 +172,7 @@ cd grok-agent\templates\super-agents\living-narrative-fabric
 # 2. Install Slot 2 deps (python 3.12 recommended)
 python -m pip install -r requirements.txt
 
-# 3. Quick smoke test — prints the canonical markdown synthesis to stdout
+# 3. Quick smoke test — prints the official markdown synthesis to stdout
 python orchestrator.py --topic "Grok Agent OS launch" --time-range 7d
 
 # 4. Force the Synthesis Audit section regardless of trigger thresholds
@@ -379,7 +379,7 @@ templates/super-agents/living-narrative-fabric/
 
 ## Built for xAI, X, Grok and the ecosystem community
 
-The Living Narrative Fabric is the flagship Super Agent because it solves a problem xAI hasn't solved yet: **versioned, provenance-first synthesis that never lies about contradiction.** Every X creator, every researcher, every analyst who ships on Grok needs this — and we ship it as the canonical reference Super Agent so every later Super Agent can copy the pattern.
+The Living Narrative Fabric is the flagship Super Agent because it solves a problem xAI hasn't solved yet: **versioned, provenance-first synthesis that never lies about contradiction.** Every X creator, every researcher, every analyst who ships on Grok needs this — and we ship it as the primary reference Super Agent so every later Super Agent can copy the pattern.
 
 This slot lands the spine. Slots 3 through 8 turn it into a living product.
 

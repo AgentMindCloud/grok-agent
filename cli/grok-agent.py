@@ -110,7 +110,7 @@ _strict = ConfigDict(extra="forbid")
 
 
 class SchemaMeta(BaseModel):
-    """Optional documentation header — only the canonical spec file declares this.
+    """Optional documentation header — only the official spec file declares this.
     User manifests typically omit it. Tolerant of evolving fields."""
     spec_version: Optional[str] = None
     spec_release_date: Optional[str] = None
@@ -148,7 +148,7 @@ class Install(BaseModel):
     prerequisites: List[str] = Field(default_factory=list)
     # P138: Super Agent manifests carry an optional-prereqs list and a
     # full one_command_install snippet that "grok install this" can shell
-    # out to. Both are documented in the canonical example for super-agents.
+    # out to. Both are documented in the reference example for super-agents.
     optional_prerequisites: List[str] = Field(default_factory=list)
     one_command_install: Optional[str] = None
 
@@ -165,7 +165,7 @@ class Windows(BaseModel):
     cache_folder: Optional[str] = None
     log_folder: Optional[str] = None
     # P138: Super Agent-specific subfolders under AppData. The schema's
-    # canonical Super Agent example documents these names; accepting them
+    # official Super Agent example documents these names; accepting them
     # explicitly stops the validator from rejecting common patterns.
     provenance_folder: Optional[str] = None
     eval_folder: Optional[str] = None
@@ -534,7 +534,7 @@ class GrokAgentManifest(BaseModel):
     Backwards-compat: any v2.14 manifest validates as v2.15 unchanged.
     """
 
-    # Optional documentation header (only the canonical spec file declares it).
+    # Optional documentation header (only the official spec file declares it).
     schema_meta: Optional[SchemaMeta] = None
 
     # REQUIRED top-level fields

@@ -543,7 +543,7 @@ class LocalProvenanceLogger:
         # cross-linked to its forward action via rolled_back_from.
         # When the in-memory map doesn't have the step (because the
         # forward action was logged in a *prior* record_run call —
-        # the canonical CLI rollback flow), fall back to scanning the
+        # the primary CLI rollback flow), fall back to scanning the
         # JSONL log for the most recent matching action_executed.
         for r in rollbacks:
             step_idx = r.get("step")
@@ -663,7 +663,7 @@ class LocalProvenanceLogger:
         """Scan the JSONL log for the most-recent action_executed record
         matching ``plan_id`` + ``step`` + ``tool``. Used to wire up the
         rollback ↔ forward action link across separate ``record_run``
-        calls (the canonical CLI rollback-last flow)."""
+        calls (the primary CLI rollback-last flow)."""
         if step is None:
             return None
         for path in sorted(_date_jsonl_files(self._root), reverse=True):

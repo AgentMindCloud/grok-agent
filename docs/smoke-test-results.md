@@ -16,7 +16,7 @@
 | Stack version | `grok-agent` 0.1.0 · spec v2.15 · Constitution v1.0 |
 | Verdict | **GREEN — Phase 1 closed.** |
 
-> **Note on the runner.** The CLI surface is `cli/grok-agent.ps1` (PowerShell). Every PowerShell call ultimately delegates the heavy lifting to `python cli/grok-agent.py validate` and `python safety/scanner.py scan*` — those are the canonical enforcement layers and the same paths CI exercises on `ubuntu-latest`. This smoke test ran the Python layer directly, which is exactly what the PS CLI invokes. Section 7 lists the remaining Windows-only checks that complete locally on a Windows 11 host.
+> **Note on the runner.** The CLI surface is `cli/grok-agent.ps1` (PowerShell). Every PowerShell call ultimately delegates the heavy lifting to `python cli/grok-agent.py validate` and `python safety/scanner.py scan*` — those are the official enforcement layers and the same paths CI exercises on `ubuntu-latest`. This smoke test ran the Python layer directly, which is exactly what the PS CLI invokes. Section 7 lists the remaining Windows-only checks that complete locally on a Windows 11 host.
 
 ---
 
@@ -81,7 +81,7 @@ foreach ($m in (Get-ChildItem -Recurse -Filter grok-agent.yaml -Path templates\)
 | 8 | `templates/general/daily-briefing-agent/grok-agent.yaml` | daily-briefing-agent | agent | ✅ |
 | 9 | `templates/general/research-assistant/grok-agent.yaml` | research-assistant | agent | ✅ |
 
-✅ **9/9 manifests validate.** Includes the canonical spec, both finance kinds, both creator kinds, both x-native kinds, both general kinds.
+✅ **9/9 manifests validate.** Includes the official spec, both finance kinds, both creator kinds, both x-native kinds, both general kinds.
 
 ---
 
@@ -172,7 +172,7 @@ license: "Apache-2.0"
 .\cli\grok-agent.ps1 install -FromStdin
 # (paste YAML, Ctrl-Z + Enter)
 
-# Equivalent canonical-validator pathway exercised here:
+# Equivalent official-validator pathway exercised here:
 python cli\grok-agent.py validate paste.yaml
 python safety\scanner.py scan paste.yaml
 ```
@@ -231,7 +231,7 @@ These exercise the PowerShell-only surface that this Linux-runner test couldn't 
 
 | Layer | Status |
 |---|---|
-| Manifest schema (v2.15) | ✅ shipped + canonical spec validates against itself |
+| Manifest schema (v2.15) | ✅ shipped + official spec validates against itself |
 | PowerShell CLI | ✅ shipped (703 LOC); every command path designed and structurally verified |
 | Pydantic validator | ✅ shipped (633 LOC); strict mode catches all 6 field violations on the negative test |
 | Agent Constitution v1.0 | ✅ shipped (332 LOC); enforced by 15-check scanner |

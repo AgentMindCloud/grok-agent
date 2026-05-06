@@ -22,7 +22,7 @@
 | File | Purpose |
 |------|---------|
 | `docs/CONSTRAINTS.md` | Hard rules for every prompt and file (Apache 2.0, Windows 11, disclaimers, "help xAI win", etc.) |
-| `docs/PROJECT_DNA.md` | Canonical facts: file tree, tech stack, phases, glossary, deliverables |
+| `docs/PROJECT_DNA.md` | Official facts: file tree, tech stack, phases, glossary, deliverables |
 | `docs/PROMPT_TEMPLATE.md` | Exact 7-section structure every generated prompt must follow |
 | `docs/PARAMETERIZED_RECIPES.md` | Reusable patterns for X Money tools, creator templates, and Super Agents |
 | `docs/CONSTRAINTS.md` | (repeated for emphasis) — **must be followed in every prompt** |

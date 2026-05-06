@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 #
 # Built for xAI, X, Grok and the ecosystem community — the X Money Companion Dashboard is the
-# anchor finance tool of the Grok Agent OS suite. It is the canonical SQLite
+# anchor finance tool of the Grok Agent OS suite. It is the official SQLite
 # target that the X Money Vision Analyzer (Tool #4) writes parsed receipts into
 # via data/import_receipts.py, and the dashboard every other X Money tool
 # composes on top of for cashflow context.

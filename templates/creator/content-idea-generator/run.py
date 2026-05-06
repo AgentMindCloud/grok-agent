@@ -164,7 +164,7 @@ MONETIZATION_KEYWORDS = (
 )
 
 # Per-archetype deterministic data for the idea generator. Each archetype
-# describes one canonical X post pattern; the renderer picks N (default
+# describes one official X post pattern; the renderer picks N (default
 # 5) from this pool deterministically based on the request tone +
 # seeded RNG so the same input always produces the same render.
 ARCHETYPE_DATA = {
@@ -1230,7 +1230,7 @@ def _render_idea_audit(
     )
     archetypes = sorted({i.archetype for i in ideas})
     archetype_line = (
-        f"{len(archetypes)} of {len(ARCHETYPE_DATA)} canonical archetypes represented."
+        f"{len(archetypes)} of {len(ARCHETYPE_DATA)} official archetypes represented."
     )
     return "\n".join([
         "## Idea Audit (auto-triggered)",
@@ -1573,7 +1573,7 @@ def build_argparser() -> argparse.ArgumentParser:
         description=(
             "Read a creator-supplied niche (and optional voice samples + trend "
             "snapshot + analytics export) and emit a 6/7-section idea plan with "
-            "5 ready-to-post ideas (or 3-10 via --count), 4 canonical Idea Plan "
+            "5 ready-to-post ideas (or 3-10 via --count), 4 official Idea Plan "
             "metrics, vanity-hook paradox detection, per-idea engagement "
             "predictions, and >= 3 cross-template bridges (mandatory: "
             "analytics-summarizer + thread-builder). Drafts only — never "
@@ -1600,7 +1600,7 @@ def build_argparser() -> argparse.ArgumentParser:
     p.add_argument("--no-banner", action="store_true",
                    help="Suppress the runner banner on stdout.")
     p.add_argument("--demo", action="store_true",
-                   help="Run with the canonical 5-idea punchy-tone demo (agent-eval tooling).")
+                   help="Run with the official 5-idea punchy-tone demo (agent-eval tooling).")
     p.add_argument("--demo-anchored", action="store_true",
                    help="Run with the high-confidence demo (voice + trends + analytics anchors).")
     p.add_argument("--demo-paradox", action="store_true",

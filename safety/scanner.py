@@ -163,6 +163,38 @@ def _get(d: Dict[str, Any], dotted: str, default: Any = None) -> Any:
 
 
 # ============================================================================
+# Bridge Registry — Article VII enforcement
+# ============================================================================
+
+_BRIDGES_REGISTRY: Optional[Dict[str, Any]] = None
+_BRIDGES_REGISTRY_PATHS = [
+    Path(__file__).parent.parent / "templates" / "super-agents" / "_bridges" / "registry.json",
+    Path.cwd() / "templates" / "super-agents" / "_bridges" / "registry.json",
+]
+
+
+def _load_bridges_registry() -> Optional[Dict[str, Any]]:
+    """Load templates/super-agents/_bridges/registry.json (lazy + cached).
+
+    Searches paths relative to scanner.py and to cwd. Returns None when the
+    registry file is missing — callers MUST treat that as graceful skip
+    rather than a hard error so the scanner stays usable in stripped repos.
+    """
+    global _BRIDGES_REGISTRY
+    if _BRIDGES_REGISTRY is not None:
+        return _BRIDGES_REGISTRY
+    for path in _BRIDGES_REGISTRY_PATHS:
+        if path.is_file():
+            try:
+                with open(path, "r", encoding="utf-8") as fh:
+                    _BRIDGES_REGISTRY = json.load(fh)
+                return _BRIDGES_REGISTRY
+            except (json.JSONDecodeError, OSError):
+                continue
+    return None
+
+
+# ============================================================================
 # Checks — Article I: Universal Rules
 # ============================================================================
 
@@ -666,6 +698,180 @@ def check_local_first_storage(m: Dict[str, Any]) -> List[Finding]:
             f"windows.appdata_folder='{appdata}' should start with 'grok-agent/' "
             f"to keep all per-user data under one umbrella",
             "windows.appdata_folder", "X",
+        )]
+    return []
+
+
+# ============================================================================
+# Article VII — Bridge Registry checks
+# ============================================================================
+
+
+@register("VII.bridge-registry-alignment")
+def check_bridge_registry_alignment(m: Dict[str, Any]) -> List[Finding]:
+    """Verify a super-agent's bridges.links exist in the registry's
+    citations_to block (or fall outside the super-agent set, in which case
+    they are flagged as info — registry only tracks super-agents)."""
+    if m.get("kind") != "super-agent":
+        return []
+    registry = _load_bridges_registry()
+    if registry is None:
+        return [Finding(
+            "info", "BR-001",
+            "bridge registry not found at templates/super-agents/_bridges/registry.json; "
+            "skipping bridge alignment check",
+            "bridges", "VII",
+        )]
+    name = m.get("name")
+    if not isinstance(name, str):
+        return []
+    agent_entry = (registry.get("agents") or {}).get(name)
+    if agent_entry is None:
+        return [Finding(
+            "warn", "BR-002",
+            f"super-agent '{name}' is not listed in the bridge registry; "
+            f"please add it to templates/super-agents/_bridges/registry.json",
+            "name", "VII",
+        )]
+    findings: List[Finding] = []
+    declared_links = _get(m, "bridges.links", []) or []
+    if not isinstance(declared_links, list):
+        return findings
+    citations_to = agent_entry.get("citations_to", {}) or {}
+    super_agent_names = set((registry.get("agents") or {}).keys())
+    for link in declared_links:
+        if not isinstance(link, str):
+            continue
+        if link in citations_to:
+            continue
+        if link in super_agent_names:
+            findings.append(Finding(
+                "error", "BR-003",
+                f"bridges.links contains super-agent '{link}' but the registry "
+                f"does not authorise '{name}' to cite it; "
+                f"add it to registry.agents['{name}'].citations_to or remove it from the manifest",
+                "bridges.links", "VII",
+            ))
+        else:
+            findings.append(Finding(
+                "info", "BR-003b",
+                f"bridges.links contains '{link}' which is not a super-agent; "
+                f"registry tracks only super-agent citations, so this is informational",
+                "bridges.links", "VII",
+            ))
+    return findings
+
+
+@register("VII.bridge-reciprocity")
+def check_bridge_reciprocity(m: Dict[str, Any]) -> List[Finding]:
+    """For each `reciprocal: true` citation, the cited agent must declare a
+    matching reverse entry. Citation type and consent gates should match."""
+    if m.get("kind") != "super-agent":
+        return []
+    registry = _load_bridges_registry()
+    if registry is None:
+        return []
+    name = m.get("name")
+    if not isinstance(name, str):
+        return []
+    agent_entry = (registry.get("agents") or {}).get(name)
+    if agent_entry is None:
+        return []
+    findings: List[Finding] = []
+    citations_to = agent_entry.get("citations_to", {}) or {}
+    for cited_name, citation in citations_to.items():
+        if not isinstance(citation, dict):
+            continue
+        if not citation.get("reciprocal"):
+            continue
+        cited_entry = (registry.get("agents") or {}).get(cited_name)
+        if cited_entry is None:
+            findings.append(Finding(
+                "error", "BR-005",
+                f"'{name}' cites '{cited_name}' as reciprocal=true but '{cited_name}' is missing from the registry",
+                "registry", "VII",
+            ))
+            continue
+        reverse = (cited_entry.get("citations_to") or {}).get(name)
+        if reverse is None:
+            findings.append(Finding(
+                "error", "BR-006",
+                f"reciprocal citation '{name}' -> '{cited_name}' has no matching reverse entry "
+                f"in '{cited_name}'.citations_to['{name}']",
+                "registry", "VII",
+            ))
+            continue
+        if citation.get("citation_type") != reverse.get("citation_type"):
+            findings.append(Finding(
+                "warn", "BR-007",
+                f"reciprocal citation_type mismatch between '{name}' <-> '{cited_name}' "
+                f"({citation.get('citation_type')} vs {reverse.get('citation_type')})",
+                "registry", "VII",
+            ))
+    return findings
+
+
+@register("VII.bridge-transitive-action")
+def check_bridge_transitive_action(m: Dict[str, Any]) -> List[Finding]:
+    """Action citations must complete inline. If A cites B as `action`, B
+    must NOT have any further `action` citations (no A -> B -> C action
+    chains). Per the registry's transitive_citation_rules.rule_3."""
+    if m.get("kind") != "super-agent":
+        return []
+    registry = _load_bridges_registry()
+    if registry is None:
+        return []
+    name = m.get("name")
+    if not isinstance(name, str):
+        return []
+    agent_entry = (registry.get("agents") or {}).get(name)
+    if agent_entry is None:
+        return []
+    findings: List[Finding] = []
+    citations_to = agent_entry.get("citations_to", {}) or {}
+    for cited_name, citation in citations_to.items():
+        if not isinstance(citation, dict):
+            continue
+        if citation.get("citation_type") != "action":
+            continue
+        cited_entry = (registry.get("agents") or {}).get(cited_name)
+        if cited_entry is None:
+            continue
+        for next_name, next_citation in (cited_entry.get("citations_to") or {}).items():
+            if isinstance(next_citation, dict) and next_citation.get("citation_type") == "action":
+                findings.append(Finding(
+                    "error", "BR-009",
+                    f"action chain '{name}' -> '{cited_name}' -> '{next_name}' violates "
+                    f"the transitive-action rule (registry rule_3)",
+                    "registry", "VII",
+                ))
+    return findings
+
+
+@register("VII.bridge-min-count")
+def check_bridge_min_count(m: Dict[str, Any]) -> List[Finding]:
+    """Verify the manifest's bridges.min_count matches the registry's
+    min_bridges entry for this agent."""
+    if m.get("kind") != "super-agent":
+        return []
+    registry = _load_bridges_registry()
+    if registry is None:
+        return []
+    name = m.get("name")
+    if not isinstance(name, str):
+        return []
+    agent_entry = (registry.get("agents") or {}).get(name)
+    if agent_entry is None:
+        return []
+    declared = _get(m, "bridges.min_count")
+    registry_min = agent_entry.get("min_bridges")
+    if declared is None or registry_min is None:
+        return []
+    if declared < registry_min:
+        return [Finding(
+            "warn", "BR-010",
+            f"bridges.min_count={declared} below registry.min_bridges={registry_min} for '{name}'",
+            "bridges.min_count", "VII",
         )]
     return []
 

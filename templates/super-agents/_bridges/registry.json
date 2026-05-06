@@ -39,7 +39,7 @@
           "citation_type": "action",
           "purpose": "turns synthesis into real-world action",
           "consent_gates": ["publish_synthesis"],
-          "reciprocal": true,
+          "reciprocal": false,
           "weight": 0.8
         },
         "agent-swarm-with-shared-memory": {
@@ -82,7 +82,7 @@
           "citation_type": "action",
           "purpose": "consent-gated action layer for workflow changes",
           "consent_gates": ["apply_workflow_change"],
-          "reciprocal": true,
+          "reciprocal": false,
           "weight": 0.85
         },
         "agent-swarm-with-shared-memory": {
@@ -111,14 +111,14 @@
           "citation_type": "data",
           "purpose": "synthesis context for action planning",
           "consent_gates": ["publish_synthesis"],
-          "reciprocal": true,
+          "reciprocal": false,
           "weight": 0.75
         },
         "self-evolving-personal-os": {
           "citation_type": "memory",
           "purpose": "personal memory context for workflow actions",
           "consent_gates": ["run_powershell_local"],
-          "reciprocal": true,
+          "reciprocal": false,
           "weight": 0.8
         },
         "provenance-first-trust-engine": {

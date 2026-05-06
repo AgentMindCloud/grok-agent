@@ -7,9 +7,17 @@
 > **Super Agent #1 — versioned, provenance-first synthesis across X, news,
 > academia, government, and open web.**
 > Detects contradictions across sources without silently resolving them.
-> Fully rewindable. Built for xAI, X, Grok and the ecosystem community the agent platform
-> battle on X — this is the runtime that makes Grok the official narrative
-> engine for everyone shipping on X.
+> Fully rewindable. Built for xAI, X, Grok and the ecosystem community —
+> the runtime that makes Grok the official narrative engine for everyone
+> shipping on X.
+
+## Demo
+
+- **Storyboard:** [`DEMO.md`](DEMO.md) — 90-second walk-through (also 30-second + 15-second recuts).
+- **Video (planned):** *uploaded to GitHub Releases when recorded —*
+  `https://github.com/AgentMindCloud/grok-agent/releases/tag/demo-living-narrative-fabric`
+- **X thread (planned):** *posted from [@JanSol0s](https://x.com/JanSol0s)
+  alongside the launch — see [`X_LAUNCH_THREAD.md`](X_LAUNCH_THREAD.md).*
 
 ---
 

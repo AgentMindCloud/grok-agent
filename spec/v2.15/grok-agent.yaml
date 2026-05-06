@@ -113,11 +113,13 @@ metadata:
 install:
   one_click: true                      # OPTIONAL · bool · default false · supports "grok install this" on X
   install_command: "grok-agent install <name>"   # OPTIONAL · str · CLI command shown to users
+  one_command_install: null            # OPTIONAL · str | null · verbatim shell snippet for "grok install this" flow
   post_url: "https://x.com/JanSol0s/status/..."  # OPTIONAL · str · X post that ships the manifest
   prerequisites:                       # OPTIONAL · list[str] · plain-language requirements
     - "Windows 11"
     - "Python 3.12+"
     - "PowerShell 5.1+"
+  optional_prerequisites: []           # OPTIONAL · list[str] · nice-to-have requirements (e.g. for enhanced features)
 
 # ----------------------------------------------------------------------------
 # windows: — Windows-specific extensions (the "windows-first" promise)
@@ -151,6 +153,7 @@ grok:
   vision: false                        # OPTIONAL · bool · default false · enable vision input (true for vision-analyzer kind)
   streaming: true                      # OPTIONAL · bool · default true
   fallback_model: null                 # OPTIONAL · str | null · model to use if primary fails
+  personalisation: null                # OPTIONAL · dict | null · user-tunable behaviour knobs (tone, locale, redaction posture)
 
 # ----------------------------------------------------------------------------
 # tools: — Grok function/tool calling definitions
@@ -236,6 +239,7 @@ public_apis:
 # multi_agent: — coordination between agents (Super Agents and swarms)
 # ----------------------------------------------------------------------------
 multi_agent:
+  enabled: false                       # OPTIONAL · bool · default false · enable multi-agent coordination
   role: "orchestrator"                 # OPTIONAL · enum: ["orchestrator", "worker", "observer"]
   delegates_to:                        # OPTIONAL · list[str] · agent names this one can call
     - "x-money-vision-analyzer"
@@ -261,6 +265,7 @@ real_time_x:
   posts: false                         # OPTIONAL · bool · default false · can this agent post to X?
   reply_only: true                     # OPTIONAL · bool · default true · if posts==true, restrict to replies
   max_posts_per_day: 10                # OPTIONAL · int · default 10 · cap to prevent runaway
+  notes: null                          # OPTIONAL · str | null · free-form notes on cadence, audit trail, or migration
 
 # ----------------------------------------------------------------------------
 # memory: — long-term memory configuration (primarily for Super Agents)
@@ -277,6 +282,8 @@ memory:
   procedural: false                    # OPTIONAL · bool · default false · learned routines
   retention_days: 365                  # OPTIONAL · int · auto-prune after N days
   encryption_at_rest: true             # OPTIONAL · bool · default true on Windows (DPAPI)
+  fallback: null                       # OPTIONAL · dict | null · fallback strategy when primary backend unavailable
+  personal_collections: []             # OPTIONAL · list[str] · personal memory collections owned by this agent
 
 # ----------------------------------------------------------------------------
 # provenance: — source-citation + audit trail (Trust Engine)
@@ -292,6 +299,8 @@ provenance:
   cite_sources: true                   # OPTIONAL · bool · default true · attach citations to every claim
   versioned_synthesis: false           # OPTIONAL · bool · default false · used by living-narrative-fabric
   contradiction_detection: false       # OPTIONAL · bool · default false · flag conflicting sources
+  append_only: true                    # OPTIONAL · bool · default true · provenance log is append-only (Article III)
+  redact_pii_before_langfuse: true     # OPTIONAL · bool · default true · scrub PII before Langfuse transmission
 
 # ----------------------------------------------------------------------------
 # constitution: — Agent Constitution (rules + consent gates)
@@ -299,6 +308,7 @@ provenance:
 # Rules are enforced at runtime by safety/scanner.py.
 # ----------------------------------------------------------------------------
 constitution:
+  file: "constitution.md"              # OPTIONAL · str | null · path to full constitution document (relative to manifest folder)
   rules:                               # REQUIRED if section present · list[str]
     - "Never publish content without provenance trail."
     - "Always show 'Not financial advice' on finance UI."
@@ -361,6 +371,7 @@ dependencies:
   system:                              # OPTIONAL · list[str]
     - "powershell >= 5.1"
   apis_required: []                    # OPTIONAL · list[str] · names that must match public_apis[].name
+  optional_packages: []                # OPTIONAL · list[str] · best-when-present packages (try-import, not blocking)
 
 # ----------------------------------------------------------------------------
 # evaluation: — Promptfoo + DeepEval + Langfuse loop (Super Agents only)
@@ -375,6 +386,7 @@ evaluation:
     suite: "eval/deepeval_suite.py"    # OPTIONAL · str · path
   langfuse_traces: false               # OPTIONAL · bool · default false · feed traces into Langfuse
   weekly_loop: false                   # OPTIONAL · bool · default false · run weekly improvement loop
+  history_path: "eval/history.jsonl"   # OPTIONAL · str | null · path to eval history JSONL (relative to manifest folder)
 
 # ============================================================================
 # reference examples

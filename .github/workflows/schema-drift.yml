@@ -43,18 +43,14 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install 'pydantic>=2.7,<3' 'pyyaml>=6.0'
 
-      - name: Run schema drift check (warn-only until v0.2)
-        # The drift detector exits 1 on any drift; we currently swallow
-        # that and surface a GitHub warning annotation instead, because
-        # there is pre-existing drift across ~10 spec sections that needs
-        # spec-yaml documentation work to close. Once those are
-        # documented in spec/v2.15/grok-agent.yaml, drop the `|| echo`
-        # tail and the step becomes blocking.
+      - name: Run schema drift check (hard-fail)
+        # As of P163 every Pydantic field is documented in
+        # spec/v2.15/grok-agent.yaml + spec/v2.15/windows-extensions.yaml,
+        # so this step blocks merges on any future drift.
         run: |
-          python scripts/check_schema_drift.py \
-            || echo "::warning::Schema drift detected. See report above. Will become a hard failure in workflow v0.2."
+          python scripts/check_schema_drift.py
 
       - name: Drift detection summary
         if: success()
         run: |
-          echo "::notice::Schema drift detector ran successfully (warn-only mode)."
+          echo "::notice::Schema drift check passed - Pydantic models and YAML specs aligned."

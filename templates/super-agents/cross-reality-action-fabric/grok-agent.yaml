@@ -60,6 +60,7 @@ metadata:
   language: "en"
   created: "2026-05-05"
   updated: "2026-05-05"
+  demo_video: "templates/super-agents/cross-reality-action-fabric/DEMO.md"
 
 # ---------------------------------------------------------------------------
 # install: how this agent is delivered to a user

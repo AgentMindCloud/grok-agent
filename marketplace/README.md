@@ -160,8 +160,7 @@ marketplace/
 │   ├── layout.tsx          # Root layout + header banner + footer
 │   ├── page.tsx            # NEW: dynamic grid + category filter
 │   ├── globals.css         # Cinnabar/parchment palette + dark mode
-│   ├── _components/
-│   │   └── AgentBrowser.tsx # legacy interactive search/filter
+│   │  (legacy AgentBrowser was archived in P163 — see docs/archive/AgentBrowser.tsx)
 │   ├── deploy/
 │   │   └── page.tsx        # Manifest generator
 │   └── agents/

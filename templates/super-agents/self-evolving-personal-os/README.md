@@ -11,6 +11,14 @@
 > Built for xAI, X, Grok and the ecosystem community — the personal-OS layer xAI hasn't shipped
 > yet.
 
+## Demo
+
+- **Storyboard:** [`DEMO.md`](DEMO.md) — 90-second walk-through (also 30-second + 15-second recuts).
+- **Video (planned):** *uploaded to GitHub Releases when recorded —*
+  `https://github.com/AgentMindCloud/grok-agent/releases/tag/demo-self-evolving-personal-os`
+- **X thread (planned):** *posted from [@JanSol0s](https://x.com/JanSol0s)
+  alongside the launch — see [`X_LAUNCH_THREAD.md`](X_LAUNCH_THREAD.md).*
+
 > 🔒 **User data is sacred.** Every byte of personal data lives under
 > `$env:LOCALAPPDATA\grok-agent\self-evolving-personal-os\`. PII is redacted
 > at three boundaries (connector → memory → provenance log) before it ever

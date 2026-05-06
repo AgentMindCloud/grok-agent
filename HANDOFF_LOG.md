@@ -153,7 +153,8 @@
 | P159 | Phase 5 | Full workplan audit — verify every phase against actual repo and flag gaps + improvement ideas | docs/workplan-audit.md, README.md, ROADMAP.md | Complete gap analysis + prioritized improvement list created | ✅ done |
 | P160 | Phase 5 | Fix every critical gap from the full workplan audit — all 5 issues in one session | scripts/generate-template.py, spec/v2.15/*, safety/scanner.py, 2 manifests, README.md, ROADMAP.md, CLAUDE.md | All 5 audit gaps resolved in one session | ✅ done |
 | P161 | Phase 5 | Fix every remaining critical gap from the updated audit — all 5 issues in one session | 2 manifests, cli/grok-agent.ps1, cross-reality-action-fabric/*, tests/x-money-integration-smoke.ps1, global tagline sweep | All 5 audit gaps resolved in one session | ✅ done |
-| P162 | Phase 5 | Fix every remaining critical gap from the latest audit — all 5 issues in one session | global "canonical" sweep, .github/workflows/schema-drift.yml, templates/super-agents/_bridges/registry.json, marketplace routes refactor, docs/phase-4-completion-report.md | All 5 audit gaps resolved in one session | ✅ done |
+| P162 | Phase 5 | Fix every remaining critical gap from the latest audit — all 5 issues in one session | global wording sweep, .github/workflows/schema-drift.yml, templates/super-agents/_bridges/registry.json, marketplace routes refactor, docs/phase-4-completion-report.md | All 5 audit gaps resolved in one session | ✅ done |
+| P163 | Phase 5 | Fix every remaining critical gap from the latest audit — all 5 issues in one session | spec/v2.15/grok-agent.yaml (12 fields), safety/scanner.py (bridge enforcement), AgentBrowser.tsx archive, legacy root md archive, demo video metadata | All 5 audit gaps resolved in one session | ✅ done |
 
 <!--
 ====================================================================

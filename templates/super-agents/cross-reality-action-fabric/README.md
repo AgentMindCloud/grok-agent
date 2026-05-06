@@ -6,12 +6,20 @@
 
 > **Super Agent #3 — the bridge between an X / Grok conversation and your
 > real Windows machine + the public web.**
-> Built to make Grok the obvious choice for every agent on X — the missing
+> Built for xAI, X, Grok and the ecosystem community — the missing
 > "do something for me" layer that turns chat into action.
 
 > ⚠️ **This agent can take real-world actions.** Every action requires
 > explicit consent. Review the action plan before approving. The agent
 > never acts autonomously.
+
+## Demo
+
+- **Storyboard:** [`DEMO.md`](DEMO.md) — 90-second walk-through (also 30-second + 15-second recuts).
+- **Video (planned):** *uploaded to GitHub Releases when recorded —*
+  `https://github.com/AgentMindCloud/grok-agent/releases/tag/demo-cross-reality-action-fabric`
+- **X thread (planned):** *posted from [@JanSol0s](https://x.com/JanSol0s)
+  alongside the launch — see [`X_LAUNCH_THREAD.md`](X_LAUNCH_THREAD.md).*
 
 ---
 

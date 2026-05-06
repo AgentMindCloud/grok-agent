@@ -224,6 +224,23 @@ The CI scanner blocks any finance / tax / real-world-action agent missing the ap
 
 ---
 
+## Demo videos
+
+90-second walk-throughs for the three flagship Super Agents. The
+storyboards (B-roll, captions, voice-over beats, plus 30-second and
+15-second recuts) live next to each agent's manifest:
+
+| Super Agent | Storyboard | Video (planned) |
+|---|---|---|
+| Living Narrative Fabric | [`DEMO.md`](templates/super-agents/living-narrative-fabric/DEMO.md) | [GitHub Releases](https://github.com/AgentMindCloud/grok-agent/releases/tag/demo-living-narrative-fabric) (upload pending) |
+| Self-Evolving Personal OS | [`DEMO.md`](templates/super-agents/self-evolving-personal-os/DEMO.md) | [GitHub Releases](https://github.com/AgentMindCloud/grok-agent/releases/tag/demo-self-evolving-personal-os) (upload pending) |
+| Cross-Reality Action Fabric | [`DEMO.md`](templates/super-agents/cross-reality-action-fabric/DEMO.md) | [GitHub Releases](https://github.com/AgentMindCloud/grok-agent/releases/tag/demo-cross-reality-action-fabric) (upload pending) |
+
+The X launch threads ship with each video and live alongside the
+storyboards as `X_LAUNCH_THREAD.md`.
+
+---
+
 ## License + author
 
 - **License:** Apache 2.0 (see [`LICENSE`](LICENSE)). Every code file carries the standard header. Every shipped agent must declare `license: "Apache-2.0"` in its manifest.

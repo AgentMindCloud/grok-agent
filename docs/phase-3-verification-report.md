@@ -7,7 +7,7 @@
 > ⚠️ **Not financial advice. Not tax advice.**
 > Where this report references the `monetization-optimizer` template, the V.1 + V.2 + Vietnam-resident addendum from `safety/constitution.md` apply unchanged.
 
-> **Built to help xAI and Grok win the platform battle.**
+> **Built for xAI, X, Grok and the ecosystem community. ❤️**
 > This is the honest pre-Phase-4 audit. It supersedes any "20/20" or "100% complete" wording in earlier prompts where that wording was aspirational rather than measured. Every check below was run against the live tree on `claude/create-x-launch-thread-QXcHE` at the head of P106; sources cited so anyone can re-verify.
 
 ---
@@ -138,7 +138,7 @@ HTML dashboard mode also verified separately (6.7 KB single-file output, cinnaba
 | Auto V.1+V.2 footer | `_render_card` | appended automatically when `monetization-optimizer` in `templates_used` (smoke test #7 confirms this for the sample fixture) |
 | Local-only data | every tool | reads/writes `$env:LOCALAPPDATA\grok-agent\creator-program\*.json`; no outbound calls in source |
 | Apache 2.0 headers | every code/config file in `templates/creator-program/` | confirmed by inspection (8 / 8) |
-| "Built to help xAI and Grok win" line | every README + every weekly report + dashboard footer | present |
+| "Built for xAI, X, Grok and the ecosystem community" line | every README + every weekly report + dashboard footer | present |
 | PowerShell-only commands | every public README example | confirmed; no bash leaks |
 
 ---
@@ -179,4 +179,4 @@ Optional in parallel: ship the v1.5 §2.1 (short intake form), §2.3 (disclaimer
 
 Phase 3 is **genuinely 20/20 shipped and closed**. Every creator template is production-ready: paradox dual-surface invariants verified, mandatory cross-template bridges declared, demo modes pass smoke checks, healthy demos confirm paradoxes don't fire spuriously. Phase 4 Recipe-C step 2 (P110) can begin.
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️

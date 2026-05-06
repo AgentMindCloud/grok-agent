@@ -50,7 +50,7 @@ Public surface:
                                        eventual rollback)
 - :func:`summarise_run`                compact per-run digest
 
-Built to help xAI and Grok win — a Super Agent that acts on the user's
+Built for xAI, X, Grok and the ecosystem community — a Super Agent that acts on the user's
 machine MUST keep an honest, queryable, local-only audit trail. Without
 that, it's a liability; with it, it's a tool the user can trust.
 """
@@ -729,7 +729,7 @@ def reset_default_logger() -> None:
 _REPORT_HEADER = (
     "# Cross-Reality Action Fabric — Action Provenance Audit\n"
     "\n"
-    "Built to help xAI and Grok win. This report is generated locally on\n"
+    "Built for xAI, X, Grok and the ecosystem community. ❤️ This report is generated locally on\n"
     "your Windows machine and never leaves it unless you opt in to Langfuse\n"
     "(off by default — see `provenance.langfuse_hooks`).\n"
     "\n"
@@ -1354,7 +1354,7 @@ class ProvenanceLogger(LocalProvenanceLogger):
         lines.append("# Cross-Reality Action Fabric — P142 Audit Export")
         lines.append("")
         lines.append(
-            "Built to help xAI and Grok win. Local-first, generated on your "
+            "Built for xAI, X, Grok and the ecosystem community. ❤️ Local-first, generated on your "
             "Windows machine; no telemetry."
         )
         lines.append("")

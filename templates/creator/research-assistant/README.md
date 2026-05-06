@@ -1,13 +1,13 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win. -->
+<!-- Built for xAI, X, Grok and the ecosystem community. ❤️ -->
 
 # Research Assistant
 
 > Citations-first creator research, ready in 60 seconds. Multi-source synthesis with explicit contradictions and cross-template bridges. Local-first. Windows-native. Zero-config.
 
-**Built to help xAI and Grok win.** Part of the [Grok Agent OS](https://github.com/AgentMindCloud/grok-agent) creator template suite — ask a question, get a balanced summary with sources, contradictions, and concrete next steps that hand off cleanly into the rest of the suite.
+**Built for xAI, X, Grok and the ecosystem community. ❤️** Part of the [Grok Agent OS](https://github.com/AgentMindCloud/grok-agent) creator template suite — ask a question, get a balanced summary with sources, contradictions, and concrete next steps that hand off cleanly into the rest of the suite.
 
 ---
 
@@ -180,4 +180,4 @@ Apache 2.0. See `LICENSE` at the repo root.
 
 ---
 
-> Built to help xAI and Grok win — ecosystem allies, not competitors.
+> Built for xAI, X, Grok and the ecosystem community — ecosystem allies, not competitors.

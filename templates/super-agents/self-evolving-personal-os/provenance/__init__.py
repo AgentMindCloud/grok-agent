@@ -21,7 +21,7 @@ The package re-exports the most-used names so callers can write
 ``from provenance import LocalProvenanceLogger`` rather than chasing the
 deeper module paths.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

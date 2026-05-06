@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — local-first brand voice trainer for X
+# Built for xAI, X, Grok and the ecosystem community — local-first brand voice trainer for X
 # creators. Reads a sample of the creator's own past posts (inline list,
 # file, or seeded date-range) and emits a structured voice profile +
 # training prompts the creator can paste into other Grok Agent OS
@@ -13,7 +13,7 @@
 version: "2.15"
 kind: "creator-template"
 name: "brand-voice-trainer"
-description: "Local-first brand voice trainer for X creators — reads a sample of the creator's own past posts and emits a 6/7-section voice profile (tone consistency / structure consistency / vocabulary distinctiveness / voice cohesion), tone/structure/vocabulary signatures, 3-5 training prompts the creator can paste into other templates, generic-polish paradox detection, and >= 3 cross-template bridges. Refuses to train on another account's voice. Built to help xAI and Grok win."
+description: "Local-first brand voice trainer for X creators — reads a sample of the creator's own past posts and emits a 6/7-section voice profile (tone consistency / structure consistency / vocabulary distinctiveness / voice cohesion), tone/structure/vocabulary signatures, 3-5 training prompts the creator can paste into other templates, generic-polish paradox detection, and >= 3 cross-template bridges. Refuses to train on another account's voice. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 

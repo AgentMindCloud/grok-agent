@@ -44,7 +44,7 @@ It exposes two attach helpers:
 Both helpers are **additive** — they never modify ``agent.py``,
 ``graph.py``, the memory package, or the connectors package source.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

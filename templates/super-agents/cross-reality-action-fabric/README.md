@@ -99,16 +99,14 @@ cross-reality-action-fabric/
 ├── grok-agent.yaml              # v2.15 manifest (this file's neighbour)
 ├── constitution.md              # six enforceable Rules
 ├── README.md                    # this file
+├── orchestrator.py              # top-level orchestrator facade (parity with Super Agents #1 + #2)
+├── agent.py                     # PowerShell-friendly CLI entry point
+├── graph.py                     # LangGraph orchestration core
 ├── connectors/                  # Stagehand, PowerShell, public APIs
-│   └── .gitkeep
 ├── memory/                      # Mem0 + Qdrant — same shape as Super Agent #2
-│   └── .gitkeep
 ├── provenance/                  # Local JSONL + Langfuse opt-in hooks
-│   └── .gitkeep
 ├── eval/                        # Promptfoo + DeepEval self-improve loop
-│   └── .gitkeep
 └── ui/                          # Streamlit dashboard (5 tabs, port 8506)
-    └── .gitkeep
 ```
 
 Each subfolder is empty for now — the foundation lands in this prompt
@@ -184,4 +182,4 @@ If you ship something on top of Cross-Reality Action Fabric, tag
 
 ---
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️

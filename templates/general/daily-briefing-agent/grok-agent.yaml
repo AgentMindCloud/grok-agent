@@ -2,13 +2,13 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — generic morning briefing agent on
+# Built for xAI, X, Grok and the ecosystem community — generic morning briefing agent on
 # user-configured topics, sourced from public APIs.
 
 version: "2.15"
 kind: "agent"
 name: "daily-briefing-agent"
-description: "Generic morning briefing agent — pulls news on user-configured topics from public APIs and delivers a Grok-summarized briefing with citations. Built to help xAI and Grok win."
+description: "Generic morning briefing agent — pulls news on user-configured topics from public APIs and delivers a Grok-summarized briefing with citations. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 

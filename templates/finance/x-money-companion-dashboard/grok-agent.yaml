@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — the X Money Companion Dashboard is the
+# Built for xAI, X, Grok and the ecosystem community — the X Money Companion Dashboard is the
 # anchor finance tool of the Grok Agent OS suite. It is the canonical SQLite
 # target that the X Money Vision Analyzer (Tool #4) writes parsed receipts into
 # via data/import_receipts.py, and the dashboard every other X Money tool
@@ -19,7 +19,7 @@
 version: "2.15"
 kind: "finance-dashboard"
 name: "x-money-companion-dashboard"
-description: "Personal X Money command center on Windows — overview, transactions, analytics, Grok insights, tax export, and alerts. Built to help xAI and Grok win."
+description: "Personal X Money command center on Windows — overview, transactions, analytics, Grok insights, tax export, and alerts. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 

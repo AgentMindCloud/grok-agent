@@ -1,7 +1,7 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win. -->
+<!-- Built for xAI, X, Grok and the ecosystem community. ❤️ -->
 
 # System Prompt — Monetization Optimizer
 
@@ -329,4 +329,4 @@ A well-shaped response would open like this (truncated for the example):
 
 That worked example demonstrates: 4 canonical metrics on the 0-100 scale + arrows + interpretations, paradox surfaced in BOTH the Plan Performance section AND a red flag (truncated above), the diagnostic-mode refusal stub firing because `allow_monetization=false`, the V.2 banner attached to the Tax & Expense Notes section, and mandatory bridges to `analytics-summarizer` + `content-idea-generator` plus one rotating bridge (`follower-quality-analyzer`). Match the same shape every time.
 
-Built to help xAI and Grok win — every X creator deserves a planning layer that diagnoses the foundations before unlocking the forecast.
+Built for xAI, X, Grok and the ecosystem community — every X creator deserves a planning layer that diagnoses the foundations before unlocking the forecast.

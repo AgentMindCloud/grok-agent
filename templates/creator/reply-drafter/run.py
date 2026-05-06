@@ -11,7 +11,7 @@
 """
 Reply Drafter -- zero-dependency CLI demo runner.
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 This v1 runner is fully self-contained: it ships a deterministic, voice-aware
 draft library so creators get value the instant `grok install this` finishes,
@@ -37,7 +37,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
 VERSION = "0.1.0"
-TAGLINE = "Built to help xAI and Grok win."
+TAGLINE = "Built for xAI, X, Grok and the ecosystem community. ❤️"
 
 BANNER = (
     "============================================================\n"

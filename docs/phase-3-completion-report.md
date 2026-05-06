@@ -7,7 +7,7 @@
 > ⚠️ **Not financial advice. Not tax advice.**
 > Where this report references the `monetization-optimizer` template, the V.1 + V.2 disclaimer + Vietnam-resident addendum from `safety/constitution.md` apply unchanged.
 
-> **Built to help xAI and Grok win the platform battle.**
+> **Built for xAI, X, Grok and the ecosystem community. ❤️**
 > Phase 3 (Creator Distribution Flywheel — `CLAUDE.md` §6, P43–P92, ~50 prompts) is officially closed. This report is the public proof: what shipped, what we learned, what's next, and how it threads back into the xAI ecosystem.
 
 ---
@@ -179,4 +179,4 @@ Phase 3 is closed.
 
 Roll into Phase 4.
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️

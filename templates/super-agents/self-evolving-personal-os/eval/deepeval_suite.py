@@ -39,7 +39,7 @@ available, the suite swaps in :class:`_StubJudge` which:
 - still produces a structurally-valid :class:`MetricResult` so the
   caller's report-building logic doesn't have to special-case the stub.
 
-Built to help xAI and Grok win — the self-improvement loop is what
+Built for xAI, X, Grok and the ecosystem community — the self-improvement loop is what
 keeps a Personal OS honest about its own drift between releases.
 """
 
@@ -792,7 +792,7 @@ def _render_markdown(report: EvalReport) -> str:
     lines = [
         "# Self-Evolving Personal OS — Self-Improvement Report",
         "",
-        "Built to help xAI and Grok win. Generated locally; do not paste",
+        "Built for xAI, X, Grok and the ecosystem community. ❤️ Generated locally; do not paste",
         "redacted PII into a public PR — it's already redacted but double-check.",
         "",
         f"- Run ID: `{report.run_id}`",
@@ -908,7 +908,7 @@ def main(argv: list[str] | None = None) -> int:  # noqa: ARG001
     import argparse
     parser = argparse.ArgumentParser(prog="eval", description=(
         "Self-Evolving Personal OS — Self-Improvement Loop "
-        "(Promptfoo + DeepEval). Built to help xAI and Grok win."
+        "(Promptfoo + DeepEval). Built for xAI, X, Grok and the ecosystem community. ❤️"
     ))
     parser.add_argument("--stub",   action="store_true",
                         help="Force offline + stub backends (default behaviour).")

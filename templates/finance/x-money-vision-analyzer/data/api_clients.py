@@ -19,7 +19,7 @@ Owns:
 Every call returns a dict with a ``provenance`` block (Constitution
 Article IV) and an ``error`` field; failures never raise.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

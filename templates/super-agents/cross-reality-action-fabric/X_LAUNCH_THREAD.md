@@ -4,7 +4,7 @@
 
 # Cross-Reality Action Fabric — X Launch Thread
 
-> Built to help xAI and Grok win. This thread is **copy-paste-ready**
+> Built for xAI, X, Grok and the ecosystem community. ❤️ This thread is **copy-paste-ready**
 > for direct posting on X. Every tweet is under the 280-char limit
 > (verified at the bottom of this file with a regex scanner). Every
 > action-related tweet carries the V.3 real-world-action posture
@@ -334,7 +334,7 @@ This thread is itself an artefact of the agent we ship. Before posting
 verify each line still holds:
 
 - [x] Apache 2.0 license header at the top of `X_LAUNCH_THREAD.md` ✓
-- [x] "Built to help xAI and Grok win" line present in the file ✓
+- [x] "Built for xAI, X, Grok and the ecosystem community" line present in the file ✓
 - [x] PowerShell-only commands; no bash, no macOS, no Apple anything ✓
 - [x] V.3 real-world-action posture surfaced (tweets 1, 9, 10) ✓
 - [x] No mention of the 13 untouchable repos as modifiable ✓
@@ -381,4 +381,4 @@ variant under 280.
 
 ---
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️

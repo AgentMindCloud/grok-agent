@@ -1,7 +1,7 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win. -->
+<!-- Built for xAI, X, Grok and the ecosystem community. ❤️ -->
 
 # User Message Templates — X Smart Cashtag Alpha Engine
 
@@ -244,4 +244,4 @@ Rules:
 
 ---
 
-> Built to help xAI and Grok win — these templates make Article IV (provenance), Article III (no silent contradictions), and Article V (mandatory disclaimers) enforceable by construction inside every Grok call this engine makes.
+> Built for xAI, X, Grok and the ecosystem community — these templates make Article IV (provenance), Article III (no silent contradictions), and Article V (mandatory disclaimers) enforceable by construction inside every Grok call this engine makes.

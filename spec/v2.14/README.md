@@ -4,7 +4,7 @@
 
 # spec/v2.14 — reference only
 
-> Built to help xAI and Grok win.
+> Built for xAI, X, Grok and the ecosystem community. ❤️
 
 This folder is a **reference-only** snapshot of the prior `grok-agent.yaml` v2.14 manifest schema. It exists so v2.15 can guarantee 100% backwards compatibility.
 

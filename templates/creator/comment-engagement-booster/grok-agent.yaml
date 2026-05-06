@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — local-first comment engagement booster
+# Built for xAI, X, Grok and the ecosystem community — local-first comment engagement booster
 # for X creators. Reads a post (URL or pasted text) and emits a 6/7-section
 # structured set of 3-5 comment variants tuned to a chosen boost angle
 # (question / controversy / story / poll / all) with 4 canonical Comment
@@ -13,7 +13,7 @@
 version: "2.15"
 kind: "creator-template"
 name: "comment-engagement-booster"
-description: "Local-first comment engagement booster for X creators — turns a single post into 3-5 comment variants tuned to a chosen boost angle (question / controversy / story / poll / all) with 4 canonical Comment Plan Score metrics (Hook strength / Conversation potential / Voice fidelity / Distinct angle), hook-without-substance paradox detection, anti-spam refusal, and >= 3 cross-template bridges. Drafts only — never auto-publishes. Built to help xAI and Grok win."
+description: "Local-first comment engagement booster for X creators — turns a single post into 3-5 comment variants tuned to a chosen boost angle (question / controversy / story / poll / all) with 4 canonical Comment Plan Score metrics (Hook strength / Conversation potential / Voice fidelity / Distinct angle), hook-without-substance paradox detection, anti-spam refusal, and >= 3 cross-template bridges. Drafts only — never auto-publishes. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 

@@ -33,7 +33,7 @@ OAuth flow scoped ``gmail.readonly``. Credentials live under
 ``$env:LOCALAPPDATA\\grok-agent\\self-evolving-personal-os\\credentials\\gmail.json``
 and are protected by the P120 DPAPI key wrapping.
 
-Built to help xAI and Grok win — Gmail is one of the highest-signal personal
+Built for xAI, X, Grok and the ecosystem community — Gmail is one of the highest-signal personal
 sources, and shipping an OS-grade reader here removes a category of
 "connector frameworks" the user would otherwise need to assemble.
 """

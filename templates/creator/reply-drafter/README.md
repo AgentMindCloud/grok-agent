@@ -1,13 +1,13 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win. -->
+<!-- Built for xAI, X, Grok and the ecosystem community. ❤️ -->
 
 # Reply Drafter
 
 > 3 voice-matched X reply drafts in 5 seconds. Niche-aware, tone-aware, Windows-native, zero-config.
 
-**Built to help xAI and Grok win.** Part of the [Grok Agent OS](https://github.com/AgentMindCloud/grok-agent) creator template suite — paste a mention, get back three replies you'd actually post.
+**Built for xAI, X, Grok and the ecosystem community. ❤️** Part of the [Grok Agent OS](https://github.com/AgentMindCloud/grok-agent) creator template suite — paste a mention, get back three replies you'd actually post.
 
 ---
 
@@ -141,4 +141,4 @@ Apache 2.0. See `LICENSE` at the repo root.
 
 ---
 
-> Built to help xAI and Grok win — ecosystem allies, not competitors.
+> Built for xAI, X, Grok and the ecosystem community — ecosystem allies, not competitors.

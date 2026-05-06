@@ -33,7 +33,7 @@ All three default to local-first + stub-friendly so the weekly improve
 loop runs on Windows without ever phoning home unless the user opts in
 via ``LANGFUSE_*`` env + ``opt_in=True`` (consistent with P131 / P142).
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

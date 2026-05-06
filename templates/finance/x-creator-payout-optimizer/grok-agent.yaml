@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — the X Creator Payout Optimizer is the
+# Built for xAI, X, Grok and the ecosystem community — the X Creator Payout Optimizer is the
 # earnings-forecasting + content-optimization + tax-estimation tool of the
 # Grok Agent OS suite. It is the LAST X Money tool in the suite per
 # CLAUDE.md §6's build order (Tool #1 -> Tool #2 -> Tool #4 -> Tool #3) so
@@ -23,7 +23,7 @@
 version: "2.15"
 kind: "creator-payout-optimizer"
 name: "x-creator-payout-optimizer"
-description: "Earnings forecasting, content optimization, and tax estimator for X creators. Reads from the X Money Companion Dashboard (Tool #1) and the X Money Vision Analyzer (Tool #4) for the richest possible local data. Built to help xAI and Grok win."
+description: "Earnings forecasting, content optimization, and tax estimator for X creators. Reads from the X Money Companion Dashboard (Tool #1) and the X Money Vision Analyzer (Tool #4) for the richest possible local data. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 

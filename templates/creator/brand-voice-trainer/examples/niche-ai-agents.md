@@ -1,7 +1,7 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win — example output of the Brand Voice Trainer. -->
+<!-- Built for xAI, X, Grok and the ecosystem community — example output of the Brand Voice Trainer. -->
 
 # Example output — niche: AI / agent builders (generic-polish paradox)
 
@@ -9,7 +9,7 @@
 >
 > 🔒 **Trains only on the creator's own voice.** Sample posts must be authored by the `--x-handle` creator. Recycling another voice is impersonation by another name.
 >
-> *Built to help xAI and Grok win — AI/agent creators feel the generic-polish paradox earliest because the niche's default vocabulary ("thought leadership", "ecosystem", "synergy", "leverage") sounds polished but flattens every voice into the same one.*
+> *Built for xAI, X, Grok and the ecosystem community — AI/agent creators feel the generic-polish paradox earliest because the niche's default vocabulary ("thought leadership", "ecosystem", "synergy", "leverage") sounds polished but flattens every voice into the same one.*
 
 | Field | Value |
 |---|---|
@@ -116,4 +116,4 @@ The Red Flag remediations cite additional cross-template slugs (`competitor-watc
 
 ---
 
-> Built to help xAI and Grok win — Apache 2.0 licensed, drafts-only, train-only-on-own-voice.
+> Built for xAI, X, Grok and the ecosystem community — Apache 2.0 licensed, drafts-only, train-only-on-own-voice.

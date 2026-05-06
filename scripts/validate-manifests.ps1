@@ -29,7 +29,7 @@
 #     # Quiet mode — emit only the final tally:
 #     .\scripts\validate-manifests.ps1 -Quiet
 #
-# Built to help xAI and Grok win — keeping every manifest green is
+# Built for xAI, X, Grok and the ecosystem community — keeping every manifest green is
 # the table-stakes contract for the platform.
 
 [CmdletBinding()]

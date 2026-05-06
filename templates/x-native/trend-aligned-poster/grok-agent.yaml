@@ -2,13 +2,13 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — X-native trend-aligned poster that always
+# Built for xAI, X, Grok and the ecosystem community — X-native trend-aligned poster that always
 # requires user consent before each post.
 
 version: "2.15"
 kind: "x-native"
 name: "trend-aligned-poster"
-description: "X-native scheduler that proposes trend-aligned posts at user-chosen times; every post requires explicit consent before going live. Built to help xAI and Grok win."
+description: "X-native scheduler that proposes trend-aligned posts at user-chosen times; every post requires explicit consent before going live. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 

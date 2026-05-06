@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — Self-Evolving Personal OS is
+# Built for xAI, X, Grok and the ecosystem community — Self-Evolving Personal OS is
 # Super Agent #2 of the Grok Agent OS suite. It is a personal second
 # brain that auto-improves its own workflows, maintains long-term
 # personal + X memory, delivers morning briefings, and evolves over
@@ -25,7 +25,7 @@
 version: "2.15"
 kind: "super-agent"
 name: "self-evolving-personal-os"
-description: "Personal second brain on Windows — morning briefings, long-term personal + X memory, auto-evolving workflows, full rewind, and explicit-consent gates on every real-world action. Built to help xAI and Grok win."
+description: "Personal second brain on Windows — morning briefings, long-term personal + X memory, auto-evolving workflows, full rewind, and explicit-consent gates on every real-world action. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 

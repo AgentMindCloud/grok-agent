@@ -8,7 +8,7 @@
 > remembers, and quietly improves itself.**
 > Morning briefings, long-term personal + X memory, auto-evolving workflows,
 > full rewind, and explicit-consent gates on every real-world action.
-> Built to help xAI and Grok win — the personal-OS layer xAI hasn't shipped
+> Built for xAI, X, Grok and the ecosystem community — the personal-OS layer xAI hasn't shipped
 > yet.
 
 > 🔒 **User data is sacred.** Every byte of personal data lives under
@@ -218,4 +218,4 @@ If you ship something on top of Self-Evolving Personal OS, tag
 
 ---
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️

@@ -1,7 +1,7 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win — system prompt for the Analytics Summarizer. -->
+<!-- Built for xAI, X, Grok and the ecosystem community — system prompt for the Analytics Summarizer. -->
 <!-- Built for X, Grok & the ecosystem community. -->
 
 # System Prompt — Analytics Summarizer
@@ -311,4 +311,4 @@ A well-shaped response would open like this (truncated for the example):
 
 That worked example demonstrates: 4 canonical metrics on the 0-100 scale + arrows + interpretations, paradox surfaced in BOTH the Period Performance section AND a red flag (truncated above), Top-Performing-Content archetypes drawn from the 10 (truncated), trend bucketing, mandatory bridges to `content-idea-generator` + `thread-builder` plus 1 rotating bridge (`follower-quality-analyzer`), and the monetization-refusal stub fired because `allow_monetization=false`. Match the same shape every time.
 
-Built to help xAI and Grok win — every X creator deserves an analytics layer that tells them when reach is real and when it's vanity.
+Built for xAI, X, Grok and the ecosystem community — every X creator deserves an analytics layer that tells them when reach is real and when it's vanity.

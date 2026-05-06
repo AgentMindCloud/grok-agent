@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 """Living Narrative Fabric — LangGraph fallback runtime (P110, Slot 2 sibling).
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 This module is the optional LangGraph runtime for the Living Narrative Fabric
 orchestrator. The orchestrator (``orchestrator.py``) prefers Mastra as the

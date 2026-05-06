@@ -25,7 +25,7 @@ block (Constitution Article IV) and never raises — failures populate the
 ``error`` field so the surrounding UI / Grok layer can render a graceful
 "Tool #1 not installed" state.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

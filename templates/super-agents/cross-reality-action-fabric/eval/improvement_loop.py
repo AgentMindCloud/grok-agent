@@ -624,7 +624,7 @@ class WeeklyImprovementLoop:
         lines = [
             "# Cross-Reality Action Fabric — Weekly Improvement Loop",
             "",
-            "Built to help xAI and Grok win. Local-first. Generated on the "
+            "Built for xAI, X, Grok and the ecosystem community. ❤️ Local-first. Generated on the "
             "user's Windows machine; no telemetry.",
             "",
             f"- Loop ID: `{report.loop_id}`",
@@ -825,7 +825,7 @@ def _build_parser() -> argparse.ArgumentParser:
         description=(
             "Cross-Reality Action Fabric — weekly self-improvement loop "
             "(Promptfoo + DeepEval + P140 memory + P142 provenance). "
-            "Built to help xAI and Grok win."
+            "Built for xAI, X, Grok and the ecosystem community. ❤️"
         ),
     )
     sub = parser.add_subparsers(dest="command", required=True)

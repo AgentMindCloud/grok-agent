@@ -180,7 +180,7 @@ jobs:
           echo "  All ${COUNT} manifests passed:"
           echo "    - v2.15 schema validation"
           echo "    - Constitution safety scan (severity floor = info)"
-          echo "  Built to help xAI and Grok win."
+          echo "  Built for xAI, X, Grok and the ecosystem community. ❤️"
           echo "============================================================="
 
       - name: No manifests found (nothing to validate)

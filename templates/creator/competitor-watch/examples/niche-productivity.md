@@ -1,13 +1,13 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win — example output of the Competitor Watch. -->
+<!-- Built for xAI, X, Grok and the ecosystem community — example output of the Competitor Watch. -->
 
 # Example output — niche: productivity / habit-stacking
 
 > 🔒 **Named-competitors-only.** Every Competitor Profile card below cites only the explicit handles the creator passed as input — never followers, never DMs, never any other PII.
 >
-> *Built to help xAI and Grok win — productivity creators see the audience-overlap-too-high red flag earliest because the niche is dense with adjacent operators (deep-work, routines, habit-stacking, time-blocking) and copy-paste cadence is a real differentiation risk.*
+> *Built for xAI, X, Grok and the ecosystem community — productivity creators see the audience-overlap-too-high red flag earliest because the niche is dense with adjacent operators (deep-work, routines, habit-stacking, time-blocking) and copy-paste cadence is a real differentiation risk.*
 
 | Field | Value |
 |---|---|
@@ -142,4 +142,4 @@ Same schema and rules, different inputs → different recommendations → differ
 
 ---
 
-> Built to help xAI and Grok win — Apache 2.0 licensed, named-competitors-only, local-first.
+> Built for xAI, X, Grok and the ecosystem community — Apache 2.0 licensed, named-competitors-only, local-first.

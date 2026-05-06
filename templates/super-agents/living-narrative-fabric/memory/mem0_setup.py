@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 """Living Narrative Fabric — Mem0 structured-memory backend (P111, Slot 3).
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 This module is the canonical structured-memory tier for the Living Narrative
 Fabric Super Agent. It owns the durable persistence of every

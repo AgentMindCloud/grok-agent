@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — local-first reply drafter for X
+# Built for xAI, X, Grok and the ecosystem community — local-first reply drafter for X
 # creators. Reads a parent X post (and optional voice samples + 7-day
 # trend snapshot + analytics signals) and emits a 6/7-section
 # structured reply plan with 3-10 ready-to-post reply drafts (default
@@ -18,7 +18,7 @@
 version: "2.15"
 kind: "creator-template"
 name: "reply-drafter"
-description: "Local-first reply drafter for X creators — reads a parent X post / thread (and optional voice samples + 7-day trend snapshot + analytics signals) and emits a 6/7-section structured reply plan with 3-10 ready-to-post reply drafts (default 5), 4 canonical Reply Plan Score metrics (Niche fit / Trend alignment / Voice fidelity / Predicted engagement), vanity-hook paradox detection (Trend alignment > 80 AND Niche fit < 50), 10 tone-matched archetypes shared with content-idea-generator, content-engagement prediction bands (never absolute numbers), and >= 3 cross-template bridges that always include analytics-summarizer and thread-builder. Drafts only — never auto-publishes; never trains on another creator's voice; never generates monetization / sales / affiliate language unless the user explicitly requests it. Built to help xAI and Grok win."
+description: "Local-first reply drafter for X creators — reads a parent X post / thread (and optional voice samples + 7-day trend snapshot + analytics signals) and emits a 6/7-section structured reply plan with 3-10 ready-to-post reply drafts (default 5), 4 canonical Reply Plan Score metrics (Niche fit / Trend alignment / Voice fidelity / Predicted engagement), vanity-hook paradox detection (Trend alignment > 80 AND Niche fit < 50), 10 tone-matched archetypes shared with content-idea-generator, content-engagement prediction bands (never absolute numbers), and >= 3 cross-template bridges that always include analytics-summarizer and thread-builder. Drafts only — never auto-publishes; never trains on another creator's voice; never generates monetization / sales / affiliate language unless the user explicitly requests it. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 

@@ -7,7 +7,7 @@
 > ⚠️ **Not financial advice. Not tax advice.**
 > Outreach for the `monetization-optimizer` template carries the standard Vietnam-resident creator addendum on every delivery DM. Always consult a licensed local advisor before acting on any financial output. This tool tracks outreach metadata only — it gives no business, legal, financial, or tax advice itself.
 
-> **Built to help xAI and Grok win the platform battle.**
+> **Built for xAI, X, Grok and the ecosystem community. ❤️**
 > Local-first, privacy-respecting infrastructure for the @JanSol0s outreach flow. Every DM, response, and delivered agent is logged on **your Windows machine only** — nothing is synced, telemetered, or sent to any third party.
 
 ---
@@ -323,4 +323,4 @@ The JSON schema is intentionally simple so you can hand-edit it in any text edit
 - Constitution Articles V.1 + V.2 (mandatory disclaimers): `safety/constitution.md`
 - Roadmap: `ROADMAP.md` Phase 3 (P88–P92 outreach program)
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️

@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — local-first analytics summarizer for X
+# Built for xAI, X, Grok and the ecosystem community — local-first analytics summarizer for X
 # creators. Reads creator-supplied X analytics (or seeded demo metrics
 # when no export is provided) and emits a 6/7-section structured period
 # summary with 4 canonical Period Performance metrics (Reach Score /
@@ -17,7 +17,7 @@
 version: "2.15"
 kind: "creator-template"
 name: "analytics-summarizer"
-description: "Local-first analytics summarizer for X creators — reads creator-supplied X analytics (or seeded demo metrics) and emits a 6/7-section period summary with 4 canonical Period Performance metrics (Reach Score / Engagement Velocity / Audience Quality / Content Resonance), the vanity-reach paradox (Reach Score > 80 AND Audience Quality < 50), weighted Performance score (0.30·AudienceQuality + 0.25·EngagementVelocity + 0.25·ContentResonance + 0.20·ReachScore), top-performing-content archetypes, trend bucketing (▲▲/▲/▬/▼/▼▼), mandatory bridges to content-idea-generator + thread-builder, and structured monetization refusal. Drafts only — never auto-publishes; never fabricates p-values or confidence intervals. Built to help xAI and Grok win."
+description: "Local-first analytics summarizer for X creators — reads creator-supplied X analytics (or seeded demo metrics) and emits a 6/7-section period summary with 4 canonical Period Performance metrics (Reach Score / Engagement Velocity / Audience Quality / Content Resonance), the vanity-reach paradox (Reach Score > 80 AND Audience Quality < 50), weighted Performance score (0.30·AudienceQuality + 0.25·EngagementVelocity + 0.25·ContentResonance + 0.20·ReachScore), top-performing-content archetypes, trend bucketing (▲▲/▲/▬/▼/▼▼), mandatory bridges to content-idea-generator + thread-builder, and structured monetization refusal. Drafts only — never auto-publishes; never fabricates p-values or confidence intervals. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 

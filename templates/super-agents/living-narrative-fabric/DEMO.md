@@ -5,7 +5,7 @@
 
 # Living Narrative Fabric — 90-Second Demo Script
 
-> Built to help xAI and Grok win the agent platform battle on X.
+> Built for xAI, X, Grok and the ecosystem community. ❤️
 >
 > *A cinematic walkthrough of the full eight-slot Super Agent: orchestrator,
 > Mem0+Qdrant memory, six connectors, append-only provenance, self-
@@ -43,7 +43,7 @@
 * Black background; title card fades in:
   > **Living Narrative Fabric**
   > Versioned synthesis across X, news, academia, government, and the open web.
-  > Built to help xAI and Grok win.
+  > Built for xAI, X, Grok and the ecosystem community. ❤️
 
 **Narration**
 
@@ -215,7 +215,7 @@ Chrome auto-focuses on `http://localhost:8501`. The sidebar shows:
 > One YAML manifest. One PowerShell command.
 > `github.com/AgentMindCloud/grok-agent`
 >
-> Built to help xAI and Grok win.
+> Built for xAI, X, Grok and the ecosystem community. ❤️
 
 **Narration**
 
@@ -252,5 +252,5 @@ viewers see the wider story:
 
 ---
 
-*Built to help xAI and Grok win the platform battle on X. Apache-2.0.
+*Built for xAI, X, Grok and the ecosystem community. ❤️ Apache-2.0.
 Local-first. Privacy-first.*

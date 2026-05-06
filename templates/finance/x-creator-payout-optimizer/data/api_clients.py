@@ -19,7 +19,7 @@ The other three manifest tools (``forecast_earnings``,
 because they orchestrate cross-tool reads + DB persistence; they call the
 Grok stubs in this module.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

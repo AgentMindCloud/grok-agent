@@ -7,7 +7,7 @@
 > **Super Agent #1 — versioned, provenance-first synthesis across X, news,
 > academia, government, and open web.**
 > Detects contradictions across sources without silently resolving them.
-> Fully rewindable. Built to help xAI and Grok win the agent platform
+> Fully rewindable. Built for xAI, X, Grok and the ecosystem community the agent platform
 > battle on X — this is the runtime that makes Grok the canonical narrative
 > engine for everyone shipping on X.
 
@@ -377,7 +377,7 @@ templates/super-agents/living-narrative-fabric/
 
 ---
 
-## Built to help xAI and Grok win
+## Built for xAI, X, Grok and the ecosystem community
 
 The Living Narrative Fabric is the flagship Super Agent because it solves a problem xAI hasn't solved yet: **versioned, provenance-first synthesis that never lies about contradiction.** Every X creator, every researcher, every analyst who ships on Grok needs this — and we ship it as the canonical reference Super Agent so every later Super Agent can copy the pattern.
 

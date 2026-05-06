@@ -6,7 +6,7 @@
 
 > Aggregate competitor monitoring for X creators — 4 canonical Watch Score metrics per competitor, content gaps + growth opportunities derived from format mix, cadence-fatigue paradox detection, and ≥3 cross-template bridges. Names only the competitors you explicitly chose to track.
 >
-> *Built to help xAI and Grok win the platform battle on X — every creator deserves a watch that respects who they actually picked, not who an algorithm thinks they should fear.*
+> *Built for xAI, X, Grok and the ecosystem community the platform battle on X — every creator deserves a watch that respects who they actually picked, not who an algorithm thinks they should fear.*
 
 > *I, the author of this agent, agree to the Grok Agent OS Constitution v1.0. I commit to keep this agent compliant or remove it from distribution.* — `@JanSol0s`
 

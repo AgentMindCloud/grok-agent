@@ -5,7 +5,7 @@
 
 # Creator Agent Program — Weekly Report
 
-> **Built to help xAI and Grok win.** Generated 2026-05-05 (last 7 days).
+> **Built for xAI, X, Grok and the ecosystem community. ❤️** Generated 2026-05-05 (last 7 days).
 
 > ⚠️ **Not financial advice. Not tax advice.** Outreach for the monetization-optimizer template carries the standard Vietnam-resident creator addendum on every delivery DM.
 
@@ -74,4 +74,4 @@ _(none — your inbox is healthy)_
 
 ---
 
-_Local-first. Privacy-first. No data leaves your machine. Built to help xAI and Grok win. 🚀_
+_Local-first. Privacy-first. No data leaves your machine. Built for xAI, X, Grok and the ecosystem community. ❤️_

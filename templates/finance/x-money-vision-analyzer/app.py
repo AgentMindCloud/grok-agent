@@ -12,7 +12,7 @@ renders 6 tabs with realistic placeholder extractions + the mandatory
 Article V disclaimer on every tab (V.2 stacked on Parsed Preview and
 Import to Tool #1, since both tabs touch tax-relevant numbers).
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations
@@ -116,7 +116,7 @@ def disclaimer_banner(*, include_tax: bool = False, ai_reinforced: bool = False)
 def page_footer() -> None:
     st.markdown("---")
     st.caption(
-        "Built to help xAI and Grok win  ·  Apache 2.0  ·  `@JanSol0s`  ·  "
+        "Built for xAI, X, Grok and the ecosystem community  ·  Apache 2.0  ·  `@JanSol0s`  ·  "
         f"Data: `{DB_PATH}`  ·  Receipts: `{RECEIPTS_DIR}`"
     )
 
@@ -266,7 +266,7 @@ with st.sidebar:
 # --- Header + tabs ---------------------------------------------------------
 
 st.title("🧾 X Money Vision Analyzer")
-st.caption("_Built to help xAI and Grok win — Tool #4 of the X Money suite._")
+st.caption("_Built for xAI, X, Grok and the ecosystem community — Tool #4 of the X Money suite._")
 
 tab_drop, tab_preview, tab_validate, tab_import, tab_history, tab_settings = st.tabs([
     "📥 Drop Files",

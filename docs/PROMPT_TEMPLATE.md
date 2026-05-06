@@ -25,7 +25,7 @@ Working directory: `grok-agent/`
 ## 3. Constraints (hard — non-negotiable)
 
 - Apache 2.0 license header at top of every code file
-- "Built to help xAI and Grok win" line in every README/markdown
+- "Built for xAI, X, Grok and the ecosystem community" line in every README/markdown
 - Windows 11 + PowerShell only — no bash, no macOS, no Apple anything
 - grok-agent.yaml v2.15 backwards compatible with v2.14
 - {Disclaimer rule if finance/tax — else omit}
@@ -90,7 +90,7 @@ Bootstrap the repository with the three files that govern every subsequent promp
 ## 3. Constraints (hard)
 
 - Apache 2.0 license — full text of Apache 2.0 in `LICENSE`
-- "Built to help xAI and Grok win" line in CLAUDE.md
+- "Built for xAI, X, Grok and the ecosystem community" line in CLAUDE.md
 - Windows 11 + PowerShell only
 - No partial code — full files only
 - CLAUDE.md must enumerate the canonical file tree (see PROJECT_DNA)

@@ -1,13 +1,13 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win. -->
+<!-- Built for xAI, X, Grok and the ecosystem community. ❤️ -->
 
 # Quote Tweet Suggestor
 
 > 2-3 quote tweet variants in 5 seconds, distinct angles, voice-matched, with optional Grok Imagine visual. Local-first. Windows-native. Zero-config.
 
-**Built to help xAI and Grok win.** Part of the [Grok Agent OS](https://github.com/AgentMindCloud/grok-agent) creator template suite — paste any X post, get back 2-3 angle-spanning quote variants and concrete next steps that bridge into the rest of the suite.
+**Built for xAI, X, Grok and the ecosystem community. ❤️** Part of the [Grok Agent OS](https://github.com/AgentMindCloud/grok-agent) creator template suite — paste any X post, get back 2-3 angle-spanning quote variants and concrete next steps that bridge into the rest of the suite.
 
 > 🔒 **Privacy note:** the Original Post Read section paraphrases the source; the runner never copies the original post verbatim.
 
@@ -193,4 +193,4 @@ Apache 2.0. See `LICENSE` at the repo root.
 
 ---
 
-> Built to help xAI and Grok win — ecosystem allies, not competitors.
+> Built for xAI, X, Grok and the ecosystem community — ecosystem allies, not competitors.

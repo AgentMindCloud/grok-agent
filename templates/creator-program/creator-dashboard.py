@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — the local-first operator dashboard for
+# Built for xAI, X, Grok and the ecosystem community — the local-first operator dashboard for
 # the Creator Agent Program. Reads outreach.json + testimonials.json from
 # AppData; never makes outbound network calls; never modifies the source
 # stores.
@@ -277,7 +277,7 @@ def _render_terminal(outreach: list[dict[str, Any]], testimonials: list[dict[str
     lines.append("  Vietnam-resident creators with international platform")
     lines.append("  earnings: consult a licensed local advisor.")
     lines.append("")
-    lines.append("Built to help xAI and Grok win.")
+    lines.append("Built for xAI, X, Grok and the ecosystem community. ❤️")
     return "\n".join(lines)
 
 
@@ -340,7 +340,7 @@ _HTML_TEMPLATE = """\
 </head>
 <body>
 <h1>Creator Agent Program — Dashboard</h1>
-<div class="meta">Generated {now} · Built to help xAI and Grok win 🚀</div>
+<div class="meta">Generated {now} · Built for xAI, X, Grok and the ecosystem community 🚀</div>
 
 <h2>Funnel</h2>
 <div class="grid">
@@ -384,7 +384,7 @@ _HTML_TEMPLATE = """\
 
 <div class="footer">
   Source: <code>$env:LOCALAPPDATA\\grok-agent\\creator-program\\</code>
-  · No data leaves your machine · Apache 2.0 · Built to help xAI and Grok win.
+  · No data leaves your machine · Apache 2.0 · Built for xAI, X, Grok and the ecosystem community. ❤️
 </div>
 </body>
 </html>
@@ -495,7 +495,7 @@ def main(argv: list[str] | None = None) -> int:
         prog="creator-dashboard",
         description=(
             "Local-first operator dashboard for the Creator Agent Program. "
-            "Built to help xAI and Grok win."
+            "Built for xAI, X, Grok and the ecosystem community. ❤️"
         ),
     )
     parser.add_argument(

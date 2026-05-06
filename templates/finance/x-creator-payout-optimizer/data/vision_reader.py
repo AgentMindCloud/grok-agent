@@ -15,7 +15,7 @@ Public surface:
 - ``read_receipts(...)`` — filtered list of receipt dicts
 - ``read_parsed_items_for_receipt(receipt_id)`` — line items joined to a receipt
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

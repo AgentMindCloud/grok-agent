@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — the X Smart Cashtag Alpha Engine is the
+# Built for xAI, X, Grok and the ecosystem community — the X Smart Cashtag Alpha Engine is the
 # narrative-momentum + alpha-signal tool of the Grok Agent OS suite. It
 # composes on top of Tool #1's local SQLite for portfolio context and can
 # feed holdings back into the X Money Companion Dashboard for cross-tool
@@ -20,7 +20,7 @@
 version: "2.15"
 kind: "alpha-engine"
 name: "x-smart-cashtag-alpha-engine"
-description: "Real-time cashtag intelligence on X — narrative momentum, contradictions across sources, and Grok-powered alpha signals with full provenance. Built to help xAI and Grok win."
+description: "Real-time cashtag intelligence on X — narrative momentum, contradictions across sources, and Grok-powered alpha signals with full provenance. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 

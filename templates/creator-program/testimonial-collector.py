@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — the local-first testimonial collection
+# Built for xAI, X, Grok and the ecosystem community — the local-first testimonial collection
 # system for the Creator Agent Program. Captures consent-gated quotes from
 # real creators and turns them into publish-ready markdown cards. Mirrors the
 # storage + privacy contract of outreach-tracker.py.
@@ -337,7 +337,7 @@ def cmd_generate_cards(args: argparse.Namespace) -> int:
         "",
         "# Creator Agent Program — Testimonial Cards",
         "",
-        f"> **Built to help xAI and Grok win.** Generated {_utcnow()[:10]}. "
+        f"> **Built for xAI, X, Grok and the ecosystem community. ❤️** Generated {_utcnow()[:10]}. "
         f"{len(entries)} card(s) — every quote is verbatim, every entry is "
         "consent-gated, every revoked entry is excluded.",
         "",
@@ -354,7 +354,7 @@ def cmd_generate_cards(args: argparse.Namespace) -> int:
         "Creators may revoke consent at any time; revoked entries are removed "
         "from this file on the next regeneration._",
         "",
-        "_Built to help xAI and Grok win. 🚀_",
+        "_Built for xAI, X, Grok and the ecosystem community. ❤️_",
     ]
     out = "\n".join(header) + "\n".join(body) + "\n" + "\n".join(footer)
 
@@ -433,7 +433,7 @@ def build_parser() -> argparse.ArgumentParser:
         prog="testimonial-collector",
         description=(
             "Local-first testimonial collector for the Grok Agent OS Creator "
-            "Program. Built to help xAI and Grok win."
+            "Program. Built for xAI, X, Grok and the ecosystem community. ❤️"
         ),
     )
     sub = p.add_subparsers(dest="command", required=True)

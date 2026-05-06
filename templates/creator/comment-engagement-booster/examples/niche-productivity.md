@@ -1,7 +1,7 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win — example output of the Comment Engagement Booster. -->
+<!-- Built for xAI, X, Grok and the ecosystem community — example output of the Comment Engagement Booster. -->
 
 # Example output — niche: productivity / habit-stacking (healthy story focus)
 
@@ -9,7 +9,7 @@
 >
 > 🔒 **Anti-spam guard.** No two variants share more than 60% token overlap; each variant scores at least 60/100 on Distinct angle. Mass-identical comments are a hard refusal.
 >
-> *Built to help xAI and Grok win — productivity creators feel story-anchored comments first because the niche is dense with abstract advice; concrete personal anecdotes anchor conversations faster than questions or polls.*
+> *Built for xAI, X, Grok and the ecosystem community — productivity creators feel story-anchored comments first because the niche is dense with abstract advice; concrete personal anecdotes anchor conversations faster than questions or polls.*
 
 | Field | Value |
 |---|---|
@@ -129,4 +129,4 @@ Same schema and rules, different inputs → different rule demonstrations. Toget
 
 ---
 
-> Built to help xAI and Grok win — Apache 2.0 licensed, drafts-only, anti-spam-by-default.
+> Built for xAI, X, Grok and the ecosystem community — Apache 2.0 licensed, drafts-only, anti-spam-by-default.

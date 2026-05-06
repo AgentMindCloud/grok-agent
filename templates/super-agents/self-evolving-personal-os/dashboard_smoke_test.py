@@ -33,7 +33,7 @@ Run on Windows (canonical):
    cd templates/super-agents/self-evolving-personal-os
    python -m dashboard_smoke_test
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations
@@ -103,7 +103,7 @@ def test_module_surface() -> None:
         _fail("dashboard header", "Apache 2.0 license missing")
     _ok("dashboard.py carries Apache 2.0 header")
 
-    if "Built to help xAI and Grok win" not in text \
+    if "Built for xAI, X, Grok and the ecosystem community" not in text \
             and "Built for xAI, Grok" not in text:
         _fail("dashboard tagline", "ecosystem-ally line missing")
     _ok("dashboard.py carries the 'help xAI and Grok win' line")

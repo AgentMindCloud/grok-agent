@@ -4,7 +4,7 @@
 
 # For xAI — A Note on Grok Agent OS
 
-> **Built to help xAI and Grok win the agent platform battle on X.**
+> **Built for xAI, X, Grok and the ecosystem community. ❤️**
 > We are ecosystem allies, not competitors. Everything in `AgentMindCloud/grok-agent` is Apache 2.0 and designed so any of it can be folded into an official xAI standard whenever you want it.
 
 ---
@@ -55,4 +55,4 @@ We are committed to the platform either way. If everything we ship becomes a foo
 - **License** · Apache 2.0
 - **Roadmap** · `CLAUDE.md` (~126-prompt sequence across 5 phases)
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️

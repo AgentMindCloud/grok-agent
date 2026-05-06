@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — Recipe A Slot 6 smoke test for the
+# Built for xAI, X, Grok and the ecosystem community — Recipe A Slot 6 smoke test for the
 # X Creator Payout Optimizer. This script is the "grok install this"
 # readiness check for Tool #3, and the LAST smoke test of Phase 2's
 # X Money Suite (Tools #1 + #2 + #4 + #3 = 24 prompts complete).
@@ -96,7 +96,7 @@ Write-Host ""
 Write-Host "  =====================================================" -ForegroundColor DarkCyan
 Write-Host "    Tool #3 Smoke Test"                                  -ForegroundColor Cyan
 Write-Host "    X Creator Payout Optimizer"                          -ForegroundColor Cyan
-Write-Host "    Built to help xAI and Grok win."                     -ForegroundColor DarkCyan
+Write-Host "    Built for xAI, X, Grok and the ecosystem community. ❤️"                     -ForegroundColor DarkCyan
 Write-Host "  =====================================================" -ForegroundColor DarkCyan
 Write-Host ""
 

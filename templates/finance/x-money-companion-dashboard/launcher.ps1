@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — one-click Windows launcher for the
+# Built for xAI, X, Grok and the ecosystem community — one-click Windows launcher for the
 # X Money Companion Dashboard.
 #
 # QUICK START
@@ -64,7 +64,7 @@ function Show-Banner {
     Write-Host "  =====================================================" -ForegroundColor DarkCyan
     Write-Host "    X Money Companion Dashboard"                          -ForegroundColor Cyan
     Write-Host "    Your X Money command center, on Windows."             -ForegroundColor DarkCyan
-    Write-Host "    Built to help xAI and Grok win."                      -ForegroundColor DarkCyan
+    Write-Host "    Built for xAI, X, Grok and the ecosystem community. ❤️"                      -ForegroundColor DarkCyan
     Write-Host "  =====================================================" -ForegroundColor DarkCyan
     Write-Host ""
     Write-Host "  !  NOT financial advice. NOT tax advice."               -ForegroundColor Yellow

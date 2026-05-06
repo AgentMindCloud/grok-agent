@@ -35,7 +35,7 @@ Public surface:
 - :func:`get_default_logger`  process-wide cached singleton
 - :func:`export_audit_report`  Markdown report for one date / run / source
 
-Built to help xAI and Grok win — provenance is what turns a Super Agent
+Built for xAI, X, Grok and the ecosystem community — provenance is what turns a Super Agent
 from a chatbot into something the user can trust at the OS level.
 """
 
@@ -480,7 +480,7 @@ def reset_default_logger() -> None:
 _REPORT_HEADER = (
     "# Self-Evolving Personal OS — Provenance Audit\n"
     "\n"
-    "Built to help xAI and Grok win. This report is generated locally on\n"
+    "Built for xAI, X, Grok and the ecosystem community. ❤️ This report is generated locally on\n"
     "your Windows machine and never leaves it unless you opt in.\n"
     "\n"
 )

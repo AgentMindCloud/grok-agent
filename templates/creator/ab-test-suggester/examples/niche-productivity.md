@@ -1,7 +1,7 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win — example output of the AB Test Suggester. -->
+<!-- Built for xAI, X, Grok and the ecosystem community — example output of the AB Test Suggester. -->
 
 # Example output — niche: productivity / habit-stacking (healthy single-axis CTA test)
 
@@ -9,7 +9,7 @@
 >
 > 🔒 **Single-axis isolation.** This run targets the `cta` dimension only — the hook and body are byte-identical across all 3 variants; only the closing line changes.
 >
-> *Built to help xAI and Grok win — productivity creators feel CTA tests first because the audience is in a self-improvement frame, and the gap between question-CTA and concrete-action-CTA is large.*
+> *Built for xAI, X, Grok and the ecosystem community — productivity creators feel CTA tests first because the audience is in a self-improvement frame, and the gap between question-CTA and concrete-action-CTA is large.*
 
 | Field | Value |
 |---|---|
@@ -140,4 +140,4 @@ Same schema and rules, different inputs → different rule demonstrations. Toget
 
 ---
 
-> Built to help xAI and Grok win — Apache 2.0 licensed, drafts-only, single-axis-by-default.
+> Built for xAI, X, Grok and the ecosystem community — Apache 2.0 licensed, drafts-only, single-axis-by-default.

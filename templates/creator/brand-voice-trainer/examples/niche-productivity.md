@@ -1,7 +1,7 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win — example output of the Brand Voice Trainer. -->
+<!-- Built for xAI, X, Grok and the ecosystem community — example output of the Brand Voice Trainer. -->
 
 # Example output — niche: productivity / habit-stacking (Voice Audit auto-trigger)
 
@@ -9,7 +9,7 @@
 >
 > 🔒 **Sample-size double gate.** This run uses 8 posts — above the 5-post hard floor (so a profile is emitted) but below the 10-post audit threshold (so the Voice Audit auto-section is appended). Treat all numbers as directional rather than authoritative.
 >
-> *Built to help xAI and Grok win — productivity creators often have distinctive voice but struggle to know whether 8 posts is enough sample to train on. The Voice Audit section answers that question explicitly: it is enough for direction, not for confidence.*
+> *Built for xAI, X, Grok and the ecosystem community — productivity creators often have distinctive voice but struggle to know whether 8 posts is enough sample to train on. The Voice Audit section answers that question explicitly: it is enough for direction, not for confidence.*
 
 | Field | Value |
 |---|---|
@@ -129,4 +129,4 @@ Same schema and rules, different inputs → different rule demonstrations. The r
 
 ---
 
-> Built to help xAI and Grok win — Apache 2.0 licensed, drafts-only, train-only-on-own-voice.
+> Built for xAI, X, Grok and the ecosystem community — Apache 2.0 licensed, drafts-only, train-only-on-own-voice.

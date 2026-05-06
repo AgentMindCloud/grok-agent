@@ -6,7 +6,7 @@
 
 > Earnings forecasting, content optimization, and tax estimator for X creators. Reads from the X Money Companion Dashboard (Tool #1) and the X Money Vision Analyzer (Tool #4) for the richest possible local data.
 >
-> *Built to help xAI and Grok win the platform battle on X.*
+> *Built for xAI, X, Grok and the ecosystem community. ❤️*
 
 > *I, the author of this agent, agree to the Grok Agent OS Constitution v1.0. I commit to keep this agent compliant or remove it from distribution.* — `@JanSol0s`
 

@@ -4,7 +4,7 @@
 
 # First X Launch Thread — Phase 1 Public Announcement
 
-> **Built to help xAI and Grok win.**
+> **Built for xAI, X, Grok and the ecosystem community. ❤️**
 > Ready-to-post text for the @JanSol0s thread that opens Grok Agent OS to the public. Phase 1 is officially closed: all 18 deliverables shipped, both Python + PowerShell layers smoke-tested, the Constitution scanner is green on every commit. Each tweet below is **≤ 280 characters** (verified). Recommended posting window: weekday 8–10am Pacific (high X engagement for the tech-creator audience).
 
 ---
@@ -45,7 +45,7 @@ Shipped Phase 1 of Grok Agent OS — the missing OS layer for Grok agents on X.
 
 One YAML manifest. One PowerShell command. Windows-native. Constitution-enforced. Apache 2.0.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 🧵 below 👇 (1/7)
 ```
@@ -131,7 +131,7 @@ Roadmap · /ROADMAP.md
 For xAI · /docs/for-xai-adoption.md
 Quick start · /docs/windows-guide.md
 
-Built to help xAI and Grok win. 🚀 (7/7)
+Built for xAI, X, Grok and the ecosystem community. ❤️ (7/7)
 ```
 
 ---
@@ -149,7 +149,7 @@ Windows-first layer that makes Grok the easiest, most magical platform to deploy
 
 github.com/AgentMindCloud/grok-agent
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 ```
 
 ---
@@ -210,4 +210,4 @@ Read the Constitution → github.com/AgentMindCloud/grok-agent
 - **Day 3–4:** quote-tweet variant C (X Money creators) once the X Money creator-tools work in Phase 2 lands.
 - **Day 7:** cross-post `/docs/for-xai-adoption.md` as a separate top-level post addressed to xAI engineers. Keep that one short, humble, and free of marketing language.
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️

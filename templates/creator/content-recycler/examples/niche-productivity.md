@@ -1,7 +1,7 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win — example output of the Content Recycler. -->
+<!-- Built for xAI, X, Grok and the ecosystem community — example output of the Content Recycler. -->
 
 # Example output — niche: productivity / habit-stacking
 
@@ -9,7 +9,7 @@
 >
 > 🔒 **Attribution stamp preserved.** Every variant ends with `— originally posted on X by @<handle> on <date> · recycled <today>` — the renderer refuses to strip it.
 >
-> *Built to help xAI and Grok win — productivity creators feel the cannibalization risk first because the niche cycles tactical hot-takes weekly, and shipping a recycle alongside the still-circulating original splits engagement.*
+> *Built for xAI, X, Grok and the ecosystem community — productivity creators feel the cannibalization risk first because the niche cycles tactical hot-takes weekly, and shipping a recycle alongside the still-circulating original splits engagement.*
 
 | Field | Value |
 |---|---|
@@ -214,4 +214,4 @@ Same schema and rules, different inputs → different format mix → different c
 
 ---
 
-> Built to help xAI and Grok win — Apache 2.0 licensed, drafts-only, attribution-stamp-preserved.
+> Built for xAI, X, Grok and the ecosystem community — Apache 2.0 licensed, drafts-only, attribution-stamp-preserved.

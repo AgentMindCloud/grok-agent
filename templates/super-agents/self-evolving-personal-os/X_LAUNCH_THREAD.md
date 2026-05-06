@@ -4,7 +4,7 @@
 
 # Self-Evolving Personal OS — X Launch Thread
 
-> Built to help xAI and Grok win. This thread is **copy-paste-ready** for
+> Built for xAI, X, Grok and the ecosystem community. ❤️ This thread is **copy-paste-ready** for
 > direct posting on X. Every tweet is under the 280-character limit
 > (counted with hashtags and the `https://github.com/AgentMindCloud/grok-agent`
 > link), every image placeholder names the asset to attach, and the CTA
@@ -345,7 +345,7 @@ This thread is itself an artefact of the agent we ship. Before posting
 verify each line still holds:
 
 - [x] Apache 2.0 license header at the top of `X_LAUNCH_THREAD.md` ✓
-- [x] "Built to help xAI and Grok win" line present in the file ✓
+- [x] "Built for xAI, X, Grok and the ecosystem community" line present in the file ✓
 - [x] PowerShell-only commands; no bash, no macOS, no Apple anything ✓
 - [x] No mention of the 13 untouchable repos as modifiable ✓
 - [x] No forbidden phrases ("etc.", "and so on", "as you see fit",
@@ -358,4 +358,4 @@ If any line above is unchecked, **don't post** — fix the file first.
 
 ---
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️

@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — generates the Creator Agent Program weekly
+# Built for xAI, X, Grok and the ecosystem community — generates the Creator Agent Program weekly
 # report from the local outreach.json store. Reads only; never modifies the
 # tracker's data; never makes outbound network calls.
 """weekly-report.py — render a clean weekly markdown report.
@@ -77,7 +77,7 @@ def _section_header(title: str, days: int | None) -> str:
     lines = [
         "# Creator Agent Program — Weekly Report",
         "",
-        f"> **Built to help xAI and Grok win.** Generated {now} ({window}).",
+        f"> **Built for xAI, X, Grok and the ecosystem community. ❤️** Generated {now} ({window}).",
         "",
         "> ⚠️ **Not financial advice. Not tax advice.** Outreach for the "
         "monetization-optimizer template carries the standard Vietnam-resident "
@@ -268,7 +268,7 @@ def _section_footer() -> str:
     return (
         "---\n\n"
         "_Local-first. Privacy-first. No data leaves your machine. "
-        "Built to help xAI and Grok win. 🚀_\n"
+        "Built for xAI, X, Grok and the ecosystem community. ❤️_\n"
     )
 
 

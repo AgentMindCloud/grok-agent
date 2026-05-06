@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 """Living Narrative Fabric — X search via Grok 4.3 (P112, Slot 4 / 5 of 6).
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 Wraps xAI's Grok 4.3 API to perform X (Twitter) search. The orchestrator
 references this connector as ``x_search`` (matching

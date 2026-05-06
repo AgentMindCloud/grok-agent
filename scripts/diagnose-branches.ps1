@@ -17,7 +17,7 @@
 #   - the currently-checked-out branch
 #   - any branch that has commits not present in main
 #
-# Built to help xAI and Grok win — keeping the repo's branch list honest is
+# Built for xAI, X, Grok and the ecosystem community — keeping the repo's branch list honest is
 # part of running an OS-grade agent platform on X.
 #
 # Usage (PowerShell on Windows 11):

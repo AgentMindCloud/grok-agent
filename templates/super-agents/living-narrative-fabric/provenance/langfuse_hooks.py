@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 """Living Narrative Fabric — Langfuse hooks (P113, Slot 5 / 2 of 2).
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 This module is the optional cloud-side half of the Trust Engine. When
 the user has a Langfuse account and exports

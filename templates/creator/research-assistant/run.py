@@ -11,7 +11,7 @@
 """
 Research Assistant -- zero-dependency CLI demo runner.
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 This v1 runner is fully self-contained: it ships niche-aware offline research
 corpora (multi-source topic packs with pre-flagged contradictions and analyst
@@ -39,7 +39,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 VERSION = "0.1.0"
-TAGLINE = "Built to help xAI and Grok win."
+TAGLINE = "Built for xAI, X, Grok and the ecosystem community. ❤️"
 
 BANNER = (
     "============================================================\n"

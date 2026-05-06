@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 """Living Narrative Fabric — DeepEval suite + metrics (P114, Slot 6 / 1 of 2).
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 This module is the deterministic measurement core of the self-improvement
 loop. Every metric here is computable WITHOUT an LLM judge — it inspects

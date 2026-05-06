@@ -18,7 +18,7 @@ Each store-side manifest tool orchestrates:
 Constitution Article III is enforced by the cross-tool readers' SQLite-
 level read-only mode plus this manifest's "READS only" rule.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

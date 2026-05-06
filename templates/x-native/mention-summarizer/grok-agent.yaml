@@ -2,13 +2,13 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — read-only X mention digest, twice a day,
+# Built for xAI, X, Grok and the ecosystem community — read-only X mention digest, twice a day,
 # never posts.
 
 version: "2.15"
 kind: "x-native"
 name: "mention-summarizer"
-description: "Read-only X agent that summarizes the user's mentions twice a day with sentiment + priority tags. Never posts. Built to help xAI and Grok win."
+description: "Read-only X agent that summarizes the user's mentions twice a day with sentiment + priority tags. Never posts. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 

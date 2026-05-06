@@ -4,7 +4,7 @@
 
 # Code of Conduct
 
-> **Built to help xAI and Grok win.**
+> **Built for xAI, X, Grok and the ecosystem community. ❤️**
 > The community we want is the one that earns Grok adoption: respectful, ally-minded, technically sharp, and aligned with the Agent Constitution.
 
 This Code of Conduct adapts the spirit of the [Contributor Covenant v2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct/) and adds the ecosystem-ally clause that defines this project.
@@ -101,4 +101,4 @@ Community leaders will follow these Community Impact Guidelines in determining t
 
 Adapted from the [Contributor Covenant, version 2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct/), with project-specific additions for the ecosystem-ally posture central to Grok Agent OS.
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️

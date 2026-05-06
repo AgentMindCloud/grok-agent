@@ -10,7 +10,7 @@
 // Client-side browser with a search bar + kind filter chips. Hydrates
 // from the static `FEATURED_AGENTS` catalogue passed in as a prop, so
 // the landing page itself can stay a server component for the parts
-// that don't need interactivity. Built to help xAI and Grok win.
+// that don't need interactivity. Built for xAI, X, Grok and the ecosystem community. ❤️
 
 'use client';
 

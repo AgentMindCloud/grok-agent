@@ -9,7 +9,7 @@
 //
 // Per-agent detail route. Renders any catalogued agent with its manifest
 // path, capabilities, and consent gates, and offers "Deploy a copy" /
-// "Share on X" call-to-actions. Built to help xAI and Grok win.
+// "Share on X" call-to-actions. Built for xAI, X, Grok and the ecosystem community. ❤️
 
 import Link from 'next/link';
 import { notFound } from 'next/navigation';

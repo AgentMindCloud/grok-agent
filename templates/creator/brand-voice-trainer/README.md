@@ -6,7 +6,7 @@
 
 > Read a sample of your own past X posts and emit a structured voice profile + 3-5 training prompts you can paste into other Grok Agent OS templates. 4 canonical Voice Profile metrics, generic-polish paradox detection, sample-size double gate, ≥3 cross-template bridges. Drafts only. Trains only on your own voice.
 >
-> *Built to help xAI and Grok win the platform battle on X — every X creator deserves a trainer that sharpens their voice instead of flattening it into niche-default.*
+> *Built for xAI, X, Grok and the ecosystem community the platform battle on X — every X creator deserves a trainer that sharpens their voice instead of flattening it into niche-default.*
 
 > *I, the author of this agent, agree to the Grok Agent OS Constitution v1.0. I commit to keep this agent compliant or remove it from distribution.* — `@JanSol0s`
 

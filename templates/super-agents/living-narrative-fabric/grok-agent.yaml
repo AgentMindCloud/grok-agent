@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — Living Narrative Fabric is the
+# Built for xAI, X, Grok and the ecosystem community — Living Narrative Fabric is the
 # flagship Super Agent of the Grok Agent OS suite. It produces
 # versioned, provenance-first synthesis across X (via Grok 4.3),
 # news (NewsAPI + GNews), academia (Semantic Scholar), government
@@ -25,7 +25,7 @@
 version: "2.15"
 kind: "super-agent"
 name: "living-narrative-fabric"
-description: "Versioned, provenance-first synthesis across X, news, academia, government, and the open web — with full contradiction detection that never silently picks a winner. Built to help xAI and Grok win."
+description: "Versioned, provenance-first synthesis across X, news, academia, government, and the open web — with full contradiction detection that never silently picks a winner. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 

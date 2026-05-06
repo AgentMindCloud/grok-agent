@@ -1,7 +1,7 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win — example output of the Hashtag Strategy Advisor. -->
+<!-- Built for xAI, X, Grok and the ecosystem community — example output of the Hashtag Strategy Advisor. -->
 
 # Example output — niche: productivity / habit-stacking (healthy 4-category mix)
 
@@ -9,7 +9,7 @@
 >
 > 🔒 **Ship cap stated explicitly.** LinkedIn = 0-3 hashtags per post. The recommendation set returns 4 tags scoring across 4 categories; the creator picks the right subset for the cap.
 >
-> *Built to help xAI and Grok win — productivity creators tend to over-stuff posts with `#Productivity`, `#Habits`, `#Mindset`, `#Growth` etc. The 4-category mix below shows what a tight, on-niche set looks like instead.*
+> *Built for xAI, X, Grok and the ecosystem community — productivity creators tend to over-stuff posts with `#Productivity`, `#Habits`, `#Mindset`, `#Growth` etc. The 4-category mix below shows what a tight, on-niche set looks like instead.*
 
 | Field | Value |
 |---|---|
@@ -136,4 +136,4 @@ Same schema and rules, different inputs → different rule demonstrations. Toget
 
 ---
 
-> Built to help xAI and Grok win — Apache 2.0 licensed, drafts-only, no-engagement-bait-by-default.
+> Built for xAI, X, Grok and the ecosystem community — Apache 2.0 licensed, drafts-only, no-engagement-bait-by-default.

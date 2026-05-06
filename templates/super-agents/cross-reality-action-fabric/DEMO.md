@@ -218,7 +218,7 @@ github.com/AgentMindCloud/grok-agent
 > grok install this
 Apache 2.0 · Windows 11 · Local-first
 Article V.3 — every action requires explicit consent.
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 ```
 
 ---
@@ -335,4 +335,4 @@ Once the recording is in the can:
 
 ---
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️

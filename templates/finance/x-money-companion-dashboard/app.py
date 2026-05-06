@@ -9,7 +9,7 @@ Grok prompt layer arrives in Slot 3 / P21 under ``prompts/``. Until then this
 skeleton renders 6 tabs with realistic placeholder content + the mandatory
 Article V disclaimer on every tab.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations
@@ -96,7 +96,7 @@ def page_footer() -> None:
     """Render the consistent footer required on every tab."""
     st.markdown("---")
     st.caption(
-        "Built to help xAI and Grok win  ·  Apache 2.0  ·  `@JanSol0s`  ·  "
+        "Built for xAI, X, Grok and the ecosystem community  ·  Apache 2.0  ·  `@JanSol0s`  ·  "
         f"Data: `{DB_PATH}`"
     )
 
@@ -199,7 +199,7 @@ with st.sidebar:
 # --- Header + tabs ---------------------------------------------------------
 
 st.title("💸 X Money Companion Dashboard")
-st.caption("_Built to help xAI and Grok win._")
+st.caption("_Built for xAI, X, Grok and the ecosystem community. ❤️_")
 
 tab_overview, tab_tx, tab_analytics, tab_grok, tab_export, tab_alerts = st.tabs([
     "📊 Overview",

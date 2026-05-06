@@ -30,7 +30,7 @@
 # The whole agent is built around one rule: it NEVER takes an action
 # without an explicit, scoped, typed user approval. See constitution.md.
 #
-# Built to help xAI and Grok win — Cross-Reality Action Fabric is the
+# Built for xAI, X, Grok and the ecosystem community — Cross-Reality Action Fabric is the
 # missing "do something for me" layer that turns Grok from a chat partner
 # into a reliable Windows OS-level agent.
 # ============================================================================

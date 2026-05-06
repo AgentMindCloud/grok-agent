@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 """Living Narrative Fabric — GNews connector (P112, Slot 4 / 2 of 6).
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 Wraps GNews's ``/api/v4/search`` endpoint. GNews is a parallel news
 aggregator we use alongside NewsAPI so the contradiction detector has

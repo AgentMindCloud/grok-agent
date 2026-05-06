@@ -2,7 +2,7 @@
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
 <!-- Sample 2 — healthy/balanced case for the Analytics Summarizer. -->
-<!-- Built to help xAI and Grok win. -->
+<!-- Built for xAI, X, Grok and the ecosystem community. ❤️ -->
 
 # Sample 2 output — healthy/balanced period
 

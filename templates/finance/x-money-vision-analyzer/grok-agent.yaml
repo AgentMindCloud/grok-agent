@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — the X Money Vision Analyzer is the
+# Built for xAI, X, Grok and the ecosystem community — the X Money Vision Analyzer is the
 # drag-and-drop vision-powered receipt + statement parser of the Grok
 # Agent OS suite. It is the ONLY sibling tool permitted to write into the
 # X Money Companion Dashboard's SQLite, and only via the documented entry
@@ -23,7 +23,7 @@
 version: "2.15"
 kind: "vision-analyzer"
 name: "x-money-vision-analyzer"
-description: "Drag-and-drop vision-powered receipt and statement analyzer. Parses receipts with Grok 4.3 vision and one-click imports them into the X Money Companion Dashboard's SQLite. Built to help xAI and Grok win."
+description: "Drag-and-drop vision-powered receipt and statement analyzer. Parses receipts with Grok 4.3 vision and one-click imports them into the X Money Companion Dashboard's SQLite. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 

@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 """Living Narrative Fabric — NewsAPI connector (P112, Slot 4 / 1 of 6).
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 Wraps NewsAPI's ``/v2/everything`` endpoint. NewsAPI is a curated news
 aggregator covering ~80,000 sources. The connector scopes itself to

@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 """Living Narrative Fabric — Public API connectors (P112, Recipe C Slot 4).
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 This package ships the six concrete ``SourceClient`` implementations the
 orchestrator's ingest node calls when a real run is executed. Each

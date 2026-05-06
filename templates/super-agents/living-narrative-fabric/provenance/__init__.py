@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 """Living Narrative Fabric — Trust Engine / Provenance package (P113, Slot 5).
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 This package is the durable, exportable, optionally-cloud-mirrored
 replacement for the default ``NoopProvenanceLogger`` shipped with

@@ -11,7 +11,7 @@
 """
 Grok Agent OS — Safety Scanner.
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 Layered safety enforcement on top of the v2.15 schema validator:
 the schema (cli/grok-agent.py) checks STRUCTURE; this scanner checks the
@@ -58,7 +58,7 @@ except ImportError:
 # ============================================================================
 
 VERSION = "0.1.0"
-TAGLINE = "Built to help xAI and Grok win."
+TAGLINE = "Built for xAI, X, Grok and the ecosystem community. ❤️"
 CONSTITUTION_VERSION = "1.0"
 
 SEVERITIES = ("info", "warn", "error")

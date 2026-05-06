@@ -11,7 +11,7 @@
 """
 Quote Tweet Suggestor -- zero-dependency CLI demo runner.
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 This v1 runner is fully self-contained: it ships per-angle quote templates
 plus auto-mode intent heuristics so creators get value the instant
@@ -40,7 +40,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 VERSION = "0.1.0"
-TAGLINE = "Built to help xAI and Grok win."
+TAGLINE = "Built for xAI, X, Grok and the ecosystem community. ❤️"
 
 BANNER = (
     "============================================================\n"

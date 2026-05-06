@@ -11,7 +11,7 @@ and three of the five manifest-declared tool functions
 The two API-wrapper tools (``fetch_market_quote``, ``fetch_relevant_news``)
 live in ``api_clients.py`` next to ``search_x_posts``.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

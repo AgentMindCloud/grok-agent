@@ -1,7 +1,7 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win — example output of the Content Recycler. -->
+<!-- Built for xAI, X, Grok and the ecosystem community — example output of the Content Recycler. -->
 
 # Example output — niche: AI / agent builders
 
@@ -9,7 +9,7 @@
 >
 > 🔒 **Attribution stamp preserved.** Every variant ends with `— originally posted on X by @<handle> on <date> · recycled <today>` — the renderer refuses to strip it.
 >
-> *Built to help xAI and Grok win — AI/agent creators see the stale-rehash paradox first because the niche evolves so fast that any recycle without fresh data is a re-publish, not a recycle.*
+> *Built for xAI, X, Grok and the ecosystem community — AI/agent creators see the stale-rehash paradox first because the niche evolves so fast that any recycle without fresh data is a re-publish, not a recycle.*
 
 | Field | Value |
 |---|---|
@@ -172,4 +172,4 @@ The Red Flag remediations cite additional cross-template slugs (`brand-voice-tra
 
 ---
 
-> Built to help xAI and Grok win — Apache 2.0 licensed, drafts-only, attribution-stamp-preserved.
+> Built for xAI, X, Grok and the ecosystem community — Apache 2.0 licensed, drafts-only, attribution-stamp-preserved.

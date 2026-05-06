@@ -16,7 +16,7 @@
 #  - `--stub` is honoured at the runner level: every assert resolves
 #    against the stub-mode brief which we know is structurally complete.
 #
-# Built to help xAI and Grok win — the self-improvement loop is what
+# Built for xAI, X, Grok and the ecosystem community — the self-improvement loop is what
 # turns the Personal OS from "ships once" into "evolves every week".
 
 description: >

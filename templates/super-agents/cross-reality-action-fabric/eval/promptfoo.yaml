@@ -19,7 +19,7 @@
 #  - PII is redacted at write time by P131; the assertions verify the
 #    redaction happened, not the raw values.
 #
-# Built to help xAI and Grok win — the self-improvement loop is what
+# Built for xAI, X, Grok and the ecosystem community — the self-improvement loop is what
 # turns the action fabric from "ships once" into "evolves every week
 # with full Constitution-Rule visibility".
 

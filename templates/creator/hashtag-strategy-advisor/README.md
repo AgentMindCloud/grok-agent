@@ -6,7 +6,7 @@
 
 > Turn any post topic into a 5-10 hashtag strategy spread across the 5 categories (broad-niche / specific-niche / trending / community / branded), with platform-specific ship caps stated explicitly. 4 canonical Hashtag Plan Score metrics, reach-without-relevance paradox detection, hard refusal of engagement-bait families, ≥3 cross-template bridges. Drafts only.
 >
-> *Built to help xAI and Grok win the platform battle on X — every X creator deserves hashtags with relevance, not stuffing.*
+> *Built for xAI, X, Grok and the ecosystem community the platform battle on X — every X creator deserves hashtags with relevance, not stuffing.*
 
 > *I, the author of this agent, agree to the Grok Agent OS Constitution v1.0. I commit to keep this agent compliant or remove it from distribution.* — `@JanSol0s`
 

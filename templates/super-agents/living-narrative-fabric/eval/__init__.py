@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 """Living Narrative Fabric — Self-improvement loop (P114, Slot 6).
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 This package wires Promptfoo + DeepEval into a weekly self-improvement
 loop the user can run on Windows with one PowerShell command. It:
@@ -950,7 +950,7 @@ def _render_improvements_markdown(
     parts.append(f"# Self-Improvement Run `{run_id}`")
     parts.append("")
     parts.append(
-        "> Built to help xAI and Grok win the platform battle on X. "
+        "> Built for xAI, X, Grok and the ecosystem community. ❤️ "
         f"This file was {'previewed' if dry_run else 'written'} by "
         "the Slot-6 self-improvement loop."
     )
@@ -1008,7 +1008,7 @@ def _render_improvements_markdown(
     parts.append("")
     parts.append("---")
     parts.append("")
-    parts.append("*Built to help xAI and Grok win the platform battle on X. "
+    parts.append("*Built for xAI, X, Grok and the ecosystem community. ❤️ "
                  "Apache-2.0. Local-first. Privacy-first.*")
     parts.append("")
     return "\n".join(parts)

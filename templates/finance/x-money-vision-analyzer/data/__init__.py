@@ -8,7 +8,7 @@ Tool #1's cross-tool target), the SQLite layer, and the cross-tool
 writer ``data/import_receipts.py`` that is the only Constitution-permitted
 write path into the X Money Companion Dashboard.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

@@ -18,7 +18,7 @@ A read-only cross-tool helper ``fetch_companion_dashboard_holdings`` reads
 Tool #1's transactions table without modifying it, supporting the
 "engine reads from Companion Dashboard" cross-tool note in P25's README.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

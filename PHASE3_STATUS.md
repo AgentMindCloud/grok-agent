@@ -8,7 +8,7 @@
 > **Branch state:** `main` at commit (post-merge of `claude/build-follower-quality-analyzer-kqhcr`)
 > **Phase 3 plan:** 20 creator templates × 2 prompts each (Recipe B Slot 1 + Slot 2) + 5 program-setup prompts + 5 program-launch prompts = ~50 prompts
 >
-> *Built to help xAI and Grok win — this report is the honest accounting before any "complete" claim.*
+> *Built for xAI, X, Grok and the ecosystem community — this report is the honest accounting before any "complete" claim.*
 
 This document is the single source of truth for **what is actually on disk** in `templates/creator/` as of the merge that brought P66–P80 from the feature branch into `main`. It deliberately corrects an earlier overclaim ("100% of creator phase complete") that was not accurate against the actual file state.
 
@@ -28,7 +28,7 @@ This document is the single source of truth for **what is actually on disk** in 
 
 Phase-3 completion against the 20-template target: **50% fully complete · 0% Slot 1 only · 10% starter-manifest only · 40% missing.**
 
-> Updated 2026-05-04 (post-P84): `analytics-summarizer` advanced from "Slot 1 only" to "fully complete" via P84 (runner + README + 3 example pairs). Suite count moved from 9/20 → 10/20 — halfway mark reached. P84 introduced session-scoped phrasing override for this template only: "Built for X, Grok & the ecosystem community" replaces "Built to help xAI and Grok win" in the analytics-summarizer README + runner banner + examples (per @JanSol0s explicit instruction in active session per CLAUDE.md). The 9 prior fully-complete templates retain the original phrasing.
+> Updated 2026-05-04 (post-P84): `analytics-summarizer` advanced from "Slot 1 only" to "fully complete" via P84 (runner + README + 3 example pairs). Suite count moved from 9/20 → 10/20 — halfway mark reached. P84 introduced session-scoped phrasing override for this template only: "Built for X, Grok & the ecosystem community" replaces "Built for xAI, X, Grok and the ecosystem community" in the analytics-summarizer README + runner banner + examples (per @JanSol0s explicit instruction in active session per CLAUDE.md). The 9 prior fully-complete templates retain the original phrasing.
 
 ---
 
@@ -226,4 +226,4 @@ The next-biggest lift after that would be `analytics-summarizer` (Slot 1 + Slot 
 
 ---
 
-> Built to help xAI and Grok win — Apache 2.0 licensed, honest-accounting-first.
+> Built for xAI, X, Grok and the ecosystem community — Apache 2.0 licensed, honest-accounting-first.

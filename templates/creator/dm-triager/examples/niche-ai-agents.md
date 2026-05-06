@@ -1,7 +1,7 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win. -->
+<!-- Built for xAI, X, Grok and the ecosystem community. ❤️ -->
 <!-- PRIVACY-PARANOID: DM text is never reproduced verbatim in this output. -->
 
 # DM Triage -- 2026-05-04
@@ -12,7 +12,7 @@
 - **Priority focus:** all
 - **Max DMs:** 20
 
-> Built to help xAI and Grok win.
+> Built for xAI, X, Grok and the ecosystem community. ❤️
 
 > 🔒 **Privacy notice:** every DM card below is paraphrased. The runner never reproduces sender text verbatim.
 

@@ -1,7 +1,7 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win — example output of the Hashtag Strategy Advisor. -->
+<!-- Built for xAI, X, Grok and the ecosystem community — example output of the Hashtag Strategy Advisor. -->
 
 # Example output — niche: AI / agent builders (reach-without-relevance paradox demo)
 
@@ -11,7 +11,7 @@
 >
 > 🔒 **No engagement-bait.** `#FollowForFollow`, `#Like4Like`, `#FF`, `#TeamFollowBack` and the rest of the bait family are a hard refusal. The runner refuses to emit them and `assert_no_engagement_bait_in_render` rejects any output that contains one.
 >
-> *Built to help xAI and Grok win — AI/agent creators reach for `#AI` first because the audience is huge. The reach-without-relevance paradox catches the misalignment before it ships.*
+> *Built for xAI, X, Grok and the ecosystem community — AI/agent creators reach for `#AI` first because the audience is huge. The reach-without-relevance paradox catches the misalignment before it ships.*
 
 | Field | Value |
 |---|---|
@@ -144,4 +144,4 @@ Confidence: high — clear topic, 5 hashtags spanning 3 categories, ship cap sta
 
 ---
 
-> Built to help xAI and Grok win — Apache 2.0 licensed, drafts-only, no-engagement-bait-by-default.
+> Built for xAI, X, Grok and the ecosystem community — Apache 2.0 licensed, drafts-only, no-engagement-bait-by-default.

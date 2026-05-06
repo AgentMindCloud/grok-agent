@@ -265,4 +265,4 @@ This is recommended, not mandatory. It exists so the social contract is visible 
 
 ---
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️

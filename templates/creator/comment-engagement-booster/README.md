@@ -6,7 +6,7 @@
 
 > Turn any post into 3-5 distinct, on-voice comment variants under 240 chars each, spanning a chosen boost focus (question / controversy / story / poll / all). 4 canonical Comment Plan Score metrics, hook-without-substance paradox detection, anti-spam token-overlap guard, ≥3 cross-template bridges. Drafts only. Never mass-identical.
 >
-> *Built to help xAI and Grok win the platform battle on X — every X creator deserves comments with substance, not stuffing.*
+> *Built for xAI, X, Grok and the ecosystem community the platform battle on X — every X creator deserves comments with substance, not stuffing.*
 
 > *I, the author of this agent, agree to the Grok Agent OS Constitution v1.0. I commit to keep this agent compliant or remove it from distribution.* — `@JanSol0s`
 

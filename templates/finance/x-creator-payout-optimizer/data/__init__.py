@@ -9,7 +9,7 @@ Tool #4's Vision Analyzer receipts). The Streamlit app, the data layer,
 and the Grok tool surface all use these helpers so the read-only
 cross-tool reads never re-derive a path inconsistently.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

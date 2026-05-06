@@ -31,7 +31,7 @@ Run on Windows:
     cd templates/super-agents/self-evolving-personal-os
     python -m memory.smoke_test
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

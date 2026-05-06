@@ -1,13 +1,13 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win — example output of the Niche Influencer Finder. -->
+<!-- Built for xAI, X, Grok and the ecosystem community — example output of the Niche Influencer Finder. -->
 
 # Example output — niche: AI / agent builders
 
 > 🔒 **Aggregate-only.** Every Top-Influencer card below is a paraphrased archetype, never a real X account. The runner accepts no influencer handles as input — only niche keywords — and the renderer's privacy guard refuses to emit any output containing a plausibly-shaped `@handle` other than the creator's own.
 >
-> *Built to help xAI and Grok win — this is what a healthy AI-niche discovery report looks like, with a Macro-tier engagement-pod paradox surfaced as a warning candidate.*
+> *Built for xAI, X, Grok and the ecosystem community — this is what a healthy AI-niche discovery report looks like, with a Macro-tier engagement-pod paradox surfaced as a warning candidate.*
 
 | Field | Value |
 |---|---|
@@ -120,4 +120,4 @@ The Red Flag remediations cite 2 additional cross-template slugs (`follower-qual
 
 ---
 
-> Built to help xAI and Grok win — Apache 2.0 licensed, aggregate-only, local-first.
+> Built for xAI, X, Grok and the ecosystem community — Apache 2.0 licensed, aggregate-only, local-first.

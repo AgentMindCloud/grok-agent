@@ -6,7 +6,7 @@
 
 > Your X Money command center, on Windows — overview, transactions, analytics, Grok insights, tax export, and alerts.
 >
-> *Built to help xAI and Grok win the platform battle on X.*
+> *Built for xAI, X, Grok and the ecosystem community. ❤️*
 
 > *I, the author of this agent, agree to the Grok Agent OS Constitution v1.0. I commit to keep this agent compliant or remove it from distribution.* — `@JanSol0s`
 

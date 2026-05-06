@@ -11,7 +11,7 @@
 """
 Grok Agent OS — Python fallback validator (v2.15).
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 This script is the deep, Pydantic v2-based validator for grok-agent.yaml
 manifests against the v2.15 schema (see spec/v2.15/grok-agent.yaml).
@@ -70,7 +70,7 @@ except ImportError:
 # ============================================================================
 
 VERSION = "0.1.0"
-TAGLINE = "Built to help xAI and Grok win."
+TAGLINE = "Built for xAI, X, Grok and the ecosystem community. ❤️"
 SPEC_VERSION = "2.15"
 ACCEPTED_VERSIONS = ("2.14", "2.15")
 

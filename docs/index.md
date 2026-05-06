@@ -4,7 +4,7 @@
 
 # Grok Agent OS
 
-> **Built to help xAI and Grok win the agent platform battle on X.**
+> **Built for xAI, X, Grok and the ecosystem community. ❤️**
 > The canonical open standard + Windows-first distribution layer that makes Grok the easiest, most powerful, and most magical platform for deploying agents.
 
 `AgentMindCloud/grok-agent` is the missing OS layer for Grok agents. One YAML manifest (`grok-agent.yaml` v2.15) plus one command (`grok install this` or `.\cli\grok-agent.ps1 install`) gets a Grok-powered agent installed safely on Windows 11 with full provenance, public-API power, and the disclaimers required by the Agent Constitution.
@@ -123,6 +123,6 @@ Every manifest is validated twice on every push and PR: once for **structure** (
 - **License** — Apache 2.0 (see [`LICENSE`](../LICENSE))
 - **Author** — [@JanSol0s](https://x.com/JanSol0s)
 
-We win when xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community.
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️

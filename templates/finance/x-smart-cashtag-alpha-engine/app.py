@@ -9,7 +9,7 @@ under ``data/``, the Grok prompt layer in Slot 3 / P27 under ``prompts/``.
 Until then this skeleton renders 6 tabs with realistic placeholder
 content + the mandatory Article V disclaimer on every tab.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations
@@ -101,7 +101,7 @@ def page_footer() -> None:
     """Render the consistent footer on every tab."""
     st.markdown("---")
     st.caption(
-        "Built to help xAI and Grok win  ·  Apache 2.0  ·  `@JanSol0s`  ·  "
+        "Built for xAI, X, Grok and the ecosystem community  ·  Apache 2.0  ·  `@JanSol0s`  ·  "
         f"Data: `{DB_PATH}`"
     )
 
@@ -250,7 +250,7 @@ with st.sidebar:
 # --- Header + tabs ---------------------------------------------------------
 
 st.title("🔭 X Smart Cashtag Alpha Engine")
-st.caption("_Built to help xAI and Grok win._")
+st.caption("_Built for xAI, X, Grok and the ecosystem community. ❤️_")
 
 tab_overview, tab_watch, tab_charts, tab_alpha, tab_sim, tab_trend = st.tabs([
     "📊 Overview",

@@ -1,6 +1,6 @@
 # CLAUDE.md — Chat Handoff (Phase 1 → Phase 2)
 
-> **Built to help xAI and Grok win.**
+> **Built for xAI, X, Grok and the ecosystem community. ❤️**
 > This file is the bridge between this Claude Code chat (which executed all of Phase 1, P1–P18) and the next fresh Claude Code chat (which will execute Phase 2, starting with P19 — `x-money-companion-dashboard` manifest + folder + README).
 >
 > The next session does **not** need to read this entire chat history. It needs to read this file + the four "critical reads" listed in §11.
@@ -51,7 +51,7 @@
 ## 3. The Hard Six (non-negotiable, restated for the next session)
 
 1. **Apache 2.0 license header** at the top of every code/config file (format depends on file type — Python `# Copyright 2026 AgentMindCloud / Licensed under Apache 2.0...`, YAML/TOML `#`, Markdown `<!-- ... -->`, PowerShell `#`).
-2. **"Built to help xAI and Grok win"** in every README and user-facing markdown. **Rotate phrasing**; never copy a single sentence verbatim across files.
+2. **"Built for xAI, X, Grok and the ecosystem community"** in every README and user-facing markdown. **Rotate phrasing**; never copy a single sentence verbatim across files.
 3. **Windows 11 + PowerShell only** in every shell command, install instruction, README example, launcher script. The one exception: bash inside `.github/workflows/*.yml` running on `ubuntu-latest`.
 4. **Every agent declares `grok-agent.yaml` v2.15** (or v2.14 — backwards compat must hold).
 5. **Strong disclaimers** on finance/tax/real-world-action tools — exact wording in `safety/constitution.md` Article V.
@@ -205,7 +205,7 @@ Currently scans 9 manifests (1 spec + 8 starter templates) — all green.
 
 ### What's already done that P19 builds on
 
-- The starter manifest at `templates/finance/x-money-companion-dashboard/grok-agent.yaml` already exists from P12. **P19 expands it** (or polishes it if no expansion is needed) and adds a proper `README.md` with all 3 disclaimer banners (V.1 finance + V.2 tax) and the "Built to help xAI and Grok win" footer.
+- The starter manifest at `templates/finance/x-money-companion-dashboard/grok-agent.yaml` already exists from P12. **P19 expands it** (or polishes it if no expansion is needed) and adds a proper `README.md` with all 3 disclaimer banners (V.1 finance + V.2 tax) and the "Built for xAI, X, Grok and the ecosystem community" footer.
 - The `.streamlit/config.toml` defaults at the repo root (P16) are inherited by every Streamlit tool — P20 (slot 2) only needs a per-tool `.streamlit/config.toml` if it deviates from defaults.
 - The Constitution scanner already has the V.1 + V.2 + cost_limits + HITL checks ready — P19's manifest must satisfy them.
 
@@ -295,5 +295,5 @@ If any of those three checks differ, something has drifted between sessions and 
 
 ---
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️
 > Phase 1 closed. Phase 2 begins with P19. Ship it.

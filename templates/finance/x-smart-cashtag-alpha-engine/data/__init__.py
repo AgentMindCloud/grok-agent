@@ -8,7 +8,7 @@ The Streamlit app (``app.py``), the Grok tool layer, and any sibling tool
 that wants to read this engine's alpha-report or watchlist history use this
 package.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

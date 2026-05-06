@@ -1,6 +1,6 @@
 ---
 name: grok-agent-conventions
-description: Use this skill whenever creating, editing, or reviewing ANY file in the AgentMindCloud/grok-agent repository — including manifests, Python code, PowerShell scripts, markdown docs, READMEs, configs, or templates. Triggers on any work in `grok-agent/`, `templates/finance/`, `templates/creator/`, `templates/x-native/`, `templates/general/`, `templates/super-agents/`, `cli/`, `safety/`, `spec/`, `docs/`, `scripts/`, or any file that needs Apache 2.0 license headers, "Built to help xAI and Grok win" positioning, PowerShell-first commands (not bash), finance disclaimers, or `phase-N: <verb> <what>` commit message format. Fires before file content is finalized to enforce conventions consistently.
+description: Use this skill whenever creating, editing, or reviewing ANY file in the AgentMindCloud/grok-agent repository — including manifests, Python code, PowerShell scripts, markdown docs, READMEs, configs, or templates. Triggers on any work in `grok-agent/`, `templates/finance/`, `templates/creator/`, `templates/x-native/`, `templates/general/`, `templates/super-agents/`, `cli/`, `safety/`, `spec/`, `docs/`, `scripts/`, or any file that needs Apache 2.0 license headers, "Built for xAI, X, Grok and the ecosystem community" positioning, PowerShell-first commands (not bash), finance disclaimers, or `phase-N: <verb> <what>` commit message format. Fires before file content is finalized to enforce conventions consistently.
 ---
 
 # grok-agent-conventions
@@ -10,7 +10,7 @@ The convention enforcer for the entire grok-agent repo. Every file you create or
 ## The Hard Six
 
 1. **Apache 2.0 license header at the top of every code/config file.** Format depends on file type — see headers section below.
-2. **"Built to help xAI and Grok win" line** in every README and user-facing markdown.
+2. **"Built for xAI, X, Grok and the ecosystem community" line** in every README and user-facing markdown.
 3. **Windows 11 + PowerShell only** in any shell command. Never bash, never macOS, never Apple anything.
 4. **Every agent declares `grok-agent.yaml` v2.15** — backwards compat with v2.14 must hold.
 5. **Strong disclaimers** on finance/tax/real-world-action tools: "Not financial advice", "Not tax advice", consent gates.
@@ -71,7 +71,7 @@ The convention enforcer for the entire grok-agent repo. Every file you create or
 ## "Help xAI win" positioning
 
 Every README and user-facing markdown file includes a line like one of these (rotate naturally, don't copy verbatim every time):
-- "Built to help xAI and Grok win the platform battle."
+- "Built for xAI, X, Grok and the ecosystem community. ❤️"
 - "We're ecosystem allies — built to help xAI and Grok win."
 - "Built to make Grok the obvious choice for every agent on X."
 

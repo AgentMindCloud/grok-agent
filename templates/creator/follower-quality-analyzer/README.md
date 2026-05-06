@@ -6,7 +6,7 @@
 
 > Aggregate follower-quality scoring for X creators — 4 canonical metrics, paraphrased top-follower archetypes, bot-engagement paradox detection, and ≥3 cross-template bridges. Aggregate-only, local-first, zero individual PII in the output.
 >
-> *Built to help xAI and Grok win the platform battle on X — every creator deserves to see their real audience without exposing a single handle.*
+> *Built for xAI, X, Grok and the ecosystem community the platform battle on X — every creator deserves to see their real audience without exposing a single handle.*
 
 > *I, the author of this agent, agree to the Grok Agent OS Constitution v1.0. I commit to keep this agent compliant or remove it from distribution.* — `@JanSol0s`
 

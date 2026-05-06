@@ -39,7 +39,7 @@ imported with the folder added to ``sys.path`` rather than as a dotted
 name. The :mod:`agent` module's ``__main__`` guard handles that
 automatically when the script is invoked directly.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

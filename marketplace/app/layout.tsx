@@ -55,7 +55,7 @@ export default function RootLayout({
       <body>
         <header className="banner">
           <strong>🚀 Grok Agent OS Marketplace</strong> — Apache-2.0 ·
-          Local-first · Windows-first · Built to help xAI and Grok win.
+          Local-first · Windows-first · Built for xAI, X, Grok and the ecosystem community. ❤️
         </header>
         {children}
         <footer className="footer">

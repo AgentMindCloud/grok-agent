@@ -4,7 +4,7 @@
 
 # Security Policy
 
-> **Built to help xAI and Grok win.**
+> **Built for xAI, X, Grok and the ecosystem community. ❤️**
 > User trust is the platform — we treat security disclosures with the seriousness that earns it.
 
 ---
@@ -101,4 +101,4 @@ We follow standard responsible-disclosure practice. We will:
 - Not pursue legal action against good-faith researchers.
 - Publish a brief post-mortem in `spec/v2.15/changelog.md` once a patch is live, omitting any details that would aid exploitation.
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️

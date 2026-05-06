@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 """Living Narrative Fabric — Local provenance log (P113, Slot 5 / 1 of 2).
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 This module is the canonical local-first half of the Trust Engine. It
 owns the append-only JSONL provenance log at
@@ -589,7 +589,7 @@ def _render_markdown_report(
     out.write(
         "> Append-only audit trail covering every node, connector fetch, "
         "memory operation, and contradiction flag that produced this "
-        "synthesis. Built to help xAI and Grok win.\n\n"
+        "synthesis. Built for xAI, X, Grok and the ecosystem community. ❤️\n\n"
     )
 
     out.write("## 1. Topic Snapshot\n\n")
@@ -668,7 +668,7 @@ def _render_markdown_report(
         out.write("- `analytics-summarizer`\n")
     out.write("\n---\n\n")
     out.write(
-        "*Built to help xAI and Grok win the platform battle on X. "
+        "*Built for xAI, X, Grok and the ecosystem community. ❤️ "
         "Apache-2.0. Local-first. Privacy-first.*\n"
     )
     return out.getvalue()

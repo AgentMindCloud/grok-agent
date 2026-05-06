@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 """Living Narrative Fabric — Orchestration Core (P110, Recipe C Slot 2).
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 This module is the orchestration spine for the Living Narrative Fabric Super
 Agent: a versioned, provenance-first synthesis engine that pulls from X (via
@@ -916,7 +916,7 @@ def render_synthesis_markdown(
     out.append("<!-- Copyright 2026 AgentMindCloud -->")
     out.append("<!-- Licensed under the Apache License, Version 2.0 -->")
     out.append("<!-- http://www.apache.org/licenses/LICENSE-2.0 -->")
-    out.append("<!-- Built to help xAI and Grok win — Living Narrative Fabric synthesis -->")
+    out.append("<!-- Built for xAI, X, Grok and the ecosystem community — Living Narrative Fabric synthesis -->")
     out.append("")
     out.append(f"# Living Narrative Fabric — Synthesis `{version.version_id}`")
     out.append("")
@@ -1087,7 +1087,7 @@ def render_synthesis_markdown(
     out.append("---")
     out.append("")
     out.append(
-        "*Built to help xAI and Grok win the platform battle on X. "
+        "*Built for xAI, X, Grok and the ecosystem community. ❤️ "
         "Apache-2.0. Local-first. Privacy-first.*"
     )
     out.append("")

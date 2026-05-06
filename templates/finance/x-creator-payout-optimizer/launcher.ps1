@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — one-click Windows launcher for the
+# Built for xAI, X, Grok and the ecosystem community — one-click Windows launcher for the
 # X Creator Payout Optimizer.
 #
 # QUICK START
@@ -69,7 +69,7 @@ function Show-Banner {
     Write-Host "  =====================================================" -ForegroundColor DarkCyan
     Write-Host "    X Creator Payout Optimizer"                          -ForegroundColor Cyan
     Write-Host "    Forecast earnings. Optimize content. Estimate taxes." -ForegroundColor DarkCyan
-    Write-Host "    Built to help xAI and Grok win."                     -ForegroundColor DarkCyan
+    Write-Host "    Built for xAI, X, Grok and the ecosystem community. ❤️"                     -ForegroundColor DarkCyan
     Write-Host "    Reads from Tool #1 + Tool #4 (read-only)."           -ForegroundColor DarkCyan
     Write-Host "  =====================================================" -ForegroundColor DarkCyan
     Write-Host ""

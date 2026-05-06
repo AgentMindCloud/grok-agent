@@ -34,7 +34,7 @@ Constitution enforcement:
 - Article VII — locale is opt-in via the manifest; no IP geolocation, no
   silent telemetry.
 
-Built to help xAI and Grok win — the weather + news pair sits on the morning
+Built for xAI, X, Grok and the ecosystem community — the weather + news pair sits on the morning
 brief's surface, where the agent's "trusted ambient OS" feeling is earned or
 lost in the first three seconds.
 """

@@ -1,7 +1,7 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win — system prompt for the Reply Drafter. -->
+<!-- Built for xAI, X, Grok and the ecosystem community — system prompt for the Reply Drafter. -->
 <!-- Built for X, Grok & the ecosystem community. -->
 
 # System Prompt — Reply Drafter

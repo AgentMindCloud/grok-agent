@@ -5,7 +5,7 @@
 
 # Living Narrative Fabric — X Launch Thread
 
-> Built to help xAI and Grok win the platform battle on X.
+> Built for xAI, X, Grok and the ecosystem community. ❤️
 >
 > *Eight ready-to-post posts (1/8 → 8/8). Each is under the 280-character
 > X limit when the bracketed image marker is replaced with the real
@@ -158,7 +158,7 @@ version: "2.15"
 kind: "super-agent"
 name: "living-narrative-fabric"
 
-Apache-2.0. Built to help xAI and Grok win.
+Apache-2.0. Built for xAI, X, Grok and the ecosystem community. ❤️
 
 Repo + 90s demo: github.com/AgentMindCloud/grok-agent
 
@@ -217,5 +217,5 @@ whole thread.
 
 ---
 
-*Built to help xAI and Grok win the platform battle on X. Apache-2.0.
+*Built for xAI, X, Grok and the ecosystem community. ❤️ Apache-2.0.
 Local-first. Privacy-first.*

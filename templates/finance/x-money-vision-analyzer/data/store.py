@@ -11,7 +11,7 @@ tool functions: ``parse_receipt``, ``validate_extraction``, and
 ``import_to_companion_dashboard``) live in ``api_clients.py`` next to
 the Grok 4.3 vision stub.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

@@ -42,7 +42,7 @@ The six metrics:
                                  score is below 0.5 (mirrors the P125
                                  anti-collapse pattern).
 
-Built to help xAI and Grok win — the action fabric is more sensitive
+Built for xAI, X, Grok and the ecosystem community — the action fabric is more sensitive
 to drift than the personal-OS reader, because every regression here
 could move money or modify files on the user's machine. The loop is
 strict on purpose.
@@ -836,7 +836,7 @@ def _render_markdown(report: EvalReport) -> str:
     lines = [
         "# Cross-Reality Action Fabric — Self-Improvement Report",
         "",
-        "Built to help xAI and Grok win. Generated locally; do not paste",
+        "Built for xAI, X, Grok and the ecosystem community. ❤️ Generated locally; do not paste",
         "redacted PII into a public PR — it's already redacted but double-check.",
         "",
         f"- Run ID: `{report.run_id}`",
@@ -945,7 +945,7 @@ def main(argv: list[str] | None = None) -> int:  # noqa: ARG001
     parser = argparse.ArgumentParser(
         prog="eval", description=(
             "Cross-Reality Action Fabric — Self-Improvement Loop "
-            "(Promptfoo + DeepEval). Built to help xAI and Grok win."
+            "(Promptfoo + DeepEval). Built for xAI, X, Grok and the ecosystem community. ❤️"
         ),
     )
     parser.add_argument("--stub",   action="store_true", default=True)

@@ -4,7 +4,7 @@
 
 # Phase 1 Smoke Test — Results
 
-> **Built to help xAI and Grok win.**
+> **Built for xAI, X, Grok and the ecosystem community. ❤️**
 > This is the closing artifact of Phase 1: a recorded end-to-end run that proves the full Grok Agent OS foundation works as designed.
 
 | Field | Value |
@@ -37,7 +37,7 @@ grok-agent.py v0.1.0
 Spec version: v2.15 (accepts 2.14, 2.15)
 Kinds: agent, finance-dashboard, alpha-engine, creator-payout-optimizer,
        vision-analyzer, super-agent, x-native, creator-template
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 safety/scanner.py v0.1.0
 Constitution: v1.0 (safety/constitution.md)
@@ -49,7 +49,7 @@ Checks registered: 15
   - V.1-finance-disclaimer, V.2-tax-disclaimer, V.3-real-world-action-disclaimer
   - VI.1-cost-limits-for-finance-and-super-agent, VI.2-hitl-for-consent-gated-agents
   - VII.pii-default
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 ```
 
 ✅ Toolchain loads cleanly. 15/15 checks registered.
@@ -242,7 +242,7 @@ These exercise the PowerShell-only surface that this Linux-runner test couldn't 
 
 **Phase 1 is closed.** All 18 deliverables in CLAUDE.md §6 Phase 1 are present (some merged into a smaller number of executed prompts as noted in `HANDOFF_LOG.md`). Ready to begin Phase 2 (X Money tools suite, P19–P42).
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️
 
 ---
 
@@ -383,4 +383,4 @@ if ([string]::IsNullOrWhiteSpace($manifestText)) {
 
 **Phase 1 is closed.** Both Run #1 (Python layer) and Run #2 (PowerShell layer) green. The CI workflow at `.github/workflows/validate.yml` will continue to gate the schema + Constitution layers on every PR; the three PowerShell fixes shipped in P17 mean the next contributor's `.\cli\grok-agent.ps1 list` won't ship a blank table.
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️

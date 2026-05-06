@@ -315,4 +315,4 @@ The current version is **1.0** (initial release, 2026-05-05).
 
 ---
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️

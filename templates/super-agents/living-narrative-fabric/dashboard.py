@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 """Living Narrative Fabric — Streamlit dashboard (P115, Recipe C Slot 7).
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 This is the user-facing real-time control surface for the entire Slot
 2-6 stack: orchestrator (P110), Mem0+Qdrant memory (P111), 6 public-API
@@ -1017,7 +1017,7 @@ def render_sidebar(stack: WiredStack) -> None:
     with st.sidebar:
         st.title(PAGE_TITLE)
         st.caption(
-            "Built to help xAI and Grok win the platform battle on X. "
+            "Built for xAI, X, Grok and the ecosystem community. ❤️ "
             "Apache-2.0. Local-first. Privacy-first."
         )
         st.markdown("---")

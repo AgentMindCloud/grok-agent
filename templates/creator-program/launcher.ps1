@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — Windows 11 + PowerShell launcher for the
+# Built for xAI, X, Grok and the ecosystem community — Windows 11 + PowerShell launcher for the
 # Creator Agent Program outreach tracker and weekly report.
 
 <#

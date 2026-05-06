@@ -16,7 +16,7 @@ Tool #1's and Tool #4's SQLite files directly (read-only) so the
 "Tool #N installed: ✓ / ✗" indicator reflects actual filesystem state,
 not a mock — graceful degradation if either sibling is absent.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations
@@ -152,7 +152,7 @@ def disclaimer_banner(*, include_tax: bool = False, ai_reinforced: bool = False)
 def page_footer() -> None:
     st.markdown("---")
     st.caption(
-        "Built to help xAI and Grok win  ·  Apache 2.0  ·  `@JanSol0s`  ·  "
+        "Built for xAI, X, Grok and the ecosystem community  ·  Apache 2.0  ·  `@JanSol0s`  ·  "
         f"Data: `{DB_PATH}`"
     )
 
@@ -336,7 +336,7 @@ with st.sidebar:
 # --- Header + tabs ---------------------------------------------------------
 
 st.title("📈 X Creator Payout Optimizer")
-st.caption("_Built to help xAI and Grok win — Tool #3, the last of the X Money suite._")
+st.caption("_Built for xAI, X, Grok and the ecosystem community — Tool #3, the last of the X Money suite._")
 
 tab_forecast, tab_optimize, tab_tax, tab_metrics, tab_roi, tab_settings = st.tabs([
     "📈 Earnings Forecast",

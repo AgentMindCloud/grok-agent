@@ -1,7 +1,7 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win. -->
+<!-- Built for xAI, X, Grok and the ecosystem community. ❤️ -->
 
 # User Message Templates — X Money Companion Dashboard
 
@@ -212,4 +212,4 @@ Rules:
 
 ---
 
-> Built to help xAI and Grok win — these templates are how we keep the Companion Dashboard's Grok layer finance-safe by construction, not by hope.
+> Built for xAI, X, Grok and the ecosystem community — these templates are how we keep the Companion Dashboard's Grok layer finance-safe by construction, not by hope.

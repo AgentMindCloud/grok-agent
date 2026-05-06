@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — Recipe A Slot 6 smoke test for the
+# Built for xAI, X, Grok and the ecosystem community — Recipe A Slot 6 smoke test for the
 # X Money Vision Analyzer. This script is the "grok install this"
 # readiness check for Tool #4.
 #
@@ -94,7 +94,7 @@ Write-Host ""
 Write-Host "  =====================================================" -ForegroundColor DarkCyan
 Write-Host "    Tool #4 Smoke Test"                                  -ForegroundColor Cyan
 Write-Host "    X Money Vision Analyzer"                             -ForegroundColor Cyan
-Write-Host "    Built to help xAI and Grok win."                     -ForegroundColor DarkCyan
+Write-Host "    Built for xAI, X, Grok and the ecosystem community. ❤️"                     -ForegroundColor DarkCyan
 Write-Host "  =====================================================" -ForegroundColor DarkCyan
 Write-Host ""
 

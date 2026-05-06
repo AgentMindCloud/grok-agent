@@ -4,7 +4,7 @@
 
 # Windows Guide — Grok Agent OS
 
-> **Built to help xAI and Grok win.** This guide is the canonical, end-to-end Windows 11 walkthrough for installing, validating, running, and troubleshooting Grok agents. Every command on this page is PowerShell. There are no macOS or Linux instructions here, by design.
+> **Built for xAI, X, Grok and the ecosystem community. ❤️** This guide is the canonical, end-to-end Windows 11 walkthrough for installing, validating, running, and troubleshooting Grok agents. Every command on this page is PowerShell. There are no macOS or Linux instructions here, by design.
 
 ---
 
@@ -337,4 +337,4 @@ That's a full rollback. Nothing else was modified — by design.
 
 ---
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️

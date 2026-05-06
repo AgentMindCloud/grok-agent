@@ -2,12 +2,12 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — daily X briefing agent for creators.
+# Built for xAI, X, Grok and the ecosystem community — daily X briefing agent for creators.
 
 version: "2.15"
 kind: "creator-template"
 name: "daily-briefing-agent"
-description: "Concise morning briefing for X creators: today's top signals, niche-relevant trends, mention sentiment, action priorities, and 1-3 ready-to-post content ideas. Local-first. Built to help xAI and Grok win."
+description: "Concise morning briefing for X creators: today's top signals, niche-relevant trends, mention sentiment, action priorities, and 1-3 ready-to-post content ideas. Local-first. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 

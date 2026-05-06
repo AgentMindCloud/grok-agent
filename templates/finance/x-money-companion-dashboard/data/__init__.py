@@ -8,7 +8,7 @@ The Streamlit app (``app.py``), the Grok tool layer, and any sibling tool that
 wants to import transactions (e.g. the X Money Vision Analyzer's
 ``data/import_receipts.py``) all use this package.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

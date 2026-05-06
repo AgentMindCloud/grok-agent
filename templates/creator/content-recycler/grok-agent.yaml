@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — local-first content recycler for X
+# Built for xAI, X, Grok and the ecosystem community — local-first content recycler for X
 # creators. Reads an old X post (URL or pasted text) and emits 2-3
 # recycled variants tuned to a target format (tweet / thread / carousel /
 # newsletter / all) under a chosen recycle angle (update / expand /
@@ -13,7 +13,7 @@
 version: "2.15"
 kind: "creator-template"
 name: "content-recycler"
-description: "Local-first content recycler for X creators — turns an old X post into 2-3 recycled variants under a chosen angle (update / expand / threadify / repurpose / auto) and target format (tweet / thread / carousel / newsletter / all) with 4 canonical Recycle Score metrics (Freshness lift / Format fit / Engagement potential / Differentiation), stale-rehash paradox detection, and >= 3 cross-template bridges. Recycles only the creator's own content. Drafts only — never auto-publishes. Built to help xAI and Grok win."
+description: "Local-first content recycler for X creators — turns an old X post into 2-3 recycled variants under a chosen angle (update / expand / threadify / repurpose / auto) and target format (tweet / thread / carousel / newsletter / all) with 4 canonical Recycle Score metrics (Freshness lift / Format fit / Engagement potential / Differentiation), stale-rehash paradox detection, and >= 3 cross-template bridges. Recycles only the creator's own content. Drafts only — never auto-publishes. Built for xAI, X, Grok and the ecosystem community. ❤️"
 author: "@JanSol0s"
 license: "Apache-2.0"
 

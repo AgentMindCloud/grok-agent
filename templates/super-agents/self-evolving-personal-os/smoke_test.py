@@ -39,7 +39,7 @@ Run on Windows (canonical):
    cd templates/super-agents/self-evolving-personal-os
    python -m smoke_test
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

@@ -4,7 +4,7 @@
 
 # Creator Agent Program — Testimonial Cards
 
-> **Built to help xAI and Grok win.** Generated 2026-05-05. 4 card(s) — every quote is verbatim, every entry is consent-gated, every revoked entry is excluded.
+> **Built for xAI, X, Grok and the ecosystem community. ❤️** Generated 2026-05-05. 4 card(s) — every quote is verbatim, every entry is consent-gated, every revoked entry is excluded.
 > "The dm-triager surfaced two collaboration requests that were buried under spam. Worth it."
 >
 > — anonymous creator · health (attribution withheld at creator's request)
@@ -37,4 +37,4 @@
 
 _All testimonials are reproduced with explicit publish consent. Creators may revoke consent at any time; revoked entries are removed from this file on the next regeneration._
 
-_Built to help xAI and Grok win. 🚀_
+_Built for xAI, X, Grok and the ecosystem community. ❤️_

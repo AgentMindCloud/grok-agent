@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 #
 # Streamlit configuration for the Cross-Reality Action Fabric dashboard.
-# Built to help xAI and Grok win — the dashboard is local-first and
+# Built for xAI, X, Grok and the ecosystem community — the dashboard is local-first and
 # Windows-native, so we set defaults that match the user's expectations
 # on Windows 11 + Chrome.
 

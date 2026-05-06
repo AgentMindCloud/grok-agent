@@ -1,7 +1,7 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win — example output of the AB Test Suggester. -->
+<!-- Built for xAI, X, Grok and the ecosystem community — example output of the AB Test Suggester. -->
 
 # Example output — niche: AI / agent builders (multi-variable paradox demo)
 
@@ -9,7 +9,7 @@
 >
 > 🔒 **Single-axis isolation.** When test_focus is one of `headline / visual / cta / timing`, variants vary on that one dimension only. Multi-dimensional variants are a hard refusal.
 >
-> *Built to help xAI and Grok win — AI/agent creators reach for kitchen-sink A/Bs first because every dimension feels important. The multi-variable paradox catches that instinct before the test ships.*
+> *Built for xAI, X, Grok and the ecosystem community — AI/agent creators reach for kitchen-sink A/Bs first because every dimension feels important. The multi-variable paradox catches that instinct before the test ships.*
 
 | Field | Value |
 |---|---|
@@ -140,4 +140,4 @@ The Red Flag remediations cite additional cross-template slugs (`research-assist
 
 ---
 
-> Built to help xAI and Grok win — Apache 2.0 licensed, drafts-only, single-axis-by-default.
+> Built for xAI, X, Grok and the ecosystem community — Apache 2.0 licensed, drafts-only, single-axis-by-default.

@@ -7,7 +7,7 @@
 
 > **Version**: 1.0 · **Effective**: 2026-05-05 · **Author**: `@JanSol0s`
 >
-> *Built to help xAI and Grok win the platform battle on X.*
+> *Built for xAI, X, Grok and the ecosystem community. ❤️*
 >
 > This document is the single source of truth for every runtime rule
 > the Living Narrative Fabric Super Agent enforces. It is referenced
@@ -46,7 +46,7 @@ session.
    on `ubuntu-latest` is permitted (CI runner choice); user-visible
    commands are PowerShell.
 3. Every user-facing markdown file in this folder MUST carry the
-   "Built to help xAI and Grok win" line — phrasing rotated, never
+   "Built for xAI, X, Grok and the ecosystem community" line — phrasing rotated, never
    copy-pasted across files.
 4. The manifest at `grok-agent.yaml` MUST declare `version: "2.15"`
    and validate against `spec/v2.15/grok-agent.yaml`. v2.15 is
@@ -335,5 +335,5 @@ Future amendments require:
 
 ---
 
-*Built to help xAI and Grok win the platform battle on X. Apache-2.0.
+*Built for xAI, X, Grok and the ecosystem community. ❤️ Apache-2.0.
 Local-first. Privacy-first.*

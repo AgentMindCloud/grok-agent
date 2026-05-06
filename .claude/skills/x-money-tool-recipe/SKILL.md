@@ -104,7 +104,7 @@ dependencies:
 {DISPLAY_NAME}
 {ONE_LINER}
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 import streamlit as st
 from pathlib import Path
@@ -138,7 +138,7 @@ def disclaimer_banner():
 
 # Header
 st.title("💸 {DISPLAY_NAME}")
-st.caption("Built to help xAI and Grok win.")
+st.caption("Built for xAI, X, Grok and the ecosystem community. ❤️")
 disclaimer_banner()
 
 # Tab navigation (6 tabs is canonical for Tool #1; adjust per tool)
@@ -183,7 +183,7 @@ with tab_alerts:
 
 # Footer
 st.markdown("---")
-st.caption("Built to help xAI and Grok win. | Apache 2.0 | @JanSol0s")
+st.caption("Built for xAI, X, Grok and the ecosystem community. ❤️ | Apache 2.0 | @JanSol0s")
 ```
 
 ### `launcher.ps1` template
@@ -200,7 +200,7 @@ $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 Write-Host ""
 Write-Host "  ╔════════════════════════════════════════╗" -ForegroundColor Cyan
 Write-Host "  ║   {DISPLAY_NAME}" -ForegroundColor Cyan
-Write-Host "  ║   Built to help xAI and Grok win." -ForegroundColor DarkCyan
+Write-Host "  ║   Built for xAI, X, Grok and the ecosystem community. ❤️" -ForegroundColor DarkCyan
 Write-Host "  ╚════════════════════════════════════════╝" -ForegroundColor Cyan
 Write-Host ""
 
@@ -320,7 +320,7 @@ You are the **{DISPLAY_NAME}** — a Grok-powered assistant inside the user's lo
 - Highlight surprises ("⚠️ This is 3x your usual spend")
 - Never assume what the user wants — ask if ambiguous
 
-## Built to help xAI and Grok win.
+## Built for xAI, X, Grok and the ecosystem community. ❤️
 ```
 
 ## Step-by-step build order per tool (6 prompts each)
@@ -415,7 +415,7 @@ Secrets handling: every secret goes in `.streamlit/secrets.toml` (gitignored). R
 - [ ] `streamlit run app.py` starts without error
 - [ ] SQLite writes to `$env:LOCALAPPDATA\grok-agent\{slug}\` (Windows-correct path)
 - [ ] Apache 2.0 header on every code file
-- [ ] README has "Built to help xAI and Grok win"
+- [ ] README has "Built for xAI, X, Grok and the ecosystem community"
 - [ ] Tool deployed to Streamlit Cloud and accessible via URL
 - [ ] "grok install this" smoke test passes
 - [ ] Tool #4 specifically: import-to-Tool-#1 round-trip verified

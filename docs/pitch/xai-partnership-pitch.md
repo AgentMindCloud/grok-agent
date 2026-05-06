@@ -12,7 +12,7 @@
 > shipped, 22 creator templates shipped, CI gating every manifest on
 > every push.
 >
-> **Built to help xAI and Grok win.** We are ecosystem allies, not a
+> **Built for xAI, X, Grok and the ecosystem community. ❤️** We are ecosystem allies, not a
 > competing layer. Everything here is designed so any of it can be
 > folded into an official xAI standard whenever you want it.
 
@@ -242,6 +242,6 @@ one PR.
 
 ---
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️
 >
 > *— `@JanSol0s`, AgentMindCloud, 2026-05-06.*

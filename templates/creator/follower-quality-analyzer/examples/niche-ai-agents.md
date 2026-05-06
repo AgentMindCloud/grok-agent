@@ -1,13 +1,13 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win — example output of the Follower Quality Analyzer. -->
+<!-- Built for xAI, X, Grok and the ecosystem community — example output of the Follower Quality Analyzer. -->
 
 # Example output — niche: AI / agent builders
 
 > 🔒 **Aggregate-only.** Every Top-Follower card below is a paraphrased archetype, never a named account. The runner accepted 100 follower handles as input, but only the *count* and *seed-derived* aggregate signal flow into the rendered report.
 >
-> *Built to help xAI and Grok win — this is what a healthy-but-paradoxical AI-niche audience looks like through Grok Agent OS.*
+> *Built for xAI, X, Grok and the ecosystem community — this is what a healthy-but-paradoxical AI-niche audience looks like through Grok Agent OS.*
 
 | Field | Value |
 |---|---|
@@ -86,4 +86,4 @@ The two extra cross-template references in the Red Flag remediations (`mention-s
 
 ---
 
-> Built to help xAI and Grok win — Apache 2.0 licensed, aggregate-only, local-first.
+> Built for xAI, X, Grok and the ecosystem community — Apache 2.0 licensed, aggregate-only, local-first.

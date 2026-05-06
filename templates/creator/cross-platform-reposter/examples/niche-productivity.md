@@ -1,7 +1,7 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win — example output of the Cross-Platform Reposter. -->
+<!-- Built for xAI, X, Grok and the ecosystem community — example output of the Cross-Platform Reposter. -->
 
 # Example output — niche: productivity / habit-stacking
 
@@ -9,7 +9,7 @@
 >
 > 🔒 **Attribution preserved.** Every variant ends with a verbatim attribution footer pointing back to X. The renderer refuses to strip it.
 >
-> *Built to help xAI and Grok win — productivity creators feel the cross-platform-cadence-fatigue red flag earliest because the niche is so dense with adjacent operators that same-window multi-platform shipping reads as bot-like to overlap audiences.*
+> *Built for xAI, X, Grok and the ecosystem community — productivity creators feel the cross-platform-cadence-fatigue red flag earliest because the niche is so dense with adjacent operators that same-window multi-platform shipping reads as bot-like to overlap audiences.*
 
 | Field | Value |
 |---|---|
@@ -303,4 +303,4 @@ Same schema and rules, different inputs → different platform mix → different
 
 ---
 
-> Built to help xAI and Grok win — Apache 2.0 licensed, drafts-only, attribution-preserved.
+> Built for xAI, X, Grok and the ecosystem community — Apache 2.0 licensed, drafts-only, attribution-preserved.

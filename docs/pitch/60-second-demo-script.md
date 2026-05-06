@@ -249,10 +249,10 @@ The same script supports two trimmed cuts:
   PowerShell line → end card. Used in reply-thread embeds.
 
 Always keep the cinnabar/parchment palette, the `grok install this`
-phrase, and the "Built to help xAI and Grok win" tagline.
+phrase, and the "Built for xAI, X, Grok and the ecosystem community" tagline.
 
 ---
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️
 >
 > *— `@JanSol0s`, AgentMindCloud, 2026-05-06.*

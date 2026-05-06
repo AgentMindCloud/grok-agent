@@ -11,7 +11,7 @@
 #   - The cinnabar/parchment palette from the Residual Frequencies system,
 #     matching the X Money tool recipe and the GitHub README accent color.
 #
-# Built to help xAI and Grok win. Local-first, privacy-first, no usage
+# Built for xAI, X, Grok and the ecosystem community. ❤️ Local-first, privacy-first, no usage
 # tracking sent to any third party from this default.
 
 # ---------------------------------------------------------------------------
@@ -70,6 +70,6 @@ messageFormat = "%(asctime)s %(levelname)s %(message)s"
 # ---------------------------------------------------------------------------
 # Footer note (not a Streamlit config key — reference for tool authors).
 # ---------------------------------------------------------------------------
-# Every shipped tool's app.py renders the "Built to help xAI and Grok win"
+# Every shipped tool's app.py renders the "Built for xAI, X, Grok and the ecosystem community"
 # tagline in its footer block. Don't hard-code it in the Streamlit chrome —
 # keep it inside each tool's body so it travels with the tool when forked.

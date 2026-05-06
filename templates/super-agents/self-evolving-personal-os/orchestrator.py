@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 """Self-Evolving Personal OS — Orchestration Core (P119, Recipe C Slot 2).
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 This module is the orchestration spine for Super Agent #2: a personal
 second-brain that produces daily morning briefings from the user's
@@ -872,7 +872,7 @@ def render_briefing_markdown(
     out.append("<!-- Copyright 2026 AgentMindCloud -->")
     out.append("<!-- Licensed under the Apache License, Version 2.0 -->")
     out.append("<!-- http://www.apache.org/licenses/LICENSE-2.0 -->")
-    out.append("<!-- Built to help xAI and Grok win — Self-Evolving Personal OS Morning Brief -->")
+    out.append("<!-- Built for xAI, X, Grok and the ecosystem community — Self-Evolving Personal OS Morning Brief -->")
     out.append("")
     out.append(f"# Morning Brief — `{briefing.for_date.isoformat()}` (`{briefing.briefing_id}`)")
     out.append("")
@@ -990,7 +990,7 @@ def render_briefing_markdown(
     out.append("---")
     out.append("")
     out.append(
-        "*Built to help xAI and Grok win the platform battle on X. "
+        "*Built for xAI, X, Grok and the ecosystem community. ❤️ "
         "Apache-2.0. Local-first. Privacy-first.*"
     )
     out.append("")

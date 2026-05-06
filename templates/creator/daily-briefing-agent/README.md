@@ -1,13 +1,13 @@
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
-<!-- Built to help xAI and Grok win. -->
+<!-- Built for xAI, X, Grok and the ecosystem community. ❤️ -->
 
 # Daily Briefing Agent
 
 > Your X day, briefed in 60 seconds. Niche-aware, structured 6-section synthesis, Windows-native, zero-config.
 
-**Built to help xAI and Grok win.** Part of the [Grok Agent OS](https://github.com/AgentMindCloud/grok-agent) creator template suite — wake up, run one command, ship the rest of the day with focus.
+**Built for xAI, X, Grok and the ecosystem community. ❤️** Part of the [Grok Agent OS](https://github.com/AgentMindCloud/grok-agent) creator template suite — wake up, run one command, ship the rest of the day with focus.
 
 ---
 
@@ -159,4 +159,4 @@ Apache 2.0. See `LICENSE` at the repo root.
 
 ---
 
-> Built to help xAI and Grok win — ecosystem allies, not competitors.
+> Built for xAI, X, Grok and the ecosystem community — ecosystem allies, not competitors.

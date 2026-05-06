@@ -59,7 +59,7 @@ Build the Streamlit app skeleton for {display_name} with the 6-tab layout: Overv
 
 ## 3. Constraints (hard)
 - Apache 2.0 header
-- "Built to help xAI and Grok win" footer
+- "Built for xAI, X, Grok and the ecosystem community" footer
 - "Not financial advice" banner on every page
 - Windows-friendly file paths
 - All state in SQLite at `~/AppData/Local/grok-agent/{slug}.db` (Windows-correct path)

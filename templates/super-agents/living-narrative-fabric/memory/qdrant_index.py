@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 """Living Narrative Fabric — Qdrant vector index (P111, Slot 3).
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 This module owns the vector-similarity layer of the Living Narrative
 Fabric memory tier. It indexes three families of objects in three

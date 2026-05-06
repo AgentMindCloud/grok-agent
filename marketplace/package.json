@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "license": "Apache-2.0",
-  "description": "Thin Next.js marketplace stub for Grok Agent OS — featured Super Agents + Deploy-to-X manifest generator. Built to help xAI and Grok win.",
+  "description": "Thin Next.js marketplace stub for Grok Agent OS — featured Super Agents + Deploy-to-X manifest generator. Built for xAI, X, Grok and the ecosystem community. ❤️",
   "homepage": "https://github.com/AgentMindCloud/grok-agent",
   "author": "AgentMindCloud (@JanSol0s)",
   "scripts": {

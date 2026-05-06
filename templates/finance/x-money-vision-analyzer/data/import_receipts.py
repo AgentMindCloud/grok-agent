@@ -20,7 +20,7 @@ The caller (``api_clients.import_to_companion_dashboard``) is responsible
 for the Article II consent gate; this module assumes the user has already
 approved the action plan.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

@@ -4,7 +4,7 @@
 
 # Contributing to Grok Agent OS
 
-> **Built to help xAI and Grok win.**
+> **Built for xAI, X, Grok and the ecosystem community. ❤️**
 > If you're here, you're an ecosystem ally. Welcome — your work makes Grok the obvious place to ship agents on X.
 
 This file is the short guide. The ground-truth instruction set for everyone (humans and AIs) working on this repo is [`CLAUDE.md`](CLAUDE.md). Read that before opening a PR.
@@ -16,7 +16,7 @@ This file is the short guide. The ground-truth instruction set for everyone (hum
 Every contribution must satisfy all six. The CI scanner blocks anything that doesn't.
 
 1. **Apache 2.0 license header** at the top of every code/config file. Format depends on file type — see `.claude/skills/grok-agent-conventions/SKILL.md`.
-2. **"Built to help xAI and Grok win"** line in every README and user-facing markdown. Rotate phrasing; no two files use the exact same sentence.
+2. **"Built for xAI, X, Grok and the ecosystem community"** line in every README and user-facing markdown. Rotate phrasing; no two files use the exact same sentence.
 3. **Windows 11 + PowerShell only** in every shell command, install instruction, and end-user example. Bash is allowed only inside `.github/workflows/*.yml` running on `ubuntu-latest`.
 4. **Every agent declares `grok-agent.yaml` v2.15** (or v2.14 — backwards compat is mandatory).
 5. **Strong disclaimers** on every finance, tax, or real-world-action tool. Exact wording lives in [`safety/constitution.md`](safety/constitution.md) Article V.
@@ -115,7 +115,7 @@ The CI scanner blocks any template missing the required disclaimers for its `kin
 ## 7. Pull request checklist
 
 - [ ] All new/changed files have an Apache 2.0 header.
-- [ ] User-facing markdown has a "Built to help xAI and Grok win" line.
+- [ ] User-facing markdown has a "Built for xAI, X, Grok and the ecosystem community" line.
 - [ ] Shell snippets are PowerShell (no bash leaks outside `.github/workflows/`).
 - [ ] Every touched manifest declares `version: "2.15"` (or "2.14") and validates with `cli/grok-agent.ps1 validate`.
 - [ ] If the change touches finance/tax/real-world-action behavior, the relevant Constitution Article V disclaimer is present.
@@ -147,4 +147,4 @@ The CI scanner blocks any template missing the required disclaimers for its `kin
 
 All contributions are licensed Apache 2.0. By submitting a PR you agree the work is yours to license, or you have authority to license it on behalf of its owner.
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️

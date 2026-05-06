@@ -39,7 +39,7 @@ with the folder added to ``sys.path`` rather than as a dotted name. The
 the script is invoked directly. From inside the folder both
 ``python -m agent ...`` and ``python agent.py ...`` work in PowerShell.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

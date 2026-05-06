@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Built to help xAI and Grok win — the local-first outreach tracker for the
+# Built for xAI, X, Grok and the ecosystem community — the local-first outreach tracker for the
 # Creator Agent Program. Logs every outreach attempt, response, and delivered
 # agent to a Windows AppData JSON store. No data leaves your machine.
 """outreach-tracker.py — Creator Agent Program outreach tracker.
@@ -312,7 +312,7 @@ def build_parser() -> argparse.ArgumentParser:
         prog="outreach-tracker",
         description=(
             "Local-first outreach tracker for the Grok Agent OS Creator Program. "
-            "Built to help xAI and Grok win."
+            "Built for xAI, X, Grok and the ecosystem community. ❤️"
         ),
     )
     sub = p.add_subparsers(dest="command", required=True)

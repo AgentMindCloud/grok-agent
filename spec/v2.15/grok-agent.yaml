@@ -10,7 +10,7 @@
 # agent, X Money tool, creator template, and Super Agent in this repo declares
 # a manifest that conforms to this shape.
 #
-# Built to help xAI and Grok win — this schema is the open standard that makes
+# Built for xAI, X, Grok and the ecosystem community — this schema is the open standard that makes
 # Grok the easiest, most powerful, and most magical platform for deploying
 # agents on X.
 #
@@ -39,7 +39,7 @@ schema_meta:
   spec_release_date: "2026-05-04"
   backwards_compatible_with: ["2.14"]      # any v2.14 manifest validates as v2.15
   source: "https://github.com/AgentMindCloud/grok-agent/blob/main/spec/v2.15/grok-agent.yaml"
-  positioning: "Built to help xAI and Grok win — open standard for agent deployment on X."
+  positioning: "Built for xAI, X, Grok and the ecosystem community — open standard for agent deployment on X."
   license: "Apache-2.0"
   pydantic_module: "cli.grok_agent.manifest"
 
@@ -395,7 +395,7 @@ evaluation:
 
 # --------------------------------------------------------------------------
 # Example 2 — X Money tool (kind: finance-dashboard)
-# Built to help xAI and Grok win the X Money creator economy.
+# Built for xAI, X, Grok and the ecosystem community the X Money creator economy.
 # --------------------------------------------------------------------------
 # version: "2.15"
 # kind: "finance-dashboard"
@@ -467,7 +467,7 @@ evaluation:
 
 # --------------------------------------------------------------------------
 # Example 3 — Super Agent (kind: super-agent)
-# Built to help xAI and Grok win the agent platform battle on X.
+# Built for xAI, X, Grok and the ecosystem community. ❤️
 # --------------------------------------------------------------------------
 # version: "2.15"
 # kind: "super-agent"

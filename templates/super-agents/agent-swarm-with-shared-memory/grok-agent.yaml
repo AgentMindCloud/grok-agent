@@ -1,45 +1,141 @@
-# Apache 2.0 License
 # Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Lighter Super Agent — Agent Swarm with Shared Memory.
+# Six specialised agents (researcher, skeptic, creator, executor,
+# archivist, orchestrator) that share long-term memory via Mem0 + Qdrant
+# and reason together for collective intelligence on complex tasks.
 
 version: "2.15"
 kind: "super-agent"
-name: "Agent Swarm with Shared Memory"
-description: "Collaborative swarm of specialized agents that share long-term memory and reason together in real time for superior collective intelligence."
-
-author:
-  x_handle: "@JanSol0s"
-  github: "AgentMindCloud"
-
-install:
-  command: "grok install this"
-  one_click: true
-
-tools:
-  - name: "memory"
-    type: "memory"
-  - name: "multi_agent_debate"
-    type: "internal"
-
-multi_agent:
-  supports_collaboration: true
-  max_agents: 6
-  agents: ["researcher", "skeptic", "creator", "executor", "archivist", "orchestrator"]
-  shared_memory: true
-
-safety_profile:
-  reply_only: true
-  cost_limit_usd: 1.20
-
-constitution:
-  version: "1.0"
-  rules:
-    - "All agents must access the same shared memory"
-    - "Every final answer must include dissenting opinions from the swarm"
-    - "Memory is private and never shared externally"
-    - "Swarm decisions require consensus or clear majority"
-  badge: "verifiable-safe-v1"
+name: "agent-swarm-with-shared-memory"
+description: "Collaborative swarm of specialised agents that share long-term memory and reason together in real time for superior collective intelligence."
+author: "@JanSol0s"
+license: "Apache-2.0"
 
 metadata:
+  display_name: "Agent Swarm with Shared Memory"
+  tagline: "Six specialised agents · one shared memory · visible debate."
+  categories: ["super-agent", "intelligence"]
   tags: ["super-agent", "swarm", "collective-intelligence", "memory"]
-  category: "intelligence"
+  language: "en"
+  repository: "github.com/AgentMindCloud/grok-agent"
   created: "2026-05-06"
+
+install:
+  one_click: true
+  install_command: "grok-agent install agent-swarm-with-shared-memory"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  launcher: "launcher.ps1"
+  appdata_folder: "grok-agent/agent-swarm-with-shared-memory"
+  log_folder: "grok-agent/agent-swarm-with-shared-memory/logs"
+  default_port: 8512
+  chrome_only: true
+  requires_admin: false
+  min_powershell_version: "5.1"
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.5
+  max_tokens: 4096
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+  vision: false
+
+multi_agent:
+  role: "orchestrator"
+  shared_memory: "mem0://grok-agent-shared"
+  max_concurrent_workers: 6
+
+memory:
+  enabled: true
+  provider: "mem0"
+  vector_store:
+    backend: "qdrant"
+    collection_prefix: "agent-swarm-with-shared-memory"
+  episodic: true
+  semantic: true
+  retention_days: 365
+  encryption_at_rest: true
+
+provenance:
+  enabled: true
+  log_path: "$env:LOCALAPPDATA\\grok-agent\\agent-swarm-with-shared-memory\\provenance\\events.jsonl"
+  cite_sources: true
+  append_only: true
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 365
+  scanner_severity_floor: "warn"
+  cost_limits:
+    usd_per_session_max: 1.20
+    usd_per_day_max: 6.00
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "publish_synthesis"
+      - "export_provenance_log"
+  disclaimers:
+    not_financial_advice: false
+    not_tax_advice: false
+    real_world_action_consent: true
+    not_medical_advice: false
+
+constitution:
+  rules:
+    - "All agents in the swarm must access the same shared memory."
+    - "Every final answer must include dissenting opinions from the swarm."
+    - "Memory is private and never shared externally without explicit consent."
+    - "Swarm decisions require consensus or a clear majority."
+  consent_gates:
+    - "publish_synthesis"
+    - "export_provenance_log"
+  hard_refusals:
+    - "Mutate or delete provenance events."
+    - "Hide a dissenting agent's opinion from the final response."
+
+tools:
+  - name: "swarm_debate"
+    type: "local_function"
+    description: "Runs the six-agent debate loop and returns each agent's contribution + the final synthesis."
+    module: "orchestrator"
+    function: "AgentSwarm.debate"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          question: { type: "string" }
+          rounds: { type: "integer", default: 3 }
+        required: ["question"]
+
+  - name: "shared_memory_read"
+    type: "local_function"
+    description: "Reads from the shared mem0 collection. Read-only — never mutates shared memory."
+    module: "memory"
+    function: "SharedMemory.read"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          query: { type: "string" }
+        required: ["query"]
+
+  - name: "shared_memory_append"
+    type: "local_function"
+    description: "Append-only write into the shared mem0 collection."
+    module: "memory"
+    function: "SharedMemory.append"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          fact: { type: "string" }
+          source_id: { type: "string" }
+        required: ["fact", "source_id"]

@@ -21,7 +21,7 @@ exceptions. A line is also appended to the agent's append-only provenance
 log at ``$env:LOCALAPPDATA\\grok-agent\\x-smart-cashtag-alpha-engine\\
 provenance.log``.
 
-Built to help xAI and Grok win.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 """
 
 from __future__ import annotations

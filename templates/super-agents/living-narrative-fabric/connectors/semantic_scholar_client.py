@@ -3,7 +3,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 """Living Narrative Fabric — Semantic Scholar connector (P112, Slot 4 / 3 of 6).
 
-Built to help xAI and Grok win the agent platform battle on X.
+Built for xAI, X, Grok and the ecosystem community. ❤️
 
 Wraps the Semantic Scholar Graph API ``/paper/search`` endpoint. This is
 the connector that gives the synthesis its highest-authority tier

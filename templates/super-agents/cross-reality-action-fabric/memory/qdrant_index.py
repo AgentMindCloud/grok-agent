@@ -13,15 +13,18 @@
 This module is the **vector-search layer** of Super Agent #3. It sits
 below :mod:`memory.mem0_setup` (the high-level write API + consent
 enforcement) and above the P129 orchestration core (which feeds it
-executed actions, approval records, and rollback rows).
+executed actions, approval records, rollback rows, and real-world
+outcomes).
 
-Five action-fabric-specific collections — one per memory category. The
+Six action-fabric-specific collections — one per memory category. The
 collection split mirrors the way a user actually thinks about the
 agent's history:
 
 - ``crf.actions``       — every executed action (any tool, any outcome)
 - ``crf.approvals``     — HITL approval records (consent_token + scope)
 - ``crf.rollbacks``     — rollback history (Rule 3 audit)
+- ``crf.outcomes``      — real-world outcome of each executed action
+                          (P140: success, side_effects, downstream state)
 - ``crf.preferences``   — user preferences (locale, timezone, declared
                           watchlists, default consent posture)
 - ``crf.contexts``      — session / location context snapshots
@@ -39,12 +42,13 @@ Design contract (mirrors P122 with action-fabric-specific routing):
   provenance block plus a ``backend`` field; every payload re-runs
   through :func:`redact_pii` at write time AND read time.
 - **Per-collection metadata filters.** ``action_type``,
-  ``approval_status``, ``tool``, ``outcome`` are first-class metadata
-  fields the search API can filter on.
+  ``approval_status``, ``tool``, ``outcome``, ``consent_token``,
+  ``consent_level``, and ``rollback_id`` are first-class metadata
+  fields the search API can filter on (P140 extension).
 
 Built to make Grok the obvious choice for every agent on X — the
 action-fabric memory layer is what lets the user ask "what did I
-approve last week?" and get a clean, redacted answer.
+approve last week?" and get a clean, redacted, consent-scoped answer.
 """
 
 from __future__ import annotations
@@ -79,6 +83,10 @@ __all__ = [
     "ALLOWED_COLLECTIONS",
     "COLLECTION_FOR_KIND",
     "MEMORY_KINDS",
+    "ACTION_MEMORY_KINDS",
+    "CONSENT_LEVELS",
+    "DEFAULT_CONSENT_LEVEL",
+    "consent_level_rank",
 ]
 
 
@@ -87,11 +95,14 @@ __all__ = [
 DEFAULT_VECTOR_DIM = 384
 _HASH_SALT = "grok-agent.cross-reality-action-fabric.qdrant.v1"
 
-#: The five canonical memory categories the action fabric tracks.
+#: The six canonical memory categories the action fabric tracks.
+#: P140 added ``outcome`` for storing real-world results of executed
+#: actions; the other five are stable from P130.
 MEMORY_KINDS: tuple[str, ...] = (
     "action",
     "approval",
     "rollback",
+    "outcome",
     "preference",
     "context",
 )
@@ -102,12 +113,46 @@ COLLECTION_FOR_KIND: dict[str, str] = {
     "action":      "crf.actions",
     "approval":    "crf.approvals",
     "rollback":    "crf.rollbacks",
+    "outcome":     "crf.outcomes",
     "preference":  "crf.preferences",
     "context":     "crf.contexts",
 }
 
 #: Tuple of all valid collection names — used by the smoke test.
 ALLOWED_COLLECTIONS: tuple[str, ...] = tuple(COLLECTION_FOR_KIND.values())
+
+#: The four kinds the P140 action-centric API operates on. ``preference``
+#: and ``context`` are excluded because they're not strictly per-action.
+ACTION_MEMORY_KINDS: tuple[str, ...] = (
+    "action",
+    "approval",
+    "rollback",
+    "outcome",
+)
+
+#: Hierarchical consent levels for action-memory writes (P140). Higher
+#: values mean broader retention. ``session`` is wiped at end of session
+#: by callers that opt in; ``persistent`` survives restarts; ``shared``
+#: is the only level that the user has explicitly opted into for export.
+#: Search at level X returns records at levels ≤ X (rank-based filter).
+CONSENT_LEVELS: tuple[str, ...] = ("session", "persistent", "shared")
+
+#: Default consent level applied to every write that doesn't specify one.
+DEFAULT_CONSENT_LEVEL: str = "session"
+
+
+def consent_level_rank(level: str | None) -> int:
+    """Return the integer rank of a consent level.
+
+    Unknown levels degrade to the most restrictive rank (0 = session)
+    so a typo never accidentally widens retention.
+    """
+    if not level:
+        return 0
+    try:
+        return CONSENT_LEVELS.index(str(level))
+    except ValueError:
+        return 0
 
 
 def qdrant_root() -> Path:
@@ -285,6 +330,24 @@ class _StubQdrantBackend:
                 "  created_at TEXT NOT NULL"
                 ")"
             )
+            # P140 additive migration: add consent_token, consent_level,
+            # rollback_id, and consent_rank columns if a pre-existing
+            # P130 database is opened. ``ADD COLUMN IF NOT EXISTS`` is
+            # supported on SQLite ≥ 3.35; we fall back to a try/except
+            # for older runtimes.
+            for col, col_type in (
+                ("consent_token", "TEXT"),
+                ("consent_level", "TEXT"),
+                ("consent_rank",  "INTEGER"),
+                ("rollback_id",   "TEXT"),
+                ("action_id",     "TEXT"),
+            ):
+                try:
+                    con.execute(
+                        f"ALTER TABLE qdrant_points ADD COLUMN {col} {col_type}"
+                    )
+                except sqlite3.OperationalError:
+                    pass  # column already exists
             con.commit()
 
     def ensure_collection(self, name: str, vector_size: int) -> None:
@@ -312,12 +375,15 @@ class _StubQdrantBackend:
         with self._lock, sqlite3.connect(self._db_path) as con:
             for p in points:
                 payload = dict(p.get("payload") or {})
+                consent_level = payload.get("consent_level") or DEFAULT_CONSENT_LEVEL
                 con.execute(
                     """
                     INSERT OR REPLACE INTO qdrant_points
                       (collection, point_id, vector_json, payload, timestamp,
-                       kind, action_type, approval_status, tool, outcome)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                       kind, action_type, approval_status, tool, outcome,
+                       consent_token, consent_level, consent_rank,
+                       rollback_id, action_id)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         collection,
@@ -330,6 +396,11 @@ class _StubQdrantBackend:
                         payload.get("approval_status"),
                         payload.get("tool"),
                         payload.get("outcome"),
+                        payload.get("consent_token"),
+                        str(consent_level),
+                        int(consent_level_rank(consent_level)),
+                        payload.get("rollback_id"),
+                        payload.get("action_id"),
                     ),
                 )
             con.commit()
@@ -404,6 +475,10 @@ class _StubQdrantBackend:
                 ("approval_status", "approval_status"),
                 ("tool",            "tool"),
                 ("outcome",         "outcome"),
+                ("consent_token",   "consent_token"),
+                ("consent_level",   "consent_level"),
+                ("rollback_id",     "rollback_id"),
+                ("action_id",       "action_id"),
             ):
                 if flt.get(payload_key):
                     sql += f" AND {col_key} = ?"
@@ -414,6 +489,9 @@ class _StubQdrantBackend:
             if flt.get("timestamp_lte"):
                 sql += " AND timestamp <= ?"
                 args.append(str(flt["timestamp_lte"]))
+            if flt.get("consent_rank_lte") is not None:
+                sql += " AND consent_rank <= ?"
+                args.append(int(flt["consent_rank_lte"]))
         with self._lock, sqlite3.connect(self._db_path) as con:
             try:
                 return con.execute(sql, args).fetchall()
@@ -487,7 +565,12 @@ class _RealQdrantBackend:
         qfilter = None
         if flt:
             must: list[Any] = []
-            for key in ("kind", "action_type", "approval_status", "tool", "outcome"):
+            for key in (
+                "kind", "action_type", "approval_status",
+                "tool", "outcome",
+                "consent_token", "consent_level",
+                "rollback_id", "action_id",
+            ):
                 if flt.get(key):
                     must.append(qm.FieldCondition(
                         key=key, match=qm.MatchValue(value=str(flt[key])),
@@ -499,6 +582,11 @@ class _RealQdrantBackend:
                         gte=flt.get("timestamp_gte"),
                         lte=flt.get("timestamp_lte"),
                     ),
+                ))
+            if flt.get("consent_rank_lte") is not None:
+                must.append(qm.FieldCondition(
+                    key="consent_rank",
+                    range=qm.Range(lte=int(flt["consent_rank_lte"])),
                 ))
             qfilter = qm.Filter(must=must) if must else None
         results = self._client.search(
@@ -698,29 +786,59 @@ class QdrantIndex:
         query: str,
         *,
         kind: str | None = None,
+        kinds: Sequence[str] | None = None,
         action_type: str | None = None,
         approval_status: str | None = None,
         tool: str | None = None,
         outcome: str | None = None,
+        consent_token: str | None = None,
+        consent_level: str | None = None,
+        max_consent_level: str | None = None,
+        rollback_id: str | None = None,
+        action_id: str | None = None,
         timestamp_gte: str | None = None,
         timestamp_lte: str | None = None,
         limit: int = 5,
     ) -> list[SearchHit]:
-        """Semantic search across one or all collections with metadata filters."""
+        """Semantic search across one or all collections with metadata filters.
+
+        ``max_consent_level`` (P140) returns only records whose stored
+        ``consent_rank`` is ≤ the rank of the supplied level — i.e. a
+        caller holding ``"session"`` cannot retrieve records that were
+        written at ``"persistent"`` or ``"shared"`` retention. Use
+        ``consent_level`` for an exact-match filter instead.
+        """
         qvec, _ = self._embed(query or "")
-        kinds: list[str] = [kind] if kind else list(MEMORY_KINDS)
+        if kinds:
+            picked: list[str] = list(kinds)
+        elif kind:
+            picked = [kind]
+        else:
+            picked = list(MEMORY_KINDS)
+        for k in picked:
+            if k not in COLLECTION_FOR_KIND:
+                raise ConstitutionViolation(
+                    f"qdrant: refused to search unknown kind '{k}'",
+                    rule=2, tool=None,
+                )
         flt: dict[str, Any] = {}
-        if kind:            flt["kind"] = kind
+        if kind and not kinds: flt["kind"] = kind
         if action_type:     flt["action_type"] = action_type
         if approval_status: flt["approval_status"] = approval_status
         if tool:            flt["tool"] = tool
         if outcome:         flt["outcome"] = outcome
+        if consent_token:   flt["consent_token"] = consent_token
+        if consent_level:   flt["consent_level"] = consent_level
+        if rollback_id:     flt["rollback_id"] = rollback_id
+        if action_id:       flt["action_id"] = action_id
         if timestamp_gte:   flt["timestamp_gte"] = timestamp_gte
         if timestamp_lte:   flt["timestamp_lte"] = timestamp_lte
+        if max_consent_level is not None:
+            flt["consent_rank_lte"] = consent_level_rank(max_consent_level)
 
         all_hits: list[SearchHit] = []
         per_collection_limit = max(1, int(limit))
-        for k in kinds:
+        for k in picked:
             collection = COLLECTION_FOR_KIND[k]
             raw = self._backend.search(collection, qvec, per_collection_limit, flt)
             for h in raw:

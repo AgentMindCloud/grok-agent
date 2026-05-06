@@ -84,21 +84,30 @@ from graph import (  # type: ignore
     run_action_loop as _graph_run_action_loop,
 )
 from memory.qdrant_index import (  # type: ignore
+    ACTION_MEMORY_KINDS,
     COLLECTION_FOR_KIND,
+    CONSENT_LEVELS,
+    DEFAULT_CONSENT_LEVEL,
     DEFAULT_VECTOR_DIM,
     MEMORY_KINDS,
     MemoryRecord,
     QdrantIndex,
     SearchHit,
+    consent_level_rank,
 )
 
 __all__ = [
     "MEMORY_WRITE_GATE",
     "PersonalMemoryClient",
+    "PersonalActionMemoryClient",
     "MemoryStoreAdapter",
+    "ActionMemoryStoreAdapter",
     "get_memory_client",
+    "get_action_memory_client",
     "build_memory_store",
+    "build_action_memory_store",
     "attach_memory_store",
+    "attach_action_memory",
     "memory_root",
     "MemoryRecord",
     "SearchHit",
@@ -451,6 +460,7 @@ class PersonalMemoryClient:
             f"[action] {action.get('tool','')}: "
             f"{action.get('description','') or ''}"
         ).strip()
+        consent_level = action.get("consent_level") or DEFAULT_CONSENT_LEVEL
         payload = {
             "action_id":      action.get("action_id") or action.get("step_id"),
             "step":           action.get("step"),
@@ -460,6 +470,8 @@ class PersonalMemoryClient:
             "started_at":     action.get("started_at"),
             "finished_at":    action.get("finished_at"),
             "consent_token":  action.get("consent_token"),
+            "consent_level":  str(consent_level),
+            "rollback_id":    action.get("rollback_id"),
             "rollback_present": bool((action.get("rollback") or "").strip()),
             "executed":       bool(action.get("executed")),
             "rolled_back":    bool(action.get("rolled_back")),
@@ -482,11 +494,15 @@ class PersonalMemoryClient:
             f"[approval] step={approval.get('step')} tool={approval.get('tool')} "
             f"token={approval.get('consent_token')}"
         ).strip()
+        consent_level = approval.get("consent_level") or DEFAULT_CONSENT_LEVEL
         payload = {
             "step":              approval.get("step"),
             "tool":              approval.get("tool"),
             "action_type":       approval.get("tool"),
+            "action_id":         approval.get("action_id"),
             "consent_token":     approval.get("consent_token"),
+            "consent_level":     str(consent_level),
+            "rollback_id":       approval.get("rollback_id"),
             "approval_status":   approval.get("approval_status") or "granted",
             "granted_at":        approval.get("granted_at") or _now_iso(),
             "scope":             approval.get("scope"),
@@ -510,6 +526,7 @@ class PersonalMemoryClient:
             f"outcome={rollback.get('outcome')} "
             f"target={rollback.get('rolled_back_from')}"
         ).strip()
+        consent_level = rollback.get("consent_level") or DEFAULT_CONSENT_LEVEL
         payload = {
             "step":               rollback.get("step"),
             "tool":               rollback.get("tool"),
@@ -517,6 +534,11 @@ class PersonalMemoryClient:
             "outcome":            rollback.get("outcome"),
             "rolled_back_from":   rollback.get("rolled_back_from")
                                   or rollback.get("step"),
+            "action_id":          rollback.get("action_id")
+                                  or rollback.get("rolled_back_from"),
+            "rollback_id":        rollback.get("rollback_id"),
+            "consent_token":      rollback.get("consent_token"),
+            "consent_level":      str(consent_level),
             "started_at":         rollback.get("started_at"),
             "finished_at":        rollback.get("finished_at"),
             "rollback_script":    rollback.get("rollback"),
@@ -524,6 +546,44 @@ class PersonalMemoryClient:
         }
         prov = self._make_provenance(provenance, kind="rollback")
         return self._upsert("rollback", text, payload, prov, record_id)
+
+    def add_outcome_record(
+        self,
+        outcome: dict,
+        *,
+        provenance: dict | None = None,
+        record_id: str | None = None,
+    ) -> MemoryRecord:
+        """Record one real-world outcome of an executed action (P140).
+
+        ``outcome`` should carry at minimum: ``action_id`` (links back to
+        the originating action row), ``outcome`` ("success" / "failure" /
+        "rolled_back" / "side_effect"), and a free-form ``description``.
+        """
+        self._enforce_write("outcome")
+        outcome = redact_pii(dict(outcome or {}))
+        text = (
+            f"[outcome] action={outcome.get('action_id')} "
+            f"result={outcome.get('outcome')}: "
+            f"{outcome.get('description','') or ''}"
+        ).strip()
+        consent_level = outcome.get("consent_level") or DEFAULT_CONSENT_LEVEL
+        payload = {
+            "action_id":         outcome.get("action_id"),
+            "step":              outcome.get("step"),
+            "tool":              outcome.get("tool"),
+            "action_type":       outcome.get("tool"),
+            "outcome":           outcome.get("outcome"),
+            "description":       outcome.get("description"),
+            "side_effects":      outcome.get("side_effects") or [],
+            "downstream_state":  outcome.get("downstream_state"),
+            "consent_token":     outcome.get("consent_token"),
+            "consent_level":     str(consent_level),
+            "rollback_id":       outcome.get("rollback_id"),
+            "observed_at":       outcome.get("observed_at") or _now_iso(),
+        }
+        prov = self._make_provenance(provenance, kind="outcome")
+        return self._upsert("outcome", text, payload, prov, record_id)
 
     def add_preference(
         self,
@@ -864,3 +924,479 @@ def iter_recent(
     """Iterate recent entries by feeding an empty query — convenience for
     the dashboard's "recent activity" pane."""
     return iter(client.search_by_context("", kind=kind, limit=limit))
+
+
+# --- Section 8. P140 action-centric API ----------------------------------
+#
+# The :class:`PersonalActionMemoryClient` below specialises the P130
+# :class:`PersonalMemoryClient` with action-shaped wrappers. Every write
+# is consent-scoped (Rule 1), provenance-stamped (Rule 2), and the
+# rollback chain is preserved verbatim (Rule 3). The names match the
+# P140 contract one-to-one: ``add_approved_action`` /
+# ``add_rollback_record`` / ``add_outcome_record`` /
+# ``search_past_actions``. Older callers that import
+# :class:`PersonalMemoryClient` keep working unchanged.
+
+
+def _coerce_consent_level(level: str | None) -> str:
+    """Snap a level to one of :data:`CONSENT_LEVELS`; default = session."""
+    if not level:
+        return DEFAULT_CONSENT_LEVEL
+    s = str(level).strip().lower()
+    return s if s in CONSENT_LEVELS else DEFAULT_CONSENT_LEVEL
+
+
+class PersonalActionMemoryClient(PersonalMemoryClient):
+    """Action-centric memory client (P140).
+
+    Sits on top of :class:`PersonalMemoryClient` and adds:
+
+    - :meth:`add_approved_action`   — record a step that the user has
+                                      already approved (writes one
+                                      ``action`` row + one matching
+                                      ``approval`` row in lock-step).
+    - :meth:`add_rollback_record`   — inherited; rebound here so callers
+                                      get the new ``consent_level`` /
+                                      ``rollback_id`` / ``action_id``
+                                      metadata for free.
+    - :meth:`add_outcome_record`    — inherited; rebound for symmetry.
+    - :meth:`search_past_actions`   — semantic search restricted to the
+                                      four action-shaped kinds with a
+                                      hierarchical ``consent_level``
+                                      filter. Records written at a
+                                      retention level higher than the
+                                      caller's are hidden.
+
+    The class never relaxes a Constitution rule. It only adds typed
+    helpers around the P130 surface so callers stop hand-rolling the
+    same payload dicts.
+    """
+
+    #: Public re-exports so ``from memory import (
+    #: PersonalActionMemoryClient, CONSENT_LEVELS)`` works.
+    CONSENT_LEVELS = CONSENT_LEVELS
+    DEFAULT_CONSENT_LEVEL = DEFAULT_CONSENT_LEVEL
+
+    # -- Writes ------------------------------------------------------------
+
+    def add_approved_action(
+        self,
+        action: dict,
+        *,
+        consent_token: str,
+        consent_level: str = DEFAULT_CONSENT_LEVEL,
+        rollback_id: str | None = None,
+        action_id: str | None = None,
+        scope: str | None = None,
+        provenance: dict | None = None,
+        record_id: str | None = None,
+    ) -> dict:
+        """Record one HITL-approved + executed action with full audit trail.
+
+        Writes two records in lock-step:
+
+        - one ``action`` row with the executed-action payload, and
+        - one ``approval`` row with the held ``consent_token`` and scope.
+
+        Both share the same ``consent_level``, ``rollback_id``, and
+        ``action_id``, so :meth:`search_past_actions` can correlate them
+        downstream.
+
+        Returns a dict ``{"action": MemoryRecord, "approval": MemoryRecord,
+        "action_id": str, "consent_token": str, "consent_level": str,
+        "rollback_id": str | None}``.
+
+        Raises :class:`ConstitutionViolation` (Rule 1) if either:
+
+        - the caller's consent does not hold ``MEMORY_WRITE_GATE``, or
+        - ``consent_token`` is missing / empty (Rule 1 audit trail).
+        """
+        if not consent_token or not str(consent_token).strip():
+            raise ConstitutionViolation(
+                "memory.add_approved_action: refused — empty consent_token "
+                "violates Rule 1 (every action must carry a typed approval).",
+                rule=1, tool=action.get("tool") if isinstance(action, dict) else None,
+            )
+        level = _coerce_consent_level(consent_level)
+        body = dict(action or {})
+        body.setdefault("consent_token", consent_token)
+        body["consent_level"] = level
+        if rollback_id:
+            body["rollback_id"] = rollback_id
+        # Keep the existing ``action_id`` if present; otherwise mint a
+        # stable one from the step number + consent_token so downstream
+        # correlation is deterministic.
+        chosen_action_id = (
+            action_id
+            or body.get("action_id")
+            or f"act::{body.get('step') or 'step'}::{consent_token}"
+        )
+        body["action_id"] = chosen_action_id
+
+        action_rec = self.add_action_history(
+            body,
+            provenance={**dict(provenance or {}), "consent_level": level},
+            record_id=record_id,
+        )
+        approval_rec = self.add_approval_record(
+            {
+                "step":            body.get("step"),
+                "tool":            body.get("tool"),
+                "consent_token":   consent_token,
+                "consent_level":   level,
+                "rollback_id":     body.get("rollback_id"),
+                "action_id":       chosen_action_id,
+                "approval_status": "granted",
+                "scope":           scope or body.get("description"),
+                "stub":            bool(body.get("stub")),
+            },
+            provenance={**dict(provenance or {}), "consent_level": level,
+                        "action_id": chosen_action_id},
+        )
+        return {
+            "action":         action_rec,
+            "approval":       approval_rec,
+            "action_id":      chosen_action_id,
+            "consent_token":  consent_token,
+            "consent_level":  level,
+            "rollback_id":    body.get("rollback_id"),
+        }
+
+    def add_rollback_record(   # type: ignore[override]
+        self,
+        rollback: dict,
+        *,
+        consent_token: str | None = None,
+        consent_level: str = DEFAULT_CONSENT_LEVEL,
+        rollback_id: str | None = None,
+        action_id: str | None = None,
+        provenance: dict | None = None,
+        record_id: str | None = None,
+    ) -> MemoryRecord:
+        """Record one Rule-3 rollback with explicit chain metadata.
+
+        Falls back to the parent implementation when called with the
+        legacy positional-only signature (so existing P130 callers keep
+        working).
+        """
+        body = dict(rollback or {})
+        if consent_token and not body.get("consent_token"):
+            body["consent_token"] = consent_token
+        body["consent_level"] = _coerce_consent_level(
+            consent_level if consent_level != DEFAULT_CONSENT_LEVEL
+            else body.get("consent_level") or DEFAULT_CONSENT_LEVEL
+        )
+        if rollback_id:
+            body["rollback_id"] = rollback_id
+        if action_id:
+            body["action_id"] = action_id
+        return super().add_rollback_record(
+            body, provenance=provenance, record_id=record_id,
+        )
+
+    def add_outcome_record(   # type: ignore[override]
+        self,
+        outcome: dict,
+        *,
+        consent_token: str | None = None,
+        consent_level: str = DEFAULT_CONSENT_LEVEL,
+        rollback_id: str | None = None,
+        action_id: str | None = None,
+        provenance: dict | None = None,
+        record_id: str | None = None,
+    ) -> MemoryRecord:
+        """Record the real-world outcome of an executed action."""
+        body = dict(outcome or {})
+        if consent_token and not body.get("consent_token"):
+            body["consent_token"] = consent_token
+        body["consent_level"] = _coerce_consent_level(
+            consent_level if consent_level != DEFAULT_CONSENT_LEVEL
+            else body.get("consent_level") or DEFAULT_CONSENT_LEVEL
+        )
+        if rollback_id:
+            body["rollback_id"] = rollback_id
+        if action_id:
+            body["action_id"] = action_id
+        return super().add_outcome_record(
+            body, provenance=provenance, record_id=record_id,
+        )
+
+    # -- Reads -------------------------------------------------------------
+
+    def search_past_actions(
+        self,
+        query: str,
+        *,
+        consent_token: str | None = None,
+        consent_level: str | None = None,
+        max_consent_level: str | None = None,
+        rollback_id: str | None = None,
+        action_id: str | None = None,
+        tool: str | None = None,
+        outcome: str | None = None,
+        timestamp_gte: str | None = None,
+        timestamp_lte: str | None = None,
+        kinds: Iterable[str] | None = None,
+        limit: int = 5,
+    ) -> list[SearchHit]:
+        """Semantic search over past actions, scoped to caller consent.
+
+        Returned hits are limited to the four action-shaped kinds
+        (``action``, ``approval``, ``rollback``, ``outcome``) by
+        default. The ``max_consent_level`` filter is the headline P140
+        guarantee: a caller searching at ``"session"`` retention can
+        never see records that were written at a higher level
+        (``"persistent"`` or ``"shared"``). Pass ``consent_level`` for
+        an exact-match filter (e.g. *only* shared records).
+
+        ``consent_token`` lets you pull every record tied to one
+        specific approval — convenient for "what happened after I
+        approved token ct-123?" reporting.
+
+        Pass ``kinds=("action",)`` to restrict to a single category
+        without losing the consent-level filter.
+        """
+        # Default search scope is the four action-shaped kinds — ignores
+        # preferences and contexts which aren't strictly per-action.
+        if kinds is None:
+            search_kinds = list(ACTION_MEMORY_KINDS)
+        else:
+            search_kinds = []
+            for k in kinds:
+                if k not in COLLECTION_FOR_KIND:
+                    raise ConstitutionViolation(
+                        f"search_past_actions: unknown kind '{k}'",
+                        rule=2, tool=None,
+                    )
+                search_kinds.append(k)
+            if not search_kinds:
+                search_kinds = list(ACTION_MEMORY_KINDS)
+
+        # If the caller asked for a max_consent_level, it cannot exceed
+        # the levels for which their ConsentContext holds the write
+        # gate. Without the write gate, search is still allowed but is
+        # implicitly capped at the most restrictive level.
+        effective_max = max_consent_level
+        if effective_max is None and not self._consent.has(MEMORY_WRITE_GATE):
+            effective_max = DEFAULT_CONSENT_LEVEL
+
+        return self._qdrant.search(
+            query,
+            kinds=search_kinds,
+            tool=tool,
+            outcome=outcome,
+            consent_token=consent_token,
+            consent_level=consent_level,
+            max_consent_level=effective_max,
+            rollback_id=rollback_id,
+            action_id=action_id,
+            timestamp_gte=timestamp_gte,
+            timestamp_lte=timestamp_lte,
+            limit=limit,
+        )
+
+    def list_rollback_chain(
+        self, action_id: str, *, limit: int = 25,
+    ) -> list[SearchHit]:
+        """Return every record correlated with one ``action_id``.
+
+        Convenience for the P133 dashboard's "rollback chain visualizer"
+        — given the originating action, surface the matching approval +
+        rollback + outcome rows in one call.
+        """
+        if not action_id:
+            return []
+        return self._qdrant.search(
+            "",
+            kinds=list(ACTION_MEMORY_KINDS),
+            action_id=action_id,
+            limit=limit,
+        )
+
+
+# --- Section 9. P140 adapters + factories --------------------------------
+
+
+class ActionMemoryStoreAdapter(MemoryStoreAdapter):
+    """Adapter wrapping a :class:`PersonalActionMemoryClient`.
+
+    Subclasses :class:`MemoryStoreAdapter` so callers that already hold a
+    :class:`MemoryStoreAdapter` reference don't need a type-narrowing
+    branch; ``adapter.client`` is correctly typed as a
+    :class:`PersonalActionMemoryClient` here.
+    """
+
+    def __init__(self, client: PersonalActionMemoryClient) -> None:
+        if not isinstance(client, PersonalActionMemoryClient):
+            raise TypeError(
+                "ActionMemoryStoreAdapter requires a "
+                "PersonalActionMemoryClient instance"
+            )
+        super().__init__(client)
+
+    @property
+    def client(self) -> PersonalActionMemoryClient:   # type: ignore[override]
+        return self._client  # type: ignore[return-value]
+
+
+_ACTION_CLIENT_LOCK = threading.Lock()
+_DEFAULT_ACTION_CLIENT: PersonalActionMemoryClient | None = None
+
+
+def get_action_memory_client(
+    *,
+    user_id: str = "default",
+    force_stub: bool = False,
+    consent: ConsentContext | None = None,
+    refresh: bool = False,
+) -> PersonalActionMemoryClient:
+    """Process-wide cached :class:`PersonalActionMemoryClient`.
+
+    ``refresh=True`` always rebuilds the client. Otherwise the cached
+    instance is returned and its consent is updated in place when a new
+    :class:`ConsentContext` is provided.
+    """
+    global _DEFAULT_ACTION_CLIENT
+    with _ACTION_CLIENT_LOCK:
+        if (
+            refresh
+            or _DEFAULT_ACTION_CLIENT is None
+            or _DEFAULT_ACTION_CLIENT.user_id != user_id
+        ):
+            _DEFAULT_ACTION_CLIENT = PersonalActionMemoryClient(
+                user_id=user_id, force_stub=force_stub, consent=consent,
+            )
+        elif consent is not None:
+            _DEFAULT_ACTION_CLIENT.set_consent(consent)
+    return _DEFAULT_ACTION_CLIENT
+
+
+def build_action_memory_store(
+    *,
+    user_id: str = "default",
+    force_stub: bool = False,
+    consent: ConsentContext | None = None,
+) -> ActionMemoryStoreAdapter:
+    """Factory — fresh action-centric client + adapter pair."""
+    client = PersonalActionMemoryClient(
+        user_id=user_id, force_stub=force_stub, consent=consent,
+    )
+    return ActionMemoryStoreAdapter(client)
+
+
+def attach_action_memory(
+    *,
+    user_id: str = "default",
+    force_stub: bool = False,
+    consent: ConsentContext | None = None,
+) -> tuple[PersonalActionMemoryClient, Callable[..., dict]]:
+    """Wire an action-centric memory client into the P129 graph.
+
+    Returns ``(client, run_with_action_memory)``. The wrapper preserves
+    every keyword argument :func:`graph.run_action_loop` already
+    accepts (``user_id``, ``user_request``, ``consent``, ``force_stub``,
+    ``auto_approve``, ``prompt_version``) and adds two memory-side
+    keyword arguments:
+
+    - ``consent_level`` — retention level applied to every row written
+      from this run. Defaults to ``"session"``.
+    - ``record_outcomes`` — when True, an ``outcome`` row is written per
+      executed action with ``outcome="success"`` / ``"failure"`` /
+      ``"rolled_back"`` derived from the graph's per-step result.
+
+    The wrapper is **additive** — it never modifies P129 ``graph.py``
+    or ``agent.py``. Callers opt in by importing from this module.
+    """
+    client = PersonalActionMemoryClient(
+        user_id=user_id, force_stub=force_stub, consent=consent,
+    )
+
+    def run_with_action_memory(
+        *,
+        consent_level: str = DEFAULT_CONSENT_LEVEL,
+        record_outcomes: bool = True,
+        **kwargs: Any,
+    ) -> dict:
+        out = _graph_run_action_loop(**kwargs)
+        if not client.consent.has(MEMORY_WRITE_GATE):
+            out.setdefault("memory_ingest", {
+                "skipped": True,
+                "reason":  f"consent gate '{MEMORY_WRITE_GATE}' not held",
+            })
+            return out
+
+        plan        = (out.get("plan") or {})
+        proposed    = plan.get("proposed_actions") or []
+        rollbacks   = out.get("rollbacks") or []
+        plan_id     = plan.get("plan_id")
+        level       = _coerce_consent_level(consent_level)
+        counters = {
+            "actions":   0, "approvals": 0,
+            "rollbacks": 0, "outcomes":  0,
+            "consent_level": level,
+        }
+        try:
+            for raw_step in proposed:
+                if not raw_step.get("executed"):
+                    continue
+                token = raw_step.get("consent_token")
+                if not token:
+                    continue
+                pair = client.add_approved_action(
+                    {**raw_step, "consent_level": level,
+                     "stub": bool(out.get("stub"))},
+                    consent_token=token,
+                    consent_level=level,
+                    rollback_id=(
+                        f"rb::{plan_id}::step{raw_step.get('step')}"
+                    ),
+                    provenance={
+                        "plan_id": plan_id,
+                        "stub":    bool(out.get("stub")),
+                    },
+                )
+                counters["actions"]   += 1
+                counters["approvals"] += 1
+                if record_outcomes:
+                    client.add_outcome_record(
+                        {
+                            "action_id":   pair["action_id"],
+                            "step":        raw_step.get("step"),
+                            "tool":        raw_step.get("tool"),
+                            "outcome":     raw_step.get("outcome") or "success",
+                            "description": raw_step.get("description"),
+                            "side_effects": raw_step.get("side_effects") or [],
+                            "downstream_state": (
+                                raw_step.get("execution_result") or {}
+                            ),
+                            "rollback_id":  pair.get("rollback_id"),
+                            "consent_token": token,
+                            "consent_level": level,
+                        },
+                        provenance={
+                            "plan_id": plan_id,
+                            "stub":    bool(out.get("stub")),
+                        },
+                    )
+                    counters["outcomes"] += 1
+            for r in rollbacks:
+                rb_step = r.get("step") or r.get("rolled_back_from")
+                client.add_rollback_record(
+                    {**r, "consent_level": level,
+                     "stub": bool(out.get("stub"))},
+                    consent_token=r.get("consent_token"),
+                    consent_level=level,
+                    rollback_id=f"rb::{plan_id}::step{rb_step}",
+                    action_id=f"act::{rb_step}::{r.get('consent_token')}",
+                    provenance={
+                        "plan_id": plan_id,
+                        "stub":    bool(out.get("stub")),
+                    },
+                )
+                counters["rollbacks"] += 1
+        except ConstitutionViolation:
+            counters.setdefault("refused", True)
+        out["memory_ingest"] = counters
+        return out
+
+    return client, run_with_action_memory

@@ -70,7 +70,7 @@ The runner expects markdown formatted exactly like this. Do not add introductory
 ### Tone
 - **Dominant tone**: <e.g. punchy + thoughtful 60/40 mix>
 - **Secondary tones**: <one line listing 1-2 minor modes>
-- **Tone tells**: <2-3 specific moves the creator uses (sentence-length cadence, contrarian opener, etc.)>
+- **Tone tells**: <2-3 specific moves the creator uses (sentence-length cadence, contrarian opener, or similar)>
 
 ### Structure
 - **Common shape 1**: <e.g. claim → counter → evidence → CTA>

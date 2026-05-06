@@ -395,7 +395,7 @@ def check_cost_limits(m: Dict[str, Any]) -> List[Finding]:
     if cl is None:
         return [Finding(
             "warn", "COST-001",
-            f"kind='{kind}' should declare safety.cost_limits (usd_per_session_max etc.)",
+            f"kind='{kind}' should declare safety.cost_limits with usd_per_session_max, usd_per_day_max, and tokens_per_session_max",
             "safety.cost_limits", "VI.1",
         )]
     return []

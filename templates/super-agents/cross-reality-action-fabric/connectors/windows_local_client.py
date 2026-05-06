@@ -18,7 +18,7 @@ under the strictest possible safety contract:
   STDIN — **never** assembled into a shell-form command line. This
   rules out command-injection by construction (no ``shell=True``).
 - Every snippet is scanned for bash leaks (``bash -c``, ``sh -c``,
-  ``osascript``, ``wsl.exe``, ``/usr/bin``, etc.) before any process
+  ``osascript``, ``wsl.exe``, ``/usr/bin``, and similar) before any process
   is spawned. A leak raises :class:`ConnectorRefusal` (Rule 5).
 - Every snippet is scanned for Unix-style tilde paths (``~/foo``)
   without the Windows ``$env:`` prefix. A leak raises

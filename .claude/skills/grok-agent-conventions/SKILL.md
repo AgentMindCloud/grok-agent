@@ -113,7 +113,7 @@ For tax-specific tools, ADD:
 > Consult a licensed tax professional. Especially relevant for Vietnam-resident creators with international platform earnings.
 ```
 
-For real-world-action agents (Cross-Reality Action Fabric, etc.):
+For real-world-action agents (Cross-Reality Action Fabric, Self-Evolving Personal OS, and similar):
 
 ```markdown
 > ⚠️ **This agent can take real-world actions.** Every action requires explicit consent.

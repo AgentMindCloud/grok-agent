@@ -304,7 +304,7 @@ if ($env:LOCALAPPDATA) {
 
 Two agents installed; zero rows shown.
 
-**Root cause:** `$entries | Format-Table -AutoSize -Property Name, Kind, Version, Description` produces no visible output when stdout isn't a console (CI, redirected to a file, etc.) — `-AutoSize` can't compute column widths without a TTY.
+**Root cause:** `$entries | Format-Table -AutoSize -Property Name, Kind, Version, Description` produces no visible output when stdout isn't a console (CI, redirected to a file, or any non-TTY context) — `-AutoSize` can't compute column widths without a TTY.
 
 **Fix:** replace `Format-Table` with a manual `-f` formatter:
 

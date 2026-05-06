@@ -34,9 +34,9 @@ kind:
   - alpha-engine                    # market intelligence agent (Cashtag Alpha)
   - creator-payout-optimizer        # earnings forecasting + content optimization
   - vision-analyzer                 # image/document vision agent (Receipt Analyzer)
-  - super-agent                     # flagship orchestrated agent (Living Narrative Fabric, etc.)
+  - super-agent                     # flagship orchestrated agent (Living Narrative Fabric and similar)
   - x-native                        # runs primarily via "grok install this" on X
-  - creator-template                # creator program templates (content-ideas, reply-drafter, etc.)
+  - creator-template                # creator program templates (content-ideas, reply-drafter, and similar)
 ```
 
 ## Optional sections (declare only what you need)

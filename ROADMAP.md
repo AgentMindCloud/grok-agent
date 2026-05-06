@@ -132,7 +132,7 @@ Phase 2 and Phase 3 deliberately overlap (days 35–56) — once at least one X 
 
 ### Success metrics
 
-- 4 tools deployed and reachable on Streamlit Cloud (`xmoney-companion.streamlit.app`, etc.).
+- 4 tools deployed and reachable on Streamlit Cloud (`xmoney-companion.streamlit.app` and the matching subdomains for the other three).
 - Each tool installable via `.\cli\grok-agent.ps1 install templates\finance\<slug>` with zero errors.
 - Tool #4 → Tool #1 receipt round-trip verified end-to-end.
 - First 5 X Money creators run at least one tool against real data.

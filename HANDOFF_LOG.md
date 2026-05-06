@@ -157,6 +157,7 @@
 | P163 | Phase 5 | Fix every remaining critical gap from the latest audit — all 5 issues in one session | spec/v2.15/grok-agent.yaml (12 fields), safety/scanner.py (bridge enforcement), AgentBrowser.tsx archive, legacy root md archive, demo video metadata | All 5 audit gaps resolved in one session | ✅ done |
 | P165 | Phase 5 | Fix every remaining critical gap — all 10 issues in one session | 10 fixes across manifests, safety/scanner.py, tests, docs, marketplace, CI | All 10 issues resolved in one session | ✅ done |
 | P166 | Phase 5 | Fix remaining 5 critical gaps + build static marketplace webpage | safety/scanner.py (BR-003 + 2 new transitive checks), 22 creator templates strict sweep, demo metadata polish, phase-6-kickoff.md, marketplace/index.html + assets | All 5 gaps closed + marketplace webpage ready for GitHub Pages | ✅ done |
+| P167 | Phase 5 | Fix all 5 remaining critical gaps from P166 report | cli/grok-agent.py (--strict flag), 3 flagship demo_video fields, .github/workflows/pages.yml, safety/scanner.py:398 phrase fix, docs/prompts/P127-creator-program-v2-paid-tier.md | All 5 gaps resolved + GitHub Pages workflow added | ✅ done |
 
 <!--
 ====================================================================

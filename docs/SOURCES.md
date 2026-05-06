@@ -21,7 +21,7 @@
 
 | File | Purpose |
 |------|---------|
-| `docs/CONSTRAINTS.md` | Hard rules for every prompt and file (Apache 2.0, Windows 11, disclaimers, "help xAI win", etc.) |
+| `docs/CONSTRAINTS.md` | Hard rules for every prompt and file (Apache 2.0, Windows 11, disclaimers, "help xAI win", and the rest of the Hard Six) |
 | `docs/PROJECT_DNA.md` | Official facts: file tree, tech stack, phases, glossary, deliverables |
 | `docs/PROMPT_TEMPLATE.md` | Exact 7-section structure every generated prompt must follow |
 | `docs/PARAMETERIZED_RECIPES.md` | Reusable patterns for X Money tools, creator templates, and Super Agents |
@@ -33,7 +33,7 @@
 
 | Skill | Purpose |
 |-------|---------|
-| `grok-agent-conventions` | Universal convention enforcer (license headers, PowerShell, disclaimers, etc.) |
+| `grok-agent-conventions` | Universal convention enforcer (license headers, PowerShell, disclaimers, and similar repo-wide rules) |
 | `grok-yaml-v215` | Master reference for the v2.15 manifest schema |
 | `x-money-tool-recipe` | Pattern for building the 4 X Money tools consistently |
 

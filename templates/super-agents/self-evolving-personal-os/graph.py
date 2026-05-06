@@ -319,7 +319,7 @@ def evolve_workflows(state: PersonalOSState) -> dict:
     bumped = bool(error_sources) or bool(live_threads)
     new_version = state["prompt_version"]
     if bumped:
-        # Bump v1 -> v2-resilient, v2 -> v3-resilient, etc.
+        # Bump v1 -> v2-resilient, v2 -> v3-resilient, and so forth across versions.
         try:
             head, tag = state["prompt_version"].rsplit("@v", 1)
             head_ver = int("".join(c for c in tag.split("-")[0] if c.isdigit()) or "1")

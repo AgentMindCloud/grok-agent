@@ -1,0 +1,60 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Publish the static `marketplace/` folder to GitHub Pages on every push to
+# main. Provides the public web surface for the Grok Agent OS marketplace.
+
+name: Deploy Marketplace to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "marketplace/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# GitHub Pages best-practice: allow in-flight deploys to finish so artifacts
+# are not lost when rapid pushes land back-to-back.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build marketplace artifact
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload marketplace as Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./marketplace
+
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 5
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy artifact to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

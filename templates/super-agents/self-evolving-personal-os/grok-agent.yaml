@@ -43,9 +43,9 @@ metadata:
   docs:       "github.com/AgentMindCloud/grok-agent/blob/main/templates/super-agents/self-evolving-personal-os/README.md"
   demo_video:
     storyboard: "templates/super-agents/self-evolving-personal-os/DEMO.md"
-    url: "https://github.com/AgentMindCloud/grok-agent/releases/download/super-agent-demos-v1/self-evolving-personal-os-demo.mp4"  # (planned — upload pending)
-    status: "(planned — upload pending)"
-    note: "Actual video will be uploaded as a future GitHub Release asset."
+    url: "https://github.com/AgentMindCloud/grok-agent/releases/download/super-agent-demos-v1/self-evolving-personal-os-demo.mp4"  # (planned — recording + upload pending; target release tag: super-agent-demos-v1)
+    status: "(planned — recording + upload pending; target release tag: super-agent-demos-v1)"
+    note: "Actual video has not yet been recorded; once recorded, it will be uploaded as a release asset under tag 'super-agent-demos-v1'."
 
 # ----------------------------------------------------------------------------
 # install: the "grok install this" primitive

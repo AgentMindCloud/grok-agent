@@ -9,7 +9,7 @@
 >
 > 🔒 **Ship cap stated explicitly.** LinkedIn = 0-3 hashtags per post. The recommendation set returns 4 tags scoring across 4 categories; the creator picks the right subset for the cap.
 >
-> *Built for xAI, X, Grok and the ecosystem community — productivity creators tend to over-stuff posts with `#Productivity`, `#Habits`, `#Mindset`, `#Growth` etc. The 4-category mix below shows what a tight, on-niche set looks like instead.*
+> *Built for xAI, X, Grok and the ecosystem community — productivity creators tend to over-stuff posts with `#Productivity`, `#Habits`, `#Mindset`, `#Growth` and similar broad tags. The 4-category mix below shows what a tight, on-niche set looks like instead.*
 
 | Field | Value |
 |---|---|

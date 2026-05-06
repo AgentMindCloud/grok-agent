@@ -34,7 +34,7 @@ The report is the same shape every time:
 
 1. **Headline** — one-sentence takeaway, focus-aware
 2. **Quality Scores** — exactly 4 standard metrics (Engagement quality / Authenticity / Niche alignment / Growth potential), each 0–100 with interpretation + 30-day trend arrow
-3. **Top Followers** — 3–5 paraphrased archetype cards (`Daily-engaging niche peer`, `Long-tenure quiet builder`, etc.) — never a named account — each with one of the 6 official action verbs (`Engage`, `Spotlight`, `Collaborate`, `Reply`, `Monitor`, `Cultivate`)
+3. **Top Followers** — 3–5 paraphrased archetype cards (`Daily-engaging niche peer`, `Long-tenure quiet builder`, and similar) — never a named account — each with one of the 6 official action verbs (`Engage`, `Spotlight`, `Collaborate`, `Reply`, `Monitor`, `Cultivate`)
 4. **Red Flags** — 2–3 cards with severity, surfaces the **bot-engagement paradox** in BOTH this section AND the Quality Scores section when it triggers (Authenticity < 80 AND Engagement quality > niche median)
 5. **Recommendations** — 3–5 next moves, each linking to ≥3 distinct cross-template bridges in `templates/creator/`
 6. **Confidence** — `high | medium | low` with the reason

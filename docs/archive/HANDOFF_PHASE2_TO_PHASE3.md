@@ -32,7 +32,7 @@ A `git fetch --all --prune` surfaced `origin/claude/grok-agent-os-blueprint-Fpsr
 1. `git checkout main` (was at `48c9f44`)
 2. `git merge origin/claude/grok-agent-os-blueprint-Fpsr8 --no-ff` → merge commit `6200951`
 3. `git push -u origin main` → `48c9f44..6200951`
-4. Verified all P1–P18 deliverables present on `main` (CLAUDE.md, README.md, ROADMAP.md, cli/, safety/, spec/v2.15/, templates/, .github/workflows/validate.yml, .streamlit/, pyproject.toml, etc.)
+4. Verified all P1–P18 deliverables present on `main` (CLAUDE.md, README.md, ROADMAP.md, cli/, safety/, spec/v2.15/, templates/, .github/workflows/validate.yml, .streamlit/, pyproject.toml, and the rest of the Phase 1 file set)
 5. Re-ran the §15 sanity checks: `cli/grok-agent.py validate spec/v2.15/grok-agent.yaml` → `OK Valid v2.15 manifest`; `safety/scanner.py scan-all templates/` → 8 manifests, 0 findings
 6. Appended a `MERGE` row to `HANDOFF_LOG.md` with commit `a24c9ca`
 

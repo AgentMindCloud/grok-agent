@@ -160,4 +160,4 @@ Pre-written artifacts in the plan include: full README.md, full CLAUDE.md, full 
 - **v2.15** — current manifest version (backwards compat with v2.14)
 - **Super Agent** — flagship agent that orchestrates Grok + multiple public APIs + memory + provenance
 - **Agent Constitution** — safety layer enforcing rules per agent
-- **Public APIs** — the 1,400+ free API set Super Agents pull from (NewsAPI, GNews, Semantic Scholar, data.gov, yfinance, CoinGecko, etc.)
+- **Public APIs** — the 1,400+ free API set Super Agents pull from (NewsAPI, GNews, Semantic Scholar, data.gov, yfinance, CoinGecko, and the rest of the catalog)

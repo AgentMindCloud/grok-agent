@@ -16,8 +16,8 @@ already-passing P121 connector smoke test:
 1. **Consent-gated writes** — PersonalMemoryClient refuses writes when the
    ``write_personal_memory`` gate or the source-specific read gate is not
    held (Article II).
-2. **PII redaction at write + read** — emails, X handles, lat/lon, etc. are
-   redacted on both upsert and search paths.
+2. **PII redaction at write + read** — emails, X handles, lat/lon, and similar
+   identifiers are redacted on both upsert and search paths.
 3. **Per-source vector index** — Qdrant collections are created on first
    run, upserts route to ``personal.<source>`` exactly, and semantic
    search filters cleanly by source.

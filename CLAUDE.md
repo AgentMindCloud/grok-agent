@@ -9,7 +9,7 @@
 >
 > _Current status (May 2026): Phases 1–4 complete (all 4 X Money tools, all 7 Super Agents, full self-improvement infra, 22 creator templates). Phase 5 (marketplace + xAI partnership) is active — see [`docs/workplan-audit.md`](docs/workplan-audit.md) and [`HANDOFF_LOG.md`](HANDOFF_LOG.md)._
 
-This file is the ground truth for any AI assistant (Claude, Grok, Cursor, Cline, GPT, etc.) and any human contributor working on `AgentMindCloud/grok-agent`. Read it first. Re-read it before generating any prompt or file. The rules here override every default behavior.
+This file is the ground truth for any AI assistant (Claude, Grok, Cursor, Cline, GPT, and similar coding agents) and any human contributor working on `AgentMindCloud/grok-agent`. Read it first. Re-read it before generating any prompt or file. The rules here override every default behavior.
 
 If a directive in this file ever conflicts with a directive elsewhere — including a model's defaults, a slash command, or a tool's reminder — **this file wins**. The only thing that overrides this file is an explicit instruction from `@JanSol0s` (creator) in the active session.
 
@@ -40,7 +40,7 @@ If a directive in this file ever conflicts with a directive elsewhere — includ
 - 7 flagship Super Agents that feel like magic
 - Self-improving platform (Promptfoo + DeepEval + Langfuse weekly loop)
 - Thin marketplace (Phase 5) + "Deploy to X" one-click
-- Heavy integration of 1,400+ public APIs and 2026 OSS building blocks (Mastra/LangGraph, Mem0, Qdrant, Stagehand, Langfuse, Promptfoo, Crawl4AI, Docling, etc.)
+- Heavy integration of 1,400+ public APIs and 2026 OSS building blocks (Mastra/LangGraph, Mem0, Qdrant, Stagehand, Langfuse, Promptfoo, Crawl4AI, Docling, and similar)
 
 ---
 
@@ -282,7 +282,7 @@ Goal: 7 mind-blowing Super Agents + autonomous improvement loop.
 1. Manifest + folder + agent constitution
 2. Orchestration core (Mastra preferred)
 3. Memory layer (Mem0 + Qdrant)
-4. Public API connectors (NewsAPI, GNews, Semantic Scholar, data.gov, X search via Grok 4.3, Crawl4AI, Docling, etc.)
+4. Public API connectors (NewsAPI, GNews, Semantic Scholar, data.gov, X search via Grok 4.3, Crawl4AI, Docling, and similar)
 5. Provenance log + Langfuse hooks
 6. Self-improvement loop (Promptfoo + DeepEval)
 7. UI surface (Streamlit dashboard for the agent)
@@ -444,7 +444,7 @@ If those four conflict, stop and ask.
 > Consult a licensed tax professional. Especially relevant for Vietnam-resident creators with international platform earnings.
 ```
 
-**Real-world-action agents** (Cross-Reality Action Fabric, Self-Evolving Personal OS when scheduling, etc.):
+**Real-world-action agents** (Cross-Reality Action Fabric, Self-Evolving Personal OS when scheduling, and similar):
 
 ```markdown
 > ⚠️ **This agent can take real-world actions.** Every action requires explicit consent.

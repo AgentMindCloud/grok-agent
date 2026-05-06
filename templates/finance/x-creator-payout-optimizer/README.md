@@ -32,7 +32,7 @@ The **earnings + content + tax tool** of the Grok Agent OS suite — and the **l
 - Optimizes content topics by surfacing angles correlated with the highest historical engagement and payout
 - Estimates your tax burden on creator earnings for a date range, with explicit jurisdiction handling and the V.2 disclaimer baked into every export
 - Tracks X engagement / reach / payout metrics in one dashboard
-- Computes per-topic content ROI by joining your revenue rows (Tool #1's `transactions`) with your cost rows (Tool #4's parsed receipts for editing fees, software subscriptions, props, etc.)
+- Computes per-topic content ROI by joining your revenue rows (Tool #1's `transactions`) with your cost rows (Tool #4's parsed receipts for editing fees, software subscriptions, props, and similar)
 
 All earnings, receipt, and forecast data stays under `$env:LOCALAPPDATA\grok-agent\x-creator-payout-optimizer\` unless you explicitly approve a consent gate. No telemetry. No third-party trackers. **Read-only on Tool #1 and Tool #4** — this tool composes on top of its siblings without ever modifying them.
 

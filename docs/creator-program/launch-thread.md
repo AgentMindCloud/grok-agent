@@ -331,7 +331,7 @@ DM @JanSol0s.
 
 ## Posting tips
 
-- **Don't auto-thread.** Post tweet 1, wait ~30s, reply with tweet 2, etc. Replies posted too fast occasionally get split into separate top-level posts on X mobile.
+- **Don't auto-thread.** Post tweet 1, wait ~30s, reply with tweet 2, then continue tweet by tweet. Replies posted too fast occasionally get split into separate top-level posts on X mobile.
 - **Pin tweet 1** for at least 7 days.
 - **Engage with replies** for the first 4 hours; the algorithm rewards early engagement, and the first DMs are also the highest-signal applicants.
 - **Day 2:** quote-tweet variant B (engineers) targeting #BuildInPublic / dev-creator followers.

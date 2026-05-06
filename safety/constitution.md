@@ -182,7 +182,7 @@ Agents that disable HITL (e.g. headless analytics) MUST justify it in their mani
 3. **PII handling** is `local-only` by default. `redacted-cloud` is allowed only when the agent's purpose requires it (e.g. an LLM call) and only with redaction documented in the manifest.
 4. **Encryption at rest** on Windows uses DPAPI. Memory backends MUST set `memory.encryption_at_rest: true` for any non-public data.
 5. **Data retention** defaults to 365 days. Agents must auto-prune older data unless the user opts in to longer retention.
-6. **No third-party trackers** in any web UI surface (Streamlit, Next.js, etc.) shipped by an agent.
+6. **No third-party trackers** in any web UI surface (Streamlit, Next.js, or any other web framework) shipped by an agent.
 
 ---
 

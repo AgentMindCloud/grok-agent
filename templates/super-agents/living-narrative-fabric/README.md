@@ -14,9 +14,9 @@
 ## Demo
 
 - **Storyboard:** [`DEMO.md`](DEMO.md) — 90-second walk-through (also 30-second + 15-second recuts).
-- **Video (planned — upload pending):** the recorded MP4 will live at
+- **Video (planned — recording + upload pending; target release tag: super-agent-demos-v1):** the recorded MP4 will live at
   [`https://github.com/AgentMindCloud/grok-agent/releases/download/super-agent-demos-v1/living-narrative-fabric-demo.mp4`](https://github.com/AgentMindCloud/grok-agent/releases/download/super-agent-demos-v1/living-narrative-fabric-demo.mp4)
-  once recorded. Actual video will be uploaded as a future GitHub Release asset; the link above is a placeholder until then and does not yet resolve.
+  once recorded. The recording itself is still to be produced; once recorded, the MP4 will be attached to a future GitHub Release tagged super-agent-demos-v1. The link above is a placeholder until then and does not yet resolve.
 - **X thread (planned):** *posted from [@JanSol0s](https://x.com/JanSol0s)
   alongside the launch — see [`X_LAUNCH_THREAD.md`](X_LAUNCH_THREAD.md).*
 

@@ -26,7 +26,7 @@
 # Exit codes:
 #   0  — every merge clean (or read-only mode finished successfully)
 #   1  — at least one merge produced an unresolvable conflict
-#   2  — pre-flight check failed (not a git repo, base branch missing, etc.)
+#   2  — pre-flight check failed (not a git repo, base branch missing, or similar)
 #   3  — push to remote failed (e.g. proxy blocks push to main)
 
 [CmdletBinding()]

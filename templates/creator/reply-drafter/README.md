@@ -38,7 +38,7 @@ The output is a daily-deterministic markdown bundle: same handle + same post + s
 - **Voice matching** — niche bucket detection (`ai`, `finance`, `productivity`, `creator`, `fitness`, `general`) picks the right counter-concept for `comparison` and `gentle-disagree` angles
 - **Tone control** — `punchy` (default), `thoughtful`, `data-led`, or `warm` — applied as a light prepend that respects each char limit
 - **Engagement scoring** — qualitative labels only (low / medium / medium-high / high), spread across the 3 drafts so every set has variety
-- **Format suggestions** — value-add slot flips to `image` with a Grok Imagine prompt when the original post mentions visuals (chart, dashboard, screenshot, etc.)
+- **Format suggestions** — value-add slot flips to `image` with a Grok Imagine prompt when the original post mentions visuals (chart, dashboard, screenshot, and similar)
 - **Trap detection** — the runner refuses to draft when the original post matches DM-bait, RT-to-win, scam, or doxx-bait patterns (Constitution rule #7)
 - **Finance-adjacent guardrail** — drafts touching cashtags / tokens / earnings / P&L / tax auto-tag with `Context only -- not financial advice.`
 - **Local-first** — every run is offline-safe, no telemetry, no upload
@@ -63,7 +63,7 @@ python run.py `
 | `--original-post` | one of | — | Full text of the X post you're replying to (in quotes). |
 | `--mention` | one of | — | Alias for `--original-post`. |
 | `--tone` | no | `punchy` | One of: `punchy`, `thoughtful`, `data-led`, `warm`. |
-| `--niche` | no | auto-detect | Optional niche hint (`AI tooling`, `creator economy`, etc.). |
+| `--niche` | no | auto-detect | Optional niche hint (`AI tooling`, `creator economy`, or similar). |
 | `--num-drafts` | no | `3` | How many drafts to return (1–3). |
 | `--output` | no | stdout | Markdown file path; folders auto-created. |
 | `--no-banner` | no | off | Suppress the banner header (handy for piping). |

@@ -49,7 +49,7 @@ templates/finance/{slug}/
 # Copyright 2026 AgentMindCloud
 # Licensed under the Apache License, Version 2.0
 version: "2.15"
-kind: "{KIND}"                                # finance-dashboard | alpha-engine | etc.
+kind: "{KIND}"                                # finance-dashboard | alpha-engine | or another v2.15 finance kind
 name: "{slug}"                                # e.g. x-money-companion-dashboard
 description: "{ONE_LINER}"
 author: "@JanSol0s"
@@ -312,7 +312,7 @@ You are the **{DISPLAY_NAME}** — a Grok-powered assistant inside the user's lo
 ## What you have access to
 - The user's local SQLite at `{DB_PATH}` (read-only unless function call requests write)
 - {API_LIST}
-- The user's stated context (Vietnam-resident creator, X handle @JanSol0s, etc.)
+- The user's stated context (Vietnam-resident creator, X handle @JanSol0s, and similar profile facts)
 
 ## Output style
 - Tight bullets when listing

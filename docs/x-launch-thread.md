@@ -136,7 +136,7 @@ Built for xAI, X, Grok and the ecosystem community. ❤️ (7/7)
 
 ---
 
-## Standalone repo announcement (single tweet — for LinkedIn / Discord / Indie Hackers / etc.)
+## Standalone repo announcement (single tweet — for LinkedIn / Discord / Indie Hackers / and similar channels)
 
 A self-contained one-tweet version that doesn't depend on the thread. Use this when sharing the repo outside X, or as a profile-pin replacement after the thread cycles off.
 
@@ -203,7 +203,7 @@ Read the Constitution → github.com/AgentMindCloud/grok-agent
 
 ## Posting tips
 
-- **Don't auto-thread.** Post tweet 1, wait 30s, reply with tweet 2, etc. — replies posted too fast occasionally get split into separate top-level posts on X mobile.
+- **Don't auto-thread.** Post tweet 1, wait 30s, reply with tweet 2, then continue tweet by tweet — replies posted too fast occasionally get split into separate top-level posts on X mobile.
 - **Pin tweet 1** for at least 7 days.
 - **Engage with replies** for the first 4 hours; the algorithm rewards early engagement.
 - **Day 2:** quote-tweet variant B (engineers) targeting #BuildInPublic / dev followers.

@@ -37,7 +37,7 @@
 # Exit codes:
 #   0  — clean (no branches needed deletion, or all deletions succeeded)
 #   1  — at least one deletion failed (network / permission / non-fast-forward)
-#   2  — pre-flight check failed (not in a git repo, base branch missing, etc.)
+#   2  — pre-flight check failed (not in a git repo, base branch missing, or similar)
 
 [CmdletBinding()]
 param(

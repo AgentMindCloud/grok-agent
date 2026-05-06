@@ -14,9 +14,9 @@
 ## Demo
 
 - **Storyboard:** [`DEMO.md`](DEMO.md) — 90-second walk-through (also 30-second + 15-second recuts).
-- **Video (planned — upload pending):** the recorded MP4 will live at
+- **Video (planned — recording + upload pending; target release tag: super-agent-demos-v1):** the recorded MP4 will live at
   [`https://github.com/AgentMindCloud/grok-agent/releases/download/super-agent-demos-v1/self-evolving-personal-os-demo.mp4`](https://github.com/AgentMindCloud/grok-agent/releases/download/super-agent-demos-v1/self-evolving-personal-os-demo.mp4)
-  once recorded. Actual video will be uploaded as a future GitHub Release asset; the link above is a placeholder until then and does not yet resolve.
+  once recorded. The recording itself is still to be produced; once recorded, the MP4 will be attached to a future GitHub Release tagged super-agent-demos-v1. The link above is a placeholder until then and does not yet resolve.
 - **X thread (planned):** *posted from [@JanSol0s](https://x.com/JanSol0s)
   alongside the launch — see [`X_LAUNCH_THREAD.md`](X_LAUNCH_THREAD.md).*
 
@@ -81,7 +81,7 @@ for Super Agent #2 so it can coexist alongside the Living Narrative Fabric
 > - Python 3.12 in `PATH`.
 > - Google Chrome installed (used by the dashboard's preview tab).
 > - Optional: `XAI_API_KEY` for live Grok 4.3 personalisation, plus the
->   per-source keys (`OPENWEATHER_API_KEY`, `NEWSAPI_KEY`, etc.) only if
+>   per-source keys (`OPENWEATHER_API_KEY`, `NEWSAPI_KEY`, and similar) only if
 >   you want live data; every connector has a stub fallback so the agent
 >   runs offline-clean by default.
 

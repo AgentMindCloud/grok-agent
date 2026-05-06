@@ -125,7 +125,7 @@ Confidence: high — clear post, 3 distinct variants under 240 chars each, avera
 
 Same schema and rules, different inputs → different rule demonstrations. Together the two examples cover the full surface of the comment-engagement-booster's edge cases: the paradox firing (AI demo), the healthy story baseline (productivity demo), and the anti-spam token-overlap guard (both examples — no two variants share more than 60% tokens).
 
-> **v1 limitation note:** like the prior runners in the suite, the variant scaffolds are deterministic per-focus templates — they wrap a 240-char comment around a single-axis framing (clarifying question, personal anecdote, etc.) but they do not paraphrase the substance of the post being commented on. A future v2 with Grok 4.3 in the loop would generate fully paraphrased comment variants while preserving the same scoring, paradox detection, anti-spam enforcement, length-cap, and no-misrepresentation invariants this v1 already enforces.
+> **v1 limitation note:** like the prior runners in the suite, the variant scaffolds are deterministic per-focus templates — they wrap a 240-char comment around a single-axis framing (clarifying question, personal anecdote, and the like) but they do not paraphrase the substance of the post being commented on. A future v2 with Grok 4.3 in the loop would generate fully paraphrased comment variants while preserving the same scoring, paradox detection, anti-spam enforcement, length-cap, and no-misrepresentation invariants this v1 already enforces.
 
 ---
 

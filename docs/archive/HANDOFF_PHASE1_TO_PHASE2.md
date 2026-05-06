@@ -96,7 +96,7 @@ Cross-field validators baked into the Pydantic model (`cli/grok-agent.py`):
 | Check ID | Article | Severity | What it enforces |
 |---|---|---|---|
 | `I.1-license` | I.1 | error | `license == "Apache-2.0"` |
-| `I.2-xai-positioning` | I.2 | error | description / metadata.tagline must not contain anti-xAI positioning ("compete with xai", "alternative to grok", etc.) |
+| `I.2-xai-positioning` | I.2 | error | description / metadata.tagline must not contain anti-xAI positioning ("compete with xai", "alternative to grok", and similar phrases) |
 | `I.3-windows-requires-admin` | I.3 | error | `windows.requires_admin == false` |
 | `I.4-version` | I.4 | error+info | `version` ∈ {2.14, 2.15}; v2.14 emits info nudge to upgrade |
 | `II.posts-consent` | II | error | `real_time_x.posts=true` requires `consent_required=true` |

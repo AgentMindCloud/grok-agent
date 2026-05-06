@@ -492,7 +492,7 @@ class Connector(Protocol):
 
     The P119 orchestrator's ``with_connectors`` injection point binds to
     this Protocol. Each per-source client (``XPersonalClient``,
-    ``GCalClient``, etc.) implements all five methods on a common
+    ``GCalClient``, and the like) implements all five methods on a common
     :class:`BaseConnector` defined below.
     """
 

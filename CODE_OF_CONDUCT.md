@@ -34,7 +34,7 @@ Behavior that is unacceptable:
 - Sexualized language or imagery, and sexual attention or advances of any kind.
 - Trolling, insulting or derogatory comments, and personal or political attacks.
 - Public or private harassment.
-- Publishing others' private information (physical address, email, etc.) without explicit permission.
+- Publishing others' private information (physical address, email, or similar) without explicit permission.
 - Other conduct which could reasonably be considered inappropriate in a professional setting.
 
 ---

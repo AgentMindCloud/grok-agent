@@ -142,7 +142,7 @@ def fetch_market_quote(ticker: str) -> dict:
             "yfinance not installed — run "
             "`python -m pip install -r requirements.txt`."
         )
-    except Exception as e:  # network, parse, etc.
+    except Exception as e:  # network, parse, and other transient errors
         result["error"] = f"{type(e).__name__}: {e}"
 
     _log_provenance(

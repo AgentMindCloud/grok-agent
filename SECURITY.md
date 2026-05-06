@@ -32,7 +32,7 @@ Use one of the private channels:
 2. **X DM** — DM [@JanSol0s](https://x.com/JanSol0s). Include the words `SECURITY` in the first line so it isn't lost in normal traffic.
 
 When reporting, please include:
-- The component (`cli/grok-agent.ps1`, `cli/grok-agent.py`, `safety/scanner.py`, a manifest you're auditing, etc.).
+- The component (`cli/grok-agent.ps1`, `cli/grok-agent.py`, `safety/scanner.py`, or a manifest you're auditing).
 - A reproducible scenario or PoC.
 - Affected commit SHA or version.
 - Your suggested severity, if you have one (info / low / med / high / critical).
@@ -69,8 +69,8 @@ In scope:
 
 Out of scope:
 
-- The 13 original repos referenced in `CLAUDE.md` §13 (`grok-install`, `grok-install-cli`, etc.). They are reference-only; report issues to their owners.
-- Vulnerabilities in upstream dependencies (`pydantic`, `pyyaml`, `streamlit`, etc.). Please report those upstream; we'll bump pins when their advisories land.
+- The 13 original repos referenced in `CLAUDE.md` §13 (`grok-install`, `grok-install-cli`, and the others listed there). They are reference-only; report issues to their owners.
+- Vulnerabilities in upstream dependencies (`pydantic`, `pyyaml`, `streamlit`, and similar). Please report those upstream; we'll bump pins when their advisories land.
 - Issues that require physical access to a user's Windows machine.
 - Theoretical issues without a working PoC.
 

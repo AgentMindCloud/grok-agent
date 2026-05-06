@@ -222,7 +222,7 @@ Together the two examples cover the full surface: the paradox firing (AI demo), 
 
 ## v1 limitation note
 
-Like the prior runners in the suite, the variant scaffolds are **deterministic per-focus templates** — they wrap a 240-char comment around a single-axis framing (clarifying question / personal anecdote / respectful counter-take / etc.). A future v2 with Grok 4.3 in the loop would generate fully paraphrased comment variants while preserving the same scoring, paradox detection, anti-spam enforcement, length-cap, and no-misrepresentation invariants this v1 already enforces.
+Like the prior runners in the suite, the variant scaffolds are **deterministic per-focus templates** — they wrap a 240-char comment around a single-axis framing (clarifying question / personal anecdote / respectful counter-take / and similar single-angle moves). A future v2 with Grok 4.3 in the loop would generate fully paraphrased comment variants while preserving the same scoring, paradox detection, anti-spam enforcement, length-cap, and no-misrepresentation invariants this v1 already enforces.
 
 The value the runner adds in v1:
 1. The 4-metric scoring with weighted formula

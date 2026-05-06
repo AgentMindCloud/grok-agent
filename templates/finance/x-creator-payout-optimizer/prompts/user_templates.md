@@ -103,7 +103,7 @@ Return JSON only — no prose, no banner. Schema:
 
 Rules:
 - Return 4–6 angles unless the topic is too narrow.
-- Each angle's rationale must cite a real past post pattern (engagement number, format, etc.) — never invent.
+- Each angle's rationale must cite a real past post pattern (engagement number, format, and the like) — never invent.
 - Confidence "low" requires a clarifying question in the angle's rationale field.
 ```
 

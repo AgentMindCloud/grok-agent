@@ -15,7 +15,7 @@ orchestrator's morning-brief node, the procedural-memory replay loop, the
 Streamlit dashboard) only ever talks to :class:`PersonalMemoryClient` and
 its convenience functions:
 
-- ``add_personal_event(...)``   add a single calendar/email/note/etc. record
+- ``add_personal_event(...)``   add a single calendar/email/note record
 - ``add_note(...)``             add a free-form note
 - ``ingest_fetch_result(...)``  bulk-write a P121 :class:`FetchResult`
 - ``search(...)``               semantic search across one or all sources

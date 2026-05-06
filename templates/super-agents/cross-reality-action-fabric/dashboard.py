@@ -639,7 +639,7 @@ def run_memory_search_action(
     user_id: str = "default",
     force_stub: bool = True,
 ) -> "list[SearchHit] | list[dict]":
-    """Execute a memory search across kinds (actions / approvals / etc.)."""
+    """Execute a memory search across kinds (actions / approvals / and similar)."""
     client = get_memory_client(force_stub=force_stub, refresh=True)
     client.set_consent(ConsentContext.from_iterable(
         list(_agent.ALL_GATES) + [MEMORY_WRITE_GATE],

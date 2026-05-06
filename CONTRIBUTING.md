@@ -65,7 +65,7 @@ phase-{N}: <verb> <what>
 
 - **Verbs:** `add`, `extend`, `fix`, `refactor`, `remove`, `update`, `bootstrap`, `ship`, `polish`, `test`.
 - **Tense:** present-tense, imperative.
-- **Phase tag:** required (`phase-1`, `phase-2`, etc.); pick the phase the work belongs to.
+- **Phase tag:** required (`phase-1`, `phase-2`, `phase-3`, `phase-4`, `phase-5`); pick the phase the work belongs to.
 
 Examples:
 - `phase-2: ship X Money Companion Dashboard MVP`

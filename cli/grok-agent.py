@@ -209,7 +209,7 @@ class Grok(BaseModel):
     fallback_model: Optional[str] = None
     # P138: Super Agent manifests carry a free-form personalisation block
     # describing user-tunable behaviour knobs (tone preferences, locale,
-    # default redaction posture, etc.). The block is intentionally
+    # default redaction posture, and similar). The block is intentionally
     # untyped — agents read what they understand and ignore the rest.
     personalisation: Optional[Dict[str, Any]] = None
 
@@ -307,7 +307,7 @@ class PublicApi(BaseModel):
     # Evolving Personal OS). scope is a free-form list/string
     # documenting the OAuth scope required when applicable.
     # default_mode is the operational mode the agent treats this
-    # API as ("read-only" / "write-on-consent" / etc.).
+    # API as ("read-only" / "write-on-consent" / or similar label).
     source_authority: Optional[float] = Field(default=None, ge=0.0, le=1.0)
     scope: Optional[Any] = None
     default_mode: Optional[str] = None
@@ -663,6 +663,8 @@ def cmd_validate(args: argparse.Namespace) -> int:
         return 66
     if not args.quiet:
         sys.stdout.write(f"-> Validating: {path}\n")
+        if getattr(args, "strict", False):
+            sys.stdout.write("-> Strict mode (extra=forbid)\n")
 
     try:
         manifest = validate_manifest_file(path)
@@ -731,6 +733,15 @@ def build_parser() -> argparse.ArgumentParser:
         "--quiet",
         action="store_true",
         help="Print only on failure (machine-readable mode).",
+    )
+    p_val.add_argument(
+        "--strict",
+        action="store_true",
+        help=(
+            "Run validation in strict mode (extra=forbid on every nested "
+            "section). This is the current default; the flag is accepted "
+            "for forward compatibility with external CI pipelines."
+        ),
     )
     p_val.set_defaults(func=cmd_validate)
 

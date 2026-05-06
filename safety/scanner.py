@@ -739,6 +739,16 @@ def check_bridge_registry_alignment(m: Dict[str, Any]) -> List[Finding]:
         return findings
     citations_to = agent_entry.get("citations_to", {}) or {}
     super_agent_names = set((registry.get("agents") or {}).keys())
+    flagships = set(registry.get("flagships") or [])
+    lighters = set(registry.get("lighters") or [])
+    # Flagships must exactly match the registry (ERROR on mismatch);
+    # lighters stay at WARN so the registry can evolve without blocking them.
+    if name in flagships:
+        mismatch_severity = "error"
+    elif name in lighters:
+        mismatch_severity = "warn"
+    else:
+        mismatch_severity = "warn"
     for link in declared_links:
         if not isinstance(link, str):
             continue
@@ -746,7 +756,7 @@ def check_bridge_registry_alignment(m: Dict[str, Any]) -> List[Finding]:
             continue
         if link in super_agent_names:
             findings.append(Finding(
-                "error", "BR-003",
+                mismatch_severity, "BR-003",
                 f"bridges.links contains super-agent '{link}' but the registry "
                 f"does not authorise '{name}' to cite it; "
                 f"add it to registry.agents['{name}'].citations_to or remove it from the manifest",
@@ -874,6 +884,128 @@ def check_bridge_min_count(m: Dict[str, Any]) -> List[Finding]:
             "bridges.min_count", "VII",
         )]
     return []
+
+
+# ============================================================================
+# Article VII — Transitive citation enforcement (registry rules 1 & 2)
+# ============================================================================
+
+
+@register("VII.bridge-transitive-synthesis")
+def check_bridge_transitive_synthesis(m: Dict[str, Any]) -> List[Finding]:
+    """Registry rule_1: Agent A may cite Agent B's synthesis of Agent C
+    only when B is authorised to cite C. We treat a chain as
+    *transitive* when both edges are reciprocal=true synthesis edges
+    (the citation type that re-publishes B's view of C). Such a chain
+    means A's manifest must explicitly opt into the transitive flow via
+    `bridges.transitive_synthesis_consent: true`. Self-cycles (C == A)
+    are excluded — those are already covered by the reciprocity check.
+    """
+    if m.get("kind") != "super-agent":
+        return []
+    registry = _load_bridges_registry()
+    if registry is None:
+        return []
+    name = m.get("name")
+    if not isinstance(name, str):
+        return []
+    agents = registry.get("agents") or {}
+    agent_entry = agents.get(name)
+    if agent_entry is None:
+        return []
+    consent = bool(_get(m, "bridges.transitive_synthesis_consent", False))
+    findings: List[Finding] = []
+    seen_chains = set()
+    citations_to = agent_entry.get("citations_to", {}) or {}
+    for b_name, b_citation in citations_to.items():
+        if not isinstance(b_citation, dict):
+            continue
+        if b_citation.get("citation_type") != "synthesis":
+            continue
+        if not b_citation.get("reciprocal"):
+            continue
+        b_entry = agents.get(b_name)
+        if b_entry is None:
+            continue
+        for c_name, c_citation in (b_entry.get("citations_to") or {}).items():
+            if not isinstance(c_citation, dict):
+                continue
+            if c_citation.get("citation_type") != "synthesis":
+                continue
+            if not c_citation.get("reciprocal"):
+                continue
+            if c_name == name:
+                continue  # cycle back to A — handled by reciprocity check
+            chain_key = (b_name, c_name)
+            if chain_key in seen_chains:
+                continue
+            seen_chains.add(chain_key)
+            if not consent:
+                findings.append(Finding(
+                    "error", "BR-011",
+                    f"transitive synthesis chain '{name}' -> '{b_name}' -> '{c_name}' "
+                    f"requires bridges.transitive_synthesis_consent=true in the manifest "
+                    f"(registry rule_1 — no transitive shortcuts without explicit consent)",
+                    "bridges.transitive_synthesis_consent", "VII",
+                ))
+    return findings
+
+
+@register("VII.bridge-transitive-contradiction")
+def check_bridge_transitive_contradiction(m: Dict[str, Any]) -> List[Finding]:
+    """Registry rule_2: Contradiction flags are not transitive.
+    If A cites synthesis from B, and `narrative-contradiction-detector`
+    has raised a contradiction-flag citation toward B, then A risks
+    laundering a flagged claim through B's synthesis. To proceed, A
+    must declare `bridges.acknowledge_contradiction: true` so the user
+    is told the upstream agent has open contradiction flags.
+    """
+    if m.get("kind") != "super-agent":
+        return []
+    registry = _load_bridges_registry()
+    if registry is None:
+        return []
+    name = m.get("name")
+    if not isinstance(name, str):
+        return []
+    agents = registry.get("agents") or {}
+    agent_entry = agents.get(name)
+    if agent_entry is None:
+        return []
+    ncd_entry = agents.get("narrative-contradiction-detector")
+    if ncd_entry is None:
+        return []
+    flagged_targets = set()
+    for target_name, target_citation in (ncd_entry.get("citations_to") or {}).items():
+        if not isinstance(target_citation, dict):
+            continue
+        if target_citation.get("citation_type") == "contradiction-flag":
+            flagged_targets.add(target_name)
+    if not flagged_targets:
+        return []
+    acknowledge = bool(_get(m, "bridges.acknowledge_contradiction", False))
+    findings: List[Finding] = []
+    citations_to = agent_entry.get("citations_to", {}) or {}
+    for b_name, b_citation in citations_to.items():
+        if not isinstance(b_citation, dict):
+            continue
+        if b_citation.get("citation_type") != "synthesis":
+            continue
+        if b_name not in flagged_targets:
+            continue
+        if name == "narrative-contradiction-detector":
+            continue  # NCD is the source of flags; cannot flag itself
+        if not acknowledge:
+            findings.append(Finding(
+                "error", "BR-012",
+                f"'{name}' cites synthesis from '{b_name}', and "
+                f"'narrative-contradiction-detector' has raised a contradiction-flag "
+                f"on '{b_name}'; set bridges.acknowledge_contradiction=true in the "
+                f"manifest to surface the open flag (registry rule_2 — contradiction "
+                f"flags are not transitive)",
+                "bridges.acknowledge_contradiction", "VII",
+            ))
+    return findings
 
 
 # ============================================================================

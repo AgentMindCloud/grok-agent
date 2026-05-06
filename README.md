@@ -30,6 +30,20 @@
   <i>Built for xAI, X, Grok and the ecosystem community. ❤️</i>
 </p>
 
+<p align="center">
+  <a href="marketplace/index.html"><b>🛒 Marketplace (GitHub Pages)</b></a>
+  &nbsp;·&nbsp;
+  <a href="marketplace/"><b>Next.js dynamic marketplace</b></a>
+  &nbsp;·&nbsp;
+  <a href="docs/"><b>Docs</b></a>
+  &nbsp;·&nbsp;
+  <a href="CONTRIBUTING.md"><b>Contribute</b></a>
+</p>
+
+<p align="center">
+  <i>The static <code>marketplace/index.html</code> is a zero-build, GitHub-Pages-ready landing page that lists the 7 Super Agents and the 22 Creator Templates teaser. Open it in a browser, or serve it with <code>python -m http.server</code>.</i>
+</p>
+
 ---
 
 ## TL;DR

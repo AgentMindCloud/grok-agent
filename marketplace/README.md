@@ -14,6 +14,15 @@
 > static. The Install button on each card copies the install one-liner
 > to your clipboard so you can paste it on X.
 
+> 🌐 **GitHub Pages entry point — `marketplace/index.html`.** A
+> zero-build, single-file static landing page sits at
+> [`marketplace/index.html`](./index.html) alongside the Next.js app.
+> It uses Tailwind via CDN and vanilla JavaScript, lists the 7 Super
+> Agents and the 22 Creator Templates teaser, and is deployable as-is
+> to GitHub Pages. The two surfaces coexist: Next.js powers the
+> dynamic, manifest-scanned grid for Vercel; the static page powers
+> the no-build GitHub Pages mirror.
+
 ---
 
 ## What ships in v0.3
@@ -171,7 +180,7 @@ marketplace/
 └── lib/
     ├── manifests.ts        # NEW: build-time YAML scanner
     ├── agents.ts           # FeaturedAgent adapter for legacy routes
-    └── manifest.ts         # Form helpers (slugify, validate, etc.)
+    └── manifest.ts         # Form helpers (slugify, validate, normalize)
 ```
 
 ---

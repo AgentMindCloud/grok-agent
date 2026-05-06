@@ -1,0 +1,132 @@
+/*
+ * Copyright 2026 AgentMindCloud
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Built for xAI, X, Grok and the ecosystem community.
+ */
+
+/* Smooth color transitions when toggling theme */
+html,
+body {
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+/* Filter pills (component-style classes layered over Tailwind) */
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 9999px;
+  border: 1px solid #e8dcc4;
+  background-color: #ffffff;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.825rem;
+  font-weight: 500;
+  color: #2a2520;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: transform 120ms ease, background-color 120ms ease,
+    border-color 120ms ease, color 120ms ease, box-shadow 120ms ease;
+}
+
+.filter-pill:hover {
+  border-color: #e34a33;
+  color: #c44536;
+}
+
+.filter-pill:focus-visible {
+  outline: 2px solid #e34a33;
+  outline-offset: 2px;
+}
+
+.filter-pill.is-active {
+  background-color: #e34a33;
+  border-color: #e34a33;
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(227, 74, 51, 0.25);
+}
+
+.filter-pill.is-active .pill-count {
+  background-color: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+.pill-count {
+  display: inline-flex;
+  min-width: 1.5rem;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: #f5ebdc;
+  padding: 0 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #2a2520;
+}
+
+html.dark .filter-pill {
+  background-color: #252118;
+  border-color: #3a332a;
+  color: #f5ebdc;
+}
+
+html.dark .filter-pill:hover {
+  border-color: #e34a33;
+  color: #f08a78;
+}
+
+html.dark .pill-count {
+  background-color: #3a332a;
+  color: #f5ebdc;
+}
+
+html.dark .filter-pill.is-active {
+  background-color: #e34a33;
+  border-color: #e34a33;
+  color: #ffffff;
+}
+
+/* Card hover lift */
+.agent-card {
+  transition: transform 180ms ease, box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.agent-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(227, 74, 51, 0.5);
+  box-shadow: 0 10px 32px rgba(227, 74, 51, 0.18);
+}
+
+html.dark .agent-card:hover {
+  box-shadow: 0 10px 32px rgba(227, 74, 51, 0.28);
+}
+
+/* Hidden state for filtered cards (kept in DOM for fast re-show) */
+.agent-card.is-hidden {
+  display: none !important;
+}
+
+/* Copy-button "copied" state */
+.copy-btn.is-copied {
+  background-color: #16a34a !important;
+  border-color: #16a34a !important;
+  color: #ffffff !important;
+}
+
+/* Reduced-motion users get instant transitions */
+@media (prefers-reduced-motion: reduce) {
+  html,
+  body,
+  .filter-pill,
+  .agent-card,
+  .copy-btn {
+    transition: none !important;
+  }
+
+  .agent-card:hover {
+    transform: none;
+  }
+}

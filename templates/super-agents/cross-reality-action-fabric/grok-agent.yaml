@@ -60,7 +60,11 @@ metadata:
   language: "en"
   created: "2026-05-05"
   updated: "2026-05-05"
-  demo_video: "templates/super-agents/cross-reality-action-fabric/DEMO.md"
+  demo_video:
+    storyboard: "templates/super-agents/cross-reality-action-fabric/DEMO.md"
+    url: "https://github.com/AgentMindCloud/grok-agent/releases/download/super-agent-demos-v1/cross-reality-action-fabric-demo.mp4"  # (planned — upload pending)
+    status: "(planned — upload pending)"
+    note: "Actual video will be uploaded as a future GitHub Release asset."
 
 # ---------------------------------------------------------------------------
 # install: how this agent is delivered to a user

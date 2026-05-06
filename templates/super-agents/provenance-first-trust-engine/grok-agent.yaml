@@ -1,44 +1,147 @@
-# Apache 2.0 License
 # Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Lighter Super Agent — Provenance-First Trust Engine.
+# Every response carries a complete clickable provenance report —
+# all sources, confidence scores, and alternative viewpoints — so
+# downstream consumers can verify each claim end-to-end.
 
 version: "2.15"
 kind: "super-agent"
-name: "Provenance-First Trust Engine"
-description: "Every response comes with a complete, clickable provenance report including all sources, confidence scores, and alternative viewpoints for maximum trust and transparency."
-
-author:
-  x_handle: "@JanSol0s"
-  github: "AgentMindCloud"
-
-install:
-  command: "grok install this"
-  one_click: true
-
-tools:
-  - name: "langfuse_tracing"
-    type: "tracing"
-  - name: "source_verification"
-    type: "internal"
-
-multi_agent:
-  supports_collaboration: true
-  max_agents: 3
-  role: "provenance_guard"
-
-safety_profile:
-  reply_only: true
-  cost_limit_usd: 0.80
-
-constitution:
-  version: "1.0"
-  rules:
-    - "Every claim must have traceable provenance"
-    - "Confidence score required for every statement"
-    - "Alternative viewpoints must be presented when relevant"
-    - "User can click any source to verify"
-  badge: "verifiable-safe-v1"
+name: "provenance-first-trust-engine"
+description: "Every response comes with a complete clickable provenance report including all sources, confidence scores, and alternative viewpoints for maximum trust and transparency."
+author: "@JanSol0s"
+license: "Apache-2.0"
 
 metadata:
+  display_name: "Provenance-First Trust Engine"
+  tagline: "Verifiable answers — every claim, every source, every score."
+  categories: ["super-agent", "trust"]
   tags: ["super-agent", "provenance", "trust", "transparency"]
-  category: "trust"
+  language: "en"
+  repository: "github.com/AgentMindCloud/grok-agent"
   created: "2026-05-06"
+
+install:
+  one_click: true
+  install_command: "grok-agent install provenance-first-trust-engine"
+  prerequisites:
+    - "Windows 11"
+    - "Python 3.12+"
+    - "PowerShell 5.1+"
+
+windows:
+  launcher: "launcher.ps1"
+  appdata_folder: "grok-agent/provenance-first-trust-engine"
+  log_folder: "grok-agent/provenance-first-trust-engine/logs"
+  provenance_folder: "grok-agent/provenance-first-trust-engine/provenance"
+  default_port: 8511
+  chrome_only: true
+  requires_admin: false
+  min_powershell_version: "5.1"
+
+grok:
+  model: "grok-4.3"
+  temperature: 0.3
+  max_tokens: 4096
+  system_prompt_file: "prompts/system.md"
+  tool_calling: true
+  vision: false
+
+multi_agent:
+  role: "orchestrator"
+  shared_memory: "mem0://grok-agent-shared"
+  max_concurrent_workers: 3
+
+memory:
+  enabled: true
+  provider: "mem0"
+  vector_store:
+    backend: "qdrant"
+    collection_prefix: "provenance-first-trust-engine"
+  episodic: true
+  semantic: true
+  retention_days: 365
+  encryption_at_rest: true
+
+provenance:
+  enabled: true
+  log_path: "$env:LOCALAPPDATA\\grok-agent\\provenance-first-trust-engine\\provenance\\events.jsonl"
+  cite_sources: true
+  versioned_synthesis: true
+  contradiction_detection: true
+  append_only: true
+  langfuse:
+    enabled: false
+    public_key_env_var: "LANGFUSE_PUBLIC_KEY"
+    secret_key_env_var: "LANGFUSE_SECRET_KEY"
+    host: "https://cloud.langfuse.com"
+
+safety:
+  pii_handling: "local-only"
+  data_retention_days: 365
+  scanner_severity_floor: "warn"
+  cost_limits:
+    usd_per_session_max: 0.80
+    usd_per_day_max: 4.00
+  human_in_the_loop:
+    enabled: true
+    confirm_before:
+      - "export_provenance_log"
+      - "publish_synthesis"
+  disclaimers:
+    not_financial_advice: false
+    not_tax_advice: false
+    real_world_action_consent: true
+    not_medical_advice: false
+
+constitution:
+  rules:
+    - "Every claim must have a traceable, append-only provenance record."
+    - "A confidence score is required for every statement."
+    - "Alternative viewpoints must be presented when available."
+    - "Users can click any source to verify."
+  consent_gates:
+    - "export_provenance_log"
+    - "publish_synthesis"
+  hard_refusals:
+    - "Emit a claim with empty source_id."
+    - "Mutate or delete provenance events."
+
+tools:
+  - name: "trace_claims"
+    type: "local_function"
+    description: "Decomposes a response into claims and attaches a citation + confidence score per claim."
+    module: "orchestrator"
+    function: "TrustEngine.trace_claims"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          text: { type: "string" }
+        required: ["text"]
+
+  - name: "verify_source"
+    type: "local_function"
+    description: "Re-fetches a source URL and confirms the claim is still supported by it."
+    module: "orchestrator"
+    function: "TrustEngine.verify_source"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          source_id: { type: "string" }
+        required: ["source_id"]
+
+  - name: "render_provenance_report"
+    type: "local_function"
+    description: "Renders the user-visible Markdown provenance report — sources, confidence, alternatives."
+    module: "orchestrator"
+    function: "TrustEngine.render_provenance_report"
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          version_id: { type: "string" }
+        required: ["version_id"]

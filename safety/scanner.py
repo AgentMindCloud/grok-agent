@@ -440,6 +440,237 @@ def check_xai_positioning(m: Dict[str, Any]) -> List[Finding]:
 
 
 # ============================================================================
+# Additional Article III: Hard Refusals — provenance integrity
+# ============================================================================
+
+
+@register("III.cite-sources-for-super-agent")
+def check_super_agent_cite_sources(m: Dict[str, Any]) -> List[Finding]:
+    if m.get("kind") != "super-agent":
+        return []
+    if not _get(m, "provenance.cite_sources", False):
+        return [Finding(
+            "error", "HR-002",
+            "super-agent must set provenance.cite_sources=true (Article III — no claim without a source)",
+            "provenance.cite_sources", "III",
+        )]
+    return []
+
+
+@register("III.append-only-provenance")
+def check_append_only_provenance(m: Dict[str, Any]) -> List[Finding]:
+    if not _get(m, "provenance.enabled", False):
+        return []
+    if _get(m, "provenance.append_only") is False:
+        return [Finding(
+            "error", "HR-003",
+            "provenance.enabled=true requires provenance.append_only=true (Article III — never mutate provenance)",
+            "provenance.append_only", "III",
+        )]
+    return []
+
+
+@register("III.bridges-min-count")
+def check_bridges_min_count(m: Dict[str, Any]) -> List[Finding]:
+    if m.get("kind") != "super-agent":
+        return []
+    bridges = m.get("bridges")
+    if not isinstance(bridges, dict):
+        return []
+    min_count = bridges.get("min_count")
+    if isinstance(min_count, int) and min_count < 1:
+        return [Finding(
+            "warn", "HR-004",
+            "bridges.min_count should be >= 1 for super-agents (Article III — synthesis must connect to others)",
+            "bridges.min_count", "III",
+        )]
+    return []
+
+
+@register("III.contradiction-detection")
+def check_contradiction_detection(m: Dict[str, Any]) -> List[Finding]:
+    if m.get("kind") != "super-agent":
+        return []
+    if not _get(m, "provenance.enabled", False):
+        return []
+    if _get(m, "provenance.contradiction_detection") is False:
+        return [Finding(
+            "warn", "HR-005",
+            "super-agent with provenance should set provenance.contradiction_detection=true",
+            "provenance.contradiction_detection", "III",
+        )]
+    return []
+
+
+# ============================================================================
+# Additional Article VII: Local-First & Privacy-First
+# ============================================================================
+
+
+_ABSOLUTE_DRIVE_RE = ("C:\\", "D:\\", "E:\\", "/usr/", "/etc/", "/var/")
+_TRACKER_DOMAINS = (
+    "google-analytics.com",
+    "googletagmanager.com",
+    "mixpanel.com",
+    "segment.io",
+    "amplitude.com",
+)
+
+
+@register("VII.appdata-paths-only")
+def check_appdata_paths_only(m: Dict[str, Any]) -> List[Finding]:
+    findings: List[Finding] = []
+    windows = m.get("windows") or {}
+    if not isinstance(windows, dict):
+        return []
+    for key, val in windows.items():
+        if not isinstance(val, str):
+            continue
+        for prefix in _ABSOLUTE_DRIVE_RE:
+            if val.startswith(prefix):
+                findings.append(Finding(
+                    "error", "PII-002",
+                    f"windows.{key}='{val}' uses an absolute drive path; use a relative path under $env:LOCALAPPDATA",
+                    f"windows.{key}", "VII",
+                ))
+    return findings
+
+
+@register("VII.encryption-at-rest")
+def check_encryption_at_rest(m: Dict[str, Any]) -> List[Finding]:
+    if not _get(m, "memory.enabled", False):
+        return []
+    pii = _get(m, "safety.pii_handling", "local-only")
+    if pii == "none":
+        return []
+    if _get(m, "memory.encryption_at_rest") is False:
+        return [Finding(
+            "warn", "PII-003",
+            "memory.enabled=true with pii_handling != 'none' should set memory.encryption_at_rest=true",
+            "memory.encryption_at_rest", "VII",
+        )]
+    return []
+
+
+@register("VII.data-retention-required")
+def check_data_retention(m: Dict[str, Any]) -> List[Finding]:
+    kind = m.get("kind")
+    needs_retention = (kind in FINANCE_KINDS) or (kind == "super-agent")
+    if not needs_retention:
+        return []
+    if _get(m, "safety.data_retention_days") is None:
+        return [Finding(
+            "warn", "PII-004",
+            f"kind='{kind}' should declare safety.data_retention_days (e.g. 90 or 365)",
+            "safety.data_retention_days", "VII",
+        )]
+    return []
+
+
+@register("VII.no-trackers")
+def check_no_trackers(m: Dict[str, Any]) -> List[Finding]:
+    findings: List[Finding] = []
+    blob = json.dumps(m, default=str).lower()
+    for tracker in _TRACKER_DOMAINS:
+        if tracker in blob:
+            findings.append(Finding(
+                "error", "PII-005",
+                f"manifest references third-party tracker '{tracker}'; "
+                f"agents must not bundle telemetry by default (Article VII)",
+                "manifest", "VII",
+            ))
+    return findings
+
+
+# ============================================================================
+# Additional Article II: Consent Gates — confirm_before completeness
+# ============================================================================
+
+
+_REAL_WORLD_VERBS = ("publish_", "send_", "move_", "pay_", "delete_", "modify_")
+
+
+@register("II.action-gate-confirm-list")
+def check_action_gate_confirm_list(m: Dict[str, Any]) -> List[Finding]:
+    gates = _get(m, "constitution.consent_gates", []) or []
+    confirm_before = _get(m, "safety.human_in_the_loop.confirm_before", []) or []
+    findings: List[Finding] = []
+    for gate in gates:
+        if not isinstance(gate, str):
+            continue
+        if any(gate.startswith(v) for v in _REAL_WORLD_VERBS):
+            if gate not in confirm_before:
+                findings.append(Finding(
+                    "warn", "CG-003",
+                    f"consent gate '{gate}' looks like a real-world action; "
+                    f"add it to safety.human_in_the_loop.confirm_before",
+                    "safety.human_in_the_loop.confirm_before", "II",
+                ))
+    return findings
+
+
+# ============================================================================
+# Additional Article VIII: Audit & Self-Improvement
+# ============================================================================
+
+
+@register("VIII.scanner-severity-floor")
+def check_scanner_severity_floor(m: Dict[str, Any]) -> List[Finding]:
+    floor = _get(m, "safety.scanner_severity_floor")
+    if floor is None:
+        return [Finding(
+            "info", "AUD-001",
+            "safety.scanner_severity_floor is not declared; defaulting to 'warn' is recommended",
+            "safety.scanner_severity_floor", "VIII",
+        )]
+    if floor not in SEVERITIES:
+        return [Finding(
+            "error", "AUD-002",
+            f"safety.scanner_severity_floor='{floor}' must be one of {SEVERITIES}",
+            "safety.scanner_severity_floor", "VIII",
+        )]
+    return []
+
+
+@register("VIII.severity-floor-not-info")
+def check_severity_floor_not_info(m: Dict[str, Any]) -> List[Finding]:
+    kind = m.get("kind")
+    if kind not in (FINANCE_KINDS | {"super-agent"}):
+        return []
+    floor = _get(m, "safety.scanner_severity_floor")
+    if floor == "info":
+        return [Finding(
+            "warn", "AUD-003",
+            f"kind='{kind}' should not run with scanner_severity_floor='info' "
+            f"(use 'warn' or 'error' to surface real issues)",
+            "safety.scanner_severity_floor", "VIII",
+        )]
+    return []
+
+
+# ============================================================================
+# Additional Article X: Local-first storage
+# ============================================================================
+
+
+@register("X.local-first-storage")
+def check_local_first_storage(m: Dict[str, Any]) -> List[Finding]:
+    appdata = _get(m, "windows.appdata_folder")
+    if appdata is None:
+        return []
+    if not isinstance(appdata, str):
+        return []
+    if not appdata.startswith("grok-agent/"):
+        return [Finding(
+            "warn", "LF-001",
+            f"windows.appdata_folder='{appdata}' should start with 'grok-agent/' "
+            f"to keep all per-user data under one umbrella",
+            "windows.appdata_folder", "X",
+        )]
+    return []
+
+
+# ============================================================================
 # Scan driver
 # ============================================================================
 

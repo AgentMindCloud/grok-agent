@@ -151,6 +151,7 @@
 | P154 | Phase 4 | Build Zero-Config "I Want To…" Agent lighter Super Agent | templates/super-agents/zero-config-i-want-to-agent/grok-agent.yaml, README.md | Lighter 1-prompt style; matched flagship + P151/P152/P153 manifest format exactly; no forbidden phrases used | ✅ done |
 | P155 | Phase 5 | Enhance thin Next.js marketplace to list all 7 Super Agents + 4 X Money tools | marketplace/app/page.tsx, lib/manifests.ts, components/AgentCard.tsx, README.md | Dynamic manifest scanning; all 11 agents live; clean Vercel-ready UI | ✅ done |
 | P159 | Phase 5 | Full workplan audit — verify every phase against actual repo and flag gaps + improvement ideas | docs/workplan-audit.md, README.md, ROADMAP.md | Complete gap analysis + prioritized improvement list created | ✅ done |
+| P160 | Phase 5 | Fix every critical gap from the full workplan audit — all 5 issues in one session | scripts/generate-template.py, spec/v2.15/*, safety/scanner.py, 2 manifests, README.md, ROADMAP.md, CLAUDE.md | All 5 audit gaps resolved in one session | ✅ done |
 
 <!--
 ====================================================================

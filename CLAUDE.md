@@ -4,8 +4,10 @@
 
 # CLAUDE.md — Permanent Instruction File for Grok Agent OS
 
-> **Built to help xAI and Grok win the platform battle.**
+> **Built for xAI, X, Grok and the ecosystem community. ❤️**
 > We are ecosystem allies to xAI. Everything in this repo exists to make Grok the obvious, default choice for every agent on X. Never frame this work as competing with xAI — always as the distribution + runtime layer xAI hasn't shipped yet.
+>
+> _Current status (May 2026): Phases 1–4 complete (all 4 X Money tools, all 7 Super Agents, full self-improvement infra, 22 creator templates). Phase 5 (marketplace + xAI partnership) is active — see [`docs/workplan-audit.md`](docs/workplan-audit.md) and [`HANDOFF_LOG.md`](HANDOFF_LOG.md)._
 
 This file is the ground truth for any AI assistant (Claude, Grok, Cursor, Cline, GPT, etc.) and any human contributor working on `AgentMindCloud/grok-agent`. Read it first. Re-read it before generating any prompt or file. The rules here override every default behavior.
 
@@ -24,7 +26,7 @@ If a directive in this file ever conflicts with a directive elsewhere — includ
 | Repo | `github.com/AgentMindCloud/grok-agent` |
 | Org | `AgentMindCloud` (creator: `@JanSol0s`) |
 | Codename | Grok Agent OS |
-| Tagline | "The canonical open standard + Windows-first distribution layer that makes Grok the easiest, most powerful, and most magical platform for deploying agents on X." |
+| Tagline | "The open Windows-first distribution layer for deploying Grok agents on X — built for xAI, X, Grok and the ecosystem community." |
 | License | Apache 2.0 (everywhere, no exceptions) |
 | Manifest version | `grok-agent.yaml` v2.15 (100% backwards compat with v2.14) |
 
@@ -46,8 +48,8 @@ If a directive in this file ever conflicts with a directive elsewhere — includ
 
 These six rules apply to every file, every prompt, every output. If any one fails the check at the bottom of this file → fix it before submitting.
 
-1. **Apache 2.0 license header at the top of every code/config file.** Format depends on file type — see `.claude/skills/grok-agent-conventions/SKILL.md` for the canonical headers (Python, PowerShell, YAML, Markdown, TOML, TypeScript). The full Apache 2.0 text lives at `LICENSE` in the repo root.
-2. **"Built to help xAI and Grok win" line** in every README and user-facing markdown. Rotate the phrasing; never copy a single sentence verbatim across files.
+1. **Apache 2.0 license header at the top of every code/config file.** Format depends on file type — see `.claude/skills/grok-agent-conventions/SKILL.md` for the standard headers (Python, PowerShell, YAML, Markdown, TOML, TypeScript). The full Apache 2.0 text lives at `LICENSE` in the repo root.
+2. **Ecosystem-ally tagline** in every README and user-facing markdown. Current text: "Built for xAI, X, Grok and the ecosystem community. ❤️". Older surfaces may still carry the prior wording — replace as you touch them.
 3. **Windows 11 + PowerShell only** in every shell command, install instruction, README example, launcher script, and CI script that the end user runs. Never bash, never macOS, never Apple anything. Exception: bash inside `.github/workflows/*.yml` running on `ubuntu-latest` is OK (CI runner choice). User-visible commands stay PowerShell.
 4. **Every agent declares `grok-agent.yaml` v2.15** — and the v2.15 schema must accept any valid v2.14 manifest unchanged (auto-upgrade during `grok-agent validate`).
 5. **Strong disclaimers** on every finance, tax, or real-world-action tool: "Not financial advice", "Not tax advice", explicit consent gates. See section 12 for exact wording.
@@ -190,7 +192,7 @@ We execute one numbered prompt at a time. The orchestrator (Grok) generates each
 Goal: single source-of-truth repo with v2.15 standard, Windows CLI, safety system, starter templates.
 
 - **P1** Bootstrap repo with `CLAUDE.md`, `LICENSE`, `.gitignore`
-- **P2** Create full canonical directory structure
+- **P2** Create full directory structure
 - **P3** Write permanent `CLAUDE.md` instruction file (this file)
 - **P4** Create `spec/v2.15/grok-agent.yaml` (unified manifest schema)
 - **P5** Create `cli/grok-agent.ps1` (PowerShell CLI: install/new/validate/list/run)
@@ -226,7 +228,7 @@ Highest-priority phase. Solves real creator pain from the X Money launch. Each t
 
 Build order matters: Tool #1 → Tool #2 → Tool #4 → Tool #3, so Tool #4's importer can target Tool #1's already-shipped schema.
 
-Every tool ships with: "Not financial advice" banner on every tab + export, Windows AppData Local SQLite path (`$env:LOCALAPPDATA\grok-agent\<slug>.db`), "Built to help xAI and Grok win" footer.
+Every tool ships with: "Not financial advice" banner on every tab + export, Windows AppData Local SQLite path (`$env:LOCALAPPDATA\grok-agent\<slug>.db`), and the ecosystem-ally footer ("Built for xAI, X, Grok and the ecosystem community. ❤️").
 
 ### Phase 3 — Creator Distribution Flywheel (P43–P92) — 50 prompts
 
@@ -493,4 +495,4 @@ If any box fails → fix before output.
 
 ---
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️

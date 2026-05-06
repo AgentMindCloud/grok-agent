@@ -3,12 +3,12 @@
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:FF6B00,100:1A1F2E&height=240&section=header&text=Grok%20Agent%20OS&fontSize=64&fontColor=F5F5DC&animation=fadeIn" alt="Grok Agent OS" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:FF6B00,50:7C3AED,100:0078D6&height=260&section=header&text=Grok%20Agent%20OS&fontSize=72&fontColor=F5F5DC&animation=fadeIn&desc=The%20open%20Windows-first%20layer%20for%20Grok%20agents%20on%20X&descAlignY=72&descSize=18" alt="Grok Agent OS" />
 </p>
 
 <p align="center">
   <a href="https://readme-typing-svg.demolab.com">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=18&pause=1000&color=FF6B00&center=true&width=620&lines=Built+to+help+xAI+and+Grok+win+the+platform+battle.;Windows-first+%E2%80%A2+PowerShell+CLI+%E2%80%A2+Apache+2.0.;grok-agent.yaml+v2.15+%E2%80%A2+Constitution-enforced.;%22grok+install+this%22+is+the+install+command." alt="typing tagline" />
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=20&pause=1200&color=FF6B00&center=true&width=720&lines=One+YAML+%E2%80%A2+One+install+command+%E2%80%A2+One+Constitution.;Windows-first+%E2%80%A2+PowerShell+CLI+%E2%80%A2+Apache+2.0.;%22grok+install+this%22+is+the+install+command.;11+production+agents+live+%E2%80%A2+marketplace+shipping." alt="typing tagline" />
   </a>
 </p>
 
@@ -18,11 +18,16 @@
   <img src="https://img.shields.io/badge/platform-Windows_11-0078D6.svg" alt="Windows 11" />
   <img src="https://img.shields.io/badge/python-3.12+-3776AB.svg" alt="Python 3.12+" />
   <img src="https://img.shields.io/badge/Constitution-v1.0-7C3AED.svg" alt="Constitution v1.0" />
-  <img src="https://img.shields.io/badge/status-Phase_1_in_progress-22C55E.svg" alt="Phase 1" />
+  <img src="https://img.shields.io/badge/agents%20live-11-22C55E.svg" alt="11 agents live" />
+  <img src="https://img.shields.io/badge/status-Phase_5_active-22C55E.svg" alt="Phase 5 active" />
 </p>
 
 <p align="center">
-  <b>The Windows-first distribution layer that makes Grok the easiest, most powerful, and most magical platform for deploying agents on X.</b>
+  <b>The Windows-first distribution layer for deploying Grok agents on X — one YAML, one PowerShell command, one Constitution.</b>
+</p>
+
+<p align="center">
+  <i>Built for xAI, X, Grok and the ecosystem community. ❤️</i>
 </p>
 
 ---
@@ -33,21 +38,57 @@
 
 - **One YAML** — `grok-agent.yaml` v2.15 — describes the whole agent (kind, tools, public APIs, multi-agent role, safety, cost limits, HITL gates).
 - **One PowerShell command** installs it locally on Windows 11 with no admin rights, no surprises.
-- **One Constitution** governs every shipped agent: mandatory disclaimers on finance/tax/real-world tools, machine-checkable consent gates, hard refusals enforced in CI.
+- **One Agent Constitution** governs every shipped agent: mandatory disclaimers on finance/tax/real-world tools, machine-checkable consent gates, hard refusals enforced in CI.
 
-> **Built to help xAI and Grok win.** We are ecosystem allies, not competitors. Everything in this repo is Apache 2.0 and designed so any of it can be folded into an official xAI standard whenever they want it. See [`docs/for-xai-adoption.md`](docs/for-xai-adoption.md).
-
----
-
-## Why this exists
-
-Grok 4.3 is the best agent LLM running on X. The thing that's missing is a **distribution + runtime layer** so creators can author, install, and run agents safely. Today, an X user who wants to install a Grok-powered agent copies code from a thread, installs random Python deps, and hopes. There is no schema, no provenance, no consent gate, no mandatory disclaimers, no path for a non-technical creator to ship one safely.
-
-Grok Agent OS closes that gap. The same way `package.json` made JavaScript ecosystems work — but Windows-native, Constitution-enforced, and X-shaped.
+**11 production agents** ship today — 4 X Money tools, 3 flagship Super Agents, 4 lighter Super Agents — all discoverable through the dynamic Next.js [marketplace](marketplace/).
 
 ---
 
-## 60-second quick start (Windows)
+## What's shipped (May 2026)
+
+| Phase | Range | What landed | Status |
+|---|---|---|---|
+| **1** | P1–P18 | Core platform — v2.15 schema, PowerShell + Python CLIs, safety scanner (27 checks), Agent Constitution, CI workflow, 8 starter manifests | ✅ done |
+| **2** | P19–P42 | **4 X Money tools** — Companion Dashboard, Smart Cashtag Alpha Engine, Creator Payout Optimizer, Vision Analyzer (Recipe A × 6 prompts each) | ✅ done |
+| **3** | P43–P92 | **22 creator templates** + outreach program — content, replies, analytics, monetization, threads, mentions, DMs, growth, hashtags, content calendars, A/B testing, recycling, brand voice | ✅ done |
+| **4** | P93–P124 | **7 Super Agents** — 3 flagship (Recipe C × 8 prompts) + 4 lighter (manifest + README), self-improvement infra | ✅ done |
+| **5** | P125+ | Marketplace (Next.js on Vercel) + "Deploy to X" + xAI partnership pitch + 60-second demo | 🚧 active |
+
+Track every prompt in [`HANDOFF_LOG.md`](HANDOFF_LOG.md). The latest gap analysis lives in [`docs/workplan-audit.md`](docs/workplan-audit.md).
+
+---
+
+## The 11 agents
+
+### 4 X Money tools — `templates/finance/`
+
+| # | Agent | What it does | Cost cap |
+|---|---|---|---|
+| 1 | [`x-money-companion-dashboard`](templates/finance/x-money-companion-dashboard/) | Personal X Money command centre — 6 tabs (Overview, Transactions, Analytics, Grok Insights, Tax Export, Alerts), local SQLite. | $0.50 |
+| 2 | [`x-smart-cashtag-alpha-engine`](templates/finance/x-smart-cashtag-alpha-engine/) | Real-time cashtag intelligence on X — narrative momentum, contradictions, Grok-powered alpha signals with provenance. | $1.00 |
+| 3 | [`x-creator-payout-optimizer`](templates/finance/x-creator-payout-optimizer/) | Earnings forecasting, content optimisation, tax estimator. Cross-tool reads from Tools #1 + #4. | $1.00 |
+| 4 | [`x-money-vision-analyzer`](templates/finance/x-money-vision-analyzer/) | Drag-and-drop receipt + statement vision. One-click import into Tool #1's SQLite. | $1.00 |
+
+### 3 flagship Super Agents — `templates/super-agents/`
+
+| # | Agent | Recipe C slots | Cost cap |
+|---|---|---|---|
+| 1 | [`living-narrative-fabric`](templates/super-agents/living-narrative-fabric/) | Versioned, provenance-first synthesis across X + news + academia + government + open web. Refuses to silently resolve contradictions. | $2.00 |
+| 2 | [`self-evolving-personal-os`](templates/super-agents/self-evolving-personal-os/) | Personal second brain — morning briefings, long-term memory, auto-evolving workflows, full rewind, explicit-consent gates. | $1.50 |
+| 3 | [`cross-reality-action-fabric`](templates/super-agents/cross-reality-action-fabric/) | Bridge agent between X / Grok and the user's Windows machine + open web. Every action gated, reversible, provenance-logged. | $0.50 |
+
+### 4 lighter Super Agents — `templates/super-agents/`
+
+| # | Agent | What makes it useful |
+|---|---|---|
+| 4 | [`agent-swarm-with-shared-memory`](templates/super-agents/agent-swarm-with-shared-memory/) | 6-agent swarm (researcher, skeptic, creator, executor, archivist, orchestrator) sharing Mem0 + Qdrant memory. |
+| 5 | [`provenance-first-trust-engine`](templates/super-agents/provenance-first-trust-engine/) | Every claim attaches a citation + confidence score; clickable provenance report on every response. |
+| 6 | [`narrative-contradiction-detector`](templates/super-agents/narrative-contradiction-detector/) | Surfaces conflicts across X, news, gov, academic, and personal sources with primary links + equal rigour. |
+| 7 | [`zero-config-i-want-to-agent`](templates/super-agents/zero-config-i-want-to-agent/) | Plain-language goal in, action plan out — every external action HITL-gated. |
+
+---
+
+## 60-second quick start (Windows 11, PowerShell)
 
 ```powershell
 # 1. Clone
@@ -63,12 +104,15 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 # 4. Show the CLI
 .\cli\grok-agent.ps1 help
 
-# 5. Validate the canonical schema (sanity check)
-.\cli\grok-agent.ps1 validate spec\v2.15\grok-agent.yaml
+# 5. Validate a shipped manifest
+.\cli\grok-agent.ps1 validate templates\super-agents\living-narrative-fabric\grok-agent.yaml
 
-# 6. Scaffold + install your first agent
-.\cli\grok-agent.ps1 new my-first-agent
-.\cli\grok-agent.ps1 install my-first-agent
+# 6. Scaffold + install your own agent
+python scripts\generate-template.py new my-first-agent `
+    --kind super-agent `
+    --description "Quickstart agent for the README walkthrough." `
+    --out templates\super-agents\my-first-agent
+.\cli\grok-agent.ps1 install templates\super-agents\my-first-agent\grok-agent.yaml
 .\cli\grok-agent.ps1 list
 .\cli\grok-agent.ps1 run my-first-agent
 ```
@@ -89,45 +133,25 @@ When a Grok post on X contains a `grok-agent.yaml` block, anyone can install it 
 The CLI:
 
 1. Validates the manifest against v2.15 (Pydantic deep schema check).
-2. Runs the Constitution scanner — 15 named checks blocking non-compliant manifests.
+2. Runs the Constitution scanner — **27 named checks** blocking non-compliant manifests.
 3. Copies the agent into `$env:LOCALAPPDATA\grok-agent\agents\<name>\`.
 
-No admin. No signup. No marketplace. Just a YAML in a Grok reply.
+No admin. No signup. No required marketplace. Just a YAML in a Grok reply.
 
 ---
 
-## What's shipped today
+## Marketplace (Phase 5 — live)
 
-| Layer | Path | What it does |
-|---|---|---|
-| **Open manifest standard** | [`spec/v2.15/grok-agent.yaml`](spec/v2.15/grok-agent.yaml) | 596-line documented schema, 100% backwards-compat with v2.14, includes 3 canonical examples. |
-| **Windows PowerShell CLI** | [`cli/grok-agent.ps1`](cli/grok-agent.ps1) | `help` / `new` / `install` / `validate` / `list` / `run`, plus `-FromStdin` for paste-install. |
-| **Pydantic deep validator** | [`cli/grok-agent.py`](cli/grok-agent.py) | v2 strict mode (`extra="forbid"`); typos surface instantly. |
-| **Agent Constitution v1.0** | [`safety/constitution.md`](safety/constitution.md) | 9 articles, per-kind specializations, mandatory disclaimer wording. |
-| **Constitution scanner** | [`safety/scanner.py`](safety/scanner.py) | 15 named checks; `scan` / `scan-all` / JSON output / severity floors. |
-| **CI workflow** | [`.github/workflows/validate.yml`](.github/workflows/validate.yml) | Schema + Constitution scan on every PR; non-compliant manifests block merge. |
-| **8 starter manifests** | [`templates/`](templates/) | 2 finance, 2 creator, 2 x-native, 2 general — all pass scanner with zero findings. |
-| **Docs** | [`docs/`](docs/) | `index.md`, `windows-guide.md`, `for-xai-adoption.md`. |
+The [marketplace](marketplace/) is a Next.js 14 + TypeScript app that **discovers every shipped manifest at build time** — no hand-maintained list. Drop a new `grok-agent.yaml` under `templates/super-agents/` or `templates/finance/`, run `npm run build`, and your agent appears in the grid.
 
-Phase 1 is **12 of 18 prompts** complete (P1–P12). Track progress in [`HANDOFF_LOG.md`](HANDOFF_LOG.md).
+```powershell
+cd marketplace
+npm install
+npm run dev
+Start-Process "http://localhost:3030"
+```
 
----
-
-## The 7 Super Agents — Phase 4 vision
-
-Three flagship Super Agents (Recipe C, 8 prompts each) plus four lighter ones (1 manifest each). All built on the same v2.15 standard, sharing memory + provenance + safety patterns.
-
-| # | Super Agent | What makes it magical |
-|---|---|---|
-| 1 | **Living Narrative Fabric** | Versioned synthesis of X + news + academic + government + personal data with full provenance. Surfaces contradictions across sources instead of silently picking a side. The user can rewind to any prior synthesis state. |
-| 2 | **Self-Evolving Personal OS** | Personal OS that learns the user's habits, preferences, and goals; updates itself nightly. Every change is logged and reversible. |
-| 3 | **Cross-Reality Action Fabric** | Takes real-world actions across web, calendar, X, and files. Every action is gated by an explicit consent step. Never autonomous. |
-| 4 | **Agent Swarm with Shared Memory** | Multi-agent orchestration via `multi_agent.shared_memory: mem0://grok-agent-shared`. |
-| 5 | **Provenance-First Trust Engine** | Every claim attaches a citation + source + retrieved-at timestamp. Append-only provenance log. |
-| 6 | **Narrative Contradiction Detector** | Flags when two sources disagree on a fact and shows both — refuses to silently pick one. |
-| 7 | **Zero-Config "I Want To…" Agent** | Plain-language goal in, action plan out. The plan goes through HITL before any step executes. |
-
-Each ships with a Streamlit dashboard, a Promptfoo + DeepEval + Langfuse improvement loop, and a Demo + X launch thread. See `templates/super-agents/` (folders created in Phase 4).
+Each card includes a one-click "Install — copy 'grok install this'" button (writes the install one-liner straight to the clipboard) and a link to the manifest on GitHub. Category filters between *Super Agents* and *X Money Tools*. Vercel-ready (`next.config.js` already sets `output: 'standalone'`).
 
 ---
 
@@ -137,9 +161,10 @@ Each ships with a Streamlit dashboard, a Promptfoo + DeepEval + Langfuse improve
 flowchart LR
     A[Grok post on X<br/>with YAML block] -->|copy/paste| C
     F[Local folder] --> C
-    Y[-Yaml inline] --> C
+    Y[--Yaml inline] --> C
+    M[Marketplace card<br/>Install button] --> A
     C[cli/grok-agent.ps1<br/>install] --> S1
-    S1{Schema v2.15<br/>Pydantic} -->|ok| S2{Constitution<br/>15 checks}
+    S1{Schema v2.15<br/>Pydantic strict} -->|ok| S2{Constitution<br/>27 checks}
     S1 -->|fail| X1[Stop · clear error]
     S2 -->|ok| I[Copy to<br/>%LOCALAPPDATA%\grok-agent\agents\&lt;name&gt;\]
     S2 -->|error| X2[Stop · Article + code]
@@ -151,18 +176,21 @@ flowchart LR
 
 ---
 
-## The 5-phase roadmap
+## Stack
 
-| Phase | Prompt range | Goal | Status |
-|---|---|---|---|
-| **1** | P1–P18 | Core platform: schema, CLI, scanner, Constitution, CI, 8 starter templates | 12/18 — **in progress** |
-| **2** | P19–P42 | X Money tools suite (4 tools × 6 prompts) — companion dashboard, cashtag alpha engine, payout optimizer, vision analyzer | upcoming |
-| **3** | P43–P92 | Creator distribution flywheel — 20 templates × 2 prompts + 10 program prompts | upcoming |
-| **4** | P93–P124 | 7 Super Agents + Promptfoo/DeepEval/Langfuse self-improvement loop | upcoming |
-| **5** | P125+ | Marketplace (Next.js on Vercel) + "Deploy to X" + xAI partnership pitch | upcoming |
-| | | **~126 prompts total** | |
-
-The full sequenced plan lives in [`CLAUDE.md`](CLAUDE.md). Each prompt is atomic, testable, and adds one row to [`HANDOFF_LOG.md`](HANDOFF_LOG.md).
+| Layer | Choice |
+|---|---|
+| OS target | Windows 11 + Google Chrome |
+| Shell | PowerShell (5.1+ or 7+) |
+| Language | Python 3.12 |
+| App framework | Streamlit (X Money tools, Super Agent dashboards) |
+| Schema validation | Pydantic v2 (strict mode) |
+| Local storage | SQLite (DPAPI-encrypted at rest) |
+| Super-agent orchestration | Mastra or LangGraph |
+| Memory | Mem0 + Qdrant |
+| Tracing / eval | Langfuse + Promptfoo + DeepEval |
+| Marketplace | Next.js 14 + TypeScript + js-yaml on Vercel |
+| LLM | Grok 4.3 (via xAI API) |
 
 ---
 
@@ -174,12 +202,12 @@ Every shipped agent inherits the [Agent Constitution](safety/constitution.md). T
 > Always consult a licensed financial advisor before making decisions.
 
 > ⚠️ **Not tax advice.** Tax obligations vary by jurisdiction.
-> Consult a licensed tax professional. Especially relevant for Vietnam-resident creators with international platform earnings.
+> Consult a licensed tax professional.
 
 > ⚠️ **This agent can take real-world actions.** Every action requires explicit consent.
 > Review the action plan before approving. The agent never acts autonomously.
 
-The CI scanner blocks any finance/tax/real-world-action agent missing the appropriate banner. See `safety/constitution.md` Article V for the per-kind matrix.
+The CI scanner blocks any finance / tax / real-world-action agent missing the appropriate banner. See `safety/constitution.md` Article V for the per-kind matrix.
 
 ---
 
@@ -187,29 +215,12 @@ The CI scanner blocks any finance/tax/real-world-action agent missing the approp
 
 | Role | Where to start |
 |---|---|
-| **Author an agent** | Read [`docs/windows-guide.md`](docs/windows-guide.md) sections 5–7, then run `.\cli\grok-agent.ps1 new your-agent`. |
-| **Contribute code** | Read [`CONTRIBUTING.md`](CONTRIBUTING.md) — covers commit format, HANDOFF_LOG protocol, and the PR checklist. |
+| **Author an agent** | Read [`docs/windows-guide.md`](docs/windows-guide.md) sections 5–7, then run `python scripts\generate-template.py new <slug> --kind <kind> --description "..." --out templates\<folder>\<slug>`. |
+| **Browse + install** | Open the [marketplace](marketplace/) (`cd marketplace && npm run dev`). Click "Install" on any card to copy the one-liner. |
+| **Contribute code** | Read [`CONTRIBUTING.md`](CONTRIBUTING.md) — covers commit format, HANDOFF_LOG protocol, PR checklist. |
 | **Report a bug** | Open a [GitHub issue](https://github.com/AgentMindCloud/grok-agent/issues). |
-| **Report a vulnerability** | Read [`SECURITY.md`](SECURITY.md) — use the private GH Security Advisory channel. |
-| **Community standards** | Read [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) — Contributor Covenant + the project's xAI-ally clause. |
-| **For xAI engineers** | Read [`docs/for-xai-adoption.md`](docs/for-xai-adoption.md) — short, honest pitch. |
-
----
-
-## Stack
-
-| Layer | Choice |
-|---|---|
-| OS target | Windows 11 + Google Chrome |
-| Shell | PowerShell (5.1+ or 7+) |
-| Language | Python 3.12 |
-| App framework | Streamlit (for X Money tools) |
-| Schema validation | Pydantic v2 |
-| Local storage | SQLite (DPAPI-encrypted at rest) |
-| Super-agent orchestration | Mastra or LangGraph |
-| Memory | Mem0 + Qdrant |
-| Tracing / eval | Langfuse + Promptfoo + DeepEval |
-| LLM | Grok 4.3 (via xAI API) |
+| **Report a vulnerability** | Read [`SECURITY.md`](SECURITY.md) — private GitHub Security Advisory. |
+| **For xAI engineers** | Read [`docs/for-xai-adoption.md`](docs/for-xai-adoption.md) — short, honest pitch + the [`docs/pitch/xai-partnership-pitch.md`](docs/pitch/xai-partnership-pitch.md) RFC. |
 
 ---
 
@@ -218,21 +229,17 @@ The CI scanner blocks any finance/tax/real-world-action agent missing the approp
 - **License:** Apache 2.0 (see [`LICENSE`](LICENSE)). Every code file carries the standard header. Every shipped agent must declare `license: "Apache-2.0"` in its manifest.
 - **Author:** [@JanSol0s](https://x.com/JanSol0s) · `AgentMindCloud`
 - **Repo:** `github.com/AgentMindCloud/grok-agent`
-- **Schema:** [`spec/v2.15/grok-agent.yaml`](spec/v2.15/grok-agent.yaml)
-- **Constitution:** [`safety/constitution.md`](safety/constitution.md)
-- **Roadmap:** [`CLAUDE.md`](CLAUDE.md) (~126-prompt sequence across 5 phases)
-
----
-
-*Note (May 2026): A full audit of the workplan against current repo state is available at [`docs/workplan-audit.md`](docs/workplan-audit.md). It identifies completed items, gaps, and prioritized next steps.*
+- **Schema:** [`spec/v2.15/grok-agent.yaml`](spec/v2.15/grok-agent.yaml) · [changelog](spec/v2.15/changelog.md) · [windows extensions](spec/v2.15/windows-extensions.yaml)
+- **Constitution:** [`safety/constitution.md`](safety/constitution.md) (27 checks in `safety/scanner.py`)
+- **Roadmap:** [`ROADMAP.md`](ROADMAP.md) · full plan in [`CLAUDE.md`](CLAUDE.md)
+- **Audit:** [`docs/workplan-audit.md`](docs/workplan-audit.md) — what's shipped + what's left.
 
 ---
 
 <p align="center">
-  <i>We win when xAI and Grok win.</i><br/>
-  <b>Built to help xAI and Grok win. 🚀</b>
+  <i>Built for xAI, X, Grok and the ecosystem community. ❤️</i>
 </p>
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:1A1F2E,100:FF6B00&height=80&section=footer" alt="footer" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0078D6,50:7C3AED,100:FF6B00&height=80&section=footer" alt="footer" />
 </p>

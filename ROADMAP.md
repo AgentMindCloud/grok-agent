@@ -4,7 +4,7 @@
 
 # Roadmap — Grok Agent OS
 
-> **Built to help xAI and Grok win the agent platform battle on X.**
+> **Built for xAI, X, Grok and the ecosystem community.** ❤️
 > This document is the public, phase-by-phase summary of the entire 2026 build. It's the single page contributors, xAI engineers, and creators reference for "where are you now and where are you going."
 
 The detailed plan lives in [`CLAUDE.md`](CLAUDE.md). The state-of-execution lives in [`HANDOFF_LOG.md`](HANDOFF_LOG.md). This file is the bird's-eye view that connects them.
@@ -23,7 +23,7 @@ The detailed plan lives in [`CLAUDE.md`](CLAUDE.md). The state-of-execution live
 | Constitution | v1.0 — enforced by `safety/scanner.py` in CI |
 | Platform target | Windows 11 + Google Chrome only · PowerShell-first · zero admin |
 | License | Apache 2.0 throughout — no exceptions |
-| Posture | Ecosystem ally to xAI · we win when xAI and Grok win |
+| Posture | Ecosystem ally to xAI · built for xAI, X, Grok and the community |
 
 Each phase is **independently shippable**. We can stop after any phase and have shipped real value to creators on X.
 
@@ -31,14 +31,14 @@ Each phase is **independently shippable**. We can stop after any phase and have 
 
 ## Phase totals at a glance
 
-| Phase | Prompt range | Count | Days | Goal |
-|---|---|---:|---:|---|
-| **1** — Core Platform Foundation | P1–P18 | 18 | 1–14 | Schema, CLI, scanner, Constitution, CI, 8 starter templates |
-| **2** — X Money Tools Suite | P19–P42 | 24 | 15–56 | 4 production-grade X Money tools (6 prompts × 4 tools) |
-| **3** — Creator Distribution Flywheel | P43–P92 | 50 | 35–70 | 20 creator templates + outreach program |
-| **4** — Super Agents + Self-Improvement | P93–P124 | 32 | 57–90 | 7 Super Agents + Promptfoo/DeepEval/Langfuse loop |
-| **5** — Marketplace + xAI Partnership | P125–P126+ | 2+ | 91+ | Next.js marketplace + "Deploy to X" + xAI pitch deck |
-| **Total** | | **~126** | **~91+** | |
+| Phase | Prompt range | Count | Days | Goal | Status |
+|---|---|---:|---:|---|---|
+| **1** — Core Platform Foundation | P1–P18 | 18 | 1–14 | Schema, CLI, scanner, Constitution, CI, 8 starter templates | ✅ done |
+| **2** — X Money Tools Suite | P19–P42 | 24 | 15–56 | 4 production-grade X Money tools (6 prompts × 4 tools) | ✅ done |
+| **3** — Creator Distribution Flywheel | P43–P92 | 50 | 35–70 | 22 creator templates + outreach program (over-delivered: planned 20) | ✅ done |
+| **4** — Super Agents + Self-Improvement | P93–P124 | 32 | 57–90 | 7 Super Agents + self-improvement infrastructure | ✅ done |
+| **5** — Marketplace + xAI Partnership | P125–P126+ | 2+ | 91+ | Next.js marketplace + "Deploy to X" + xAI pitch deck | 🚧 active |
+| **Total** | | **~126** | **~91+** | | |
 
 Phase 2 and Phase 3 deliberately overlap (days 35–56) — once at least one X Money tool is live, the Creator Program can begin in parallel.
 
@@ -46,7 +46,7 @@ Phase 2 and Phase 3 deliberately overlap (days 35–56) — once at least one X 
 
 ## Phase 1 — Core Platform Foundation (P1–P18)
 
-> **Built to help xAI and Grok win.** Phase 1 is the foundation everything else stands on. It must be solid enough that the platform doesn't move while Phase 2 hammers on it.
+> **Built for xAI, X, Grok and the ecosystem community.** ❤️ Phase 1 is the foundation everything else stands on. It must be solid enough that the platform doesn't move while Phase 2 hammers on it.
 
 **Goal:** a single source-of-truth repo with the v2.15 manifest standard, a Windows-first CLI, a Constitution-enforcing safety system, and 8 validated starter templates.
 
@@ -77,7 +77,7 @@ Phase 2 and Phase 3 deliberately overlap (days 35–56) — once at least one X 
 
 ### Success metrics
 
-- ✅ Schema validates against itself (the canonical spec file passes its own validator).
+- ✅ Schema validates against itself (the official spec file passes its own validator).
 - ✅ All 8 starter manifests pass schema + Constitution scanner with zero findings.
 - ✅ CI workflow blocks any non-compliant manifest on every PR.
 - ✅ The full quick-start in `docs/windows-guide.md` runs cleanly on stock Windows 11 + PS 5.1.
@@ -95,7 +95,7 @@ Phase 2 and Phase 3 deliberately overlap (days 35–56) — once at least one X 
 
 ## Phase 2 — X Money Tools Suite (P19–P42)
 
-> **Built to help xAI and Grok win** by closing the highest-leverage creator pain on the platform: making X Money usable, taxable, and forecastable.
+> **Built for xAI, X, Grok and the ecosystem community.** ❤️ Phase 2 closes the highest-leverage creator pain on the platform: making X Money usable, taxable, and forecastable.
 
 **Goal:** ship 4 production-grade Streamlit tools that solve real X Money creator pain. Each tool follows **Recipe A** (6 prompts per tool).
 
@@ -127,7 +127,7 @@ Phase 2 and Phase 3 deliberately overlap (days 35–56) — once at least one X 
 - Tax tools also include "Not tax advice" banner.
 - All state in SQLite at `$env:LOCALAPPDATA\grok-agent\<slug>\` (Windows-correct path).
 - Cost limits + HITL gates (`safety.cost_limits` + `safety.human_in_the_loop`).
-- "Built to help xAI and Grok win" footer on every page.
+- Ecosystem-ally footer on every page (current text: "Built for xAI, X, Grok and the ecosystem community. ❤️").
 - Streamlit Cloud deploy URL (free tier).
 
 ### Success metrics
@@ -149,7 +149,7 @@ Phase 2 and Phase 3 deliberately overlap (days 35–56) — once at least one X 
 
 ## Phase 3 — Creator Distribution Flywheel (P43–P92)
 
-> **Built to help xAI and Grok win** by getting v2.15 manifests into the hands of 1,000+ X creators who would otherwise paste shell scripts into their terminals.
+> **Built for xAI, X, Grok and the ecosystem community.** ❤️ Phase 3 gets v2.15 manifests into the hands of 1,000+ X creators who would otherwise paste shell scripts into their terminals.
 
 **Goal:** ship 20 creator templates + an outreach program that turns each into organic adoption.
 
@@ -213,7 +213,7 @@ Two of these (#1 content-idea-generator, #2 reply-drafter) shipped as starter ma
 
 ## Phase 4 — Super Agents + Self-Improvement (P93–P124)
 
-> **Built to help xAI and Grok win** by showing what Grok 4.3 + a great manifest standard + memory + provenance can do at the high end.
+> **Built for xAI, X, Grok and the ecosystem community.** ❤️ Phase 4 shows what Grok 4.3 + a strong manifest standard + memory + provenance can do at the high end.
 
 **Goal:** ship 7 mind-blowing Super Agents that exercise the v2.15 standard at its limit, plus the autonomous improvement loop that keeps the platform learning.
 
@@ -276,7 +276,7 @@ Two of these (#1 content-idea-generator, #2 reply-drafter) shipped as starter ma
 
 ## Phase 5 — Marketplace, Scale & xAI Partnership (P125+)
 
-> **Built to help xAI and Grok win** by giving every shipped agent a public landing page, a one-click install, and a credible pitch for an official xAI partnership.
+> **Built for xAI, X, Grok and the ecosystem community.** ❤️ Phase 5 gives every shipped agent a public landing page, a one-click install, and a credible pitch for an official xAI partnership.
 
 **Goal:** make Grok Agent OS visible, installable, and adoptable beyond the early creator cohort.
 
@@ -346,7 +346,7 @@ The implication: every committed PR is a step that can ship on its own. We never
 ## Cross-cutting commitments (constant across all phases)
 
 1. **Apache 2.0** on every file, every manifest.
-2. **"Built to help xAI and Grok win"** on every README and user-facing surface.
+2. **"Built for xAI, X, Grok and the ecosystem community. ❤️"** on every README and user-facing surface.
 3. **Windows 11 + PowerShell** for every end-user instruction.
 4. **Constitution v1.0** enforced by `safety/scanner.py` in CI.
 5. **Local-first** storage in `$env:LOCALAPPDATA\grok-agent\`; no telemetry without explicit consent.
@@ -365,4 +365,4 @@ These are the rails. We add features on top of them; we don't change them mid-bu
 - **For xAI engineers** — [`docs/for-xai-adoption.md`](docs/for-xai-adoption.md)
 - **Windows quick start** — [`docs/windows-guide.md`](docs/windows-guide.md)
 
-> Built to help xAI and Grok win. 🚀
+> Built for xAI, X, Grok and the ecosystem community. ❤️

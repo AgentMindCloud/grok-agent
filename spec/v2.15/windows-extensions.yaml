@@ -1,0 +1,203 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# spec/v2.15/windows-extensions.yaml — schema for the `windows:` section
+# of every v2.15 manifest. Documents every field accepted by the Pydantic
+# validator in cli/grok-agent.py. Referenced normatively by
+# spec/v2.15/grok-agent.yaml.
+#
+# Every path-shaped field is RELATIVE to $env:LOCALAPPDATA so that
+# install + uninstall stay portable and respect Windows AppData
+# conventions.
+
+windows_extensions:
+  spec_version: "2.15"
+  applies_to_kinds:
+    - "agent"
+    - "finance-dashboard"
+    - "alpha-engine"
+    - "creator-payout-optimizer"
+    - "vision-analyzer"
+    - "super-agent"
+    - "x-native"
+    - "creator-template"
+
+  # --------------------------------------------------------------------
+  # Field-by-field documentation
+  # --------------------------------------------------------------------
+  fields:
+
+    launcher:
+      type: "string"
+      required: false
+      default: "launcher.ps1"
+      description: >-
+        PowerShell entry script the CLI runs after a successful install.
+        Path is relative to the agent folder. Must exist when the agent
+        ships, otherwise `grok-agent run <name>` fails fast.
+
+    launch_command:
+      type: "string"
+      required: false
+      example: "streamlit run dashboard.py"
+      description: >-
+        Optional alternate launch command (e.g. `streamlit run app.py`).
+        Used when the launcher itself wraps a non-PowerShell tool.
+
+    appdata_folder:
+      type: "string"
+      required: false
+      default_template: "grok-agent/<name>"
+      description: >-
+        Sub-path under `$env:LOCALAPPDATA` where this agent stores its
+        per-user data (SQLite databases, generated artefacts, caches).
+
+    log_folder:
+      type: "string"
+      required: false
+      default_template: "grok-agent/<name>/logs"
+      description: >-
+        Per-user log folder under `$env:LOCALAPPDATA`. Rotated by the
+        launcher script; never written outside `$env:LOCALAPPDATA`.
+
+    cache_folder:
+      type: "string"
+      required: false
+      default_template: "grok-agent/<name>/cache"
+      description: >-
+        Per-user cache for HTTP responses, embeddings, and short-term
+        indices. Always under `$env:LOCALAPPDATA`.
+
+    provenance_folder:
+      type: "string"
+      required: false
+      default_template: "grok-agent/<name>/provenance"
+      description: >-
+        Append-only provenance log destination for super-agents
+        (Article IV / V).
+
+    eval_folder:
+      type: "string"
+      required: false
+      default_template: "grok-agent/<name>/eval"
+      description: >-
+        Promptfoo + DeepEval history database for the weekly self-
+        improvement loop.
+
+    workflows_folder:
+      type: "string"
+      required: false
+      default_template: "grok-agent/<name>/workflows"
+      description: >-
+        Self-Evolving Personal OS uses this for nightly-updated
+        workflow definitions.
+
+    briefings_folder:
+      type: "string"
+      required: false
+      default_template: "grok-agent/<name>/briefings"
+      description: >-
+        Daily / morning briefings rendered as Markdown under
+        `$env:LOCALAPPDATA`.
+
+    default_port:
+      type: "integer"
+      required: false
+      range: [1024, 65535]
+      description: >-
+        Streamlit / dashboard port. Reserved ranges:
+        8501–8504 (X Money tools), 8501 (Living Narrative Fabric),
+        8502 (Self-Evolving Personal OS), 8506 (Cross-Reality Action
+        Fabric). Pick a non-conflicting default.
+
+    scheduled_task:
+      type: "object"
+      required: false
+      description: >-
+        Optional Windows Task Scheduler integration for nightly /
+        weekly background runs (e.g. self-improvement evaluations).
+      properties:
+        name: { type: "string" }
+        cron: { type: "string", description: "5-field cron in PowerShell-friendly form" }
+        consent_gate: { type: "string", description: "name of the gate that must be granted" }
+
+    chrome_only:
+      type: "boolean"
+      required: false
+      default: true
+      description: >-
+        Hard rule per CLAUDE.md §4: the agent must not target other
+        browsers. Set to `false` only when there is no browser surface.
+
+    requires_admin:
+      type: "boolean"
+      required: true
+      enum: [false]
+      description: >-
+        MUST be `false`. The Constitution (Article I.3) forbids agents
+        from requiring administrator privileges. Enforced by
+        `safety/scanner.py` check `I.3-windows-requires-admin`.
+
+    min_powershell_version:
+      type: "string"
+      required: false
+      default: "5.1"
+      description: >-
+        Minimum PowerShell version the launcher targets. PowerShell 5.1
+        ships with Windows 11; PowerShell 7+ is recommended.
+
+    env_vars_optional:
+      type: "array<string>"
+      required: false
+      description: >-
+        Names of environment variables the agent reads but does not
+        require. Surfaced in the install summary so the user knows what
+        to set.
+
+# --------------------------------------------------------------------
+# Cross-reference: enforced by `safety/scanner.py`
+# --------------------------------------------------------------------
+enforcement:
+  - check: "I.3-windows-requires-admin"
+    enforces: "windows.requires_admin must be false"
+  - check: "VII.appdata-paths-only"
+    enforces: "windows.* path fields must not contain absolute drive letters"
+  - check: "VII.no-trackers"
+    enforces: "manifest must not declare external analytics URLs"
+
+# --------------------------------------------------------------------
+# Examples
+# --------------------------------------------------------------------
+examples:
+  minimal:
+    windows:
+      launcher: "launcher.ps1"
+      requires_admin: false
+
+  finance_dashboard:
+    windows:
+      launcher: "launcher.ps1"
+      appdata_folder: "grok-agent/x-money-companion-dashboard"
+      log_folder: "grok-agent/x-money-companion-dashboard/logs"
+      default_port: 8501
+      chrome_only: true
+      requires_admin: false
+      min_powershell_version: "5.1"
+
+  super_agent:
+    windows:
+      launcher: "launcher.ps1"
+      launch_command: "streamlit run dashboard.py"
+      appdata_folder: "grok-agent/living-narrative-fabric"
+      log_folder: "grok-agent/living-narrative-fabric/logs"
+      cache_folder: "grok-agent/living-narrative-fabric/cache"
+      provenance_folder: "grok-agent/living-narrative-fabric/provenance"
+      eval_folder: "grok-agent/living-narrative-fabric/eval"
+      default_port: 8501
+      chrome_only: true
+      requires_admin: false
+      env_vars_optional:
+        - "NEWSAPI_KEY"
+        - "GNEWS_KEY"
+        - "XAI_API_KEY"

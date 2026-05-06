@@ -63,9 +63,9 @@
 | P40 | Phase 2 | X Creator Payout Optimizer — Data layer + API clients | data/store.py, data/api_clients.py, data/companion_reader.py, data/vision_reader.py | Tool #3-specific schema + cross-tool readers for Tool #1 + Tool #4 with full provenance | ✅ done |
 | P41 | Phase 2 | X Creator Payout Optimizer — Launcher + Cloud config | launcher.ps1, .streamlit/config.toml, README.md | One-click Windows launcher (port 8503) + Streamlit Cloud ready; Tool #3 complete | ✅ done |
 | P42 | Phase 2 | X Creator Payout Optimizer — Final smoke test + Tool #3 + X Money Suite complete | smoke_test.ps1, README.md, HANDOFF_LOG.md | Tool #3 fully validated and ready for "grok install this"; X Money Suite (4 tools, 24 prompts) officially complete | ✅ done |
-| P43 | Phase 3 | Content Idea Generator manifest + system prompt | templates/creator/content-idea-generator/grok-agent.yaml | P12 starter manifest exists; prompts/system.md NOT yet written — Slot 1 partial | ⚠️ partial |
+| P43 | Phase 3 | Content Idea Generator manifest + system prompt | templates/creator/content-idea-generator/grok-agent.yaml, prompts/system.md | Manifest + 64-line production system prompt (8 hard rules, finance-context-only tag, distinct-angle constraint, strict no-fabricated-stats); committed in 6413491. Status corrected from ⚠️ partial → ✅ done by P145 audit | ✅ done |
 | P44 | Phase 3 | Content Idea Generator runner + README + examples | (none yet) | Slot 2 deliverables not yet built (run.py, README.md, examples/) | ⏭️ skipped |
-| P45 | Phase 3 | Reply Drafter manifest + system prompt | templates/creator/reply-drafter/grok-agent.yaml | P12 starter manifest exists; prompts/system.md NOT yet written — Slot 1 partial | ⚠️ partial |
+| P45 | Phase 3 | Reply Drafter manifest + system prompt | templates/creator/reply-drafter/grok-agent.yaml, prompts/system.md | Manifest + 313-line production system prompt (4 canonical Reply Plan Score metrics, vanity-hook paradox rule, 10-archetype taxonomy, 5-arrow trend vocabulary, ≥3 cross-template bridges); committed in 215e3ac. Status corrected from ⚠️ partial → ✅ done by P145 audit | ✅ done |
 | P46 | Phase 3 | Reply Drafter runner + README + examples | (none yet) | Slot 2 deliverables not yet built (run.py, README.md, examples/) | ⏭️ skipped |
 | P47 | Phase 3 | Analytics Summarizer manifest + system prompt — first build (renumbered to P83 in actual ship order) | (placeholder; see P83) | Original P47 slot reserved for analytics-summarizer Slot 1; actually shipped as P83 below in commit history-friendly numbering | ⏭️ skipped |
 | P48 | Phase 3 | Analytics Summarizer runner + README + examples | (none yet) | Template not yet started | ⏭️ skipped |
@@ -139,6 +139,7 @@
 | P142 | Phase 4 | Build provenance log + Langfuse hooks for Cross-Reality Action Fabric | provenance/*.py, agent.py (light wiring) | Full action_id-correlated audit trail + optional Langfuse tracing | ✅ done |
 | P143 | Phase 4 | Build self-improvement loop (Promptfoo + DeepEval) for Cross-Reality Action Fabric | eval/*.py, agent.py (light wiring) | Weekly evaluation + human-reviewable improvement suggestions with full provenance | ✅ done |
 | P144 | Phase 4 | Merge feature branch to main and refresh CRF dashboard for P140–P143 layers | dashboard.py | Feature branch merged to main + new layers surfaced in UI | ✅ done |
+| P145 | Phase 3 | Fix partial creator templates P43 and P45 (add missing system prompts) | content-idea-generator/prompts/system.md, reply-drafter/prompts/system.md | Audit confirmed both system.md files already complete on disk (committed previously in 6413491 + 215e3ac); status flag was stale. P43 + P45 rows updated from ⚠️ partial → ✅ done. No code changes — both files validated, both manifests reference them via system_prompt_file, both templates pass v2.15 schema | ✅ done |
 
 <!--
 ====================================================================

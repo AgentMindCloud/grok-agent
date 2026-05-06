@@ -224,6 +224,10 @@ The CI scanner blocks any finance/tax/real-world-action agent missing the approp
 
 ---
 
+*Note (May 2026): A full audit of the workplan against current repo state is available at [`docs/workplan-audit.md`](docs/workplan-audit.md). It identifies completed items, gaps, and prioritized next steps.*
+
+---
+
 <p align="center">
   <i>We win when xAI and Grok win.</i><br/>
   <b>Built to help xAI and Grok win. 🚀</b>

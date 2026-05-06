@@ -1,0 +1,48 @@
+# Apache 2.0 License
+# Copyright 2026 AgentMindCloud
+
+version: "2.15"
+kind: "super-agent"
+name: "Narrative Contradiction Detector"
+description: "Actively detects and surfaces contradictions across X, news, government, academic, and personal sources with full evidence and user-guided narrative exploration."
+
+author:
+  x_handle: "@JanSol0s"
+  github: "AgentMindCloud"
+
+install:
+  command: "grok install this"
+  one_click: true
+
+tools:
+  - name: "x_search"
+    type: "x_api"
+  - name: "news_apis"
+    type: "public_api"
+  - name: "academic_search"
+    type: "public_api"
+  - name: "contradiction_detection"
+    type: "internal"
+
+multi_agent:
+  supports_collaboration: true
+  max_agents: 4
+  agents: ["scanner", "evidence_collector", "synthesizer", "presenter"]
+
+safety_profile:
+  reply_only: true
+  cost_limit_usd: 1.00
+
+constitution:
+  version: "1.0"
+  rules:
+    - "Never hide contradictions"
+    - "Present all sides with equal rigor"
+    - "Always provide primary source links"
+    - "User chooses which narrative to explore further"
+  badge: "verifiable-safe-v1"
+
+metadata:
+  tags: ["super-agent", "contradiction", "truth", "critical-thinking"]
+  category: "intelligence"
+  created: "2026-05-06"

@@ -147,6 +147,7 @@
 | P150 | Phase 5 | Polish marketplace + improve manifest generator + create xAI partnership pitch materials | marketplace/ (multiple files), docs/pitch/ | Three Phase 5 improvements delivered on main | ✅ done |
 | P151 | Phase 4 | Build Agent Swarm with Shared Memory lighter Super Agent | templates/super-agents/agent-swarm-with-shared-memory/grok-agent.yaml, README.md | Lighter 1-prompt style; matched flagship manifest format exactly; no forbidden phrases used | ✅ done |
 | P152 | Phase 4 | Build Provenance-First Trust Engine lighter Super Agent | templates/super-agents/provenance-first-trust-engine/grok-agent.yaml, README.md | Lighter 1-prompt style; matched flagship + P151 manifest format exactly; no forbidden phrases used | ✅ done |
+| P153 | Phase 4 | Build Narrative Contradiction Detector lighter Super Agent | templates/super-agents/narrative-contradiction-detector/grok-agent.yaml, README.md | Lighter 1-prompt style; matched flagship + P151/P152 manifest format exactly; no forbidden phrases used | ✅ done |
 
 <!--
 ====================================================================

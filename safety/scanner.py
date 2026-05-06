@@ -1024,7 +1024,7 @@ def check_bridge_transitive_contradiction(m: Dict[str, Any]) -> List[Finding]:
 # normally.
 
 _FORBIDDEN_PHRASE_EXEMPTIONS: Dict[str, List[Tuple[int, int]]] = {
-    "CLAUDE.md": [(76, 81), (489, 489)],
+    "CLAUDE.md": [(76, 81), (507, 507)],
     "docs/CONSTRAINTS.md": [(42, 47)],
     "templates/super-agents/self-evolving-personal-os/X_LAUNCH_THREAD.md": [(351, 352)],
     "templates/super-agents/cross-reality-action-fabric/X_LAUNCH_THREAD.md": [(341, 342)],

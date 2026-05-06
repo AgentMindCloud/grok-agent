@@ -152,8 +152,13 @@ class Metadata(BaseModel):
         if value is None or isinstance(value, str):
             return value
         if isinstance(value, dict):
+            # P169: extended the allowed-keys set with `recording_steps` and
+            # `upload_steps` so each Super Agent manifest can carry the full
+            # operator runbook (record + upload via `gh`) inline. Both must
+            # be lists of strings, like `update_instructions`.
             allowed_keys = {
                 "storyboard", "url", "status", "note", "update_instructions",
+                "recording_steps", "upload_steps",
             }
             unknown = set(value.keys()) - allowed_keys
             if unknown:
@@ -166,14 +171,15 @@ class Metadata(BaseModel):
                     "metadata.demo_video mapping must include at least one of "
                     "'url', 'storyboard', or 'status'"
                 )
-            update_instructions = value.get("update_instructions")
-            if update_instructions is not None and not (
-                isinstance(update_instructions, list)
-                and all(isinstance(item, str) for item in update_instructions)
-            ):
-                raise ValueError(
-                    "metadata.demo_video.update_instructions must be a list of strings"
-                )
+            for list_key in ("update_instructions", "recording_steps", "upload_steps"):
+                list_value = value.get(list_key)
+                if list_value is not None and not (
+                    isinstance(list_value, list)
+                    and all(isinstance(item, str) for item in list_value)
+                ):
+                    raise ValueError(
+                        f"metadata.demo_video.{list_key} must be a list of strings"
+                    )
             return value
         raise ValueError(
             "metadata.demo_video must be a string, a mapping, or null"

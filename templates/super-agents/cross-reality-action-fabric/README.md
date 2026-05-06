@@ -22,6 +22,35 @@
 - **X thread (planned):** *posted from [@JanSol0s](https://x.com/JanSol0s)
   alongside the launch — see [`X_LAUNCH_THREAD.md`](X_LAUNCH_THREAD.md).*
 
+### How to record + upload
+
+Recording the MP4:
+
+- Open the agent's UI per the storyboard at [`DEMO.md`](DEMO.md).
+- Capture with OBS Studio at 1920x1080, 30fps, target duration 90-180 seconds.
+- Encode as MP4 (H.264 video + AAC audio) and save as `cross-reality-action-fabric-demo.mp4`.
+
+Upload via `gh` (Windows 11 + PowerShell):
+
+```powershell
+# 1. One-time authentication (skip if you already ran `gh auth login` for this repo).
+gh auth login
+
+# 2. Create the GitHub Release ONCE for all three flagship Super Agents.
+gh release create super-agent-demos-v1 `
+    --title 'Super Agent Demos v1' `
+    --notes 'Recorded demo videos for the three flagship Super Agents.'
+
+# 3. Upload this agent's MP4 (the --clobber flag lets you re-upload a corrected take).
+gh release upload super-agent-demos-v1 cross-reality-action-fabric-demo.mp4 --clobber
+
+# 4. Verify the asset URL resolves before announcing the demo on X.
+Invoke-WebRequest -Method Head `
+    https://github.com/AgentMindCloud/grok-agent/releases/download/super-agent-demos-v1/cross-reality-action-fabric-demo.mp4
+```
+
+`gh` is the GitHub CLI ([cli.github.com](https://cli.github.com/)); run `gh auth login` once before the first upload.
+
 ### When the video is ready
 
 - [ ] Set `metadata.demo_video.status` to: `available`

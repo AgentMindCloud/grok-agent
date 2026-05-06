@@ -477,7 +477,25 @@ These metrics are the scoreboard. Every prompt and every file should be plausibl
 
 ---
 
-## 15. Pre-output checklist (run mentally before finishing any file)
+## 16. Sub-agent self-report integrity
+
+When the main agent spawns sub-agents, every sub-agent **must** report:
+
+1. **Files actually modified** — full repo-relative paths, one per line.
+2. **Line counts** — output of `git diff --stat <file>` (or equivalent) for each modified file, captured *after* the final edit.
+3. **Verification commands run** — exact commands and their pass/fail status.
+
+The main agent **must** verify the report before committing by running:
+
+```powershell
+python scripts/validate_subagent_report.py --claimed <file1> <file2> ...
+```
+
+Discrepancies (claimed-but-not-changed; or changed-but-not-claimed) must be flagged in the audit report. **Why this rule exists:** P168's Fix 5 sub-agent self-reported "no edits" while `git diff --stat` showed +174 lines added — the feature still worked, but the inaccurate self-report would have hidden a real problem in a less-friendly scenario.
+
+---
+
+## 17. Pre-output checklist (run mentally before finishing any file)
 
 - [ ] Apache 2.0 header at top (correct format for file type)
 - [ ] If user-facing: "help xAI win" line present (rotated phrasing)
@@ -490,6 +508,7 @@ These metrics are the scoreboard. Every prompt and every file should be plausibl
 - [ ] Commit message follows `phase-N: <verb> <what>`
 - [ ] HANDOFF_LOG row appended exactly as the prompt specifies
 - [ ] 3-line reply summary (what + decisions + blockers) — no more, no less
+- [ ] Sub-agent self-reports verified — for any sub-agent work, ran `python scripts/validate_subagent_report.py --claimed <files>` and confirmed claimed file list matches actual `git diff --stat` output.
 
 If any box fails → fix before output.
 

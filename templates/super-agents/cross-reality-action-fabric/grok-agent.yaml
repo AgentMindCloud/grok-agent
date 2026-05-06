@@ -71,6 +71,15 @@ metadata:
       - "Remove the inline 'planned — recording + upload pending' comment next to the URL"
       - "Update README.md demo section: remove 'planned' language and add a runtime + duration line"
       - "Drop this update_instructions field once status is available"
+    recording_steps:
+      - "Open the agent's UI per the storyboard at metadata.demo_video.storyboard"
+      - "Capture with OBS Studio at 1920x1080, 30fps, target duration 90-180 seconds"
+      - "Encode as MP4 (H.264 video + AAC audio) and save as cross-reality-action-fabric-demo.mp4"
+    upload_steps:
+      - "PowerShell: gh auth login (one-time, if not already authenticated)"
+      - "Create the release ONCE for all three flagships: gh release create super-agent-demos-v1 --title 'Super Agent Demos v1' --notes 'Recorded demo videos for the three flagship Super Agents.'"
+      - "Upload this agent's MP4: gh release upload super-agent-demos-v1 cross-reality-action-fabric-demo.mp4 --clobber"
+      - "Verify the asset URL resolves: Invoke-WebRequest -Method Head https://github.com/AgentMindCloud/grok-agent/releases/download/super-agent-demos-v1/cross-reality-action-fabric-demo.mp4"
 
 # ---------------------------------------------------------------------------
 # install: how this agent is delivered to a user

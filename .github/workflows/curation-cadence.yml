@@ -1,0 +1,141 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Built for xAI, X, Grok and the ecosystem community.
+# ---------------------------------------------------------------------------
+# Mon/Wed/Fri Creator Program curation cadence runner.
+#
+# Three cron triggers fire at 09:00 UTC on Mon/Wed/Fri, plus a
+# workflow_dispatch path for manual re-runs. The job picks the correct
+# weekly_curation subcommand based on the day-of-week (or the manual input
+# override) and executes it on a fresh ubuntu-latest runner.
+#
+# Bash inside this YAML is permitted because the runner is ubuntu-latest;
+# every end-user instruction outside CI remains PowerShell-only per
+# CLAUDE.md.
+# ---------------------------------------------------------------------------
+
+name: Curation Cadence (Mon/Wed/Fri)
+
+"on":
+  schedule:
+    - cron: "0 9 * * 1"  # Monday 09:00 UTC -> select top-3 templates.
+    - cron: "0 9 * * 3"  # Wednesday 09:00 UTC -> draft launch thread.
+    - cron: "0 9 * * 5"  # Friday 09:00 UTC -> roll up creator retros.
+  workflow_dispatch:
+    inputs:
+      subcommand:
+        description: "Override subcommand (monday | wednesday | friday). Leave blank to auto-detect."
+        required: false
+        default: ""
+        type: choice
+        options:
+          - ""
+          - monday
+          - wednesday
+          - friday
+      week_iso:
+        description: "Override ISO week tag (e.g. 2026-W19). Leave blank to use the current UTC week."
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  curate:
+    name: Run weekly curation step
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pydantic pytest
+
+      - name: Resolve subcommand and week_iso
+        id: resolve
+        shell: bash
+        env:
+          INPUT_SUBCOMMAND: ${{ github.event.inputs.subcommand }}
+          INPUT_WEEK_ISO: ${{ github.event.inputs.week_iso }}
+          EVENT_NAME: ${{ github.event_name }}
+          SCHEDULE_CRON: ${{ github.event.schedule }}
+        run: |
+          set -euo pipefail
+          subcommand=""
+          if [ "${EVENT_NAME}" = "workflow_dispatch" ] && [ -n "${INPUT_SUBCOMMAND}" ]; then
+            subcommand="${INPUT_SUBCOMMAND}"
+          else
+            case "${SCHEDULE_CRON}" in
+              "0 9 * * 1") subcommand="monday" ;;
+              "0 9 * * 3") subcommand="wednesday" ;;
+              "0 9 * * 5") subcommand="friday" ;;
+              *)
+                # Manual dispatch with no override -> derive from current UTC weekday.
+                weekday="$(date -u +%u)"
+                case "${weekday}" in
+                  1) subcommand="monday" ;;
+                  3) subcommand="wednesday" ;;
+                  5) subcommand="friday" ;;
+                  *)
+                    echo "::error::No subcommand override and current UTC weekday (${weekday}) is not Mon/Wed/Fri."
+                    exit 1
+                    ;;
+                esac
+                ;;
+            esac
+          fi
+
+          week_iso="${INPUT_WEEK_ISO}"
+          if [ -z "${week_iso}" ]; then
+            week_iso="$(python -c "from datetime import datetime, timezone; d = datetime.now(tz=timezone.utc).date(); y, w, _ = d.isocalendar(); print(f'{y}-W{w:02d}')")"
+          fi
+
+          echo "subcommand=${subcommand}" >> "${GITHUB_OUTPUT}"
+          echo "week_iso=${week_iso}" >> "${GITHUB_OUTPUT}"
+          echo "Resolved subcommand=${subcommand} week_iso=${week_iso}"
+
+      - name: Run weekly_curation subcommand
+        shell: bash
+        env:
+          SUBCOMMAND: ${{ steps.resolve.outputs.subcommand }}
+          WEEK_ISO: ${{ steps.resolve.outputs.week_iso }}
+        run: |
+          set -euo pipefail
+          if [ "${SUBCOMMAND}" = "monday" ]; then
+            python creator-program/v2/curation/weekly_curation.py monday "${WEEK_ISO}"
+          else
+            python creator-program/v2/curation/weekly_curation.py "${SUBCOMMAND}" "${WEEK_ISO}"
+          fi
+
+      - name: Upload curation artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: curation-${{ steps.resolve.outputs.subcommand }}-${{ steps.resolve.outputs.week_iso }}
+          path: |
+            ~/AppData/Local/grok-agent/creator-program/curation/**/*.json
+          if-no-files-found: ignore
+          retention-days: 30

@@ -159,6 +159,7 @@
 | P166 | Phase 5 | Fix remaining 5 critical gaps + build static marketplace webpage | safety/scanner.py (BR-003 + 2 new transitive checks), 22 creator templates strict sweep, demo metadata polish, phase-6-kickoff.md, marketplace/index.html + assets | All 5 gaps closed + marketplace webpage ready for GitHub Pages | ✅ done |
 | P167 | Phase 5 | Fix all 5 remaining critical gaps from P166 report | cli/grok-agent.py (--strict flag), 3 flagship demo_video fields, .github/workflows/pages.yml, safety/scanner.py:398 phrase fix, docs/prompts/P127-creator-program-v2-paid-tier.md | All 5 gaps resolved + GitHub Pages workflow added | ✅ done |
 | P168 | Phase 5 | Fix all 5 remaining critical gaps from P167 report | 3 flagship demo_video fields (honest language), .github/workflows/pages.yml (smoke test), docs/prompts/P128-curation-cadence-harness.md, creator-program/v2/ (6 files), safety/scanner.py (exemption list + VIII check) | All 5 gaps resolved + creator-program/v2/ bootstrapped | ✅ done |
+| P169 | Phase 5 | Fix all 5 remaining critical gaps from P168 report | README + pages.yml (Pages manual step note), 3 flagship demo_video blocks, docs/prompts/P129-contributor-program-onboarding.md, creator-program/v2/curation/ (8 files), CLAUDE.md + scripts/validate_subagent_report.py (integrity check) | All 5 gaps resolved + curation/ bootstrapped + integrity mechanism added | ✅ done |
 
 <!--
 ====================================================================

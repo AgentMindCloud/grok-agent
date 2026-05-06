@@ -156,6 +156,8 @@ No admin. No signup. No required marketplace. Just a YAML in a Grok reply.
 
 ## Marketplace (Phase 5 — live)
 
+> ⚠️ **Manual step required:** Settings → Pages → Source → **GitHub Actions** (then re-run workflow before this Action will publish).
+
 The [marketplace](marketplace/) is a Next.js 14 + TypeScript app that **discovers every shipped manifest at build time** — no hand-maintained list. Drop a new `grok-agent.yaml` under `templates/super-agents/` or `templates/finance/`, run `npm run build`, and your agent appears in the grid.
 
 ```powershell

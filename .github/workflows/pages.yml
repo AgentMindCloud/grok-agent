@@ -5,6 +5,10 @@
 # Publish the static `marketplace/` folder to GitHub Pages on every push to
 # main. Provides the public web surface for the Grok Agent OS marketplace.
 
+# Manual step required:
+#   Settings → Pages → Source → GitHub Actions
+#   (then re-run workflow before this Action will publish.)
+
 name: Deploy Marketplace to GitHub Pages
 
 on:

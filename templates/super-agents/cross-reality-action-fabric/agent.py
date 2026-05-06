@@ -103,6 +103,8 @@ __all__ = [
     "describe_connectors",
     "register_provenance",
     "describe_provenance",
+    "register_eval_loop",
+    "describe_eval_status",
 ]
 
 
@@ -533,6 +535,7 @@ def info(*, quiet: bool = False) -> dict:
     desc["all_gates"]     = list(ALL_GATES)
     desc["connectors"]    = describe_connectors()
     desc["provenance"]    = describe_provenance()
+    desc["eval_loop"]     = describe_eval_status()
     if not quiet:
         print(json.dumps(desc, indent=2, ensure_ascii=False, default=str))
     return desc
@@ -672,6 +675,63 @@ def describe_provenance() -> dict:
             "langfuse_backend":    getattr(hooks, "backend_name", "stub:offline"),
             "langfuse_active":     bool(getattr(hooks, "is_active", False)),
             "langfuse_creds_set":  have_langfuse_credentials(),
+        }
+    except Exception as exc:  # pragma: no cover - defensive
+        return {"error": f"{type(exc).__name__}: {exc}"}
+
+
+# --- Section 4d. P143 self-improvement loop wiring (additive) -----------
+
+_EVAL_LOOP: Any = None
+
+
+def register_eval_loop(
+    *,
+    user_id:       str = "default",
+    force_stub:    bool = True,
+    lookback_days: int = 7,
+    refresh:       bool = False,
+):
+    """Register the P143 :class:`WeeklyImprovementLoop` and return it.
+
+    The loop never auto-applies a suggestion — calls to
+    :meth:`WeeklyImprovementLoop.run_weekly` produce a typed report on
+    disk and a P142 provenance record, and the user reviews the
+    generated Markdown before approving anything.
+    """
+    global _EVAL_LOOP
+    from eval.improvement_loop import (  # type: ignore
+        get_default_loop,
+    )
+    if refresh or _EVAL_LOOP is None:
+        _EVAL_LOOP = get_default_loop(
+            user_id=user_id, force_stub=force_stub,
+            lookback_days=int(lookback_days), refresh=refresh,
+        )
+    return _EVAL_LOOP
+
+
+def describe_eval_status() -> dict:
+    """Return a small, JSON-serialisable summary of the active loop +
+    most-recent run. Used by :func:`info`."""
+    try:
+        from eval.improvement_loop import (  # type: ignore
+            DEFAULT_LOOKBACK_DAYS,
+            loop_status,
+        )
+        status = loop_status(user_id="default")
+        loop = _EVAL_LOOP
+        return {
+            "default_lookback_days": DEFAULT_LOOKBACK_DAYS,
+            "loop_attached":         loop is not None,
+            "lookback_days":         getattr(loop, "lookback_days",
+                                              DEFAULT_LOOKBACK_DAYS),
+            "report_count":          int(status.get("report_count") or 0),
+            "last_report":           status.get("last_report"),
+            "last_overall":          status.get("last_overall"),
+            "last_review":           status.get("last_review"),
+            "results_dir":           status.get("results_dir"),
+            "approvals_dir":         status.get("approvals_dir"),
         }
     except Exception as exc:  # pragma: no cover - defensive
         return {"error": f"{type(exc).__name__}: {exc}"}

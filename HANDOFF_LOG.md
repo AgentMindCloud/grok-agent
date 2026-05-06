@@ -137,6 +137,7 @@
 | P140 | Phase 4 | Build memory layer for Cross-Reality Action Fabric | memory/mem0_setup.py, memory/qdrant_index.py, memory/__init__.py | Action-specific memory with consent_token, rollback_id, and full provenance (Rules 1 & 3) | ✅ done |
 | P141 | Phase 4 | Build public API connector helpers for Cross-Reality Action Fabric | connectors/*.py, agent.py (light wiring) | Full memory-integrated connectors with approval gates + provenance | ✅ done |
 | P142 | Phase 4 | Build provenance log + Langfuse hooks for Cross-Reality Action Fabric | provenance/*.py, agent.py (light wiring) | Full action_id-correlated audit trail + optional Langfuse tracing | ✅ done |
+| P143 | Phase 4 | Build self-improvement loop (Promptfoo + DeepEval) for Cross-Reality Action Fabric | eval/*.py, agent.py (light wiring) | Weekly evaluation + human-reviewable improvement suggestions with full provenance | ✅ done |
 
 <!--
 ====================================================================

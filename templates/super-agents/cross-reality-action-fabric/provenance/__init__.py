@@ -8,24 +8,41 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Provenance package for Cross-Reality Action Fabric (P131).
+"""Provenance package for Cross-Reality Action Fabric (P131 + P142).
 
 Two modules:
 
 - :mod:`provenance.log`             local-first JSONL action audit logger
                                     + Markdown report exporter with
-                                    rollback chains
+                                    rollback chains. P142 added an
+                                    action-centric :class:`ProvenanceLogger`
+                                    subclass with ``query_by_action_id`` /
+                                    ``query_by_consent_level`` /
+                                    ``query_by_date_range`` and JSON +
+                                    Markdown exporters with clickable
+                                    action_id anchors.
 - :mod:`provenance.langfuse_hooks`  optional Langfuse observability with
-                                    full stub fallback (default OFF)
+                                    full stub fallback (default OFF) plus
+                                    P142 :class:`LangfuseHooks` lifecycle
+                                    methods (``on_action_start`` /
+                                    ``on_approval`` / ``on_action_end`` /
+                                    ``on_rollback``).
 
 This package re-exports the most-used names so callers can write
-``from provenance import LocalProvenanceLogger`` rather than chasing
-the deeper module paths.
+``from provenance import ProvenanceLogger`` rather than chasing the
+deeper module paths.
 
-It also exposes :func:`attach_provenance`, the canonical bridge that
-wires the provenance layer into the P129 ``run_action_loop`` *and* the
-P130 memory-attach wrapper. The bridge is **purely additive** — it
-never modifies ``agent.py``, ``graph.py``, or the memory package.
+It exposes two attach helpers:
+
+- :func:`attach_provenance` — the canonical P131 bridge that wires the
+  logger + (optional) memory into :func:`graph.run_action_loop`.
+- :func:`attach_to_connectors` — P142 helper that auto-instruments a
+  :class:`connectors.ConnectorRegistry` so every connector call writes
+  one provenance entry per stage (approval / outcome / rollback) and
+  fires the matching :class:`LangfuseHooks` callback.
+
+Both helpers are **additive** — they never modify ``agent.py``,
+``graph.py``, the memory package, or the connectors package source.
 
 Built to help xAI and Grok win.
 """
@@ -36,29 +53,42 @@ from typing import Any, Callable
 
 # P131 modules
 from provenance.log import (  # type: ignore  # noqa: F401
+    ACTION_EVENT_KINDS,
     ActionProvenanceRecord,
     ALL_RULE_NUMBERS,
     EVENT_KINDS,
     LocalProvenanceLogger,
+    P142_SCHEMA_VERSION,
+    ProvenanceEntry,
+    ProvenanceLogger,
     ROLLBACK_OUTCOME,
+    RollbackChain,
     current_log_path,
+    export_audit_json,
+    export_audit_markdown,
     export_audit_report,
     get_default_logger,
+    get_provenance_logger,
     log_path_for,
     make_action_id,
     make_rollback_id,
     make_run_id,
     provenance_root,
     reset_default_logger,
+    reset_provenance_logger,
     summarise_run,
 )
 from provenance.langfuse_hooks import (  # type: ignore  # noqa: F401
     LangfuseClient,
+    LangfuseHooks,
     LangfuseTraceContext,
+    attach_langfuse_hooks,
     get_langfuse_client,
+    have_langfuse_credentials,
     reset_langfuse_client,
     span_from_record,
     stub_trace_path,
+    trace_name_for_action,
 )
 from provenance.langfuse_hooks import BACKEND_NAME as LANGFUSE_BACKEND_NAME  # type: ignore  # noqa: F401,E501
 
@@ -68,7 +98,7 @@ from memory import attach_memory_store as _memory_attach  # type: ignore
 from memory import MEMORY_WRITE_GATE  # type: ignore
 
 __all__ = [
-    # log
+    # log — P131
     "ActionProvenanceRecord",
     "ALL_RULE_NUMBERS",
     "EVENT_KINDS",
@@ -84,7 +114,17 @@ __all__ = [
     "provenance_root",
     "reset_default_logger",
     "summarise_run",
-    # langfuse
+    # log — P142
+    "ACTION_EVENT_KINDS",
+    "P142_SCHEMA_VERSION",
+    "ProvenanceEntry",
+    "ProvenanceLogger",
+    "RollbackChain",
+    "export_audit_json",
+    "export_audit_markdown",
+    "get_provenance_logger",
+    "reset_provenance_logger",
+    # langfuse — P131
     "LangfuseClient",
     "LangfuseTraceContext",
     "get_langfuse_client",
@@ -92,8 +132,14 @@ __all__ = [
     "span_from_record",
     "stub_trace_path",
     "LANGFUSE_BACKEND_NAME",
-    # bridge
+    # langfuse — P142
+    "LangfuseHooks",
+    "attach_langfuse_hooks",
+    "have_langfuse_credentials",
+    "trace_name_for_action",
+    # bridges
     "attach_provenance",
+    "attach_to_connectors",
 ]
 
 
@@ -212,3 +258,164 @@ def attach_provenance(
         return out
 
     return logger, langfuse, run_with_provenance
+
+
+# --- P142 connector auto-instrumentation -------------------------------
+
+def _instrument_connector(
+    connector: Any,
+    *,
+    logger: ProvenanceLogger,
+    hooks:  LangfuseHooks | None,
+) -> Any:
+    """Wrap one :class:`BaseActionConnector`'s memory-side hooks so every
+    pre-execute / post-execute / rollback event also writes a P142
+    provenance row + (when active) fires the matching Langfuse hook.
+
+    Idempotent: re-instrumenting the same connector is a no-op.
+    Returns the same connector for chaining.
+    """
+    if getattr(connector, "_p142_instrumented", False):
+        return connector
+
+    original_pre  = connector._record_approved_action  # noqa: SLF001
+    original_out  = connector._record_outcome          # noqa: SLF001
+    original_rb   = connector._record_rollback         # noqa: SLF001
+    tool          = getattr(connector, "tool_name", "unknown")
+
+    def _wrapped_pre(**kwargs: Any) -> str:
+        action_id = original_pre(**kwargs)
+        try:
+            logger.log_action_event(
+                event_kind="approval_granted",
+                action_id=action_id,
+                consent_token=kwargs.get("consent_token"),
+                tool=tool,
+                consent_level=kwargs.get("consent_level"),
+                rollback_id=kwargs.get("rollback_id"),
+                step=kwargs.get("step"),
+                before_state=kwargs.get("extra") or {},
+                stub_reason=(
+                    "force_stub=True" if connector.force_stub else None
+                ),
+            )
+        except Exception:  # pragma: no cover - logging must never break execution
+            pass
+        if hooks is not None:
+            hooks.on_approval(
+                action_id=action_id,
+                consent_token=kwargs.get("consent_token") or "",
+                tool=tool,
+                consent_level=kwargs.get("consent_level"),
+                scope=kwargs.get("description"),
+            )
+            hooks.on_action_start(
+                action_id=action_id,
+                tool=tool,
+                consent_token=kwargs.get("consent_token"),
+                consent_level=kwargs.get("consent_level"),
+                description=kwargs.get("description"),
+                rollback_id=kwargs.get("rollback_id"),
+                step=kwargs.get("step"),
+            )
+        return action_id
+
+    def _wrapped_out(**kwargs: Any) -> None:
+        original_out(**kwargs)
+        try:
+            logger.log_action_event(
+                event_kind=(
+                    "action_executed"
+                    if kwargs.get("outcome") == "success"
+                    else "action_failed"
+                ),
+                action_id=kwargs.get("action_id") or "",
+                consent_token=kwargs.get("consent_token"),
+                tool=tool,
+                consent_level=kwargs.get("consent_level"),
+                rollback_id=kwargs.get("rollback_id"),
+                outcome=kwargs.get("outcome"),
+                after_state=kwargs.get("payload") or {},
+                stub_reason=(
+                    "force_stub=True" if connector.force_stub else None
+                ),
+            )
+        except Exception:  # pragma: no cover
+            pass
+        if hooks is not None:
+            hooks.on_action_end(
+                action_id=kwargs.get("action_id") or "",
+                tool=tool,
+                outcome=kwargs.get("outcome") or "success",
+                consent_token=kwargs.get("consent_token"),
+                consent_level=kwargs.get("consent_level"),
+                rollback_id=kwargs.get("rollback_id"),
+                outputs=kwargs.get("payload") or {},
+            )
+
+    def _wrapped_rb(**kwargs: Any) -> None:
+        original_rb(**kwargs)
+        try:
+            logger.log_action_event(
+                event_kind=(
+                    "rollback_executed"
+                    if kwargs.get("outcome") == "rolled_back"
+                    else "rollback_failed"
+                ),
+                action_id=kwargs.get("rollback_id") or kwargs.get("action_id") or "",
+                consent_token=kwargs.get("consent_token"),
+                tool=tool,
+                consent_level=kwargs.get("consent_level"),
+                rollback_id=kwargs.get("rollback_id"),
+                rolled_back_from=kwargs.get("action_id"),
+                outcome=kwargs.get("outcome"),
+                rollback_script=kwargs.get("rollback_script"),
+                stub_reason=(
+                    "force_stub=True" if connector.force_stub else None
+                ),
+            )
+        except Exception:  # pragma: no cover
+            pass
+        if hooks is not None:
+            hooks.on_rollback(
+                action_id=kwargs.get("action_id") or "",
+                rollback_id=kwargs.get("rollback_id"),
+                tool=tool,
+                consent_token=kwargs.get("consent_token"),
+                outcome=kwargs.get("outcome") or "rolled_back",
+                rollback_script=kwargs.get("rollback_script"),
+                consent_level=kwargs.get("consent_level"),
+            )
+
+    connector._record_approved_action = _wrapped_pre   # type: ignore[method-assign]
+    connector._record_outcome         = _wrapped_out   # type: ignore[method-assign]
+    connector._record_rollback        = _wrapped_rb    # type: ignore[method-assign]
+    connector._p142_instrumented      = True            # type: ignore[attr-defined]
+    return connector
+
+
+def attach_to_connectors(
+    registry: Any,
+    *,
+    logger:  ProvenanceLogger | None = None,
+    hooks:   LangfuseHooks | None = None,
+    user_id: str = "default",
+) -> tuple[ProvenanceLogger, LangfuseHooks | None]:
+    """Auto-instrument every connector in a :class:`ConnectorRegistry`.
+
+    Walks :meth:`ConnectorRegistry.all_clients` and wraps each
+    connector's memory-side lifecycle methods so every action writes
+    one provenance row per stage (approval → outcome → optional
+    rollback) and fires the matching Langfuse hook.
+
+    Returns ``(logger, hooks)`` so the caller can keep references to
+    the active singletons.
+    """
+    log = logger or get_provenance_logger(user_id=user_id)
+    seen: set[int] = set()
+    for client in registry.all_clients().values():
+        if id(client) in seen:
+            continue
+        seen.add(id(client))
+        _instrument_connector(client, logger=log, hooks=hooks)
+    return log, hooks

@@ -74,6 +74,7 @@ from graph import (  # type: ignore
 )
 
 __all__ = [
+    # P131 surface
     "ActionProvenanceRecord",
     "LocalProvenanceLogger",
     "provenance_root",
@@ -89,6 +90,16 @@ __all__ = [
     "EVENT_KINDS",
     "ROLLBACK_OUTCOME",
     "ALL_RULE_NUMBERS",
+    # P142 action-centric surface
+    "ProvenanceEntry",
+    "ProvenanceLogger",
+    "RollbackChain",
+    "get_provenance_logger",
+    "reset_provenance_logger",
+    "export_audit_json",
+    "export_audit_markdown",
+    "ACTION_EVENT_KINDS",
+    "P142_SCHEMA_VERSION",
 ]
 
 
@@ -906,3 +917,592 @@ def export_audit_report(
     lines.append(f"_Report generated at {_now_iso()}._")
     lines.append("")
     return "\n".join(lines)
+
+
+# --- Section 7. P142 action-centric layer --------------------------------
+#
+# The classes below are layered ON TOP of P131. They keep the JSONL
+# storage format unchanged but add:
+#
+# - Pydantic v2 :class:`ProvenanceEntry` for typed read/query/export.
+# - :class:`ProvenanceLogger`, a :class:`LocalProvenanceLogger` subclass
+#   with action_id-/consent_level-/date-range-aware queries plus a
+#   :meth:`reconstruct_rollback_chain` walk and JSON+Markdown exporters.
+# - :class:`RollbackChain` Pydantic model that captures a forward action
+#   plus its approval, outcome, and rollback rows in one structured
+#   object, ready for the dashboard.
+# - :func:`get_provenance_logger` cached singleton.
+#
+# All P131 code keeps working untouched.
+
+
+try:
+    from pydantic import BaseModel, ConfigDict, Field
+except ImportError as _exc:  # pragma: no cover
+    raise ImportError(
+        "pydantic v2 is required for the P142 ProvenanceLogger. Install with: "
+        "python -m pip install 'pydantic>=2.7,<3'"
+    ) from _exc
+
+
+P142_SCHEMA_VERSION = "p142.v1"
+
+
+#: Subset of :data:`EVENT_KINDS` that carry an ``action_id``. The P142
+#: query API filters on this set so callers don't accidentally pull in
+#: ``plan_built`` or ``run_complete`` rows that don't have a per-action
+#: identity.
+ACTION_EVENT_KINDS: tuple[str, ...] = (
+    "approval_granted",
+    "approval_refused",
+    "action_executed",
+    "action_failed",
+    "rollback_executed",
+    "rollback_failed",
+)
+
+
+class ProvenanceEntry(BaseModel):
+    """Typed Pydantic v2 view of one :class:`ActionProvenanceRecord`.
+
+    Used by :meth:`ProvenanceLogger.query_*` and the JSON exporter.
+    Every field maps 1:1 to the dataclass; ``consent_level`` and
+    ``rollback_id`` are first-class so the dashboard can group rows
+    without parsing the ``extra`` blob.
+    """
+
+    model_config = ConfigDict(extra="allow")
+
+    record_id:        str
+    run_id:           str
+    user_id:          str
+    event_kind:       str
+    timestamp:        str
+    plan_id:          str | None = None
+    step:             int | None = None
+    tool:             str | None = None
+    action_id:        str | None = None
+    consent_token:    str | None = None
+    consent_level:    str | None = None
+    outcome:          str | None = None
+    cost_usd:         float = 0.0
+    duration_ms:      float | None = None
+    rollback_id:      str | None = None
+    rolled_back_from: str | None = None
+    inputs_redacted:  dict = Field(default_factory=dict)
+    outputs_redacted: dict = Field(default_factory=dict)
+    rule_compliance:  dict = Field(default_factory=dict)
+    stub_reason:      str | None = None
+    error:            str | None = None
+    correlation_id:   str | None = None
+    backend:          str = "local-jsonl"
+    schema_version:   str = "p131.v1"
+
+    @classmethod
+    def from_record(cls, rec: ActionProvenanceRecord) -> "ProvenanceEntry":
+        """Build a Pydantic view from a P131 dataclass record."""
+        consent_level = (rec.extra or {}).get("consent_level")
+        return cls(
+            record_id=rec.record_id,
+            run_id=rec.run_id,
+            user_id=rec.user_id,
+            event_kind=rec.event_kind,
+            timestamp=rec.timestamp,
+            plan_id=rec.plan_id,
+            step=rec.step,
+            tool=rec.tool,
+            action_id=rec.action_id,
+            consent_token=rec.consent_token,
+            consent_level=consent_level,
+            outcome=rec.outcome,
+            cost_usd=float(rec.cost_usd or 0.0),
+            duration_ms=rec.duration_ms,
+            rollback_id=rec.rollback_id,
+            rolled_back_from=rec.rolled_back_from,
+            inputs_redacted=dict(rec.inputs_redacted or {}),
+            outputs_redacted=dict(rec.outputs_redacted or {}),
+            rule_compliance=dict(rec.rule_compliance or {}),
+            stub_reason=rec.stub_reason,
+            error=rec.error,
+            correlation_id=rec.correlation_id,
+            backend=rec.backend,
+            schema_version=rec.schema_version,
+        )
+
+
+class RollbackChain(BaseModel):
+    """Structured view of one action's full audit chain.
+
+    Returned by :meth:`ProvenanceLogger.reconstruct_rollback_chain` and
+    by :meth:`ProvenanceLogger.export_json`. The chain captures every
+    row that carries the same ``action_id`` plus the rollback row whose
+    ``rolled_back_from`` points back at it.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    action_id:     str
+    forward_event: ProvenanceEntry | None = None
+    approval:      ProvenanceEntry | None = None
+    outcome_event: ProvenanceEntry | None = None
+    rollback:      ProvenanceEntry | None = None
+    siblings:      list[ProvenanceEntry] = Field(default_factory=list)
+
+    @property
+    def reversed(self) -> bool:
+        return self.rollback is not None
+
+
+class ProvenanceLogger(LocalProvenanceLogger):
+    """Action-centric provenance logger (P142).
+
+    Subclasses :class:`LocalProvenanceLogger` so every existing P131 /
+    P131 attach-bridge consumer keeps working unchanged. Adds:
+
+    - :meth:`log_action_event` — write a record from a P141
+      :class:`connectors.ActionResult` (or any payload that carries
+      ``action_id`` + ``consent_token``).
+    - :meth:`log_memory_event` — write a record from a P140
+      :class:`PersonalActionMemoryClient` add_* call.
+    - :meth:`query_by_action_id` / :meth:`query_by_consent_level` /
+      :meth:`query_by_date_range` / :meth:`reconstruct_rollback_chain`.
+    - :meth:`export_json` and :meth:`export_markdown` with clickable
+      action_id anchors.
+    """
+
+    # -- Write helpers ------------------------------------------------
+
+    def log_action_event(
+        self,
+        *,
+        event_kind:       str,
+        action_id:        str,
+        consent_token:    str | None,
+        tool:             str,
+        outcome:          str | None = None,
+        consent_level:    str | None = None,
+        rollback_id:      str | None = None,
+        rolled_back_from: str | None = None,
+        cost_usd:         float = 0.0,
+        duration_ms:      float | None = None,
+        before_state:     dict | None = None,
+        after_state:      dict | None = None,
+        plan_id:          str | None = None,
+        step:             int | None = None,
+        script:           str | None = None,
+        rollback_script:  str | None = None,
+        stub_reason:      str | None = None,
+        error:            str | None = None,
+        correlation_id:   str | None = None,
+    ) -> ProvenanceEntry:
+        """Persist one connector- or memory-driven event (P142 surface).
+
+        Returns the typed :class:`ProvenanceEntry`. The underlying
+        :class:`ActionProvenanceRecord` is written to the same JSONL
+        file the rest of the audit trail lives in, so :func:`export_audit_report`
+        and the existing dashboard keep working.
+        """
+        if event_kind not in EVENT_KINDS:
+            raise ValueError(
+                f"unknown event_kind {event_kind!r} — must be one of {EVENT_KINDS}"
+            )
+        extra = {"consent_level": consent_level, "schema_emitter": "p142"}
+        record = self.log_event(
+            event_kind=event_kind,
+            plan_id=plan_id,
+            step=step,
+            tool=tool,
+            action_id=action_id,
+            consent_token=consent_token,
+            outcome=outcome,
+            cost_usd=cost_usd,
+            duration_ms=duration_ms,
+            rollback_id=rollback_id,
+            rolled_back_from=rolled_back_from,
+            inputs={"before_state": before_state or {}},
+            outputs={"after_state": after_state or {}},
+            script=script,
+            rollback_script=rollback_script,
+            stub_reason=stub_reason,
+            error=error,
+            correlation_id=correlation_id,
+            extra=extra,
+        )
+        record.schema_version = P142_SCHEMA_VERSION
+        return ProvenanceEntry.from_record(record)
+
+    def log_memory_event(
+        self,
+        *,
+        kind:           str,            # action / approval / outcome / rollback
+        action_id:      str,
+        consent_token:  str | None,
+        tool:           str,
+        outcome:        str | None = None,
+        consent_level:  str | None = None,
+        rollback_id:    str | None = None,
+        rollback_from:  str | None = None,
+        payload:        dict | None = None,
+    ) -> ProvenanceEntry:
+        """Persist a memory-side event from the P140 layer.
+
+        ``kind`` maps to the P140 memory category; the matching
+        ``event_kind`` is selected automatically:
+
+        - ``action``   →  ``action_executed`` (or ``action_failed``)
+        - ``approval`` →  ``approval_granted``
+        - ``outcome``  →  ``action_executed`` / ``action_failed``
+        - ``rollback`` →  ``rollback_executed`` (or ``rollback_failed``)
+        """
+        kind = (kind or "").strip().lower()
+        if kind not in ("action", "approval", "outcome", "rollback"):
+            raise ValueError(
+                f"log_memory_event: unknown kind '{kind}' — "
+                "must be one of action/approval/outcome/rollback"
+            )
+        if kind == "approval":
+            ek = "approval_granted"
+        elif kind == "rollback":
+            ek = (
+                "rollback_executed" if (outcome or "rolled_back") == "rolled_back"
+                else "rollback_failed"
+            )
+        else:  # action / outcome
+            ek = "action_executed" if (outcome or "success") == "success" \
+                 else "action_failed"
+        return self.log_action_event(
+            event_kind=ek,
+            action_id=action_id,
+            consent_token=consent_token,
+            tool=tool,
+            outcome=outcome,
+            consent_level=consent_level,
+            rollback_id=rollback_id,
+            rolled_back_from=rollback_from,
+            after_state=payload or {},
+        )
+
+    # -- Read API -----------------------------------------------------
+
+    def _iter_all_records(self) -> Iterable[ActionProvenanceRecord]:
+        for path in _date_jsonl_files(self._root):
+            for rec in self._read_lines(path):
+                yield rec
+
+    def query_by_action_id(self, action_id: str) -> list[ProvenanceEntry]:
+        """Return every record that carries (or points at) ``action_id``."""
+        if not action_id:
+            return []
+        out: list[ProvenanceEntry] = []
+        for rec in self._iter_all_records():
+            if rec.action_id == action_id or rec.rolled_back_from == action_id:
+                out.append(ProvenanceEntry.from_record(rec))
+        return out
+
+    def query_by_consent_level(
+        self, consent_level: str,
+    ) -> list[ProvenanceEntry]:
+        """Return every record stamped with ``consent_level``."""
+        if not consent_level:
+            return []
+        out: list[ProvenanceEntry] = []
+        for rec in self._iter_all_records():
+            level = (rec.extra or {}).get("consent_level")
+            if level == consent_level:
+                out.append(ProvenanceEntry.from_record(rec))
+        return out
+
+    def query_by_date_range(
+        self,
+        start_iso: str,
+        end_iso:   str,
+    ) -> list[ProvenanceEntry]:
+        """Return every record whose ``timestamp`` falls in [start, end].
+
+        Both ends are inclusive; pass identical values for a single-day
+        query. Out-of-order arguments are auto-swapped so the caller
+        never has to remember the convention.
+        """
+        if not start_iso or not end_iso:
+            return []
+        if end_iso < start_iso:
+            start_iso, end_iso = end_iso, start_iso
+        out: list[ProvenanceEntry] = []
+        for rec in self._iter_all_records():
+            if start_iso <= rec.timestamp <= end_iso \
+                    or rec.timestamp.startswith(start_iso) \
+                    or rec.timestamp.startswith(end_iso):
+                out.append(ProvenanceEntry.from_record(rec))
+        return out
+
+    def reconstruct_rollback_chain(self, action_id: str) -> RollbackChain:
+        """Reconstruct the full audit chain for one ``action_id``.
+
+        Returns a :class:`RollbackChain` populated with the forward-
+        action row, its approval, outcome (if any), the matching
+        rollback row (if any), and any other sibling rows that share
+        the same ``action_id``.
+        """
+        forward: ProvenanceEntry | None = None
+        approval: ProvenanceEntry | None = None
+        outcome_event: ProvenanceEntry | None = None
+        rb: ProvenanceEntry | None = None
+        siblings: list[ProvenanceEntry] = []
+        for entry in self.query_by_action_id(action_id):
+            ek = entry.event_kind
+            if ek == "approval_granted" and approval is None:
+                approval = entry
+            elif ek in ("rollback_executed", "rollback_failed") and rb is None \
+                    and entry.rolled_back_from == action_id:
+                rb = entry
+            elif ek == "action_executed" and forward is None:
+                forward = entry
+                outcome_event = entry
+            elif ek == "action_failed" and forward is None:
+                forward = entry
+                outcome_event = entry
+            else:
+                siblings.append(entry)
+        return RollbackChain(
+            action_id=action_id,
+            forward_event=forward,
+            approval=approval,
+            outcome_event=outcome_event,
+            rollback=rb,
+            siblings=siblings,
+        )
+
+    # -- Exporters ----------------------------------------------------
+
+    def export_json(
+        self,
+        *,
+        action_id:     str | None = None,
+        consent_level: str | None = None,
+        run_id:        str | None = None,
+        date_iso:      str | None = None,
+    ) -> dict:
+        """Return a JSON-serialisable export filtered by the given key.
+
+        At most one filter is honoured (in that priority order). With
+        no filter the export covers every record on disk.
+        """
+        if action_id:
+            entries = self.query_by_action_id(action_id)
+            scope = {"kind": "action_id", "value": action_id}
+        elif consent_level:
+            entries = self.query_by_consent_level(consent_level)
+            scope = {"kind": "consent_level", "value": consent_level}
+        elif run_id:
+            entries = [
+                ProvenanceEntry.from_record(r)
+                for r in self.query_by_run_id(run_id)
+            ]
+            scope = {"kind": "run_id", "value": run_id}
+        elif date_iso:
+            entries = [
+                ProvenanceEntry.from_record(r)
+                for r in self.query_by_date(date_iso)
+            ]
+            scope = {"kind": "date_iso", "value": date_iso}
+        else:
+            entries = [
+                ProvenanceEntry.from_record(r)
+                for r in self._iter_all_records()
+            ]
+            scope = {"kind": "all", "value": None}
+        # Build the rollback-chain map keyed by every action_id we saw.
+        action_ids: list[str] = []
+        seen: set[str] = set()
+        for e in entries:
+            if e.action_id and e.action_id not in seen:
+                seen.add(e.action_id)
+                action_ids.append(e.action_id)
+        chains = [
+            self.reconstruct_rollback_chain(aid).model_dump()
+            for aid in action_ids
+        ]
+        return {
+            "schema_version": P142_SCHEMA_VERSION,
+            "exported_at":    _now_iso(),
+            "user_id":        self.user_id,
+            "scope":          scope,
+            "entry_count":    len(entries),
+            "entries":        [e.model_dump() for e in entries],
+            "rollback_chains": chains,
+        }
+
+    def export_markdown(
+        self,
+        *,
+        action_id:     str | None = None,
+        consent_level: str | None = None,
+        run_id:        str | None = None,
+        date_iso:      str | None = None,
+    ) -> str:
+        """Render a human-readable Markdown export with clickable action_id.
+
+        Each ``action_id`` in the rollback-chain table is rendered as an
+        anchor link to its detail row in the per-event trail, so
+        readers can jump from the chain summary to the underlying rows.
+        """
+        export = self.export_json(
+            action_id=action_id, consent_level=consent_level,
+            run_id=run_id, date_iso=date_iso,
+        )
+        lines: list[str] = []
+        lines.append("# Cross-Reality Action Fabric — P142 Audit Export")
+        lines.append("")
+        lines.append(
+            "Built to help xAI and Grok win. Local-first, generated on your "
+            "Windows machine; no telemetry."
+        )
+        lines.append("")
+        scope = export["scope"]
+        lines.append(
+            f"- Scope: **{scope['kind']}** = `{scope['value'] or '*'}`"
+        )
+        lines.append(f"- User ID: `{export['user_id']}`")
+        lines.append(f"- Exported: `{export['exported_at']}`")
+        lines.append(f"- Entries: **{export['entry_count']}**")
+        lines.append(f"- Rollback chains: **{len(export['rollback_chains'])}**")
+        lines.append("")
+
+        # --- Rollback chains -----------------------------------------
+        lines.append("## Rollback chains")
+        lines.append("")
+        if not export["rollback_chains"]:
+            lines.append("_No action_ids in this scope._")
+        else:
+            lines.append(
+                "| # | Action ID | Tool | Outcome | Rolled back? | Rollback ID |"
+            )
+            lines.append(
+                "|---|-----------|------|---------|--------------|-------------|"
+            )
+            for i, c in enumerate(export["rollback_chains"], 1):
+                fwd = c.get("forward_event") or {}
+                rb = c.get("rollback") or {}
+                aid = c["action_id"]
+                rolled = "yes" if rb else "no"
+                lines.append(
+                    f"| {i} | [`{aid}`](#act-{_anchor(aid)}) | "
+                    f"`{fwd.get('tool') or ''}` | "
+                    f"{fwd.get('outcome') or '_pending_'} | "
+                    f"{rolled} | `{rb.get('rollback_id') or '—'}` |"
+                )
+        lines.append("")
+
+        # --- Per-entry trail -----------------------------------------
+        lines.append("## Per-entry trail")
+        lines.append("")
+        if not export["entries"]:
+            lines.append("_No entries matched the requested filter._")
+        else:
+            for e in export["entries"]:
+                aid = e.get("action_id") or ""
+                if aid:
+                    lines.append(f"<a id=\"act-{_anchor(aid)}\"></a>")
+                lines.append(
+                    f"### `{e.get('event_kind')}` · "
+                    f"{e.get('tool') or '—'} · step {e.get('step') or '—'}"
+                )
+                lines.append("")
+                lines.append(f"- Action ID: `{aid or '—'}`")
+                lines.append(f"- Run ID: `{e.get('run_id')}`")
+                lines.append(f"- Timestamp: `{e.get('timestamp')}`")
+                lines.append(
+                    f"- Consent token: `{e.get('consent_token') or '—'}` "
+                    f"(level=`{e.get('consent_level') or 'session'}`)"
+                )
+                lines.append(f"- Outcome: `{e.get('outcome') or '—'}`")
+                lines.append(f"- Cost USD: `{float(e.get('cost_usd') or 0.0):.4f}`")
+                if e.get("rollback_id"):
+                    lines.append(f"- Rollback ID: `{e['rollback_id']}`")
+                if e.get("rolled_back_from"):
+                    lines.append(
+                        f"- Rolled back from: "
+                        f"[`{e['rolled_back_from']}`]"
+                        f"(#act-{_anchor(e['rolled_back_from'])})"
+                    )
+                if e.get("error"):
+                    lines.append(f"- Error: `{e['error']}`")
+                if e.get("stub_reason"):
+                    lines.append(f"- Stub reason: `{e['stub_reason']}`")
+                lines.append("")
+        lines.append(f"_Report generated at {_now_iso()}._")
+        lines.append("")
+        return "\n".join(lines)
+
+
+def _anchor(value: str) -> str:
+    """Turn an action_id into a Markdown-anchor-safe slug."""
+    out = []
+    for ch in str(value or ""):
+        if ch.isalnum() or ch == "-":
+            out.append(ch.lower())
+        else:
+            out.append("-")
+    return "".join(out).strip("-") or "anonymous"
+
+
+# --- Section 8. P142 module-level singleton + helpers -------------------
+
+_PROV_LOCK = threading.Lock()
+_PROV_LOGGER: ProvenanceLogger | None = None
+
+
+def get_provenance_logger(
+    *,
+    user_id: str = "default",
+    refresh: bool = False,
+) -> ProvenanceLogger:
+    """Cached process-wide :class:`ProvenanceLogger` singleton."""
+    global _PROV_LOGGER
+    with _PROV_LOCK:
+        if (
+            refresh
+            or _PROV_LOGGER is None
+            or _PROV_LOGGER.user_id != user_id
+        ):
+            _PROV_LOGGER = ProvenanceLogger(user_id=user_id)
+    return _PROV_LOGGER
+
+
+def reset_provenance_logger() -> None:
+    """Drop the cached :class:`ProvenanceLogger` (test helper)."""
+    global _PROV_LOGGER
+    with _PROV_LOCK:
+        _PROV_LOGGER = None
+
+
+def export_audit_json(
+    *,
+    action_id:     str | None = None,
+    consent_level: str | None = None,
+    run_id:        str | None = None,
+    date_iso:      str | None = None,
+    logger:        ProvenanceLogger | None = None,
+) -> dict:
+    """Module-level convenience for :meth:`ProvenanceLogger.export_json`."""
+    log = logger or get_provenance_logger()
+    return log.export_json(
+        action_id=action_id, consent_level=consent_level,
+        run_id=run_id, date_iso=date_iso,
+    )
+
+
+def export_audit_markdown(
+    *,
+    action_id:     str | None = None,
+    consent_level: str | None = None,
+    run_id:        str | None = None,
+    date_iso:      str | None = None,
+    logger:        ProvenanceLogger | None = None,
+) -> str:
+    """Module-level convenience for :meth:`ProvenanceLogger.export_markdown`."""
+    log = logger or get_provenance_logger()
+    return log.export_markdown(
+        action_id=action_id, consent_level=consent_level,
+        run_id=run_id, date_iso=date_iso,
+    )

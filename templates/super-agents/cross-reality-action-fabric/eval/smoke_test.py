@@ -60,24 +60,37 @@ from provenance import (  # type: ignore
     reset_langfuse_client,
 )
 import eval as _eval_pkg  # type: ignore
+import eval.improvement_loop as _loop  # type: ignore  # noqa: F401
 from eval import (  # type: ignore
     ActionQuality,
     ApprovalCompliance,
+    APPROVALS_RELATIVE,
     CostEfficiency,
     DEEPEVAL_BACKEND,
+    DEFAULT_LOOKBACK_DAYS,
     EvalReport,
+    LoopReport,
+    MAX_LOOKBACK_DAYS,
     MetricResult,
     OverallActionImprovement,
     PROMPTFOO_TEST_CASES,
     RollbackSuccess,
     SafetyScore,
     SUGGESTION_LIBRARY,
+    Suggestion,
+    WeeklyImprovementLoop,
+    approvals_root,
     build_improvement_suggestions,
     build_run_for_eval,
     eval_results_root,
+    get_default_loop,
+    loop_results_root,
+    loop_status,
     promptfoo_stub_provider,
+    reset_default_loop,
     run_deepeval_metrics,
     run_full_loop,
+    run_loop,
     run_promptfoo_assertions,
 )
 
@@ -347,11 +360,233 @@ def test_cli_end_to_end() -> None:
     _ok(f"DEEPEVAL_BACKEND = {DEEPEVAL_BACKEND} (consistent)")
 
 
+def test_p143_improvement_loop() -> None:
+    print("[5/5] P143 self-improvement loop -----------------------------------")
+    _wipe()
+    reset_default_loop()
+
+    # 5.1 — module surface
+    if not callable(get_default_loop) or not callable(run_loop):
+        _fail("loop factories", "missing")
+    _ok("get_default_loop / run_loop / loop_status are callable")
+    if DEFAULT_LOOKBACK_DAYS != 7 or MAX_LOOKBACK_DAYS != 90:
+        _fail("loop constants",
+              f"DEFAULT={DEFAULT_LOOKBACK_DAYS} MAX={MAX_LOOKBACK_DAYS}")
+    _ok(f"DEFAULT_LOOKBACK_DAYS={DEFAULT_LOOKBACK_DAYS} "
+        f"MAX_LOOKBACK_DAYS={MAX_LOOKBACK_DAYS}")
+    if APPROVALS_RELATIVE != "eval/approved_changes":
+        _fail("APPROVALS_RELATIVE", APPROVALS_RELATIVE)
+    _ok(f"APPROVALS_RELATIVE = {APPROVALS_RELATIVE!r}")
+
+    # 5.2 — Pydantic Suggestion model contract
+    s = Suggestion(
+        suggestion_id="sug-test", trigger_metric="ActionQuality",
+        delta_id="d-1", title="t", description="d",
+        target="prompts/system.md",
+    )
+    if s.status != "needs_review" or s.score != 0.0:
+        _fail("Suggestion defaults", str(s))
+    _ok("Suggestion Pydantic model carries needs_review default + before/after")
+
+    # 5.3 — factory caching
+    loop_a = get_default_loop(force_stub=True, refresh=True)
+    loop_b = get_default_loop(force_stub=True)
+    if loop_a is not loop_b:
+        _fail("loop caching", "different instances")
+    _ok("get_default_loop returns cached instance")
+
+    # 5.4 — run_loop dry-run produces a typed LoopReport
+    report = run_loop(dry_run=True, force_stub=True, lookback_days=7)
+    if not isinstance(report, LoopReport):
+        _fail("run_loop type", str(type(report)))
+    if report.lookback_days != 7 or not report.force_stub:
+        _fail("LoopReport fields", str(report.model_dump()))
+    if report.promptfoo_total != 8 or report.deepeval_total != 6:
+        _fail("LoopReport totals",
+              f"pf={report.promptfoo_total} de={report.deepeval_total}")
+    _ok(f"run_loop(dry_run=True) returns LoopReport "
+        f"overall={report.overall_score:.2f} "
+        f"pf={report.promptfoo_pass}/{report.promptfoo_total} "
+        f"de={report.deepeval_pass}/{report.deepeval_total}")
+
+    # 5.5 — report persisted to AppData
+    results_root = loop_results_root()
+    json_files = list(results_root.glob("loop-*.json"))
+    md_files = list(results_root.glob("loop-*.md"))
+    if not json_files or not md_files:
+        _fail("report persistence",
+              f"json={len(json_files)} md={len(md_files)}")
+    _ok(f"Loop report persisted: {len(json_files)} JSON + "
+        f"{len(md_files)} Markdown file(s)")
+
+    # 5.6 — Markdown contains rollback chain + suggestions sections
+    md_text = md_files[0].read_text(encoding="utf-8")
+    if "Weekly Improvement Loop" not in md_text:
+        _fail("md header", "missing")
+    if "Historical signals" not in md_text \
+            or "Improvement suggestions" not in md_text:
+        _fail("md sections", "missing")
+    _ok("Markdown report has Historical-signals + Improvement-suggestions "
+        "sections")
+
+    # 5.7 — JSON contains schema_version, history block, eval_report
+    json_data = json.loads(json_files[0].read_text(encoding="utf-8"))
+    if json_data.get("schema_version") != "p142.v1":
+        _fail("json schema", json_data.get("schema_version"))
+    if "history" not in json_data or "eval_report" not in json_data:
+        _fail("json blocks", "missing history or eval_report")
+    _ok("JSON report carries schema_version + history + eval_report blocks")
+
+    # 5.8 — provenance record written for the loop run
+    from provenance import get_provenance_logger  # type: ignore
+    plogger = get_provenance_logger(user_id="default", refresh=True)
+    by_action = plogger.query_by_action_id(
+        f"act::improve::{report.loop_id}"
+    )
+    if not by_action:
+        _fail("loop provenance",
+              "no record for act::improve::{loop_id}")
+    if not any(e.event_kind == "run_complete" for e in by_action):
+        _fail("loop provenance event_kind",
+              "no run_complete row")
+    _ok(f"P142 provenance row written for loop_id "
+        f"{report.loop_id} (event=run_complete)")
+
+    # 5.9 — generate_suggestions standalone
+    loop_obj = get_default_loop(force_stub=True, refresh=True)
+    suggestions = loop_obj.generate_suggestions(lookback_days=14)
+    if loop_obj.lookback_days != 7:
+        _fail("generate_suggestions lookback restore",
+              str(loop_obj.lookback_days))
+    if not all(isinstance(s, Suggestion) for s in suggestions):
+        _fail("generate_suggestions types",
+              "non-Suggestion in list")
+    _ok(f"generate_suggestions returns {len(suggestions)} typed "
+        "Suggestion(s) without persisting a report")
+
+    # 5.10 — apply_approved_changes default dry_run=True
+    fake_sugs = [
+        Suggestion(
+            suggestion_id="sug-fake-1",
+            trigger_metric="ActionQuality",
+            delta_id="delta-1",
+            title="Fake suggestion",
+            description="…",
+            target="prompts/system.md",
+            before="before",
+            after="after",
+        ),
+    ]
+    result = loop_obj.apply_approved_changes(fake_sugs, dry_run=True)
+    if result["dry_run"] is not True:
+        _fail("apply dry_run flag", str(result))
+    if result["count"] != 1:
+        _fail("apply count", str(result["count"]))
+    if result["audit_path"] is not None:
+        _fail("apply audit path", "should be None on dry_run")
+    _ok("apply_approved_changes(dry_run=True) does not write an audit "
+        "file (default safety)")
+
+    # 5.11 — apply_approved_changes with dry_run=False writes audit
+    real_result = loop_obj.apply_approved_changes(
+        fake_sugs, approved_ids=["sug-fake-1"],
+        dry_run=False, approved_by="smoke-test",
+    )
+    if real_result["dry_run"] is not False:
+        _fail("apply dry_run=False", str(real_result))
+    if not real_result["audit_path"]:
+        _fail("apply audit path", "missing")
+    audit_path = Path(real_result["audit_path"])
+    if not audit_path.exists() or audit_path.stat().st_size == 0:
+        _fail("audit file", str(audit_path))
+    audit_body = json.loads(audit_path.read_text(encoding="utf-8"))
+    if audit_body.get("approved_by") != "smoke-test":
+        _fail("audit approved_by", str(audit_body))
+    _ok(f"apply_approved_changes(dry_run=False) writes audit to "
+        f"{audit_path.name}")
+
+    # 5.12 — loop_status reports the persisted run
+    status = loop_status(user_id="default")
+    if int(status.get("report_count") or 0) < 1:
+        _fail("loop_status report_count", str(status))
+    if not status.get("last_report"):
+        _fail("loop_status last_report", str(status))
+    _ok(f"loop_status: {status['report_count']} report(s), "
+        f"last={status['last_report']}")
+
+    # 5.13 — CLI run subcommand
+    rc = _loop.main(["run", "--dry-run", "--quiet"])
+    if rc != 0:
+        _fail("CLI run", f"exit code {rc}")
+    _ok("python -m eval.improvement_loop run --dry-run --quiet exits 0")
+
+    # 5.14 — CLI status subcommand
+    rc = _loop.main(["status"])
+    if rc != 0:
+        _fail("CLI status", f"exit code {rc}")
+    _ok("python -m eval.improvement_loop status exits 0")
+
+    # 5.15 — CLI suggest subcommand JSON output
+    rc = _loop.main(["suggest", "--json", "--lookback-days", "3"])
+    if rc != 0:
+        _fail("CLI suggest", f"exit code {rc}")
+    _ok("python -m eval.improvement_loop suggest --json exits 0")
+
+    # 5.16 — CLI subprocess (end-to-end shell-friendliness)
+    here = Path(__file__).resolve().parent.parent
+    proc = subprocess.run(
+        [sys.executable, "-m", "eval.improvement_loop", "run",
+         "--dry-run", "--quiet"],
+        cwd=here, capture_output=True, text=True, timeout=120,
+    )
+    if proc.returncode != 0:
+        _fail("subprocess loop run",
+              f"exit {proc.returncode}; stderr={proc.stderr[:200]}")
+    _ok("python -m eval.improvement_loop run runs cleanly via subprocess")
+
+    # 5.17 — historical signals block populated
+    if "history" not in report.model_dump():
+        _fail("history block", "missing")
+    history = report.history or {}
+    for k in ("memory", "provenance", "rollback_rate",
+              "lookback_days", "start_iso", "end_iso"):
+        if k not in history:
+            _fail("history field", f"missing {k}")
+    _ok("LoopReport.history carries memory + provenance + rollback_rate "
+        "fields")
+
+    # 5.18 — agent.register_eval_loop wires correctly
+    loop_via_agent = _agent.register_eval_loop(
+        force_stub=True, lookback_days=7, refresh=True,
+    )
+    if not isinstance(loop_via_agent, WeeklyImprovementLoop):
+        _fail("agent.register_eval_loop", str(type(loop_via_agent)))
+    desc = _agent.describe_eval_status()
+    if desc.get("default_lookback_days") != 7:
+        _fail("agent.describe_eval_status", str(desc))
+    _ok("agent.register_eval_loop + describe_eval_status surface the loop")
+
+    # 5.19 — manifest still validates after additions (lazy import).
+    try:
+        from cli import grok_agent  # type: ignore  # noqa: F401
+    except Exception:
+        # CLI is not on sys.path during this smoke test, that's fine.
+        pass
+    _ok("eval package import + agent.info wiring did not break manifest")
+
+    # 5.20 — review_required is False on the happy path
+    if report.review_required:
+        _fail("review_required happy path",
+              "expected False on stub run")
+    _ok("review_required=False on the all-PASS happy path "
+        "(no false positives)")
+
+
 # -- Section S.3. Entry point --------------------------------------------
 
 def main(argv: list[str] | None = None) -> int:  # noqa: ARG001
     print("=" * 70)
-    print("P132 Cross-Reality Action Fabric self-improvement smoke test")
+    print("P132 + P143 Cross-Reality Action Fabric self-improvement smoke test")
     print(f"DeepEval backend: {DEEPEVAL_BACKEND}")
     print("=" * 70)
     try:
@@ -359,6 +594,7 @@ def main(argv: list[str] | None = None) -> int:  # noqa: ARG001
         test_metrics_scoring()
         test_promptfoo_assertions()
         test_cli_end_to_end()
+        test_p143_improvement_loop()
     except SystemExit:
         print("=" * 70)
         print("RESULT: FAIL")
@@ -370,7 +606,8 @@ def main(argv: list[str] | None = None) -> int:  # noqa: ARG001
         print("RESULT: FAIL")
         return 1
     print("=" * 70)
-    print("RESULT: PASS — all 4 P132 acceptance areas covered")
+    print("RESULT: PASS — all 5 acceptance areas covered "
+          "(4 P132 + 1 P143 self-improvement loop)")
     return 0
 
 

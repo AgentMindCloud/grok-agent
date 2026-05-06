@@ -63,6 +63,7 @@ from graph import (  # type: ignore
 )
 
 __all__ = [
+    # P131 surface
     "BACKEND_NAME",
     "LangfuseTraceContext",
     "LangfuseClient",
@@ -70,6 +71,11 @@ __all__ = [
     "reset_langfuse_client",
     "stub_trace_path",
     "span_from_record",
+    # P142 hook surface
+    "LangfuseHooks",
+    "attach_langfuse_hooks",
+    "have_langfuse_credentials",
+    "trace_name_for_action",
 ]
 
 
@@ -559,3 +565,320 @@ def span_from_record(record: Any) -> dict:
         "duration_ms":      getattr(record, "duration_ms", None),
         "correlation_id":   getattr(record, "correlation_id", None),
     }
+
+
+# --- Section 9. P142 hook surface ---------------------------------------
+#
+# The :class:`LangfuseHooks` class below wraps a :class:`LangfuseClient`
+# with four lifecycle methods that line up with the P141
+# :class:`BaseActionConnector` execution flow:
+#
+# - :meth:`on_action_start`    — called from ``_record_approved_action``
+# - :meth:`on_approval`        — called when a typed consent is granted
+# - :meth:`on_action_end`      — called from ``_record_outcome``
+# - :meth:`on_rollback`        — called from ``_record_rollback``
+#
+# Every method is a no-op when ``opt_in=False`` *or* when no Langfuse
+# credentials are present, so callers can wire hooks unconditionally
+# and let the runtime decide whether bytes leave the machine.
+
+
+def have_langfuse_credentials() -> bool:
+    """Public alias of the internal credential probe.
+
+    Lets callers (and the smoke test) decide whether to even attempt
+    an opt-in without parsing environment variables themselves.
+    """
+    return _have_credentials()
+
+
+def trace_name_for_action(action_id: str) -> str:
+    """Return the canonical trace name for one action_id.
+
+    Matches the contract from P142's prompt: ``crf-action-{action_id}``.
+    """
+    aid = (action_id or "anonymous").strip() or "anonymous"
+    return f"crf-action-{aid}"
+
+
+class LangfuseHooks:
+    """Lifecycle hooks that mirror P141 connector events into Langfuse.
+
+    Every method short-circuits to a no-op when ``opt_in=False`` or
+    when the Langfuse stub backend is active (default). Callers don't
+    need to branch; they just call the hook and the right thing
+    happens.
+    """
+
+    def __init__(
+        self,
+        *,
+        opt_in:  bool = False,
+        client:  LangfuseClient | None = None,
+    ) -> None:
+        self._opt_in = bool(opt_in)
+        # Reuse the cached client when possible so the trace shows up
+        # in the same backend as the rest of the run.
+        self._client = client or get_langfuse_client(opt_in=self._opt_in)
+        # We start a single trace per action_id and cache it so
+        # on_action_end / on_rollback append spans rather than
+        # creating fresh traces.
+        self._trace_by_action: dict[str, LangfuseTraceContext] = {}
+        self._lock = threading.Lock()
+
+    # -- Identity ----------------------------------------------------
+
+    @property
+    def opt_in(self) -> bool:
+        return self._opt_in
+
+    @property
+    def backend_name(self) -> str:
+        return self._client.backend_name
+
+    @property
+    def is_active(self) -> bool:
+        """True when hooks will actually publish to a real Langfuse backend."""
+        return self._opt_in and self._client.is_real
+
+    @property
+    def client(self) -> LangfuseClient:
+        return self._client
+
+    # -- Lifecycle hooks ---------------------------------------------
+
+    def on_action_start(
+        self,
+        *,
+        action_id:     str,
+        tool:          str,
+        consent_token: str | None,
+        consent_level: str | None = None,
+        user_id:       str = "default",
+        plan_id:       str | None = None,
+        step:          int | None = None,
+        description:   str | None = None,
+        rollback_id:   str | None = None,
+    ) -> dict | None:
+        """Open a trace + initial span for one action.
+
+        Returns the underlying span dict for callers that want to
+        chain additional metadata onto it; returns None when the hook
+        is inert (e.g. opt_in=False).
+        """
+        if not action_id:
+            return None
+        try:
+            with self._lock:
+                trace = self._client.start_trace(
+                    run_id=action_id,
+                    user_id=user_id,
+                    name=trace_name_for_action(action_id),
+                    metadata={
+                        "tool":          tool,
+                        "consent_level": consent_level,
+                        "plan_id":       plan_id,
+                        "step":          step,
+                        "rollback_id":   rollback_id,
+                    },
+                )
+                self._trace_by_action[action_id] = trace
+            return self._client.trace_action_step(
+                event_kind="action_started",
+                tool=tool,
+                step=step,
+                action_id=action_id,
+                consent_token=consent_token,
+                outcome="pending",
+                cost_usd=0.0,
+                rollback_id=rollback_id,
+                inputs={"description": description or ""},
+                outputs={},
+                rule_compliance={"rule_1": bool(consent_token), "rule_2": True},
+                stub_reason=(
+                    "stub:offline" if self._client.backend_name.startswith("stub")
+                    else None
+                ),
+                error=None,
+                duration_ms=None,
+                correlation_id=action_id,
+            )
+        except Exception:  # pragma: no cover - defensive, hooks must never raise
+            return None
+
+    def on_approval(
+        self,
+        *,
+        action_id:     str,
+        consent_token: str,
+        tool:          str,
+        consent_level: str | None = None,
+        scope:         str | None = None,
+    ) -> dict | None:
+        """Record one HITL approval span on the action's trace."""
+        if not action_id or not consent_token:
+            return None
+        try:
+            with self._lock:
+                trace = self._trace_by_action.get(action_id)
+                if trace is None:
+                    trace = self._client.start_trace(
+                        run_id=action_id,
+                        user_id="default",
+                        name=trace_name_for_action(action_id),
+                    )
+                    self._trace_by_action[action_id] = trace
+                self._client._trace = trace  # noqa: SLF001
+            return self._client.trace_action_step(
+                event_kind="approval_granted",
+                tool=tool,
+                action_id=action_id,
+                consent_token=consent_token,
+                outcome="granted",
+                inputs={"scope": scope or ""},
+                outputs={"consent_level": consent_level},
+                rule_compliance={"rule_1": True},
+                correlation_id=action_id,
+            )
+        except Exception:  # pragma: no cover
+            return None
+
+    def on_action_end(
+        self,
+        *,
+        action_id:     str,
+        tool:          str,
+        outcome:       str,
+        consent_token: str | None,
+        consent_level: str | None = None,
+        cost_usd:      float = 0.0,
+        duration_ms:   float | None = None,
+        rollback_id:   str | None = None,
+        outputs:       dict | None = None,
+        error:         str | None = None,
+    ) -> dict | None:
+        """Close one action: write the outcome span and end the trace."""
+        if not action_id:
+            return None
+        try:
+            with self._lock:
+                trace = self._trace_by_action.get(action_id)
+                if trace is None:
+                    trace = self._client.start_trace(
+                        run_id=action_id,
+                        user_id="default",
+                        name=trace_name_for_action(action_id),
+                    )
+                    self._trace_by_action[action_id] = trace
+                self._client._trace = trace  # noqa: SLF001
+            event_kind = (
+                "action_executed" if outcome == "success"
+                else "action_failed"
+            )
+            span = self._client.trace_action_step(
+                event_kind=event_kind,
+                tool=tool,
+                action_id=action_id,
+                consent_token=consent_token,
+                outcome=outcome,
+                cost_usd=float(cost_usd or 0.0),
+                rollback_id=rollback_id,
+                inputs={"consent_level": consent_level},
+                outputs=dict(outputs or {}),
+                rule_compliance={
+                    "rule_1": bool(consent_token),
+                    "rule_2": True,
+                    "rule_3": bool(rollback_id) or outcome == "success",
+                },
+                error=error,
+                duration_ms=duration_ms,
+                correlation_id=action_id,
+            )
+            # Close the trace so flush() commits it.
+            self._client._trace = trace  # noqa: SLF001
+            self._client.end_trace(
+                outputs={"outcome": outcome, "cost_usd": float(cost_usd or 0.0)},
+                error=error,
+            )
+            return span
+        except Exception:  # pragma: no cover
+            return None
+
+    def on_rollback(
+        self,
+        *,
+        action_id:       str,
+        rollback_id:     str | None,
+        tool:            str,
+        consent_token:   str | None,
+        outcome:         str = "rolled_back",
+        rollback_script: str | None = None,
+        consent_level:   str | None = None,
+        error:           str | None = None,
+    ) -> dict | None:
+        """Append the rollback span to the matching action trace."""
+        if not action_id:
+            return None
+        try:
+            with self._lock:
+                trace = self._trace_by_action.get(action_id)
+                if trace is None:
+                    trace = self._client.start_trace(
+                        run_id=action_id,
+                        user_id="default",
+                        name=trace_name_for_action(action_id),
+                    )
+                    self._trace_by_action[action_id] = trace
+                self._client._trace = trace  # noqa: SLF001
+            event_kind = (
+                "rollback_executed" if outcome == "rolled_back"
+                else "rollback_failed"
+            )
+            return self._client.trace_action_step(
+                event_kind=event_kind,
+                tool=tool,
+                action_id=rollback_id or action_id,
+                consent_token=consent_token,
+                outcome=outcome,
+                rollback_id=rollback_id,
+                rolled_back_from=action_id,
+                inputs={"rollback_script": (rollback_script or "")[:240]},
+                outputs={"consent_level": consent_level},
+                rule_compliance={"rule_3": True},
+                error=error,
+                correlation_id=action_id,
+            )
+        except Exception:  # pragma: no cover
+            return None
+
+    def flush(self) -> None:
+        """Flush every pending span to the backend."""
+        try:
+            self._client.flush()
+        except Exception:  # pragma: no cover
+            pass
+
+
+def attach_langfuse_hooks(
+    *,
+    opt_in: bool = False,
+    refresh: bool = False,
+    client: LangfuseClient | None = None,
+) -> LangfuseHooks:
+    """Build a :class:`LangfuseHooks` instance.
+
+    ``opt_in`` defaults to False: the user must explicitly opt in to
+    upload anything to Langfuse, even when credentials are present
+    (Constitution Rule 6). When ``opt_in`` is True we still
+    short-circuit to the stub backend if ``LANGFUSE_PUBLIC_KEY`` /
+    ``LANGFUSE_SECRET_KEY`` are missing — never raises, never blocks
+    the action loop.
+
+    Pass ``refresh=True`` to drop the cached :class:`LangfuseClient`
+    so the hooks pick up an updated environment (used by the smoke
+    test).
+    """
+    if refresh:
+        reset_langfuse_client()
+    chosen_client = client or get_langfuse_client(opt_in=opt_in, refresh=refresh)
+    return LangfuseHooks(opt_in=opt_in, client=chosen_client)

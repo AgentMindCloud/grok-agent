@@ -99,6 +99,12 @@ __all__ = [
     "info",
     "log_path",
     "main",
+    "register_connectors",
+    "describe_connectors",
+    "register_provenance",
+    "describe_provenance",
+    "register_eval_loop",
+    "describe_eval_status",
 ]
 
 
@@ -527,9 +533,208 @@ def info(*, quiet: bool = False) -> dict:
     desc["agent_version"] = AGENT_VERSION
     desc["appdata_root"]  = str(appdata_root())
     desc["all_gates"]     = list(ALL_GATES)
+    desc["connectors"]    = describe_connectors()
+    desc["provenance"]    = describe_provenance()
+    desc["eval_loop"]     = describe_eval_status()
     if not quiet:
         print(json.dumps(desc, indent=2, ensure_ascii=False, default=str))
     return desc
+
+
+# --- Section 4b. P141 connector wiring (additive) -----------------------
+#
+# The P129 graph orchestrates *what* the agent does; the P141 connector
+# layer is *how* each step gets executed. The registry below is built
+# lazily so importing ``agent`` stays cheap and so the registry inherits
+# the caller's force_stub / consent posture.
+
+_CONNECTOR_REGISTRY: Any = None
+
+
+def register_connectors(
+    *,
+    force_stub:    bool = False,
+    consent:       ConsentContext | None = None,
+    refresh:       bool = False,
+):
+    """Return the process-wide :class:`ConnectorRegistry`.
+
+    Importable as ``from agent import register_connectors``. The first
+    call builds the registry (and an attached P140
+    :class:`PersonalActionMemoryClient`); later calls return the cached
+    instance unless ``refresh=True`` is passed. Pass a
+    :class:`ConsentContext` to refresh the consent posture in place.
+    """
+    global _CONNECTOR_REGISTRY
+    # Lazy import — keeps the agent's CLI start-up cheap when the user
+    # is only running ``agent.py info`` or ``version``.
+    from connectors import build_connector_registry  # type: ignore
+
+    if refresh or _CONNECTOR_REGISTRY is None:
+        _CONNECTOR_REGISTRY = build_connector_registry(
+            force_stub=force_stub, consent=consent,
+        )
+    elif consent is not None:
+        _CONNECTOR_REGISTRY.set_consent(consent)
+    return _CONNECTOR_REGISTRY
+
+
+def describe_connectors() -> dict:
+    """Return a small, JSON-serialisable summary of the active registry.
+
+    Used by :func:`info` so the user can see at a glance which backend
+    each tool will dispatch to. Builds a fresh stub registry if one
+    hasn't been registered yet — describe_connectors never mutates
+    process-wide state.
+    """
+    try:
+        from connectors import build_connector_registry  # type: ignore
+        registry = (
+            _CONNECTOR_REGISTRY
+            or build_connector_registry(force_stub=True)
+        )
+        return {
+            "stagehand":     registry.stagehand.backend_name,
+            "windows_local": registry.windows_local.backend_name,
+            "real_world":    registry.real_world.backend_name,
+            "x_search":      registry.x_search.backend_name,
+            "tools":         sorted(registry.all_clients().keys()),
+            "memory_attached": registry.memory_client is not None,
+        }
+    except Exception as exc:  # pragma: no cover - defensive
+        return {"error": f"{type(exc).__name__}: {exc}"}
+
+
+# --- Section 4c. P142 provenance + Langfuse wiring (additive) -----------
+
+_PROVENANCE_LOGGER: Any = None
+_LANGFUSE_HOOKS:    Any = None
+
+
+def register_provenance(
+    *,
+    user_id:        str = "default",
+    langfuse_opt_in: bool = False,
+    refresh:        bool = False,
+    instrument:     bool = True,
+):
+    """Register the P142 :class:`ProvenanceLogger` and optional Langfuse
+    hooks, and (optionally) auto-instrument the active connector
+    registry so every connector call writes a provenance row.
+
+    Returns ``(logger, hooks)``. Callers can pass ``langfuse_opt_in=True``
+    after a positive user dialogue to switch the hooks from the offline
+    stub to the real backend (only effective when both
+    ``LANGFUSE_PUBLIC_KEY`` and ``LANGFUSE_SECRET_KEY`` are set —
+    otherwise the stub stays active).
+    """
+    global _PROVENANCE_LOGGER, _LANGFUSE_HOOKS
+    from provenance import (  # type: ignore
+        attach_langfuse_hooks,
+        attach_to_connectors,
+        get_provenance_logger,
+    )
+
+    if refresh or _PROVENANCE_LOGGER is None:
+        _PROVENANCE_LOGGER = get_provenance_logger(
+            user_id=user_id, refresh=refresh,
+        )
+    if refresh or _LANGFUSE_HOOKS is None or _LANGFUSE_HOOKS.opt_in != langfuse_opt_in:
+        _LANGFUSE_HOOKS = attach_langfuse_hooks(
+            opt_in=langfuse_opt_in, refresh=refresh,
+        )
+
+    if instrument:
+        registry = register_connectors(refresh=False)
+        attach_to_connectors(
+            registry,
+            logger=_PROVENANCE_LOGGER,
+            hooks=_LANGFUSE_HOOKS,
+            user_id=user_id,
+        )
+    return _PROVENANCE_LOGGER, _LANGFUSE_HOOKS
+
+
+def describe_provenance() -> dict:
+    """Return a small, JSON-serialisable summary of the active provenance
+    + Langfuse posture. Used by :func:`info`."""
+    try:
+        from provenance import (  # type: ignore
+            P142_SCHEMA_VERSION,
+            have_langfuse_credentials,
+            provenance_root,
+        )
+        logger = _PROVENANCE_LOGGER
+        hooks  = _LANGFUSE_HOOKS
+        return {
+            "schema":              P142_SCHEMA_VERSION,
+            "logger_attached":     logger is not None,
+            "logger_user_id":      getattr(logger, "user_id", None),
+            "log_root":            str(provenance_root()),
+            "langfuse_attached":   hooks is not None,
+            "langfuse_backend":    getattr(hooks, "backend_name", "stub:offline"),
+            "langfuse_active":     bool(getattr(hooks, "is_active", False)),
+            "langfuse_creds_set":  have_langfuse_credentials(),
+        }
+    except Exception as exc:  # pragma: no cover - defensive
+        return {"error": f"{type(exc).__name__}: {exc}"}
+
+
+# --- Section 4d. P143 self-improvement loop wiring (additive) -----------
+
+_EVAL_LOOP: Any = None
+
+
+def register_eval_loop(
+    *,
+    user_id:       str = "default",
+    force_stub:    bool = True,
+    lookback_days: int = 7,
+    refresh:       bool = False,
+):
+    """Register the P143 :class:`WeeklyImprovementLoop` and return it.
+
+    The loop never auto-applies a suggestion — calls to
+    :meth:`WeeklyImprovementLoop.run_weekly` produce a typed report on
+    disk and a P142 provenance record, and the user reviews the
+    generated Markdown before approving anything.
+    """
+    global _EVAL_LOOP
+    from eval.improvement_loop import (  # type: ignore
+        get_default_loop,
+    )
+    if refresh or _EVAL_LOOP is None:
+        _EVAL_LOOP = get_default_loop(
+            user_id=user_id, force_stub=force_stub,
+            lookback_days=int(lookback_days), refresh=refresh,
+        )
+    return _EVAL_LOOP
+
+
+def describe_eval_status() -> dict:
+    """Return a small, JSON-serialisable summary of the active loop +
+    most-recent run. Used by :func:`info`."""
+    try:
+        from eval.improvement_loop import (  # type: ignore
+            DEFAULT_LOOKBACK_DAYS,
+            loop_status,
+        )
+        status = loop_status(user_id="default")
+        loop = _EVAL_LOOP
+        return {
+            "default_lookback_days": DEFAULT_LOOKBACK_DAYS,
+            "loop_attached":         loop is not None,
+            "lookback_days":         getattr(loop, "lookback_days",
+                                              DEFAULT_LOOKBACK_DAYS),
+            "report_count":          int(status.get("report_count") or 0),
+            "last_report":           status.get("last_report"),
+            "last_overall":          status.get("last_overall"),
+            "last_review":           status.get("last_review"),
+            "results_dir":           status.get("results_dir"),
+            "approvals_dir":         status.get("approvals_dir"),
+        }
+    except Exception as exc:  # pragma: no cover - defensive
+        return {"error": f"{type(exc).__name__}: {exc}"}
 
 
 # --- Section 5. Output formatter -----------------------------------------

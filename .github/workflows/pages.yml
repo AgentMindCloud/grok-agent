@@ -54,7 +54,79 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Deploy artifact to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  smoke_test:
+    name: Smoke-test deployed marketplace
+    runs-on: ubuntu-latest
+    needs: deploy
+    timeout-minutes: 5
+
+    steps:
+      - name: Curl deployed Pages URL and assert markers
+        env:
+          PAGE_URL: ${{ needs.deploy.outputs.page_url }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${PAGE_URL:-}" ]; then
+            echo "::error::deploy job did not expose a page_url output"
+            exit 1
+          fi
+
+          echo "Smoke-testing ${PAGE_URL}"
+
+          # Fetch root URL with retries on transient network/HTTP failures.
+          http_status=$(curl --silent --show-error --location \
+            --retry 5 --retry-delay 5 --retry-all-errors \
+            --output index.html \
+            --write-out '%{http_code}' \
+            "${PAGE_URL}")
+
+          echo "Root URL HTTP status: ${http_status}"
+          if [ "${http_status}" != "200" ]; then
+            echo "::error::Expected HTTP 200 from ${PAGE_URL}, got ${http_status}"
+            exit 1
+          fi
+
+          # Fetch script.js (served from same Pages origin) for copy-button check.
+          script_status=$(curl --silent --show-error --location \
+            --retry 5 --retry-delay 5 --retry-all-errors \
+            --output script.js \
+            --write-out '%{http_code}' \
+            "${PAGE_URL}script.js")
+
+          echo "script.js HTTP status: ${script_status}"
+          if [ "${script_status}" != "200" ]; then
+            echo "::error::Expected HTTP 200 from ${PAGE_URL}script.js, got ${script_status}"
+            exit 1
+          fi
+
+          # Marker 1 — agent grid container (rendered into by script.js).
+          if ! grep -q 'id="grid"' index.html; then
+            echo "::error::Agent grid container (id=\"grid\") not found in deployed index.html"
+            exit 1
+          fi
+          echo "OK: agent grid container present"
+
+          # Marker 2 — search input placeholder text.
+          if ! grep -q 'Search agents by name, slug, or tagline' index.html; then
+            echo "::error::Search input markup not found in deployed index.html"
+            exit 1
+          fi
+          echo "OK: search input present"
+
+          # Marker 3 — "grok install this" copy button label from script.js.
+          if ! grep -q 'grok install this' script.js; then
+            echo "::error::\"grok install this\" copy button label not found in deployed script.js"
+            exit 1
+          fi
+          echo "OK: \"grok install this\" copy button present"
+
+          echo "All smoke-test assertions passed."

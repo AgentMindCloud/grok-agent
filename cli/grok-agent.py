@@ -132,13 +132,52 @@ class Metadata(BaseModel):
     homepage: Optional[str] = None
     repository: Optional[str] = None
     # P138: docs + demo_video links carried by Super Agent manifests.
+    # P168: demo_video now accepts either a plain string (URL or repo path)
+    # OR a structured mapping with keys such as `storyboard`, `url`, `status`,
+    # `note`, `update_instructions` so a manifest can record planned-vs-available
+    # state plus the explicit steps to flip the field once the recording lands.
     docs: Optional[str] = None
-    demo_video: Optional[str] = None
+    demo_video: Optional[Any] = None
     language: str = "en"
     created: Optional[str] = None
     updated: Optional[str] = None
 
     model_config = _strict
+
+    @field_validator("demo_video")
+    @classmethod
+    def _demo_video_shape(cls, value: Any) -> Any:
+        # Accept None, a plain string, or a mapping with at least a `url`,
+        # `storyboard`, or `status` key. Reject other shapes so typos surface.
+        if value is None or isinstance(value, str):
+            return value
+        if isinstance(value, dict):
+            allowed_keys = {
+                "storyboard", "url", "status", "note", "update_instructions",
+            }
+            unknown = set(value.keys()) - allowed_keys
+            if unknown:
+                raise ValueError(
+                    f"metadata.demo_video has unknown keys: {sorted(unknown)}; "
+                    f"allowed keys are {sorted(allowed_keys)}"
+                )
+            if not (value.keys() & {"url", "storyboard", "status"}):
+                raise ValueError(
+                    "metadata.demo_video mapping must include at least one of "
+                    "'url', 'storyboard', or 'status'"
+                )
+            update_instructions = value.get("update_instructions")
+            if update_instructions is not None and not (
+                isinstance(update_instructions, list)
+                and all(isinstance(item, str) for item in update_instructions)
+            ):
+                raise ValueError(
+                    "metadata.demo_video.update_instructions must be a list of strings"
+                )
+            return value
+        raise ValueError(
+            "metadata.demo_video must be a string, a mapping, or null"
+        )
 
 
 class Install(BaseModel):

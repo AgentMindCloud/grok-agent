@@ -43,9 +43,15 @@ metadata:
   docs:       "github.com/AgentMindCloud/grok-agent/blob/main/templates/super-agents/self-evolving-personal-os/README.md"
   demo_video:
     storyboard: "templates/super-agents/self-evolving-personal-os/DEMO.md"
-    url: "https://github.com/AgentMindCloud/grok-agent/releases/download/super-agent-demos-v1/self-evolving-personal-os-demo.mp4"  # (planned — recording + upload pending; target release tag: super-agent-demos-v1)
-    status: "(planned — recording + upload pending; target release tag: super-agent-demos-v1)"
+    url: "https://github.com/AgentMindCloud/grok-agent/releases/download/super-agent-demos-v1/self-evolving-personal-os-demo.mp4"  # planned — recording + upload pending (target: super-agent-demos-v1 GitHub Release)
+    status: "planned — recording + upload pending (target: super-agent-demos-v1 GitHub Release)"
     note: "Actual video has not yet been recorded; once recorded, it will be uploaded as a release asset under tag 'super-agent-demos-v1'."
+    update_instructions:
+      - "Set metadata.demo_video.status to: available"
+      - "Verify metadata.demo_video.url resolves to the released MP4"
+      - "Remove the inline 'planned — recording + upload pending' comment next to the URL"
+      - "Update README.md demo section: remove 'planned' language and add a runtime + duration line"
+      - "Drop this update_instructions field once status is available"
 
 # ----------------------------------------------------------------------------
 # install: the "grok install this" primitive

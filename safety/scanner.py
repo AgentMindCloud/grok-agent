@@ -38,10 +38,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 try:
     import yaml  # type: ignore[import-untyped]
@@ -1009,6 +1010,132 @@ def check_bridge_transitive_contradiction(m: Dict[str, Any]) -> List[Finding]:
 
 
 # ============================================================================
+# Article VIII — Forbidden-phrase repo-wide leak detector
+# ============================================================================
+#
+# The Hard Six rules (CLAUDE.md §3) ban a small set of vague phrases from any
+# generated prompt or output. This walks the entire repo and flags any
+# accidental leak. Governance files that *define* the banned list (CLAUDE.md,
+# docs/CONSTRAINTS.md) and a couple of launch threads that quote the list
+# inside a verification checklist are whitelisted by exact line range.
+#
+# Each entry maps a repo-root-relative POSIX path to a list of inclusive
+# (start_line, end_line) tuples. Lines outside the listed ranges are scanned
+# normally.
+
+_FORBIDDEN_PHRASE_EXEMPTIONS: Dict[str, List[Tuple[int, int]]] = {
+    "CLAUDE.md": [(76, 81), (489, 489)],
+    "docs/CONSTRAINTS.md": [(42, 47)],
+    "templates/super-agents/self-evolving-personal-os/X_LAUNCH_THREAD.md": [(351, 352)],
+    "templates/super-agents/cross-reality-action-fabric/X_LAUNCH_THREAD.md": [(341, 342)],
+    # The scanner's own regex literal must reference the banned phrases.
+    "safety/scanner.py": [(1039, 1039)],
+}
+
+# Pattern matches each banned phrase (case-insensitive). The leading \b on the
+# first alternative prevents false positives on words like "fetcher" or
+# "etcetera"; the rest are multi-word phrases that are already self-anchoring.
+_FORBIDDEN_PHRASES_RE = re.compile(
+    r"\betc\.|and so on|anything related to|as you see fit|use your judgment|boilerplate as needed",
+    re.IGNORECASE,
+)
+
+_FORBIDDEN_PHRASE_SCAN_INCLUDES = (
+    ".py",
+    ".md",
+    ".yaml",
+    ".yml",
+    ".html",
+    ".css",
+    ".js",
+    ".ps1",
+    ".tsx",
+    ".ts",
+)
+
+# Path fragments / filenames to skip outright. Lockfiles and vendored deps
+# never need scanning and are full of unrelated tokens.
+_FORBIDDEN_PHRASE_SCAN_EXCLUDES = (
+    "node_modules/",
+    ".git/",
+    "LICENSE",
+    "package-lock.json",
+    "marketplace/package-lock.json",
+    "yarn.lock",
+    "pnpm-lock.yaml",
+    "poetry.lock",
+)
+
+
+def _exempt_line_count() -> int:
+    """Total number of lines whitelisted across all exemption entries."""
+    total = 0
+    for ranges in _FORBIDDEN_PHRASE_EXEMPTIONS.values():
+        for start, end in ranges:
+            total += (end - start + 1)
+    return total
+
+
+def _is_excluded(rel_path: str) -> bool:
+    for frag in _FORBIDDEN_PHRASE_SCAN_EXCLUDES:
+        if frag in rel_path:
+            return True
+    return False
+
+
+def _is_exempt(rel_path: str, line_no: int) -> bool:
+    ranges = _FORBIDDEN_PHRASE_EXEMPTIONS.get(rel_path)
+    if not ranges:
+        return False
+    for start, end in ranges:
+        if start <= line_no <= end:
+            return True
+    return False
+
+
+def check_forbidden_phrase_leak(repo_root: Path) -> List[Finding]:
+    """Walk repo_root and emit ERROR Findings for each forbidden-phrase hit
+    that is not covered by `_FORBIDDEN_PHRASE_EXEMPTIONS`.
+
+    Returns a flat list of Findings. A clean repo returns []. The check_id is
+    `VIII.forbidden-phrase-leak`; location encodes the file:line of each hit
+    so downstream tooling (CI, PowerShell wrapper) can group output.
+    """
+    findings: List[Finding] = []
+    if not repo_root.is_dir():
+        return findings
+    for path in sorted(repo_root.rglob("*")):
+        if not path.is_file():
+            continue
+        if path.suffix not in _FORBIDDEN_PHRASE_SCAN_INCLUDES:
+            continue
+        try:
+            rel_path = path.relative_to(repo_root).as_posix()
+        except ValueError:
+            continue
+        if _is_excluded(rel_path):
+            continue
+        try:
+            text = path.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        for line_no, line in enumerate(text.splitlines(), start=1):
+            if not _FORBIDDEN_PHRASES_RE.search(line):
+                continue
+            if _is_exempt(rel_path, line_no):
+                continue
+            snippet = line.strip()[:100]
+            findings.append(Finding(
+                severity="error",
+                code="VIII.forbidden-phrase-leak",
+                message=f"Forbidden phrase at {rel_path}:{line_no}: {snippet}",
+                location=f"{rel_path}:{line_no}",
+                article="VIII",
+            ))
+    return findings
+
+
+# ============================================================================
 # Scan driver
 # ============================================================================
 
@@ -1146,6 +1273,39 @@ def cmd_info(_args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_forbidden_phrase_scan(args: argparse.Namespace) -> int:
+    """Run the repo-wide forbidden-phrase leak check (Article VIII)."""
+    repo_root = Path(getattr(args, "repo_root", None) or Path.cwd()).expanduser().resolve()
+    if not repo_root.is_dir():
+        sys.stderr.write(f"X  Repo root not found: {repo_root}\n")
+        return 66
+    findings = check_forbidden_phrase_leak(repo_root)
+    exempt_count = _exempt_line_count()
+    if args.json:
+        payload = {
+            "repo_root": str(repo_root),
+            "check_id": "VIII.forbidden-phrase-leak",
+            "exempt_line_count": exempt_count,
+            "findings": [f.to_json() for f in findings],
+            "has_errors": any(f.severity == "error" for f in findings),
+            "scanner_version": VERSION,
+        }
+        sys.stdout.write(json.dumps(payload) + "\n")
+        return 1 if findings else 0
+    sys.stdout.write(f"-> Forbidden-phrase scan: {repo_root}\n")
+    if not findings:
+        sys.stdout.write(
+            f"OK No forbidden-phrase leaks. ({exempt_count} exempt lines whitelisted)\n"
+        )
+        return 0
+    for f in findings:
+        sys.stdout.write(f.to_line() + "\n")
+    sys.stdout.write(
+        f"-- {len(findings)} error finding(s) ({exempt_count} exempt lines whitelisted)\n"
+    )
+    return 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="grok-safety-scanner",
@@ -1195,6 +1355,18 @@ def build_parser() -> argparse.ArgumentParser:
 
     p_info = sub.add_parser("info", help="Print version + check list and exit.")
     p_info.set_defaults(func=cmd_info)
+
+    p_fp = sub.add_parser(
+        "forbidden-phrase-scan",
+        help="Walk the repo and flag any forbidden-phrase leak (Article VIII).",
+    )
+    p_fp.add_argument(
+        "--repo-root",
+        default=None,
+        help="Repo root to scan (default: current working directory).",
+    )
+    p_fp.add_argument("--json", action="store_true", help="Emit JSON instead of text.")
+    p_fp.set_defaults(func=cmd_forbidden_phrase_scan)
 
     return parser
 

@@ -7,6 +7,12 @@ node_modules/
 .pnp
 .pnp.js
 
+# re-include marketplace/lib/ — the root .gitignore broadly ignores any
+# "lib/" folder (Python distribution convention). The marketplace's
+# lib/ holds first-party TypeScript modules that must be tracked.
+!lib/
+!lib/**
+
 # next.js build artefacts
 .next/
 out/

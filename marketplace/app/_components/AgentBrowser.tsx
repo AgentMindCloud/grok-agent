@@ -16,11 +16,8 @@
 
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import {
-  AgentKind,
-  FeaturedAgent,
-  filterAgents,
-} from '../../lib/agents';
+import type { AgentKind, FeaturedAgent } from '../../lib/types';
+import { filterAgents } from '../../lib/types';
 import { buildDeployToXUrl } from '../../lib/manifest';
 
 interface AgentBrowserProps {

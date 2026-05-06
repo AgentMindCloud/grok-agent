@@ -7,109 +7,119 @@
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //
-// Landing page for the Grok Agent OS marketplace. Server-rendered hero +
-// Featured Super Agents strip, with a client-only AgentBrowser below it
-// that handles search + kind-filter chips. Built to help xAI and Grok
-// win.
+// Landing page for the Grok Agent OS marketplace. Server-rendered hero
+// + dynamic agent grid built from the actual grok-agent.yaml manifests
+// in templates/super-agents/ and templates/finance/. Category filtering
+// is URL-driven (?category=super-agent or ?category=x-money-tool) so
+// this whole page stays a Server Component.
 
 import Link from 'next/link';
-import {
-  FEATURED_AGENTS,
-  FEATURED_SUPER_AGENTS,
-  listKinds,
-} from '../lib/agents';
-import { buildDeployToXUrl } from '../lib/manifest';
-import AgentBrowser from './_components/AgentBrowser';
+import AgentCard from '../components/AgentCard';
+import { loadAllAgents } from '../lib/manifests';
+import type { AgentCategory } from '../lib/types';
+import { CATEGORY_LABELS } from '../lib/types';
 
-export default function HomePage() {
+interface HomePageProps {
+  searchParams?: { category?: string };
+}
+
+const VALID_CATEGORIES: AgentCategory[] = ['super-agent', 'x-money-tool'];
+
+function activeCategory(raw?: string): AgentCategory | null {
+  if (!raw) return null;
+  return (VALID_CATEGORIES as string[]).includes(raw)
+    ? (raw as AgentCategory)
+    : null;
+}
+
+export default function HomePage({ searchParams }: HomePageProps) {
+  const allAgents = loadAllAgents();
+  const active = activeCategory(searchParams?.category);
+  const filtered = active
+    ? allAgents.filter((agent) => agent.category === active)
+    : allAgents;
+
+  const totals: Record<AgentCategory, number> = {
+    'super-agent': allAgents.filter((a) => a.category === 'super-agent').length,
+    'x-money-tool': allAgents.filter((a) => a.category === 'x-money-tool').length,
+  };
+
   return (
     <main>
       <section className="hero">
         <h1>Grok Agent OS — Marketplace</h1>
         <p className="tagline">
-          Three flagship Super Agents and a growing library of creator
-          templates. One v2.15 manifest schema. Apache-2.0, local-first,
-          Windows-first. Built to help xAI and Grok win.
+          Every agent below is a real <code>grok-agent.yaml</code> v2.15
+          manifest in this repository. The grid is generated at build
+          time from the actual files — no hand-maintained list.
         </p>
-
         <div className="deploy-cta" aria-label="Primary calls to action">
-          <Link href="/deploy" className="button">
-            Deploy your own — generate a v2.15 manifest
-          </Link>
-          <a
-            href={buildDeployToXUrl({
-              slug: 'grok-agent-os',
-              description:
-                'Local-first, Windows-native agent platform on the v2.15 ' +
-                'manifest standard. Three flagship Super Agents shipped.',
-              pageUrl: 'https://github.com/AgentMindCloud/grok-agent',
-            })}
-            className="button secondary"
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            Share the platform on X
-          </a>
           <a
             href="https://github.com/AgentMindCloud/grok-agent"
-            className="button secondary"
+            className="button"
             target="_blank"
             rel="noreferrer noopener"
           >
             View on GitHub
           </a>
+          <Link href="/deploy" className="button secondary">
+            Generate your own v2.15 manifest
+          </Link>
         </div>
       </section>
 
-      <section aria-labelledby="featured-super-agents">
-        <h2 id="featured-super-agents" className="section">
-          Featured Super Agents
+      <section aria-labelledby="catalogue">
+        <h2 id="catalogue" className="section">
+          Catalogue ({allAgents.length} agents)
         </h2>
         <p className="meta">
-          Three flagship runtimes — synthesis, personal OS, real-world
-          action — that demonstrate the v2.15 standard end-to-end.
+          {totals['super-agent']} Super Agents (3 flagship · 4 lighter) +{' '}
+          {totals['x-money-tool']} X Money tools. Each card copies the
+          one-liner you paste on X to install on Windows 11 +
+          PowerShell.
         </p>
-        <div className="grid hero-grid">
-          {FEATURED_SUPER_AGENTS.map((agent) => (
-            <article key={agent.slug} className="card hero-card">
-              <span className="badge">Super Agent #{agent.number}</span>
-              <h3>{agent.name}</h3>
-              <p className="meta">{agent.tagline}</p>
-              <p className="meta">
-                Port <code>{agent.port}</code> · Consent gates:{' '}
-                <strong>{agent.consentGates.length}</strong>
-              </p>
-              <div className="actions">
-                <Link
-                  href={`/agents/${agent.slug}` as `/agents/${string}`}
-                  className="button"
-                >
-                  View detail
-                </Link>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
 
-      <section aria-labelledby="browse-everything">
-        <h2 id="browse-everything" className="section">
-          Browse the catalogue
-        </h2>
-        <p className="meta">
-          Search across name, capabilities, consent gates, or tags. Filter
-          by kind to scope to Super Agents, creator templates, or x-native
-          agents.
-        </p>
-        <AgentBrowser agents={FEATURED_AGENTS} kinds={listKinds()} />
+        <div className="filter-chips" role="group" aria-label="Filter by category">
+          <Link
+            href="/"
+            className={active === null ? 'chip chip-active' : 'chip'}
+            aria-pressed={active === null}
+          >
+            All ({allAgents.length})
+          </Link>
+          <Link
+            href={{ pathname: '/', query: { category: 'super-agent' } }}
+            className={active === 'super-agent' ? 'chip chip-active' : 'chip'}
+            aria-pressed={active === 'super-agent'}
+          >
+            {CATEGORY_LABELS['super-agent']} ({totals['super-agent']})
+          </Link>
+          <Link
+            href={{ pathname: '/', query: { category: 'x-money-tool' } }}
+            className={active === 'x-money-tool' ? 'chip chip-active' : 'chip'}
+            aria-pressed={active === 'x-money-tool'}
+          >
+            {CATEGORY_LABELS['x-money-tool']} ({totals['x-money-tool']})
+          </Link>
+        </div>
+
+        {filtered.length === 0 ? (
+          <p className="empty">No agents matched.</p>
+        ) : (
+          <div className="grid">
+            {filtered.map((agent) => (
+              <AgentCard key={agent.slug} agent={agent} />
+            ))}
+          </div>
+        )}
       </section>
 
       <section>
-        <h2 className="section">Why a marketplace?</h2>
+        <h2 className="section">How install works</h2>
         <p>
-          Every Grok Agent OS template is one valid <code>grok-agent.yaml</code>{' '}
-          v2.15 file plus a folder of code that the canonical CLI installs in
-          one PowerShell line:
+          Every manifest accepts the same install primitive. Post the
+          line below on X above the agent&apos;s manifest URL — or copy
+          it from any card&apos;s Install button:
         </p>
         <pre className="manifest">
           <code>
@@ -118,35 +128,12 @@ export default function HomePage() {
           </code>
         </pre>
         <p>
-          The marketplace just makes that link discoverable. Every action
-          stays local: no telemetry, no auto-publish, no remote tool
-          execution. The v2.15 schema is enforced by the same{' '}
-          <code>cli/grok-agent.py</code> validator the CI workflow runs on
-          every push.
+          The Grok Agent OS CLI on the user&apos;s Windows machine
+          fetches the linked manifest, validates it against v2.15, runs
+          the safety scanner, and installs to{' '}
+          <code>$env:LOCALAPPDATA\grok-agent\</code>. Local-first +
+          privacy-first by default.
         </p>
-      </section>
-
-      <section>
-        <h2 className="section">Roadmap</h2>
-        <ul>
-          <li>
-            <strong>v0.1 (P149)</strong> — featured Super Agents +
-            Deploy-to-X manifest generator.
-          </li>
-          <li>
-            <strong>v0.2 (P150, this release)</strong> — search + kind
-            filters, polished styling, broader generator coverage, Vercel +
-            GitHub Pages deploy guide, xAI partnership pitch.
-          </li>
-          <li>
-            <strong>v0.3</strong> — anonymous, opt-in install analytics
-            (Article-VII-compliant).
-          </li>
-          <li>
-            <strong>v0.4</strong> — community submissions via PR, gated by
-            the same v2.15 + Constitution validator the CI workflow runs.
-          </li>
-        </ul>
       </section>
     </main>
   );

@@ -149,6 +149,7 @@
 | P152 | Phase 4 | Build Provenance-First Trust Engine lighter Super Agent | templates/super-agents/provenance-first-trust-engine/grok-agent.yaml, README.md | Lighter 1-prompt style; matched flagship + P151 manifest format exactly; no forbidden phrases used | ✅ done |
 | P153 | Phase 4 | Build Narrative Contradiction Detector lighter Super Agent | templates/super-agents/narrative-contradiction-detector/grok-agent.yaml, README.md | Lighter 1-prompt style; matched flagship + P151/P152 manifest format exactly; no forbidden phrases used | ✅ done |
 | P154 | Phase 4 | Build Zero-Config "I Want To…" Agent lighter Super Agent | templates/super-agents/zero-config-i-want-to-agent/grok-agent.yaml, README.md | Lighter 1-prompt style; matched flagship + P151/P152/P153 manifest format exactly; no forbidden phrases used | ✅ done |
+| P155 | Phase 5 | Enhance thin Next.js marketplace to list all 7 Super Agents + 4 X Money tools | marketplace/app/page.tsx, lib/manifests.ts, components/AgentCard.tsx, README.md | Dynamic manifest scanning; all 11 agents live; clean Vercel-ready UI | ✅ done |
 
 <!--
 ====================================================================

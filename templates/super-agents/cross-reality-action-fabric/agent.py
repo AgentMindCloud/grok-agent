@@ -99,6 +99,8 @@ __all__ = [
     "info",
     "log_path",
     "main",
+    "register_connectors",
+    "describe_connectors",
 ]
 
 
@@ -527,9 +529,74 @@ def info(*, quiet: bool = False) -> dict:
     desc["agent_version"] = AGENT_VERSION
     desc["appdata_root"]  = str(appdata_root())
     desc["all_gates"]     = list(ALL_GATES)
+    desc["connectors"]    = describe_connectors()
     if not quiet:
         print(json.dumps(desc, indent=2, ensure_ascii=False, default=str))
     return desc
+
+
+# --- Section 4b. P141 connector wiring (additive) -----------------------
+#
+# The P129 graph orchestrates *what* the agent does; the P141 connector
+# layer is *how* each step gets executed. The registry below is built
+# lazily so importing ``agent`` stays cheap and so the registry inherits
+# the caller's force_stub / consent posture.
+
+_CONNECTOR_REGISTRY: Any = None
+
+
+def register_connectors(
+    *,
+    force_stub:    bool = False,
+    consent:       ConsentContext | None = None,
+    refresh:       bool = False,
+):
+    """Return the process-wide :class:`ConnectorRegistry`.
+
+    Importable as ``from agent import register_connectors``. The first
+    call builds the registry (and an attached P140
+    :class:`PersonalActionMemoryClient`); later calls return the cached
+    instance unless ``refresh=True`` is passed. Pass a
+    :class:`ConsentContext` to refresh the consent posture in place.
+    """
+    global _CONNECTOR_REGISTRY
+    # Lazy import — keeps the agent's CLI start-up cheap when the user
+    # is only running ``agent.py info`` or ``version``.
+    from connectors import build_connector_registry  # type: ignore
+
+    if refresh or _CONNECTOR_REGISTRY is None:
+        _CONNECTOR_REGISTRY = build_connector_registry(
+            force_stub=force_stub, consent=consent,
+        )
+    elif consent is not None:
+        _CONNECTOR_REGISTRY.set_consent(consent)
+    return _CONNECTOR_REGISTRY
+
+
+def describe_connectors() -> dict:
+    """Return a small, JSON-serialisable summary of the active registry.
+
+    Used by :func:`info` so the user can see at a glance which backend
+    each tool will dispatch to. Builds a fresh stub registry if one
+    hasn't been registered yet — describe_connectors never mutates
+    process-wide state.
+    """
+    try:
+        from connectors import build_connector_registry  # type: ignore
+        registry = (
+            _CONNECTOR_REGISTRY
+            or build_connector_registry(force_stub=True)
+        )
+        return {
+            "stagehand":     registry.stagehand.backend_name,
+            "windows_local": registry.windows_local.backend_name,
+            "real_world":    registry.real_world.backend_name,
+            "x_search":      registry.x_search.backend_name,
+            "tools":         sorted(registry.all_clients().keys()),
+            "memory_attached": registry.memory_client is not None,
+        }
+    except Exception as exc:  # pragma: no cover - defensive
+        return {"error": f"{type(exc).__name__}: {exc}"}
 
 
 # --- Section 5. Output formatter -----------------------------------------

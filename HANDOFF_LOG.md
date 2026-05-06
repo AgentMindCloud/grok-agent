@@ -138,6 +138,7 @@
 | P141 | Phase 4 | Build public API connector helpers for Cross-Reality Action Fabric | connectors/*.py, agent.py (light wiring) | Full memory-integrated connectors with approval gates + provenance | ✅ done |
 | P142 | Phase 4 | Build provenance log + Langfuse hooks for Cross-Reality Action Fabric | provenance/*.py, agent.py (light wiring) | Full action_id-correlated audit trail + optional Langfuse tracing | ✅ done |
 | P143 | Phase 4 | Build self-improvement loop (Promptfoo + DeepEval) for Cross-Reality Action Fabric | eval/*.py, agent.py (light wiring) | Weekly evaluation + human-reviewable improvement suggestions with full provenance | ✅ done |
+| P144 | Phase 4 | Merge feature branch to main and refresh CRF dashboard for P140–P143 layers | dashboard.py | Feature branch merged to main + new layers surfaced in UI | ✅ done |
 
 <!--
 ====================================================================

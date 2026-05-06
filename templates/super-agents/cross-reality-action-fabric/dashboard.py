@@ -10,11 +10,11 @@
 # limitations under the License.
 """Streamlit dashboard for the Cross-Reality Action Fabric (Super Agent #3).
 
-Six tabs over the existing P128–P132 stack:
+Six tabs over the full P128–P143 stack:
 
 1. **Overview**          agent identity, backend selection, latest-run
                           summary, memory health, V.3 real-world-action
-                          banner.
+                          banner, P140–P143 layer-status card.
 2. **Action Planner**     one-click "Run Daily Plan" + plan rendering
                           + Article-V.3 banner + per-step description /
                           script / rollback preview.
@@ -23,14 +23,19 @@ Six tabs over the existing P128–P132 stack:
                           re-runs the plan after each approval and
                           surfaces the updated provenance.
 4. **Action History**     semantic search over the P130 memory layer
-                          across actions / approvals / rollbacks /
-                          preferences / contexts; PII redacted.
+                          AND the P140 action-centric
+                          ``search_past_actions`` API with
+                          ``consent_token`` / ``consent_level`` /
+                          ``action_id`` filters.
 5. **Provenance Audit**   P131 JSONL viewer with date / run_id / event
-                          filters AND the rollback-chain visualizer
-                          (forward action ↔ rollback table).
+                          filters AND the P131 rollback-chain
+                          visualizer AND the P142
+                          ``reconstruct_rollback_chain`` lookup-by-
+                          action_id widget with JSON + Markdown export.
 6. **Self-Improve**       one-click trigger of the P132 Promptfoo +
-                          DeepEval loop with human-review-gated
-                          suggestion display.
+                          DeepEval loop AND the P143
+                          :class:`WeeklyImprovementLoop` weekly status
+                          panel + dry-run launcher.
 
 Launched on Windows via:
 
@@ -112,18 +117,29 @@ from graph import (  # type: ignore
     redact_pii,
 )
 from memory import (  # type: ignore
+    ACTION_MEMORY_KINDS,
     COLLECTION_FOR_KIND,
+    CONSENT_LEVELS,
+    DEFAULT_CONSENT_LEVEL,
     MEMORY_KINDS,
     MEMORY_WRITE_GATE,
+    PersonalActionMemoryClient,
     PersonalMemoryClient,
     SearchHit,
+    get_action_memory_client,
     get_memory_client,
 )
 from provenance import (  # type: ignore
     LANGFUSE_BACKEND_NAME,
     LocalProvenanceLogger,
+    P142_SCHEMA_VERSION,
+    ProvenanceLogger,
     current_log_path,
+    export_audit_json,
+    export_audit_markdown,
     export_audit_report,
+    get_provenance_logger,
+    have_langfuse_credentials,
     log_path_for,
     provenance_root,
     summarise_run,
@@ -133,6 +149,15 @@ from eval.deepeval_suite import (  # type: ignore
     EvalReport,
     eval_results_root,
     run_full_loop,
+)
+from eval.improvement_loop import (  # type: ignore
+    DEFAULT_LOOKBACK_DAYS,
+    LoopReport,
+    Suggestion,
+    get_default_loop,
+    loop_results_root,
+    loop_status,
+    run_loop,
 )
 
 
@@ -150,6 +175,11 @@ __all__ = [
     "build_history_payload",
     "build_provenance_payload",
     "build_improve_payload",
+    # P140–P143 payload builders
+    "build_layer_status_payload",
+    "build_action_search_payload",
+    "build_chain_lookup_payload",
+    "build_loop_status_payload",
     "list_provenance_dates",
     "load_records_for_date",
     "rollback_chain_rows",
@@ -160,6 +190,10 @@ __all__ = [
     "rollback_last_action",
     "run_memory_search_action",
     "run_improve_action",
+    # P140–P143 actions
+    "run_action_search_action",
+    "run_chain_lookup_action",
+    "run_weekly_loop_action",
     # disclaimers
     "DISCLAIMER_RW",
     "DISCLAIMER_LOCAL_FIRST",
@@ -332,6 +366,57 @@ def build_overview_payload() -> dict:
         "latest_run":          latest,
         "rows_per_kind":       rows_per_kind,
         "tagline":             _TAGLINE,
+        "layers":              build_layer_status_payload(),
+    }
+
+
+def build_layer_status_payload() -> dict:
+    """Compose a small status card for the P140–P143 enhancement layers.
+
+    Pure-Python — uses each layer's introspection helpers but never
+    triggers a real action. Safe to call from the smoke test and from
+    the Overview tab on every Streamlit rerun.
+    """
+    # P140 memory client backend
+    memory_backend = "unknown"
+    try:
+        action_client = get_action_memory_client(force_stub=True, refresh=True)
+        memory_backend = getattr(
+            action_client.qdrant, "backend_name", "unknown",
+        )
+    except Exception:  # pragma: no cover - defensive
+        memory_backend = "unavailable"
+
+    # P141 connector backends — surface via agent.describe_connectors so
+    # we don't double-instantiate the registry here.
+    try:
+        connectors = _agent.describe_connectors()
+    except Exception:  # pragma: no cover
+        connectors = {"error": "unavailable"}
+
+    # P142 provenance + Langfuse posture (via the same agent helper).
+    try:
+        prov = _agent.describe_provenance()
+    except Exception:  # pragma: no cover
+        prov = {"error": "unavailable"}
+
+    # P143 weekly loop status
+    try:
+        eval_status = _agent.describe_eval_status()
+    except Exception:  # pragma: no cover
+        eval_status = {"error": "unavailable"}
+
+    return {
+        "p140_memory": {
+            "backend":         memory_backend,
+            "consent_levels":  list(CONSENT_LEVELS),
+            "action_kinds":    list(ACTION_MEMORY_KINDS),
+            "default_level":   DEFAULT_CONSENT_LEVEL,
+        },
+        "p141_connectors": connectors,
+        "p142_provenance": prov,
+        "p143_eval_loop":  eval_status,
+        "p142_schema":     P142_SCHEMA_VERSION,
     }
 
 
@@ -571,6 +656,212 @@ def run_improve_action(
     return run_full_loop(force_stub=force_stub, user_id=user_id)
 
 
+# --- Section 4b. P140–P143 payload builders + action runners ------------
+
+def build_action_search_payload(
+    hits: "list[SearchHit] | list[dict]",
+    *,
+    consent_token: str | None = None,
+    consent_level: str | None = None,
+    action_id: str | None = None,
+) -> dict:
+    """Shape :meth:`PersonalActionMemoryClient.search_past_actions` hits.
+
+    Produces the same row shape as :func:`build_history_payload` but
+    augmented with the action-centric fields (``consent_token``,
+    ``consent_level``, ``rollback_id``, ``action_id``) so the table
+    reads like a per-action audit trail.
+    """
+    def _attr(h: Any, key: str, default: Any = None) -> Any:
+        if isinstance(h, dict):
+            return h.get(key, default)
+        return getattr(h, key, default)
+
+    rows: list[dict] = []
+    levels_seen: set[str] = set()
+    tokens_seen: set[str] = set()
+    for h in hits:
+        text = _attr(h, "text") or ""
+        kind = _attr(h, "kind") or ""
+        payload = _attr(h, "payload") or {}
+        if not isinstance(payload, dict):
+            payload = {}
+        prov = _attr(h, "provenance") or {}
+        if not isinstance(prov, dict):
+            prov = {}
+        ct = payload.get("consent_token")
+        cl = payload.get("consent_level")
+        rows.append({
+            "score":         round(float(_attr(h, "score", 0.0)), 4),
+            "kind":          kind,
+            "tool":          payload.get("tool") or payload.get("action_type"),
+            "outcome":       payload.get("outcome"),
+            "action_id":     payload.get("action_id") or "",
+            "consent_token": ct or "",
+            "consent_level": cl or "",
+            "rollback_id":   payload.get("rollback_id") or "",
+            "timestamp":     _attr(h, "timestamp") or "",
+            "snippet":       redact_for_display(
+                text[:200] + ("…" if len(text) > 200 else "")
+            ),
+            "redacted":      bool(prov.get("redaction_applied")),
+        })
+        if cl:
+            levels_seen.add(str(cl))
+        if ct:
+            tokens_seen.add(str(ct))
+    return {
+        "row_count":      len(rows),
+        "rows":           rows,
+        "consent_levels": sorted(levels_seen),
+        "consent_tokens": sorted(tokens_seen)[:20],
+        "filter_applied": {
+            "consent_token": consent_token or "",
+            "consent_level": consent_level or "",
+            "action_id":     action_id or "",
+        },
+    }
+
+
+def build_chain_lookup_payload(action_id: str) -> dict:
+    """Shape one P142 :class:`RollbackChain` for the lookup widget.
+
+    Returns the same dict shape that :meth:`ProvenanceLogger.export_json`
+    emits per chain, plus a flat ``rows`` list ready for a table.
+    """
+    if not action_id or not action_id.strip():
+        return {"empty": True, "action_id": "", "rows": [], "chain": None}
+    try:
+        logger = get_provenance_logger(user_id="default", refresh=True)
+        chain = logger.reconstruct_rollback_chain(action_id.strip())
+    except Exception:  # pragma: no cover - defensive
+        return {"empty": True, "action_id": action_id, "rows": [],
+                "chain": None}
+    if (chain.forward_event is None and chain.approval is None
+            and chain.rollback is None and not chain.siblings):
+        return {"empty": True, "action_id": action_id, "rows": [],
+                "chain": chain.model_dump()}
+
+    rows: list[dict] = []
+    for label, entry in (
+        ("approval",      chain.approval),
+        ("forward_event", chain.forward_event),
+        ("outcome_event", chain.outcome_event
+            if chain.outcome_event is not chain.forward_event else None),
+        ("rollback",      chain.rollback),
+    ):
+        if entry is None:
+            continue
+        rows.append({
+            "role":           label,
+            "event_kind":     entry.event_kind,
+            "tool":           entry.tool,
+            "step":           entry.step,
+            "outcome":        entry.outcome,
+            "consent_token":  entry.consent_token or "",
+            "consent_level":  entry.consent_level or "",
+            "rollback_id":    entry.rollback_id or "",
+            "timestamp":      entry.timestamp,
+        })
+    for sib in chain.siblings:
+        rows.append({
+            "role":           "sibling",
+            "event_kind":     sib.event_kind,
+            "tool":           sib.tool,
+            "step":           sib.step,
+            "outcome":        sib.outcome,
+            "consent_token":  sib.consent_token or "",
+            "consent_level":  sib.consent_level or "",
+            "rollback_id":    sib.rollback_id or "",
+            "timestamp":      sib.timestamp,
+        })
+    return {
+        "empty":      False,
+        "action_id":  action_id,
+        "reversed":   bool(chain.reversed),
+        "rows":       rows,
+        "chain":      chain.model_dump(),
+    }
+
+
+def build_loop_status_payload(report: LoopReport | None = None) -> dict:
+    """Shape :class:`LoopReport` + on-disk status for the Self-Improve tab."""
+    status = loop_status(user_id="default")
+    payload: dict[str, Any] = {
+        "status":             status,
+        "default_lookback":   DEFAULT_LOOKBACK_DAYS,
+        "report_count":       int(status.get("report_count") or 0),
+        "results_dir":        status.get("results_dir"),
+        "approvals_dir":      status.get("approvals_dir"),
+        "last_overall":       status.get("last_overall"),
+        "last_review":        status.get("last_review"),
+    }
+    if report is not None:
+        payload["loop_report"] = report.model_dump()
+        payload["suggestion_rows"] = [
+            {
+                "id":             s.suggestion_id,
+                "trigger_metric": s.trigger_metric,
+                "title":          s.title,
+                "target":         s.target,
+                "score":          round(float(s.score), 4),
+                "threshold":      round(float(s.threshold), 4),
+                "status":         s.status,
+                "before":         (s.before or "")[:200],
+                "after":          (s.after or "")[:200],
+            }
+            for s in (report.suggestions or [])
+        ]
+        payload["history"] = report.history or {}
+    return payload
+
+
+def run_action_search_action(
+    query: str,
+    *,
+    consent_token: str | None = None,
+    consent_level: str | None = None,
+    action_id: str | None = None,
+    limit: int = 10,
+    user_id: str = "default",
+    force_stub: bool = True,
+) -> "list[SearchHit]":
+    """Run a P140 :meth:`search_past_actions` query with consent filters."""
+    consent = ConsentContext.from_iterable(
+        list(_agent.ALL_GATES) + [MEMORY_WRITE_GATE],
+    )
+    client = get_action_memory_client(
+        user_id=user_id, force_stub=force_stub,
+        consent=consent, refresh=True,
+    )
+    return client.search_past_actions(
+        query=query,
+        consent_token=consent_token or None,
+        consent_level=consent_level or None,
+        action_id=action_id or None,
+        limit=int(limit),
+    )
+
+
+def run_chain_lookup_action(action_id: str) -> dict:
+    """Look up one rollback chain by ``action_id`` (P142)."""
+    return build_chain_lookup_payload(action_id)
+
+
+def run_weekly_loop_action(
+    *,
+    dry_run: bool = True,
+    force_stub: bool = True,
+    lookback_days: int = DEFAULT_LOOKBACK_DAYS,
+    user_id: str = "default",
+) -> LoopReport:
+    """Trigger the P143 weekly self-improvement cycle."""
+    return run_loop(
+        dry_run=dry_run, force_stub=force_stub,
+        user_id=user_id, lookback_days=int(lookback_days),
+    )
+
+
 # --- Section 5. Streamlit render paths ----------------------------------
 
 def _render_disclaimers() -> None:
@@ -672,6 +963,76 @@ def _render_overview_tab(controls: dict) -> None:
         ]),
         language="text",
     )
+
+    # --- P140–P143 layer-status card ------------------------------------
+    layers = payload.get("layers") or {}
+    st.subheader("P140–P143 enhancement layers")
+    st.caption(
+        "Each row reports the live backend selected by the matching layer. "
+        "All four default to local-first stubs unless the user has opted "
+        "in to a real backend."
+    )
+    p140 = layers.get("p140_memory") or {}
+    p141 = layers.get("p141_connectors") or {}
+    p142 = layers.get("p142_provenance") or {}
+    p143 = layers.get("p143_eval_loop") or {}
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("P140 memory backend", p140.get("backend", "?"))
+    c2.metric(
+        "P141 stagehand backend",
+        (p141 or {}).get("stagehand", "stub:web"),
+    )
+    c3.metric(
+        "P142 Langfuse backend",
+        (p142 or {}).get("langfuse_backend", "stub:offline"),
+    )
+    c4.metric(
+        "P143 reports on disk",
+        int((p143 or {}).get("report_count") or 0),
+    )
+    layer_table = [
+        {
+            "layer":  "P140 PersonalActionMemoryClient",
+            "status": p140.get("backend", "?"),
+            "detail": f"levels={','.join(p140.get('consent_levels') or [])}",
+        },
+        {
+            "layer":  "P141 connectors",
+            "status": "registered" if p141 and not p141.get("error") else "?",
+            "detail": (
+                f"windows_local={(p141 or {}).get('windows_local','?')}"
+                f" · real_world={(p141 or {}).get('real_world','?')}"
+                f" · x_search={(p141 or {}).get('x_search','?')}"
+            ),
+        },
+        {
+            "layer":  "P142 ProvenanceLogger + LangfuseHooks",
+            "status": (p142 or {}).get("langfuse_backend", "stub:offline"),
+            "detail": (
+                f"schema={(p142 or {}).get('schema','?')}"
+                f" · creds={'yes' if (p142 or {}).get('langfuse_creds_set') else 'no'}"
+                f" · active={(p142 or {}).get('langfuse_active', False)}"
+            ),
+        },
+        {
+            "layer":  "P143 WeeklyImprovementLoop",
+            "status": (
+                "ready" if not (p143 or {}).get("error") else "unavailable"
+            ),
+            "detail": (
+                f"lookback={p143.get('default_lookback_days', '?')}"
+                f"d · last_overall={p143.get('last_overall','?')}"
+                f" · review={p143.get('last_review','?')}"
+            ),
+        },
+    ]
+    if PANDAS_AVAILABLE and _pd is not None:
+        st.dataframe(
+            _pd.DataFrame(layer_table),
+            hide_index=True, use_container_width=True,
+        )
+    else:
+        st.json(layer_table)
 
 
 def _render_planner_tab(controls: dict) -> None:
@@ -872,6 +1233,64 @@ def _render_history_tab(controls: dict) -> None:
     st.caption("All snippets above are PII-redacted via "
                "connectors.redact_pii (the same engine the connectors use).")
 
+    # --- P140 action-centric search ------------------------------------
+    st.markdown("---")
+    st.subheader("P140 action-centric search")
+    st.caption(
+        "`PersonalActionMemoryClient.search_past_actions` — restricts "
+        "results to the four action-shaped kinds (action / approval / "
+        "outcome / rollback) and exposes consent_token / consent_level "
+        "/ action_id filters."
+    )
+    ac1, ac2, ac3 = st.columns([3, 1, 1])
+    aq = ac1.text_input("Action query", value="", key="action_search_q")
+    a_token = ac2.text_input("consent_token (filter)", value="",
+                              key="action_search_token")
+    a_level = ac3.selectbox(
+        "consent_level (filter)",
+        options=["(any)"] + list(CONSENT_LEVELS),
+        index=0, key="action_search_level",
+    )
+    ac4, ac5 = st.columns([3, 1])
+    a_aid = ac4.text_input("action_id (filter)", value="",
+                            key="action_search_aid")
+    a_limit = ac5.number_input(
+        "Limit", min_value=1, max_value=50, value=10,
+        key="action_search_limit",
+    )
+    a_search_btn = st.button("Run action search", type="primary",
+                              key="action_search_btn")
+    if a_search_btn:
+        with st.spinner("Searching action-centric memory…"):
+            a_hits = run_action_search_action(
+                aq,
+                consent_token=a_token or None,
+                consent_level=None if a_level == "(any)" else a_level,
+                action_id=a_aid or None,
+                limit=int(a_limit),
+                user_id=controls["user_id"],
+                force_stub=controls["force_stub"],
+            )
+        st.session_state["last_action_search"] = a_hits
+    a_hits = st.session_state.get("last_action_search") or []
+    a_payload = build_action_search_payload(
+        a_hits,
+        consent_token=a_token or None,
+        consent_level=None if a_level == "(any)" else a_level,
+        action_id=a_aid or None,
+    )
+    st.write(
+        f"Returned **{a_payload['row_count']}** hit(s); "
+        f"levels seen: {a_payload['consent_levels'] or '_none_'}."
+    )
+    if PANDAS_AVAILABLE and _pd is not None and a_payload["rows"]:
+        st.dataframe(
+            _pd.DataFrame(a_payload["rows"]),
+            hide_index=True, use_container_width=True,
+        )
+    else:
+        st.json(a_payload["rows"])
+
 
 def _render_provenance_tab(controls: dict) -> None:
     if not STREAMLIT_AVAILABLE:
@@ -954,6 +1373,89 @@ def _render_provenance_tab(controls: dict) -> None:
             mime="text/markdown",
         )
 
+    # --- P142 ProvenanceLogger lookup-by-action_id ---------------------
+    st.markdown("---")
+    st.subheader(f"P142 reconstruct_rollback_chain (schema {P142_SCHEMA_VERSION})")
+    st.caption(
+        "Look up one ``action_id`` and surface the full audit chain "
+        "(approval → forward → outcome → rollback). Backed by "
+        "`ProvenanceLogger.reconstruct_rollback_chain`."
+    )
+    cl1, cl2 = st.columns([3, 1])
+    chain_aid = cl1.text_input(
+        "action_id", value="", key="chain_lookup_aid",
+    )
+    lookup_btn = cl2.button(
+        "Look up chain", type="primary",
+        key="chain_lookup_btn", use_container_width=True,
+    )
+    if lookup_btn:
+        st.session_state["last_chain_lookup"] = run_chain_lookup_action(
+            chain_aid,
+        )
+    chain_payload = st.session_state.get("last_chain_lookup")
+    if chain_payload:
+        if chain_payload.get("empty"):
+            st.info(
+                "No chain found for this action_id. "
+                "Try copying one from the table above."
+            )
+        else:
+            st.success(
+                f"Chain for `{chain_payload['action_id']}` — "
+                f"reversed: **{chain_payload.get('reversed', False)}**"
+            )
+            if PANDAS_AVAILABLE and _pd is not None:
+                st.dataframe(
+                    _pd.DataFrame(chain_payload["rows"]),
+                    hide_index=True, use_container_width=True,
+                )
+            else:
+                st.json(chain_payload["rows"])
+            # Offer JSON + Markdown export of this chain.
+            cj1, cj2 = st.columns(2)
+            with cj1:
+                if st.button(
+                    "Export chain JSON", key="chain_export_json_btn",
+                ):
+                    json_export = export_audit_json(
+                        action_id=chain_payload["action_id"],
+                    )
+                    st.session_state["last_chain_json"] = json_export
+                json_blob = st.session_state.get("last_chain_json")
+                if json_blob:
+                    st.download_button(
+                        "Download chain.json",
+                        data=json.dumps(json_blob, indent=2, default=str),
+                        file_name=(
+                            f"crf_chain_"
+                            f"{chain_payload['action_id'].replace(':','-')}"
+                            f".json"
+                        ),
+                        mime="application/json",
+                        key="chain_json_dl",
+                    )
+            with cj2:
+                if st.button(
+                    "Export chain Markdown", key="chain_export_md_btn",
+                ):
+                    st.session_state["last_chain_md"] = export_audit_markdown(
+                        action_id=chain_payload["action_id"],
+                    )
+                md_blob = st.session_state.get("last_chain_md")
+                if md_blob:
+                    st.download_button(
+                        "Download chain.md",
+                        data=md_blob,
+                        file_name=(
+                            f"crf_chain_"
+                            f"{chain_payload['action_id'].replace(':','-')}"
+                            f".md"
+                        ),
+                        mime="text/markdown",
+                        key="chain_md_dl",
+                    )
+
 
 def _render_improve_tab(controls: dict) -> None:
     if not STREAMLIT_AVAILABLE:
@@ -1021,6 +1523,107 @@ def _render_improve_tab(controls: dict) -> None:
                 st.markdown(f"**Effort:** {s.get('estimated_effort')}")
                 st.markdown(f"**Status:** **{s.get('status','needs_review')}**")
                 st.write(s.get("description", ""))
+
+    # --- P143 weekly improvement loop -----------------------------------
+    st.markdown("---")
+    st.subheader("P143 weekly improvement loop")
+    st.caption(
+        "`WeeklyImprovementLoop` layers historical signals from P140 "
+        "memory + P142 provenance on top of the P132 metrics. Reports "
+        "are persisted to AppData; ``apply_approved_changes`` is the "
+        "ONLY path that writes a human-approved audit row, and it never "
+        "edits prompt files on disk."
+    )
+    loop_col_a, loop_col_b = st.columns([1, 1])
+    with loop_col_a:
+        loop_lookback = st.number_input(
+            "Lookback (days)", min_value=1, max_value=90,
+            value=DEFAULT_LOOKBACK_DAYS, key="loop_lookback",
+        )
+    with loop_col_b:
+        loop_dry_run = st.toggle(
+            "Dry run", value=True, key="loop_dry_run",
+            help=(
+                "When True (default), the loop persists a typed report + "
+                "P142 provenance row but never auto-applies a suggestion."
+            ),
+        )
+    loop_btn = st.button(
+        "Run weekly loop (dry-run)", type="primary",
+        key="weekly_loop_btn",
+    )
+    if loop_btn:
+        with st.spinner("Running weekly improvement cycle…"):
+            loop_report = run_weekly_loop_action(
+                dry_run=bool(loop_dry_run),
+                force_stub=controls["force_stub"],
+                lookback_days=int(loop_lookback),
+                user_id=controls["user_id"],
+            )
+        st.session_state["last_loop_report"] = loop_report
+
+    last_loop = st.session_state.get("last_loop_report")
+    loop_payload = build_loop_status_payload(
+        last_loop if isinstance(last_loop, LoopReport) else None,
+    )
+    sc1, sc2, sc3 = st.columns(3)
+    sc1.metric("Reports on disk", loop_payload["report_count"])
+    sc2.metric(
+        "Last overall",
+        f"{(loop_payload.get('last_overall') or 0.0):.3f}"
+        if loop_payload.get("last_overall") is not None else "—",
+    )
+    sc3.metric(
+        "Last review required",
+        "yes" if loop_payload.get("last_review") else "no",
+    )
+
+    if last_loop is not None and loop_payload.get("history"):
+        history = loop_payload["history"]
+        memory = history.get("memory") or {}
+        provenance = history.get("provenance") or {}
+        st.markdown(
+            f"- Lookback window: **{history.get('lookback_days', '?')}** day(s) "
+            f"(`{history.get('start_iso', '?')}` → "
+            f"`{history.get('end_iso', '?')}`)"
+        )
+        st.markdown(
+            f"- Memory in window: "
+            f"actions=**{memory.get('actions',0)}**, "
+            f"approvals=**{memory.get('approvals',0)}**, "
+            f"outcomes=**{memory.get('outcomes',0)}**, "
+            f"rollbacks=**{memory.get('rollbacks',0)}**"
+        )
+        st.markdown(
+            f"- Provenance entries: **{provenance.get('entries',0)}** "
+            f"(reversed chains: **{provenance.get('reversed_chains',0)}**)"
+        )
+        st.markdown(
+            f"- Rollback rate: "
+            f"**{float(history.get('rollback_rate') or 0.0):.0%}**"
+        )
+
+    suggestions_rows = loop_payload.get("suggestion_rows") or []
+    if suggestions_rows:
+        st.markdown("**Loop suggestions (HUMAN REVIEW REQUIRED):**")
+        if PANDAS_AVAILABLE and _pd is not None:
+            st.dataframe(
+                _pd.DataFrame(suggestions_rows),
+                hide_index=True, use_container_width=True,
+            )
+        else:
+            st.json(suggestions_rows)
+    else:
+        st.info(
+            "No loop suggestions yet — click **Run weekly loop "
+            "(dry-run)** above to generate a report."
+        )
+
+    if loop_payload.get("results_dir"):
+        st.caption(
+            f"Reports persisted to: `{loop_payload['results_dir']}` · "
+            f"approvals audit: `{loop_payload['approvals_dir']}`"
+        )
 
 
 # --- Section 6. Top-level layout ----------------------------------------

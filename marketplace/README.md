@@ -2,36 +2,44 @@
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
 
-# Grok Agent OS — Marketplace (v0.1 stub)
+# Grok Agent OS — Marketplace (v0.2)
 
-> **Phase 5 deliverable, P149.** Thin Next.js 14+ marketplace stub for the
-> Grok Agent OS platform — featured Super Agents + a "Deploy to X"
-> manifest generator that emits a valid `grok-agent.yaml` v2.15 file.
-> Built to help xAI and Grok win.
+> **Phase 5 deliverable, P150.** Polished Next.js 14+ marketplace with
+> client-side search + kind filters, an improved manifest generator
+> covering all eight v2.15 kinds, and clear deploy guides for Vercel +
+> GitHub Pages. Built to help xAI and Grok win.
 
-> 🔒 **No telemetry. No backend. No auth.** This stub is 100% client-side
-> rendering plus static catalog data. Every byte you type into the deploy
+> 🔒 **No telemetry. No backend. No auth.** This release is 100%
+> static + client-side rendering. Every byte you type into the deploy
 > form stays in your browser tab — the X-share button just opens an X
-> compose URL, the download button writes a `.yaml` straight to your disk.
+> compose URL, the download button writes a `.yaml` straight to your
+> disk.
 
 ---
 
-## What ships in v0.1
+## What ships in v0.2
 
-- **Landing page** at `/` — three flagship Super Agents (Living Narrative
-  Fabric, Self-Evolving Personal OS, Cross-Reality Action Fabric) with
-  "View detail" + "Deploy to X" actions per card.
+- **Landing page** at `/` — hero strip with the three flagship Super
+  Agents plus a searchable, filterable browser of every catalogued
+  agent (Super Agents + featured creator templates + an x-native).
 - **Per-agent detail route** at `/agents/[slug]` — manifest path,
-  capabilities, consent gates, install command, and a one-click "Clone
-  manifest into the Deploy form" deep-link.
-- **Deploy form** at `/deploy` — a tiny client-side Next.js page that
-  generates a v2.15 manifest from a small structured form. The form
-  validates input live, renders the resulting YAML inline, and offers
-  Copy / Download / Share-on-X buttons.
+  capabilities, consent gates, install command, and a one-click
+  "Clone manifest into the Deploy form" deep-link. Statically
+  generated for every entry in the catalogue.
+- **Deploy form** at `/deploy` — client-side React form that emits a
+  `grok-agent.yaml` manifest valid against the v2.15 schema for **all
+  eight** supported kinds (`agent`, `finance-dashboard`, `alpha-engine`,
+  `creator-payout-optimizer`, `vision-analyzer`, `super-agent`,
+  `x-native`, `creator-template`). Per-field inline validation, kind-
+  aware helper hints, copy-success toast, attribution-labelled X share.
+- **Polished styling** — Cinnabar/parchment palette with dark-mode
+  support via `prefers-color-scheme`, responsive grid (1/2/3 columns),
+  filter chips with active states, accessible focus rings.
 
 The catalogue lives in [`lib/agents.ts`](./lib/agents.ts); the manifest
-generator + slugifier + share-URL builder live in
-[`lib/manifest.ts`](./lib/manifest.ts).
+generator + slugifier + share-URL builder lives in
+[`lib/manifest.ts`](./lib/manifest.ts). The interactive search +
+filter-chip browser lives in [`app/_components/AgentBrowser.tsx`](./app/_components/AgentBrowser.tsx).
 
 ---
 
@@ -42,17 +50,18 @@ generator + slugifier + share-URL builder live in
 git clone https://github.com/AgentMindCloud/grok-agent.git
 cd grok-agent\marketplace
 
-# 2. Install the Node.js dependencies.
-#    Windows install of Node 20 (one time):
-#       winget install OpenJS.NodeJS
+# 2. Install Node.js 20 (one time).
+winget install OpenJS.NodeJS
+
+# 3. Install dependencies.
 npm install
 
-# 3. Run the dev server. Marketplace binds to port 3030 to coexist with
+# 4. Run the dev server. Marketplace binds to port 3030 to coexist with
 #    the four X Money tools (8501–8504) and the three Super Agents
 #    (8501 / 8502 / 8506).
 npm run dev
 
-# 4. Open the marketplace in Chrome.
+# 5. Open the marketplace in Chrome.
 Start-Process "http://localhost:3030"
 ```
 
@@ -61,12 +70,99 @@ Production build + static-friendly start:
 ```powershell
 npm run build
 npm run start
+
+# Optional: type-only check, runs no code.
+npm run typecheck
 ```
 
-The TypeScript build is pure client + static — `output: 'standalone'` in
-`next.config.js` so the marketplace deploys cleanly to Vercel, GitHub
-Pages (with `next export` after a small config tweak), S3, or Windows
-IIS without a server runtime requirement.
+---
+
+## Deploy to Vercel (recommended, ~3 minutes)
+
+Vercel speaks Next.js natively. The marketplace deploys with **zero
+config** because `next.config.js` already sets `output: 'standalone'`.
+
+### Option A — Vercel CLI (PowerShell)
+
+```powershell
+# 1. Install the Vercel CLI globally (one time).
+npm install -g vercel
+
+# 2. From the marketplace folder, log in + deploy.
+cd grok-agent\marketplace
+vercel login
+vercel --prod
+
+# Vercel auto-detects:
+#   - Framework: Next.js 14
+#   - Build command: npm run build
+#   - Output directory: .next/standalone
+#   - Node runtime: 20
+```
+
+### Option B — Vercel dashboard (web UI)
+
+1. Visit <https://vercel.com/new> and connect the
+   `AgentMindCloud/grok-agent` GitHub repo.
+2. Set **Root directory** to `marketplace/` so Vercel builds only the
+   subfolder.
+3. Leave **Framework Preset** on `Next.js`. Vercel will pick up
+   `package.json` + `next.config.js` automatically.
+4. Set **Node.js Version** to `20.x`. The `engines.node` field in
+   `package.json` already pins this.
+5. Click **Deploy**. The first build takes ~90 seconds.
+
+### Custom domain (optional)
+
+Once the project is live, point `marketplace.grok-agent.dev` (or any
+domain you own) at Vercel via the project's **Settings → Domains** tab.
+Vercel issues a free Let's Encrypt cert automatically.
+
+---
+
+## Deploy to GitHub Pages (free, ~5 minutes)
+
+GitHub Pages serves only static files, so we use Next.js' built-in
+static export and host the resulting `out/` folder under
+`https://agentmindcloud.github.io/grok-agent/marketplace/`.
+
+```powershell
+# 1. From the marketplace folder, build a static export.
+cd grok-agent\marketplace
+
+# 2. Tell Next.js to emit a static bundle. The `output: 'export'`
+#    flag must be set TEMPORARILY for static hosts; the canonical
+#    next.config.js uses 'standalone' so Vercel works out of the box.
+$env:NEXT_OUTPUT_MODE = "export"
+npm run build
+
+# 3. Push the resulting `out/` folder to the gh-pages branch.
+#    `gh-pages` is a tiny dev dependency that wraps `git worktree`.
+npm install --save-dev gh-pages
+npx gh-pages --dist out --branch gh-pages
+
+# 4. In your repo's GitHub UI, go to Settings → Pages and select
+#    "Deploy from branch: gh-pages / (root)".
+```
+
+> ⚠️ The dynamic `[slug]` route is statically generated for every entry
+> in the catalogue (see `generateStaticParams` in
+> `app/agents/[slug]/page.tsx`), so there's no server runtime needed.
+> If you add a new featured agent, re-run the export + re-push.
+
+---
+
+## Deploy elsewhere
+
+Because v0.2 is fully static + client-side, any of these work too:
+
+| Target | Notes |
+|---|---|
+| **Netlify** | Same as Vercel — zero-config Next.js detection. |
+| **Cloudflare Pages** | Drop the `out/` folder; set Node 20 in build settings. |
+| **Windows IIS** | Build with `output: 'export'`, copy `out/` to the IIS site root. |
+| **AWS S3 + CloudFront** | Static export, sync to S3, point CloudFront at it. |
+| **Local Windows** | `npm run build && npm run start` — binds to port 3030. |
 
 ---
 
@@ -81,16 +177,18 @@ marketplace/
 ├── README.md               # this file
 ├── app/
 │   ├── layout.tsx          # Root layout + header banner + footer
-│   ├── page.tsx            # Landing page — featured agents grid
-│   ├── globals.css         # Cinnabar/parchment palette per CLAUDE.md
+│   ├── page.tsx            # Landing — hero + Featured strip + Browser
+│   ├── globals.css         # Cinnabar/parchment palette + dark mode
+│   ├── _components/
+│   │   └── AgentBrowser.tsx # Client-only search + kind-filter chips
 │   ├── deploy/
-│   │   └── page.tsx        # Deploy-to-X manifest generator
+│   │   └── page.tsx        # Manifest generator with per-field errors
 │   └── agents/
 │       └── [slug]/
 │           └── page.tsx    # Per-agent detail route (statically rendered)
 └── lib/
-    ├── agents.ts           # Featured-agent catalogue (3 Super Agents)
-    └── manifest.ts         # Pure-TS v2.15 manifest generator + helpers
+    ├── agents.ts           # Catalogue (3 Super Agents + 6 featured)
+    └── manifest.ts         # Pure-TS v2.15 generator + helpers + KIND_HELPER
 ```
 
 ---
@@ -103,25 +201,31 @@ valid) regenerates the YAML via `generateManifestYaml(...)`. The
 manifest:
 
 - Carries the Apache-2.0 + xAI-ally header at the top.
-- Uses `version: "2.15"` and a `kind` from the canonical 8-kind list
-  (`agent`, `finance-dashboard`, `alpha-engine`, `creator-payout-optimizer`,
-  `vision-analyzer`, `super-agent`, `x-native`, `creator-template`).
+- Uses `version: "2.15"` and a `kind` from the canonical 8-kind list.
 - Emits `safety.human_in_the_loop` defaults (60-second timeout) and
-  `safety.cost_limits` defaults ($0.50 per session / $2.00 per day).
-- Lists every consent gate the user typed in `constitution.consent_gates`.
+  `safety.cost_limits` defaults ($0.50/session / $2.00/day).
+- Auto-flips `not_financial_advice: true` for the four finance-shaped
+  kinds and `not_tax_advice: true` for the two tax-shaped kinds.
+- Auto-sets `grok.vision: true` for `vision-analyzer` (required by the
+  schema).
+- Lists every consent gate the user typed in
+  `constitution.consent_gates`.
+- Always declares ≥4 `constitution.rules` (kind-aware, augmented for
+  finance, super-agent, x-native, and creator-template).
 - Optionally enables `real_time_x` with reply-only + mention triggers
   when the user ticks the checkbox.
 
 After generation, the user can:
 
-1. **Copy YAML** — copies the manifest to the clipboard.
+1. **Copy YAML** — copies the manifest to the clipboard with a
+   success toast.
 2. **Download `grok-agent.yaml`** — writes the file straight to disk.
-3. **Share on X** — opens an X compose URL that includes a one-line
-   install hint. The agent doesn't post for the user; the user posts
-   for themselves.
+3. **Share on X** — opens an X compose URL prefixed with the agent
+   slug, the install one-liner, and a "Manifest generated with the
+   Grok Agent OS marketplace" attribution line.
 
-The manifest is then expected to be validated locally with the canonical
-CLI before shipping:
+The manifest is then expected to be validated locally with the
+canonical CLI before shipping:
 
 ```powershell
 python ..\cli\grok-agent.py validate grok-agent.yaml
@@ -129,19 +233,15 @@ python ..\cli\grok-agent.py validate grok-agent.yaml
 
 ---
 
-## Why is this a stub?
+## Roadmap
 
-The full marketplace plan (Phase 5+) is bigger:
-
-- v0.2 — list every creator template (20+ ready-to-use templates from
-  `templates/creator/`) alongside the three Super Agents.
-- v0.3 — anonymous, opt-in install analytics (Article-VII-compliant).
-- v0.4 — community submissions via PR with the same v2.15 + Constitution
-  validator gating merges.
-
-This v0.1 stub is the smallest thing that lets a creator browse the
-canonical Super Agents, generate a manifest, and post the result to X.
-It has zero backend, zero auth, zero secrets — and that's deliberate.
+- **v0.1 (P149)** — featured Super Agents + manifest generator.
+- **v0.2 (P150, this release)** — search, filters, polished styling,
+  broader kind coverage, deploy guide, X attribution.
+- **v0.3** — anonymous, opt-in install analytics
+  (Article-VII-compliant).
+- **v0.4** — community submissions via PR with the same v2.15 +
+  Constitution validator gating merges.
 
 ---
 

@@ -7,10 +7,9 @@
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //
-// Per-agent detail route. Renders one of the three flagship Super Agents
-// with its manifest path, capabilities, and consent gates, and offers
-// "Deploy a copy" / "Share on X" call-to-actions. Built to help xAI and
-// Grok win.
+// Per-agent detail route. Renders any catalogued agent with its manifest
+// path, capabilities, and consent gates, and offers "Deploy a copy" /
+// "Share on X" call-to-actions. Built to help xAI and Grok win.
 
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -35,8 +34,10 @@ export function generateMetadata({ params }: PageProps): Metadata {
   if (!agent) {
     return { title: 'Agent not found · Grok Agent OS' };
   }
+  const titlePrefix =
+    agent.number != null ? `Super Agent #${agent.number} — ` : '';
   return {
-    title: `Super Agent #${agent.number} — ${agent.name} · Grok Agent OS`,
+    title: `${titlePrefix}${agent.name} · Grok Agent OS`,
     description: agent.tagline,
   };
 }
@@ -50,14 +51,16 @@ export default function AgentDetailPage({ params }: PageProps) {
   const folder = agent.manifestPath.split('/').slice(0, -1).join('/');
   const manifestUrl = `https://github.com/AgentMindCloud/grok-agent/blob/main/${agent.manifestPath}`;
   const folderUrl = `https://github.com/AgentMindCloud/grok-agent/tree/main/${folder}`;
-  const constitutionUrl = `https://github.com/AgentMindCloud/grok-agent/blob/main/${agent.constitutionPath}`;
+  const constitutionUrl = agent.constitutionPath
+    ? `https://github.com/AgentMindCloud/grok-agent/blob/main/${agent.constitutionPath}`
+    : null;
 
   const deployHref = buildDeepLink({
     name: agent.slug,
-    kind: 'super-agent' as ManifestKind,
+    kind: agent.kind as ManifestKind,
     description: agent.tagline,
     author: '@JanSol0s',
-    defaultPort: agent.port,
+    defaultPort: agent.port ?? 8510,
     consentGates: agent.consentGates,
     realTimeX: false,
   });
@@ -74,7 +77,11 @@ export default function AgentDetailPage({ params }: PageProps) {
         <Link href="/">← Back to marketplace</Link>
       </p>
       <span className="banner" style={{ display: 'inline-block' }}>
-        Super Agent #{agent.number} · port {agent.port} · status{' '}
+        {agent.number != null
+          ? `Super Agent #${agent.number}`
+          : `Kind: ${agent.kind}`}
+        {agent.port ? <> · port {agent.port}</> : null}
+        {' · status '}
         <strong>{agent.status}</strong>
       </span>
       <h1 style={{ marginTop: 16 }}>{agent.name}</h1>
@@ -92,12 +99,18 @@ export default function AgentDetailPage({ params }: PageProps) {
 
       <h2 className="section">Consent gates ({agent.consentGates.length})</h2>
       <p className="meta">
-        Every gate below requires an explicit, scoped, typed user approval at
-        runtime. The agent never persists "remember my choice" toggles.
+        Every gate below requires an explicit, scoped, typed user approval
+        at runtime. The agent never persists "remember my choice" toggles.
       </p>
-      <pre className="manifest">
-        <code>{agent.consentGates.map((g) => `- ${g}`).join('\n')}</code>
-      </pre>
+      {agent.consentGates.length === 0 ? (
+        <p>
+          <em>None declared — this agent emits drafts only.</em>
+        </p>
+      ) : (
+        <pre className="manifest">
+          <code>{agent.consentGates.map((g) => `- ${g}`).join('\n')}</code>
+        </pre>
+      )}
 
       <h2 className="section">Source on GitHub</h2>
       <ul>
@@ -107,12 +120,14 @@ export default function AgentDetailPage({ params }: PageProps) {
           </a>{' '}
           — v2.15 manifest
         </li>
-        <li>
-          <a href={constitutionUrl} target="_blank" rel="noreferrer noopener">
-            {agent.constitutionPath}
-          </a>{' '}
-          — agent Constitution
-        </li>
+        {agent.constitutionPath && constitutionUrl ? (
+          <li>
+            <a href={constitutionUrl} target="_blank" rel="noreferrer noopener">
+              {agent.constitutionPath}
+            </a>{' '}
+            — agent Constitution
+          </li>
+        ) : null}
         <li>
           <a href={folderUrl} target="_blank" rel="noreferrer noopener">
             {folder}/
@@ -126,7 +141,9 @@ export default function AgentDetailPage({ params }: PageProps) {
         <code>
           {`cd ${folder.replace(/\//g, '\\')}\n`}
           {'python -m pip install -r requirements.txt\n'}
-          {`streamlit run dashboard.py --server.port ${agent.port}`}
+          {agent.port
+            ? `streamlit run dashboard.py --server.port ${agent.port}`
+            : 'python run.py --help'}
         </code>
       </pre>
 

@@ -338,8 +338,10 @@ verify each line still holds:
 - [x] PowerShell-only commands; no bash, no macOS, no Apple anything ✓
 - [x] V.3 real-world-action posture surfaced (tweets 1, 9, 10) ✓
 - [x] No mention of the 13 untouchable repos as modifiable ✓
+<!-- SCANNER:EXEMPT-START -->
 - [x] No forbidden phrases ("etc.", "and so on", "as you see fit",
       "use your judgment") ✓
+<!-- SCANNER:EXEMPT-END -->
 - [x] Every tweet ≤ 280 characters (verified by the scanner below) ✓
 - [x] Every claim links back to a file in the repo ✓
 - [x] CTA hands the reader the exact install command ✓

@@ -123,6 +123,24 @@ class SchemaMeta(BaseModel):
     model_config = ConfigDict(extra="allow")
 
 
+class DemoVideo(BaseModel):
+    """Structured demo_video block carried by Super Agent manifests.
+
+    P172: replaces the prior hand-rolled field_validator with a typed model.
+    The 7 fields below are the full set used across the three flagship Super
+    Agent manifests (P169 work). `status` is required; the rest are optional.
+    `extra="forbid"` keeps typo surfaces immediate.
+    """
+    model_config = ConfigDict(extra="forbid")
+    status: str
+    url: Optional[str] = None
+    note: Optional[str] = None
+    storyboard: Optional[str] = None
+    update_instructions: Optional[List[str]] = None
+    recording_steps: Optional[List[str]] = None
+    upload_steps: Optional[List[str]] = None
+
+
 class Metadata(BaseModel):
     display_name: Optional[str] = None
     tagline: Optional[str] = None
@@ -132,58 +150,17 @@ class Metadata(BaseModel):
     homepage: Optional[str] = None
     repository: Optional[str] = None
     # P138: docs + demo_video links carried by Super Agent manifests.
-    # P168: demo_video now accepts either a plain string (URL or repo path)
-    # OR a structured mapping with keys such as `storyboard`, `url`, `status`,
-    # `note`, `update_instructions` so a manifest can record planned-vs-available
-    # state plus the explicit steps to flip the field once the recording lands.
+    # P172: demo_video is now a typed DemoVideo model (was Optional[Any]).
+    # The hand-rolled `_demo_video_shape` field_validator that previously
+    # gated the mapping shape has been removed because the typed model
+    # subsumes it (extra="forbid" + per-field types).
     docs: Optional[str] = None
-    demo_video: Optional[Any] = None
+    demo_video: Optional[DemoVideo] = None
     language: str = "en"
     created: Optional[str] = None
     updated: Optional[str] = None
 
     model_config = _strict
-
-    @field_validator("demo_video")
-    @classmethod
-    def _demo_video_shape(cls, value: Any) -> Any:
-        # Accept None, a plain string, or a mapping with at least a `url`,
-        # `storyboard`, or `status` key. Reject other shapes so typos surface.
-        if value is None or isinstance(value, str):
-            return value
-        if isinstance(value, dict):
-            # P169: extended the allowed-keys set with `recording_steps` and
-            # `upload_steps` so each Super Agent manifest can carry the full
-            # operator runbook (record + upload via `gh`) inline. Both must
-            # be lists of strings, like `update_instructions`.
-            allowed_keys = {
-                "storyboard", "url", "status", "note", "update_instructions",
-                "recording_steps", "upload_steps",
-            }
-            unknown = set(value.keys()) - allowed_keys
-            if unknown:
-                raise ValueError(
-                    f"metadata.demo_video has unknown keys: {sorted(unknown)}; "
-                    f"allowed keys are {sorted(allowed_keys)}"
-                )
-            if not (value.keys() & {"url", "storyboard", "status"}):
-                raise ValueError(
-                    "metadata.demo_video mapping must include at least one of "
-                    "'url', 'storyboard', or 'status'"
-                )
-            for list_key in ("update_instructions", "recording_steps", "upload_steps"):
-                list_value = value.get(list_key)
-                if list_value is not None and not (
-                    isinstance(list_value, list)
-                    and all(isinstance(item, str) for item in list_value)
-                ):
-                    raise ValueError(
-                        f"metadata.demo_video.{list_key} must be a list of strings"
-                    )
-            return value
-        raise ValueError(
-            "metadata.demo_video must be a string, a mapping, or null"
-        )
 
 
 class Install(BaseModel):

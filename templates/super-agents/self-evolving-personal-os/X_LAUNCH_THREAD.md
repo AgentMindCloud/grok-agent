@@ -348,8 +348,10 @@ verify each line still holds:
 - [x] "Built for xAI, X, Grok and the ecosystem community" line present in the file ✓
 - [x] PowerShell-only commands; no bash, no macOS, no Apple anything ✓
 - [x] No mention of the 13 untouchable repos as modifiable ✓
+<!-- SCANNER:EXEMPT-START -->
 - [x] No forbidden phrases ("etc.", "and so on", "as you see fit",
       "use your judgment") ✓
+<!-- SCANNER:EXEMPT-END -->
 - [x] Every tweet ≤ 280 characters ✓
 - [x] Every claim links back to a file in the repo ✓
 - [x] CTA hands the reader the exact install command ✓

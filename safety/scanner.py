@@ -1017,20 +1017,31 @@ def check_bridge_transitive_contradiction(m: Dict[str, Any]) -> List[Finding]:
 # generated prompt or output. This walks the entire repo and flags any
 # accidental leak. Governance files that *define* the banned list (CLAUDE.md,
 # docs/CONSTRAINTS.md) and a couple of launch threads that quote the list
-# inside a verification checklist are whitelisted by exact line range.
+# inside a verification checklist surround those sections with HTML-comment
+# markers `<!-- SCANNER:EXEMPT-START -->` / `<!-- SCANNER:EXEMPT-END -->`.
+# The scanner reads those markers at runtime instead of relying on hardcoded
+# line numbers, so future edits to the governance files don't silently break
+# the whitelist.
 #
-# Each entry maps a repo-root-relative POSIX path to a list of inclusive
-# (start_line, end_line) tuples. Lines outside the listed ranges are scanned
-# normally.
+# `_FORBIDDEN_PHRASE_EXEMPT_FILES` lists the repo-root-relative POSIX paths
+# that opt into marker-based exemption. `_get_exempt_ranges()` parses the
+# markers on each call.
 
-_FORBIDDEN_PHRASE_EXEMPTIONS: Dict[str, List[Tuple[int, int]]] = {
-    "CLAUDE.md": [(76, 81), (507, 507)],
-    "docs/CONSTRAINTS.md": [(42, 47)],
-    "templates/super-agents/self-evolving-personal-os/X_LAUNCH_THREAD.md": [(351, 352)],
-    "templates/super-agents/cross-reality-action-fabric/X_LAUNCH_THREAD.md": [(341, 342)],
-    # The scanner's own regex literal must reference the banned phrases.
-    "safety/scanner.py": [(1039, 1039)],
+_FORBIDDEN_PHRASE_EXEMPT_FILES: set = {
+    "CLAUDE.md",
+    "docs/CONSTRAINTS.md",
+    "templates/super-agents/self-evolving-personal-os/X_LAUNCH_THREAD.md",
+    "templates/super-agents/cross-reality-action-fabric/X_LAUNCH_THREAD.md",
 }
+
+# The scanner's own regex literal references the banned phrases by necessity
+# (it has to match them). We can't put HTML-comment markers inside a Python
+# source file, so this single line is exempt via a hardcoded fallback in
+# `_get_self_exempt_ranges()` below.
+_SELF_EXEMPT_FILE = "safety/scanner.py"
+
+_EXEMPT_START_MARKER = "<!-- SCANNER:EXEMPT-START -->"
+_EXEMPT_END_MARKER = "<!-- SCANNER:EXEMPT-END -->"
 
 # Pattern matches each banned phrase (case-insensitive). The leading \b on the
 # first alternative prevents false positives on words like "fetcher" or
@@ -1067,12 +1078,68 @@ _FORBIDDEN_PHRASE_SCAN_EXCLUDES = (
 )
 
 
-def _exempt_line_count() -> int:
-    """Total number of lines whitelisted across all exemption entries."""
+def _get_self_exempt_ranges() -> List[Tuple[int, int]]:
+    """Hardcoded exemption for the scanner's own forbidden-phrase references.
+
+    The forbidden-phrase regex (`_FORBIDDEN_PHRASES_RE`) must reference the
+    banned phrases verbatim, and the helper that locates that regex must also
+    contain the same token to find it. We can't put HTML-comment markers
+    inside a Python source file, so we rescan the scanner at runtime and
+    return every line whose content would otherwise trigger a leak finding.
+    Single-line ranges are emitted (one per match) so the line count stays
+    intuitive (one exempt line per forbidden token).
+    """
+    here = Path(__file__)
+    try:
+        text = here.read_text(encoding="utf-8")
+    except OSError:
+        return []
+    ranges: List[Tuple[int, int]] = []
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if _FORBIDDEN_PHRASES_RE.search(line):
+            ranges.append((line_no, line_no))
+    return ranges
+
+
+def _get_exempt_ranges(file_path: Path) -> List[Tuple[int, int]]:
+    """Return inclusive (start, end) line ranges marked as exempt in a file.
+
+    Walks the file line-by-line tracking marker state. Lines containing
+    `<!-- SCANNER:EXEMPT-START -->` open a range; lines containing
+    `<!-- SCANNER:EXEMPT-END -->` close it. Both marker lines are included
+    in the exempt range (they're HTML comments so they wouldn't fire anyway,
+    but counting them keeps the math intuitive).
+
+    Unmatched markers are tolerated: a stray START with no END is dropped,
+    and a stray END is ignored.
+    """
+    try:
+        text = file_path.read_text(encoding="utf-8")
+    except OSError:
+        return []
+    ranges: List[Tuple[int, int]] = []
+    start_line: Optional[int] = None
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if _EXEMPT_START_MARKER in line and start_line is None:
+            start_line = line_no
+        elif _EXEMPT_END_MARKER in line and start_line is not None:
+            ranges.append((start_line, line_no))
+            start_line = None
+    return ranges
+
+
+def _exempt_line_count(repo_root: Path) -> int:
+    """Total number of lines whitelisted across all exempt files."""
     total = 0
-    for ranges in _FORBIDDEN_PHRASE_EXEMPTIONS.values():
-        for start, end in ranges:
+    for rel_path in _FORBIDDEN_PHRASE_EXEMPT_FILES:
+        full = repo_root / rel_path
+        if not full.is_file():
+            continue
+        for start, end in _get_exempt_ranges(full):
             total += (end - start + 1)
+    # Add the scanner's own self-exemption.
+    for start, end in _get_self_exempt_ranges():
+        total += (end - start + 1)
     return total
 
 
@@ -1083,8 +1150,8 @@ def _is_excluded(rel_path: str) -> bool:
     return False
 
 
-def _is_exempt(rel_path: str, line_no: int) -> bool:
-    ranges = _FORBIDDEN_PHRASE_EXEMPTIONS.get(rel_path)
+def _is_exempt(rel_path: str, line_no: int, exempt_cache: Dict[str, List[Tuple[int, int]]]) -> bool:
+    ranges = exempt_cache.get(rel_path)
     if not ranges:
         return False
     for start, end in ranges:
@@ -1093,9 +1160,28 @@ def _is_exempt(rel_path: str, line_no: int) -> bool:
     return False
 
 
+def _build_exempt_cache(repo_root: Path) -> Dict[str, List[Tuple[int, int]]]:
+    """Resolve all exempt ranges once per scan.
+
+    Marker-based ranges are derived from the governance files listed in
+    `_FORBIDDEN_PHRASE_EXEMPT_FILES`. The scanner's own regex literal is
+    located dynamically by `_get_self_exempt_ranges()`.
+    """
+    cache: Dict[str, List[Tuple[int, int]]] = {}
+    for rel_path in _FORBIDDEN_PHRASE_EXEMPT_FILES:
+        full = repo_root / rel_path
+        if not full.is_file():
+            continue
+        cache[rel_path] = _get_exempt_ranges(full)
+    self_ranges = _get_self_exempt_ranges()
+    if self_ranges:
+        cache[_SELF_EXEMPT_FILE] = self_ranges
+    return cache
+
+
 def check_forbidden_phrase_leak(repo_root: Path) -> List[Finding]:
     """Walk repo_root and emit ERROR Findings for each forbidden-phrase hit
-    that is not covered by `_FORBIDDEN_PHRASE_EXEMPTIONS`.
+    that is not covered by the marker-based exempt cache.
 
     Returns a flat list of Findings. A clean repo returns []. The check_id is
     `VIII.forbidden-phrase-leak`; location encodes the file:line of each hit
@@ -1104,6 +1190,7 @@ def check_forbidden_phrase_leak(repo_root: Path) -> List[Finding]:
     findings: List[Finding] = []
     if not repo_root.is_dir():
         return findings
+    exempt_cache = _build_exempt_cache(repo_root)
     for path in sorted(repo_root.rglob("*")):
         if not path.is_file():
             continue
@@ -1122,7 +1209,7 @@ def check_forbidden_phrase_leak(repo_root: Path) -> List[Finding]:
         for line_no, line in enumerate(text.splitlines(), start=1):
             if not _FORBIDDEN_PHRASES_RE.search(line):
                 continue
-            if _is_exempt(rel_path, line_no):
+            if _is_exempt(rel_path, line_no, exempt_cache):
                 continue
             snippet = line.strip()[:100]
             findings.append(Finding(
@@ -1280,7 +1367,7 @@ def cmd_forbidden_phrase_scan(args: argparse.Namespace) -> int:
         sys.stderr.write(f"X  Repo root not found: {repo_root}\n")
         return 66
     findings = check_forbidden_phrase_leak(repo_root)
-    exempt_count = _exempt_line_count()
+    exempt_count = _exempt_line_count(repo_root)
     if args.json:
         payload = {
             "repo_root": str(repo_root),

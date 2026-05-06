@@ -73,12 +73,14 @@ If any of the Hard Six fails → fix before output.
 
 These phrases mean the spec is too vague to act on safely. Never use them, and push back if a prompt contains them:
 
+<!-- SCANNER:EXEMPT-START -->
 - "and so on"
 - "etc."
 - "anything related to"
 - "as you see fit"
 - "use your judgment"
 - "boilerplate as needed"
+<!-- SCANNER:EXEMPT-END -->
 
 If you are tempted to write one of these, the prompt or the output is too broad and must be split into smaller, testable pieces.
 
@@ -504,7 +506,9 @@ Discrepancies (claimed-but-not-changed; or changed-but-not-claimed) must be flag
 - [ ] If manifest: declares `version: 2.15`, validates against `spec/v2.15/grok-agent.yaml`
 - [ ] Paths are Windows-correct (`$env:LOCALAPPDATA`, not `~/.config`)
 - [ ] No mention of macOS, Linux-only tools (outside CI runners), or the 13 original repos as modifiable
+<!-- SCANNER:EXEMPT-START -->
 - [ ] No forbidden phrases ("etc.", "and so on", "as you see fit", "use your judgment")
+<!-- SCANNER:EXEMPT-END -->
 - [ ] Commit message follows `phase-N: <verb> <what>`
 - [ ] HANDOFF_LOG row appended exactly as the prompt specifies
 - [ ] 3-line reply summary (what + decisions + blockers) — no more, no less

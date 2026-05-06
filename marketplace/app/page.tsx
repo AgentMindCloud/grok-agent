@@ -19,25 +19,13 @@ import { loadAllAgents } from '../lib/manifests';
 import type { AgentCategory } from '../lib/types';
 import { CATEGORY_LABELS } from '../lib/types';
 
-interface HomePageProps {
-  searchParams?: { category?: string };
-}
+// NOTE: with output:'export', searchParams are not available at build time.
+// Category filtering is deferred to the upcoming CommandPalette / client UI.
+const active: AgentCategory | null = null;
 
-const VALID_CATEGORIES: AgentCategory[] = ['super-agent', 'x-money-tool'];
-
-function activeCategory(raw?: string): AgentCategory | null {
-  if (!raw) return null;
-  return (VALID_CATEGORIES as string[]).includes(raw)
-    ? (raw as AgentCategory)
-    : null;
-}
-
-export default function HomePage({ searchParams }: HomePageProps) {
+export default function HomePage() {
   const allAgents = loadAllAgents();
-  const active = activeCategory(searchParams?.category);
-  const filtered = active
-    ? allAgents.filter((agent) => agent.category === active)
-    : allAgents;
+  const filtered = allAgents;
 
   const totals: Record<AgentCategory, number> = {
     'super-agent': allAgents.filter((a) => a.category === 'super-agent').length,

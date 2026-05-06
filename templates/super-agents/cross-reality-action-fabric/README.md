@@ -2,7 +2,7 @@
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
 
-# Cross-Reality Action Fabric
+# Super Agent #3 — Cross-Reality Action Fabric
 
 > **Super Agent #3 — the bridge between an X / Grok conversation and your
 > real Windows machine + the public web.**

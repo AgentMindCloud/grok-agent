@@ -2,9 +2,14 @@
 <!-- Licensed under the Apache License, Version 2.0 -->
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
 
-# 🧬 Living Narrative Fabric — Orchestration Core (Slot 2)
+# Super Agent #1 — Living Narrative Fabric
 
-> Versioned, provenance-first synthesis across X, news, academia, government, and open web. Detects contradictions across sources without silently resolving them. Fully rewindable. Built to help xAI and Grok win the agent platform battle on X — this is the runtime that makes Grok the canonical narrative engine for everyone shipping on X.
+> **Super Agent #1 — versioned, provenance-first synthesis across X, news,
+> academia, government, and open web.**
+> Detects contradictions across sources without silently resolving them.
+> Fully rewindable. Built to help xAI and Grok win the agent platform
+> battle on X — this is the runtime that makes Grok the canonical narrative
+> engine for everyone shipping on X.
 
 ---
 

@@ -143,6 +143,7 @@
 | P146 | Phase 4 | Fix Validate Manifests (v2.15) workflow and Living Narrative Fabric validation | .github/workflows/validate.yml | Audit confirmed all 34 manifests (incl. LNF) already pass schema + Constitution scanner at info/warn/error severity floors locally — P138 + P139 fixes are on main. Hardened validate.yml: added `set -euo pipefail` to every multi-line run block, dedicated dependency-import probe (pydantic v2 + pyyaml), `--version` self-test alongside `info`, `cache-dependency-path` pinned to the workflow file, per-step pass/fail counters, and a success-summary step that emits `::notice::Validated N manifests cleanly`. LNF needed no manifest change. Workflow YAML re-parses cleanly, full end-to-end simulation green: 34/34 schema + 34/34 scanner | ✅ done |
 | P147 | Phase 4 | Fix Super Agent numbering and titles in Living Narrative Fabric and Cross-Reality Action Fabric | living-narrative-fabric/README.md, cross-reality-action-fabric/README.md | Clear #1 and #3 labeling restored | ✅ done |
 | P148 | Phase 4 | Create README.md for Self-Evolving Personal OS + final Super Agents consistency check | self-evolving-personal-os/README.md | All three Super Agents now have consistent READMEs | ✅ done |
+| P149 | Phase 5 | Create thin Next.js marketplace stub + "Deploy to X" one-click button | marketplace/ (Next.js stub) | First Phase 5 deliverable on main | ✅ done |
 
 <!--
 ====================================================================

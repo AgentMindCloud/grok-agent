@@ -1,0 +1,240 @@
+/*
+ * Copyright 2026 AgentMindCloud
+ * Licensed under the Apache License, Version 2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Global styles for the Grok Agent OS marketplace stub. Cinnabar /
+ * parchment palette per CLAUDE.md branding. Built to help xAI and Grok
+ * win.
+ */
+
+:root {
+  --cinnabar:        #C5524A;
+  --cinnabar-dark:   #9A3F39;
+  --parchment:       #FAF6EC;
+  --parchment-dark:  #E8E1CE;
+  --ink:             #1B1B1F;
+  --muted:           #5A5A5F;
+  --rule:            #D6CFB8;
+  --shadow-rgb:      27, 27, 31;
+  --max-width:       960px;
+  --radius:          12px;
+  --gap:             18px;
+  --font-stack:      "Inter", "Segoe UI", system-ui, -apple-system,
+                     "Helvetica Neue", Arial, sans-serif;
+  --mono-stack:      "JetBrains Mono", "Cascadia Code", "Consolas",
+                     ui-monospace, "SFMono-Regular", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  padding: 0;
+  margin: 0;
+  background: var(--parchment);
+  color: var(--ink);
+  font-family: var(--font-stack);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--cinnabar);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--cinnabar-dark);
+  text-decoration: underline;
+}
+
+main {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+h1, h2, h3 {
+  margin: 0 0 12px 0;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+h1 { font-size: 2.25rem; }
+h2 { font-size: 1.4rem; }
+h3 { font-size: 1.1rem; }
+
+.tagline {
+  color: var(--muted);
+  margin: 0 0 28px 0;
+  font-size: 1.05rem;
+}
+
+.banner {
+  background: rgba(197, 82, 74, 0.08);
+  border: 1px solid var(--cinnabar);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin: 16px 0 28px;
+  font-size: 0.95rem;
+}
+
+.grid {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 720px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card {
+  background: white;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 2px 6px rgba(var(--shadow-rgb), 0.04);
+}
+
+.card .badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--cinnabar);
+  color: white;
+  padding: 3px 8px;
+  border-radius: 999px;
+  align-self: flex-start;
+}
+
+.card .meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.card ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.card .actions {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.button, button {
+  display: inline-block;
+  border: 1px solid var(--cinnabar);
+  background: var(--cinnabar);
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.button:hover, button:hover {
+  background: var(--cinnabar-dark);
+  border-color: var(--cinnabar-dark);
+  color: white;
+  text-decoration: none;
+}
+
+.button.secondary {
+  background: transparent;
+  color: var(--cinnabar);
+}
+
+.button.secondary:hover {
+  background: rgba(197, 82, 74, 0.08);
+  color: var(--cinnabar-dark);
+}
+
+.deploy-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 24px 0 32px;
+}
+
+.section {
+  margin: 36px 0 12px;
+}
+
+label {
+  display: block;
+  margin: 12px 0 4px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: white;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: 2px solid var(--cinnabar);
+  outline-offset: 1px;
+}
+
+pre, code {
+  font-family: var(--mono-stack);
+}
+
+pre.manifest {
+  background: var(--ink);
+  color: var(--parchment);
+  padding: 16px;
+  border-radius: var(--radius);
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.error {
+  color: var(--cinnabar-dark);
+  background: rgba(197, 82, 74, 0.08);
+  border: 1px solid var(--cinnabar);
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin: 8px 0;
+}
+
+.footer {
+  margin-top: 48px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+  color: var(--muted);
+  font-size: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}

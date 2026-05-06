@@ -5,7 +5,7 @@
 # ============================================================================
 # Validate every grok-agent.yaml manifest in the repo against the v2.15 schema
 # AND run the Constitution safety scanner on each. Built for xAI, X, Grok and the ecosystem community
-# win — keeping the platform compliant is non-negotiable.
+# — keeping the platform compliant is non-negotiable.
 #
 # Two enforcement layers run sequentially. Both must pass for the workflow to
 # go green:

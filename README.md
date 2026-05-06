@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://readme-typing-svg.demolab.com">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=20&pause=1200&color=FF6B00&center=true&width=720&lines=One+YAML+%E2%80%A2+One+install+command+%E2%80%A2+One+Constitution.;Windows-first+%E2%80%A2+PowerShell+CLI+%E2%80%A2+Apache+2.0.;%22grok+install+this%22+is+the+install+command.;11+production+agents+live+%E2%80%A2+marketplace+shipping." alt="typing tagline" />
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=20&pause=1200&color=FF6B00&center=true&width=720&lines=One+YAML+%E2%80%A2+One+install+command+%E2%80%A2+One+safety+scanner.;Windows-first+%E2%80%A2+PowerShell+CLI+%E2%80%A2+Apache+2.0.;%22grok+install+this%22+is+the+install+command.;11+production+agents+live+%E2%80%A2+marketplace+shipping." alt="typing tagline" />
   </a>
 </p>
 
@@ -17,13 +17,12 @@
   <img src="https://img.shields.io/badge/manifest-v2.15-1A1F2E.svg" alt="v2.15" />
   <img src="https://img.shields.io/badge/platform-Windows_11-0078D6.svg" alt="Windows 11" />
   <img src="https://img.shields.io/badge/python-3.12+-3776AB.svg" alt="Python 3.12+" />
-  <img src="https://img.shields.io/badge/Constitution-v1.0-7C3AED.svg" alt="Constitution v1.0" />
   <img src="https://img.shields.io/badge/agents%20live-11-22C55E.svg" alt="11 agents live" />
   <img src="https://img.shields.io/badge/status-Phase_5_active-22C55E.svg" alt="Phase 5 active" />
 </p>
 
 <p align="center">
-  <b>The Windows-first distribution layer for deploying Grok agents on X — one YAML, one PowerShell command, one Constitution.</b>
+  <b>The Windows-first distribution layer for deploying Grok agents on X — one YAML, one PowerShell command, one safety scanner.</b>
 </p>
 
 <p align="center">

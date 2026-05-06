@@ -6,7 +6,7 @@
 
 > Turn a single X post into 2-3 high-fidelity variants per target platform — LinkedIn, Threads, Bluesky, Newsletter — with 4 official Variant Score metrics, voice-drift paradox detection, and ≥3 cross-template bridges. Drafts only. Attribution always preserved.
 >
-> *Built for xAI, X, Grok and the ecosystem community the platform battle on X — every X creator deserves a cross-poster that respects their voice and their attribution, not an auto-publisher that flattens both.*
+> *Built for xAI, X, Grok and the ecosystem community — winning the platform battle on X. Every X creator deserves a cross-poster that respects their voice and their attribution, not an auto-publisher that flattens both.*
 
 > *I, the author of this agent, agree to the Grok Agent OS Constitution v1.0. I commit to keep this agent compliant or remove it from distribution.* — `@JanSol0s`
 

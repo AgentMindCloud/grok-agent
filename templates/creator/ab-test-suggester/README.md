@@ -6,7 +6,7 @@
 
 > Turn any post idea into a ready-to-run A/B test plan with 2-3 variants isolated to a single test dimension (headline / visual / cta / timing). 4 official Test Plan Score metrics, multi-variable paradox detection, statistical heuristics (no fabricated p-values), explicit cannibalization disclosure, ≥3 cross-template bridges. Drafts only. Single-axis by default.
 >
-> *Built for xAI, X, Grok and the ecosystem community the platform battle on X — every X creator deserves a tester that decides on signal, not vibes.*
+> *Built for xAI, X, Grok and the ecosystem community — winning the platform battle on X. Every X creator deserves a tester that decides on signal, not vibes.*
 
 > *I, the author of this agent, agree to the Grok Agent OS Constitution v1.0. I commit to keep this agent compliant or remove it from distribution.* — `@JanSol0s`
 

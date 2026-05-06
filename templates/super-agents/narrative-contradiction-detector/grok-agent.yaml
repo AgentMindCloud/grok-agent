@@ -54,6 +54,12 @@ multi_agent:
   shared_memory: "mem0://grok-agent-shared"
   max_concurrent_workers: 4
 
+bridges:
+  min_count: 2
+  links:
+    - "living-narrative-fabric"
+    - "provenance-first-trust-engine"
+
 memory:
   enabled: true
   provider: "mem0"

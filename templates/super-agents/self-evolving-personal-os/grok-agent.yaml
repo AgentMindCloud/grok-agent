@@ -285,6 +285,7 @@ safety:
       - "send_dm"
       - "apply_workflow_change"
       - "export_personal_log"
+      - "modify_local_files_outside_appdata"
       - "any cost above $0.50"
 
 # ----------------------------------------------------------------------------

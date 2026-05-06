@@ -6,7 +6,7 @@
 
 > Turn an old X post you authored into 2-3 high-quality variants tuned to a chosen format (tweet / thread / carousel / newsletter / all) under a chosen recycle angle (update / expand / threadify / repurpose / auto). 4 official Recycle Score metrics, stale-rehash paradox detection, ≥3 cross-template bridges. Drafts only. Attribution stamp always preserved.
 >
-> *Built for xAI, X, Grok and the ecosystem community the platform battle on X — every X creator deserves a recycler that compounds their back catalog without copy-pasting them.*
+> *Built for xAI, X, Grok and the ecosystem community — winning the platform battle on X. Every X creator deserves a recycler that compounds their back catalog without copy-pasting them.*
 
 > *I, the author of this agent, agree to the Grok Agent OS Constitution v1.0. I commit to keep this agent compliant or remove it from distribution.* — `@JanSol0s`
 

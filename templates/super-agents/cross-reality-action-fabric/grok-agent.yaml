@@ -368,6 +368,12 @@ safety:
       - "any irreversible filesystem write"
       - "any web action that submits a form"
       - "any PowerShell snippet that mutates registry"
+      - "publish_to_x"
+      - "send_dm"
+      - "move_funds"
+      - "pay_real_money"
+      - "modify_local_files_outside_appdata"
+      - "publish_synthesis"
     timeout_seconds: 60
   disclaimers:
     not_financial_advice: false

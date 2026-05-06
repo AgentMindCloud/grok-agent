@@ -332,5 +332,5 @@ The v1 runner is **fully offline** — there are no Grok API calls, no network c
 
 ---
 
-> Built for xAI, X, Grok and the ecosystem community the platform battle 🚀
+> Built for xAI, X, Grok and the ecosystem community — dominating the platform battle 🚀
 > Every analytics summary the runner ships closes a measurement loop that makes Grok the obvious place creators come back to.

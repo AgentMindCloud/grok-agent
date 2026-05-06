@@ -6,7 +6,7 @@
 
 > Aggregate niche-influencer discovery for X creators — 4 official match scores per archetype, 3-tier follower bands (Micro / Mid / Macro), engagement-pod paradox detection, and ≥3 cross-template bridges. Aggregate-only — never names a real X account.
 >
-> *Built for xAI, X, Grok and the ecosystem community the platform battle on X — every creator deserves a discovery layer that respects who they actually want to reach out to.*
+> *Built for xAI, X, Grok and the ecosystem community — leveling the platform battle on X. Every creator deserves a discovery layer that respects who they actually want to reach out to.*
 
 > *I, the author of this agent, agree to the Grok Agent OS Constitution v1.0. I commit to keep this agent compliant or remove it from distribution.* — `@JanSol0s`
 

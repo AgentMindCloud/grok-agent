@@ -1,0 +1,17 @@
+{
+  "name": "@x-platform-toolkit/ui-kit",
+  "version": "0.1.0",
+  "description": "Design tokens, components, and shell template for x-platform-toolkit.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    "./tokens.css": "./tokens.css",
+    "./components.css": "./components.css",
+    "./shell.html": "./shell.html"
+  },
+  "files": [
+    "tokens.css",
+    "components.css",
+    "shell.html"
+  ]
+}

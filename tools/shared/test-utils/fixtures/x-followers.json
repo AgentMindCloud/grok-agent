@@ -1,0 +1,41 @@
+{
+  "data": [
+    {
+      "id": "1000000000000000001",
+      "name": "Ada Lovelace",
+      "username": "adalovelace",
+      "public_metrics": {
+        "followers_count": 12345,
+        "following_count": 222,
+        "tweet_count": 987,
+        "listed_count": 18
+      }
+    },
+    {
+      "id": "1000000000000000002",
+      "name": "Grace Hopper",
+      "username": "amazinggrace",
+      "public_metrics": {
+        "followers_count": 67890,
+        "following_count": 150,
+        "tweet_count": 1500,
+        "listed_count": 42
+      }
+    },
+    {
+      "id": "1000000000000000003",
+      "name": "Alan Turing",
+      "username": "turingtest",
+      "public_metrics": {
+        "followers_count": 333333,
+        "following_count": 60,
+        "tweet_count": 222,
+        "listed_count": 100
+      }
+    }
+  ],
+  "meta": {
+    "result_count": 3,
+    "next_token": "NEXTPAGE_cursor_token_abc123"
+  }
+}

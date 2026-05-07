@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grok Thread Composer — x-platform-toolkit</title>
+<meta name="description" content="Write threads grounded in what's actually happening on X right now.">
+
+<!--
+  Dev server expectation: served from the repo root so /shared/** resolves.
+  See tools/19-grok-thread-composer/README.md Run locally section. The `npm run dev`
+  script in this tool's package.json handles that.
+-->
+<link rel="stylesheet" href="/shared/ui-kit/tokens.css">
+<link rel="stylesheet" href="/shared/ui-kit/components.css">
+</head>
+<body>
+
+<!-- Stub shell. Real composer UI is TODO per SPEC.md "User journey" section. -->
+<header class="brand-bar">
+  <div class="brand-mark">
+    <span class="icon">X</span>
+    <span class="name">x-platform-toolkit</span>
+  </div>
+  <div class="brand-mark">
+    <span class="badge mono">19</span>
+    <span class="text-muted mono" style="font-size:11px;">grok-install family</span>
+  </div>
+</header>
+
+<main style="max-width:960px; margin:0 auto; padding:48px 24px;">
+  <h1 class="gradient-text">Grok Thread Composer</h1>
+  <p class="text-secondary" style="font-size:18px; margin-top:8px;">
+    Write threads grounded in what's actually happening on X right now.
+  </p>
+
+  <div id="app" class="card" style="margin-top:32px;">
+    <p class="text-muted mono">
+      Scaffold only. Implementation follows <a href="../SPEC.md">SPEC.md</a>.
+    </p>
+  </div>
+</main>
+
+<footer style="border-top:1px solid var(--border-subtle); padding:24px; text-align:center; margin-top:64px;">
+  <p class="text-muted mono" style="font-size:12px; letter-spacing:0.1em;">
+    APACHE 2.0  ·  PART OF THE GROK-INSTALL FAMILY
+  </p>
+</footer>
+
+<script type="module">
+  import { ThreadComposer } from './main.js';
+  const composer = new ThreadComposer({ mount: document.getElementById('app') });
+  composer.main().catch((err) => {
+    console.error('ThreadComposer failed to start:', err);
+  });
+</script>
+
+</body>
+</html>

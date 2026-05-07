@@ -1,0 +1,10 @@
+data: {"id":"chatcmpl-stream-1","object":"chat.completion.chunk","created":1712700000,"model":"grok-2-latest","choices":[{"index":0,"delta":{"role":"assistant","content":"Hot"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-stream-1","object":"chat.completion.chunk","created":1712700000,"model":"grok-2-latest","choices":[{"index":0,"delta":{"content":" takes"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-stream-1","object":"chat.completion.chunk","created":1712700000,"model":"grok-2-latest","choices":[{"index":0,"delta":{"content":" age"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-stream-1","object":"chat.completion.chunk","created":1712700000,"model":"grok-2-latest","choices":[{"index":0,"delta":{"content":" fast."},"finish_reason":"stop"}]}
+
+data: [DONE]
+

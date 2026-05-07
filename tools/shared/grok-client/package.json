@@ -1,0 +1,19 @@
+{
+  "name": "@x-platform-toolkit/grok-client",
+  "version": "0.1.0",
+  "description": "xAI Grok API wrapper for x-platform-toolkit",
+  "license": "Apache-2.0",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./browser": "./browser.mjs"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "devDependencies": {
+    "@x-platform-toolkit/test-utils": "*"
+  },
+  "engines": { "node": ">=18" }
+}

@@ -2,10 +2,11 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
 #
-# Publish the static `marketplace/` folder to GitHub Pages on every push to
-# main. Provides the public web surface for the Grok Agent OS marketplace.
+# Publish the Next.js marketplace export at `marketplace/out/` to GitHub
+# Pages on every push to main. Provides the public web surface for the
+# Grok Agent OS marketplace.
 
-# Manual step required:
+# Manual step required (one-time, in repo settings):
 #   Settings → Pages → Source → GitHub Actions
 #   (then re-run workflow before this Action will publish.)
 
@@ -16,6 +17,7 @@ on:
     branches: [main]
     paths:
       - "marketplace/**"
+      - "templates/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -32,21 +34,38 @@ concurrency:
 
 jobs:
   build:
-    name: Build marketplace artifact
+    name: Build Next.js marketplace
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: marketplace/package-lock.json
+
+      - name: Install dependencies
+        working-directory: marketplace
+        run: npm ci
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
+        with:
+          static_site_generator: next
 
-      - name: Upload marketplace as Pages artifact
+      - name: Build Next.js (next build → marketplace/out/)
+        working-directory: marketplace
+        run: npm run build
+
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./marketplace
+          path: ./marketplace/out
 
   deploy:
     name: Deploy to GitHub Pages
@@ -99,38 +118,55 @@ jobs:
             exit 1
           fi
 
-          # Fetch script.js (served from same Pages origin) for copy-button check.
-          script_status=$(curl --silent --show-error --location \
+          # Marker 1 — Next.js page <title> from app/layout.tsx metadata.
+          if ! grep -q 'Grok Agent OS' index.html; then
+            echo "::error::'Grok Agent OS' brand string not found in deployed index.html"
+            exit 1
+          fi
+          echo "OK: Grok Agent OS brand string present"
+
+          # Marker 2 — the install one-liner rendered in app/page.tsx's
+          # <pre><code> block. Confirms the page actually renders the
+          # primary install affordance, not just the wrapper layout.
+          if ! grep -q 'grok install this' index.html; then
+            echo "::error::'grok install this' install one-liner not found in deployed index.html"
+            exit 1
+          fi
+          echo "OK: install one-liner present"
+
+          # Marker 3 — the catalogue heading rendered in app/page.tsx.
+          # Confirms the agent grid section actually rendered (rather than
+          # a build that crashed before the catalogue mounted).
+          if ! grep -qE 'Catalogue.*agents' index.html; then
+            echo "::error::Catalogue section ('Catalogue (N agents)') not found in deployed index.html"
+            exit 1
+          fi
+          echo "OK: Catalogue section present"
+
+          # Marker 4 — Next.js asset prefix (next/static or _next/static).
+          # With basePath='/grok-agent' + trailingSlash, asset URLs in the
+          # rendered HTML start with '/grok-agent/_next/'. Confirms basePath
+          # is wired correctly.
+          if ! grep -q '/_next/' index.html; then
+            echo "::error::Next.js asset URLs ('/_next/...') not found in deployed index.html"
+            exit 1
+          fi
+          echo "OK: Next.js asset URLs present"
+
+          # Marker 5 — fetch one agent detail page to confirm the dynamic
+          # SSG paths actually deployed. Trailing slash matches Next.js
+          # 'trailingSlash: true' export behavior.
+          agent_status=$(curl --silent --show-error --location \
             --retry 5 --retry-delay 5 --retry-all-errors \
-            --output script.js \
+            --output agent.html \
             --write-out '%{http_code}' \
-            "${PAGE_URL}script.js")
+            "${PAGE_URL}agents/living-narrative-fabric/")
 
-          echo "script.js HTTP status: ${script_status}"
-          if [ "${script_status}" != "200" ]; then
-            echo "::error::Expected HTTP 200 from ${PAGE_URL}script.js, got ${script_status}"
+          echo "/agents/living-narrative-fabric/ HTTP status: ${agent_status}"
+          if [ "${agent_status}" != "200" ]; then
+            echo "::error::Agent detail page expected HTTP 200, got ${agent_status}"
             exit 1
           fi
-
-          # Marker 1 — agent grid container (rendered into by script.js).
-          if ! grep -q 'id="grid"' index.html; then
-            echo "::error::Agent grid container (id=\"grid\") not found in deployed index.html"
-            exit 1
-          fi
-          echo "OK: agent grid container present"
-
-          # Marker 2 — search input placeholder text.
-          if ! grep -q 'Search agents by name, slug, or tagline' index.html; then
-            echo "::error::Search input markup not found in deployed index.html"
-            exit 1
-          fi
-          echo "OK: search input present"
-
-          # Marker 3 — "grok install this" copy button label from script.js.
-          if ! grep -q 'grok install this' script.js; then
-            echo "::error::\"grok install this\" copy button label not found in deployed script.js"
-            exit 1
-          fi
-          echo "OK: \"grok install this\" copy button present"
+          echo "OK: agent detail SSG page reachable"
 
           echo "All smoke-test assertions passed."

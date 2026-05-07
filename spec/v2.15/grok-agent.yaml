@@ -116,6 +116,7 @@ metadata:
   language: "en"                       # OPTIONAL · IETF tag · default "en"
   created: "2026-05-04"                # OPTIONAL · ISO-8601 date
   updated: "2026-05-04"                # OPTIONAL · ISO-8601 date
+  implementation_status: "manifest-only"  # OPTIONAL · str · one of "manifest-only", "in-progress", "shipped" · marks scaffolds with no runnable code yet so the marketplace + safety scanner can warn instead of pretending the agent is real
 
 # ----------------------------------------------------------------------------
 # install: — "grok install this" hints + X-native install flow

@@ -256,6 +256,24 @@ storyboards as `X_LAUNCH_THREAD.md`.
 
 ---
 
+## Folded sub-projects (Phase 16)
+
+Beyond the 11 production agents above, this repo folds in two sister
+projects via `git subtree --squash` so the whole ecosystem ships from
+one source of truth:
+
+| Path | Origin repo | What it is |
+|---|---|---|
+| [`tools/`](tools/) | [`AgentMindCloud/x-platform-toolkit`](https://github.com/AgentMindCloud/x-platform-toolkit) | 20-tool monorepo for X creators, builders, and analysts — analytics, AI writing, automation. Single-HTML-file tools, self-hostable, ToS-respecting. |
+| [`pulse/`](pulse/) | [`AgentMindCloud/grok-pulse-mcp-server`](https://github.com/AgentMindCloud/grok-pulse-mcp-server) | First-party MCP server for the xAI / X / Grok ecosystem. One tool call returns today's Grok-prioritized attention list across your GitHub repos. Works inside any MCP-compatible agent (Claude Code, Cursor, custom). |
+
+Both retain their original Apache 2.0 license, READMEs, and tip-commit
+provenance (recorded in [`MERGE_PLAN.md`](MERGE_PLAN.md)). They're
+independent packages — `tools/` and `pulse/` each carry their own
+`package.json` and build config and stay buildable in isolation.
+
+---
+
 ## License + author
 
 - **License:** Apache 2.0 (see [`LICENSE`](LICENSE)). Every code file carries the standard header. Every shipped agent must declare `license: "Apache-2.0"` in its manifest.

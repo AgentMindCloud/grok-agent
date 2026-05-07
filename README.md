@@ -3,22 +3,23 @@
 <!-- http://www.apache.org/licenses/LICENSE-2.0 -->
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:FF6B00,50:7C3AED,100:0078D6&height=260&section=header&text=Grok%20Agent%20OS&fontSize=72&fontColor=F5F5DC&animation=fadeIn&desc=The%20open%20Windows-first%20layer%20for%20Grok%20agents%20on%20X&descAlignY=72&descSize=18" alt="Grok Agent OS" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:FF1E70,30:0A0A0A,70:0A0A0A,100:00E0D5&height=260&section=header&text=Grok%20Agent%20OS&fontSize=72&fontColor=F4ECDA&animation=fadeIn&desc=The%20open%20Windows-first%20layer%20for%20Grok%20agents%20on%20X&descAlignY=72&descSize=18" alt="Grok Agent OS" />
 </p>
 
 <p align="center">
   <a href="https://readme-typing-svg.demolab.com">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=20&pause=1200&color=FF6B00&center=true&width=720&lines=One+YAML+%E2%80%A2+One+install+command+%E2%80%A2+One+safety+scanner.;Windows-first+%E2%80%A2+PowerShell+CLI+%E2%80%A2+Apache+2.0.;%22grok+install+this%22+is+the+install+command.;11+production+agents+live+%E2%80%A2+marketplace+shipping." alt="typing tagline" />
+    <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=20&pause=1200&color=FF1E70&center=true&width=720&lines=One+YAML+%E2%80%A2+One+install+command+%E2%80%A2+One+safety+scanner.;Windows-first+%E2%80%A2+PowerShell+CLI+%E2%80%A2+Apache+2.0.;%22grok+install+this%22+is+the+install+command.;11+production+agents+live+%E2%80%A2+marketplace+shipping." alt="typing tagline" />
   </a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/License-Apache_2.0-FF6B00.svg" alt="Apache 2.0" />
-  <img src="https://img.shields.io/badge/manifest-v2.15-1A1F2E.svg" alt="v2.15" />
-  <img src="https://img.shields.io/badge/platform-Windows_11-0078D6.svg" alt="Windows 11" />
-  <img src="https://img.shields.io/badge/python-3.12+-3776AB.svg" alt="Python 3.12+" />
-  <img src="https://img.shields.io/badge/agents%20live-11-22C55E.svg" alt="11 agents live" />
-  <img src="https://img.shields.io/badge/status-Phase_5_active-22C55E.svg" alt="Phase 5 active" />
+  <img src="https://img.shields.io/badge/License-Apache_2.0-FF1E70.svg?labelColor=0A0A0A" alt="Apache 2.0" />
+  <img src="https://img.shields.io/badge/manifest-v2.15-0A0A0A.svg?labelColor=FF1E70" alt="v2.15" />
+  <img src="https://img.shields.io/badge/platform-Windows_11-00E0D5.svg?labelColor=0A0A0A" alt="Windows 11" />
+  <img src="https://img.shields.io/badge/python-3.12+-00E0D5.svg?labelColor=0A0A0A" alt="Python 3.12+" />
+  <img src="https://img.shields.io/badge/agents%20live-11-FF1E70.svg?labelColor=0A0A0A" alt="11 agents live" />
+  <img src="https://img.shields.io/badge/status-Phase_5_active-00E0D5.svg?labelColor=0A0A0A" alt="Phase 5 active" />
+  <img src="https://img.shields.io/badge/spectral-v1-FF1E70.svg?labelColor=00E0D5" alt="Spectral v1 visual system" />
 </p>
 
 <p align="center">
@@ -43,6 +44,10 @@
   <i>The static <code>marketplace/index.html</code> is a zero-build, GitHub-Pages-ready landing page that lists the 7 Super Agents and the 22 Creator Templates teaser. Open it in a browser, or serve it with <code>python -m http.server</code>.</i>
 </p>
 
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=rect&color=0:FF1E70,50:0A0A0A,100:00E0D5&height=4&section=header" alt="Spectral chromatic divider" />
+</p>
+
 ---
 
 ## TL;DR
@@ -56,6 +61,12 @@
 **11 production agents** ship today — 4 X Money tools, 3 flagship Super Agents, 4 lighter Super Agents — all discoverable through the dynamic Next.js [marketplace](marketplace/).
 
 ---
+
+<p align="center">
+  <img src="https://img.shields.io/badge/%E2%97%8F%20live-Phase%205%20active-00E0D5.svg?labelColor=0A0A0A&style=for-the-badge" alt="Pulse: Phase 5 active" />
+  &nbsp;
+  <img src="https://img.shields.io/badge/%E2%97%87%20pulse-real--time-FF1E70.svg?labelColor=0A0A0A&style=for-the-badge" alt="Pulse: real-time" />
+</p>
 
 ## What's shipped (May 2026)
 
@@ -71,11 +82,17 @@ Track every prompt in [`HANDOFF_LOG.md`](HANDOFF_LOG.md). The latest gap analysi
 
 ---
 
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=transparent&fontColor=FF1E70&height=70&section=header&text=%E2%97%87%20Tools%20%E2%80%94%20The%2011%20Agents&fontSize=30&fontAlign=50&fontAlignY=50" alt="Tools — The 11 Agents" />
+</p>
+
 ## The 11 agents
+
+> ◆ **Tools tab** of the consumer cathedral. Each agent ships with a v2.15 manifest, Apache 2.0 license, and Constitution-enforced disclaimers.
 
 ### 4 X Money tools — `templates/finance/`
 
-| # | Agent | What it does | Cost cap |
+| ◆ | Agent | What it does | Cost cap |
 |---|---|---|---|
 | 1 | [`x-money-companion-dashboard`](templates/finance/x-money-companion-dashboard/) | Personal X Money command centre — 6 tabs (Overview, Transactions, Analytics, Grok Insights, Tax Export, Alerts), local SQLite. | $0.50 |
 | 2 | [`x-smart-cashtag-alpha-engine`](templates/finance/x-smart-cashtag-alpha-engine/) | Real-time cashtag intelligence on X — narrative momentum, contradictions, Grok-powered alpha signals with provenance. | $1.00 |
@@ -84,7 +101,7 @@ Track every prompt in [`HANDOFF_LOG.md`](HANDOFF_LOG.md). The latest gap analysi
 
 ### 3 flagship Super Agents — `templates/super-agents/`
 
-| # | Agent | Recipe C slots | Cost cap |
+| ◆ | Agent | Recipe C slots | Cost cap |
 |---|---|---|---|
 | 1 | [`living-narrative-fabric`](templates/super-agents/living-narrative-fabric/) | Versioned, provenance-first synthesis across X + news + academia + government + open web. Refuses to silently resolve contradictions. | $2.00 |
 | 2 | [`self-evolving-personal-os`](templates/super-agents/self-evolving-personal-os/) | Personal second brain — morning briefings, long-term memory, auto-evolving workflows, full rewind, explicit-consent gates. | $1.50 |
@@ -92,7 +109,7 @@ Track every prompt in [`HANDOFF_LOG.md`](HANDOFF_LOG.md). The latest gap analysi
 
 ### 4 lighter Super Agents — `templates/super-agents/`
 
-| # | Agent | What makes it useful |
+| ◆ | Agent | What makes it useful |
 |---|---|---|
 | 4 | [`agent-swarm-with-shared-memory`](templates/super-agents/agent-swarm-with-shared-memory/) | 6-agent swarm (researcher, skeptic, creator, executor, archivist, orchestrator) sharing Mem0 + Qdrant memory. |
 | 5 | [`provenance-first-trust-engine`](templates/super-agents/provenance-first-trust-engine/) | Every claim attaches a citation + confidence score; clickable provenance report on every response. |
@@ -187,6 +204,15 @@ flowchart LR
     R --> L1[launcher.ps1]
     R --> L2[app.py · streamlit]
     R --> L3[main.py · python]
+
+    classDef plasma fill:#FF1E70,stroke:#FF1E70,color:#0A0A0A,font-weight:bold
+    classDef aurora fill:#00E0D5,stroke:#00E0D5,color:#0A0A0A,font-weight:bold
+    classDef dark fill:#0A0A0A,stroke:#FF1E70,color:#F4ECDA
+    classDef stop fill:#0A0A0A,stroke:#FF1E70,color:#FF1E70,font-weight:bold
+    class S1,S2 plasma
+    class C,R,I aurora
+    class A,F,Y,M,L1,L2,L3 dark
+    class X1,X2 stop
 ```
 
 ---
@@ -206,6 +232,8 @@ flowchart LR
 | Tracing / eval | Langfuse + Promptfoo + DeepEval |
 | Marketplace | Next.js 14 + TypeScript + js-yaml on Vercel |
 | LLM | Grok 4.3 (via xAI API) |
+| Type system | Inter (headings) + JetBrains Mono (code, terminal, typing-SVG) |
+| Visual identity | Spectral v1 — Plasma `#FF1E70` · Aurora `#00E0D5` · Dark `#0A0A0A` |
 
 ---
 
@@ -273,5 +301,5 @@ storyboards as `X_LAUNCH_THREAD.md`.
 </p>
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0078D6,50:7C3AED,100:FF6B00&height=80&section=footer" alt="footer" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:00E0D5,50:0A0A0A,100:FF1E70&height=80&section=footer" alt="footer" />
 </p>

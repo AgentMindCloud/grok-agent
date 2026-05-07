@@ -7,10 +7,11 @@
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //
-// SERVER-ONLY build-time manifest scanner. Walks templates/super-agents
-// and templates/finance, parses every grok-agent.yaml with js-yaml, and
-// returns a normalized Agent[]. Imported only from Server Components or
-// other server-only modules — never from a Client Component.
+// SERVER-ONLY build-time manifest scanner. Walks templates/super-agents,
+// templates/finance, and templates/creator, parses every grok-agent.yaml
+// with js-yaml, and returns a normalized Agent[]. Imported only from
+// Server Components or other server-only modules — never from a Client
+// Component.
 
 import 'server-only';
 import fs from 'node:fs';
@@ -34,6 +35,7 @@ const REPO_ROOT = path.resolve(process.cwd(), '..');
 const TEMPLATES_ROOT = path.join(REPO_ROOT, 'templates');
 const SUPER_AGENTS_DIR = path.join(TEMPLATES_ROOT, 'super-agents');
 const FINANCE_DIR = path.join(TEMPLATES_ROOT, 'finance');
+const CREATOR_DIR = path.join(TEMPLATES_ROOT, 'creator');
 
 function readManifest(folderPath: string): ManifestRaw | null {
   const manifestFile = path.join(folderPath, 'grok-agent.yaml');
@@ -74,11 +76,14 @@ function deriveInstallCommand(manifest: ManifestRaw, slug: string): string {
 }
 
 function deriveCategory(folderRoot: string): AgentCategory {
-  return folderRoot === SUPER_AGENTS_DIR ? 'super-agent' : 'x-money-tool';
+  if (folderRoot === SUPER_AGENTS_DIR) return 'super-agent';
+  if (folderRoot === CREATOR_DIR) return 'creator-template';
+  return 'x-money-tool';
 }
 
 function deriveTier(category: AgentCategory, slug: string): AgentTier {
   if (category === 'x-money-tool') return 'x-money';
+  if (category === 'creator-template') return 'creator';
   return FLAGSHIP_SLUGS.has(slug) ? 'flagship' : 'lighter';
 }
 
@@ -143,11 +148,17 @@ function tierWeight(tier: AgentTier): number {
       return 1;
     case 'x-money':
       return 2;
+    case 'creator':
+      return 3;
   }
 }
 
 export function loadAllAgents(): Agent[] {
-  const all = [...scanFolder(SUPER_AGENTS_DIR), ...scanFolder(FINANCE_DIR)];
+  const all = [
+    ...scanFolder(SUPER_AGENTS_DIR),
+    ...scanFolder(FINANCE_DIR),
+    ...scanFolder(CREATOR_DIR),
+  ];
   all.sort((a, b) => {
     const tierDiff = tierWeight(a.tier) - tierWeight(b.tier);
     if (tierDiff !== 0) return tierDiff;

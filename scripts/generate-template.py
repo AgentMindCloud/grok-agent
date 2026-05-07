@@ -191,7 +191,7 @@ def render_manifest(
         f'  tagline: "{_escape(description[:120])}"',
         f"  tags:{_yaml_list(cfg['tags'], 4)}",
         '  language: "en"',
-        '  repository: "github.com/AgentMindCloud/grok-agent"',
+        '  repository: "https://github.com/AgentMindCloud/grok-agent"',
         "",
         "install:",
         "  one_click: true",
@@ -370,8 +370,8 @@ def cmd_new(args: argparse.Namespace) -> int:
             f"X  kind '{kind}' is not in v2.15 enum: {', '.join(KINDS)}\n"
         )
         return 65
-    if len(description) < 12:
-        sys.stderr.write("X  description must be at least 12 characters.\n")
+    if len(description) < 10:
+        sys.stderr.write("X  description must be at least 10 characters.\n")
         return 65
     if not AUTHOR_PATTERN.match(author):
         sys.stderr.write(
@@ -443,7 +443,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_new.add_argument(
         "--description",
         required=True,
-        help="One-sentence description (>=12 chars).",
+        help="One-sentence description (>=10 chars).",
     )
     p_new.add_argument(
         "--author",

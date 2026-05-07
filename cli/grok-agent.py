@@ -301,6 +301,11 @@ class Tool(BaseModel):
                 f"tools[].api OR tools[].api_ref is required when "
                 f"type='public_api' (tool '{self.name}')"
             )
+        if self.type == "public_api" and self.api is not None and self.api_ref:
+            raise ValueError(
+                f"tools[].api and tools[].api_ref are mutually exclusive — "
+                f"declare exactly one (tool '{self.name}')"
+            )
         if self.type == "local_function" and (not self.module or not self.function):
             raise ValueError(
                 f"tools[].module and tools[].function are required when "
@@ -783,7 +788,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="grok-agent",
         description=(
-            f"Grok Agent OS — Pydantic v{SPEC_VERSION} manifest validator. {TAGLINE}"
+            f"Grok Agent OS — grok-agent.yaml v{SPEC_VERSION} manifest validator. {TAGLINE}"
         ),
         epilog=(
             "Examples:\n"

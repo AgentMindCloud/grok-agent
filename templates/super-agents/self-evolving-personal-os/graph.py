@@ -502,7 +502,7 @@ def output_with_provenance(state: PersonalOSState) -> dict:
 def should_loop_back_to_ingest(state: PersonalOSState) -> str:
     """LangGraph conditional edge — route after ``evolve_workflows``."""
     evo = state.get("evolution") or {}
-    if evo.get("should_loop") and int(state.get("loop_count") or 0) <= MAX_EVOLUTION_LOOPS:
+    if evo.get("should_loop") and int(state.get("loop_count") or 0) < MAX_EVOLUTION_LOOPS:
         return NODE_INGEST
     return NODE_BRIEF
 
@@ -711,7 +711,7 @@ def run_daily_brief(
         user_id=user_id, force_stub=force_stub, consent=consent,
     )
     composite.connect_memory(adapter)
-    client: PersonalMemoryClient = adapter._client  # type: ignore[attr-defined]
+    client: PersonalMemoryClient = adapter.client
 
     runnable, _backend = build_graph()
     state = build_state(

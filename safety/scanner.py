@@ -245,13 +245,29 @@ def check_version(m: Dict[str, Any]) -> List[Finding]:
 
 @register("II.posts-consent")
 def check_posts_require_consent(m: Dict[str, Any]) -> List[Finding]:
+    """Article II.1 — agents that post to X must declare consent_required.
+
+    When ``real_time_x.posts`` is true the manifest **must explicitly**
+    declare ``real_time_x.consent_required: true``. The previous behavior
+    silently defaulted absent ``consent_required`` to true, which made it
+    easy to miss the requirement in review. Now:
+
+      * absent ``consent_required`` (when posts=true) → CG-001 (explicit)
+      * ``consent_required: false`` (when posts=true) → CG-001 (explicit)
+      * ``consent_required: true``  (when posts=true) → pass
+    """
     rt = m.get("real_time_x") or {}
-    if rt.get("posts") and not rt.get("consent_required", True):
-        return [Finding(
-            "error", "CG-001",
-            "real_time_x.posts=true requires real_time_x.consent_required=true",
-            "real_time_x.consent_required", "II",
-        )]
+    if rt.get("posts"):
+        # Use a sentinel so we can distinguish "absent" from "present-and-false".
+        consent = rt.get("consent_required", None)
+        if consent is not True:
+            reason = "missing" if consent is None else "explicitly false"
+            return [Finding(
+                "error", "CG-001",
+                f"real_time_x.posts=true requires real_time_x.consent_required=true "
+                f"({reason}); declare it explicitly in the manifest",
+                "real_time_x.consent_required", "II",
+            )]
     return []
 
 

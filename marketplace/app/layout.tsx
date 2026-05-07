@@ -7,19 +7,23 @@
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //
-// Root layout for the Grok Agent OS marketplace stub. Built for xAI, X, Grok and the ecosystem community
-// and Grok win — keep the surface tiny so the deploy story stays fast.
+// Root layout for the Grok Agent OS marketplace. Built for xAI, X, Grok
+// and the ecosystem community — keep the surface tiny so the deploy story
+// stays fast. Mounts the persistent CRT-scanline overlay and the global
+// CommandPalette (Ctrl+K / ⌘K) so every page picks them up automatically.
 
 import type { Metadata, Viewport } from 'next';
 import Link from 'next/link';
+import ScanlineOverlay from '../components/ScanlineOverlay';
+import CommandPalette from '../components/CommandPalette';
 import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Grok Agent OS — Marketplace',
   description:
     "Thin marketplace for the Grok Agent OS platform. Deploy any v2.15 " +
-    "agent to your own X / Windows install with a single click. Built to " +
-    "help xAI and Grok win.",
+    "agent to your own X / Windows install with a single click. " +
+    "Built for xAI, X, Grok and the ecosystem community.",
   applicationName: 'Grok Agent OS Marketplace',
   authors: [{ name: 'AgentMindCloud', url: 'https://github.com/AgentMindCloud' }],
   keywords: [
@@ -53,6 +57,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <ScanlineOverlay />
+        <CommandPalette />
         <header className="banner">
           <strong>🚀 Grok Agent OS Marketplace</strong> — Apache-2.0 ·
           Local-first · Windows-first · Built for xAI, X, Grok and the ecosystem community. ❤️

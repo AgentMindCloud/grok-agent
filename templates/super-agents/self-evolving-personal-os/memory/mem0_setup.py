@@ -652,6 +652,18 @@ class MemoryStoreAdapter:
     def __init__(self, client: PersonalMemoryClient) -> None:
         self._client = client
 
+    @property
+    def client(self) -> PersonalMemoryClient:
+        """Read-only handle to the wrapped memory client.
+
+        Callers in :mod:`graph` need direct access to the Personal-OS-specific
+        API (audit log, consent toggles, ingest helpers) that is broader than
+        the ``MemoryStore`` Protocol the adapter formally satisfies. Exposing
+        the client through a property keeps the access path public and
+        document-able without leaking write access to the underlying field.
+        """
+        return self._client
+
     def upsert_fetch(self, collection: str, result: FetchResult) -> int:
         try:
             records = self._client.ingest_fetch_result(result)

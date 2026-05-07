@@ -191,13 +191,65 @@ function Get-YamlScalar {
     $pattern = '(?m)^' + [Regex]::Escape($Field) + '\s*:\s*(.+?)\s*$'
     if ($YamlText -match $pattern) {
         $value = $matches[1].Trim()
-        # Drop trailing comment if present
-        if ($value -match '^(?<v>.*?)(?:\s+#.*)?$') { $value = $matches['v'].Trim() }
-        # Strip surrounding quotes
-        if ($value -match '^"(.*)"$' -or $value -match "^'(.*)'$") { $value = $matches[1] }
+        # Strip surrounding quotes BEFORE comment-handling so that a `#` inside a
+        # quoted value (e.g. `"foo # bar"`) is preserved instead of being treated
+        # as a YAML comment delimiter.
+        if ($value -match '^"(.*)"\s*(#.*)?$') {
+            $value = $matches[1]
+        } elseif ($value -match "^'(.*)'\s*(#.*)?$") {
+            $value = $matches[1]
+        } else {
+            # Unquoted: strip trailing comment if preceded by whitespace.
+            if ($value -match '^(?<v>.*?)\s+#.*$') { $value = $matches['v'].Trim() }
+        }
         return $value
     }
     return $null
+}
+
+function Get-YamlNestedScalar {
+    <#
+    .SYNOPSIS
+        Returns the scalar at a dotted YAML path (e.g. "windows.launcher").
+
+    .DESCRIPTION
+        Walks the YAML text treating indentation as nesting (2-space steps,
+        which is the convention used throughout grok-agent.yaml). Returns
+        $null when any segment of the path is missing. Strips surrounding
+        quotes and trailing comments the same way Get-YamlScalar does, with
+        the same quote-aware treatment so a `#` inside a quoted value is
+        preserved.
+    #>
+    param(
+        [Parameter(Mandatory)][string]$YamlText,
+        [Parameter(Mandatory)][string]$Path
+    )
+    $parts  = $Path -split '\.'
+    $lines  = $YamlText -split "`r?`n"
+    $cursor = 0
+    $depth  = 0
+    $value  = $null
+    foreach ($part in $parts) {
+        $isLeaf      = ($depth -eq $parts.Count - 1)
+        $indentRegex = '^' + (' ' * ($depth * 2)) + [Regex]::Escape($part) + '\s*:\s*(.*?)\s*$'
+        $found       = $false
+        while ($cursor -lt $lines.Count) {
+            if ($lines[$cursor] -match $indentRegex) {
+                $value  = $matches[1]
+                $found  = $true
+                $cursor++
+                break
+            }
+            $cursor++
+        }
+        if (-not $found) { return $null }
+        if (-not $isLeaf) { $depth++ }
+    }
+    if ($null -eq $value -or $value -eq '') { return $null }
+    if ($value -match '^"(.*)"\s*(#.*)?$') { return $matches[1] }
+    if ($value -match "^'(.*)'\s*(#.*)?$") { return $matches[1] }
+    if ($value -match '^(?<v>.*?)\s+#.*$') { return $matches['v'].Trim() }
+    return $value.Trim()
 }
 
 function Test-PythonAvailable {
@@ -749,7 +801,7 @@ function Invoke-Run {
     Write-Step ("Launching agent: {0}" -f $name)
 
     # 1. Honor windows.launcher if declared
-    $launcherRel = Get-YamlScalar -YamlText $text -Field 'launcher'
+    $launcherRel = Get-YamlNestedScalar -YamlText $text -Path 'windows.launcher'
     $launcherPath = $null
     if ($launcherRel) {
         $candidate = Join-Path $dest $launcherRel
@@ -803,14 +855,14 @@ function Invoke-EvalWeekly {
     Write-Step 'Running weekly self-improvement loop across every flagship Super Agent.'
 
     $superAgentsRoot = Join-Path $Script:RepoRoot 'templates\super-agents'
-    if (-not (Test-Path $superAgentsRoot)) {
+    if (-not (Test-Path -LiteralPath $superAgentsRoot)) {
         Write-Err2 ('Super-agents folder not found: {0}' -f $superAgentsRoot)
         exit 66
     }
 
     $evalRoot = Join-Path $Script:AppDataRoot 'eval'
-    if (-not (Test-Path $evalRoot)) {
-        New-Item -ItemType Directory -Path $evalRoot -Force | Out-Null
+    if (-not (Test-Path -LiteralPath $evalRoot)) {
+        New-Item -ItemType Directory -LiteralPath $evalRoot -Force | Out-Null
     }
     $stamp     = Get-Date -Format 'yyyy-MM-dd-HHmm'
     $outFile   = Join-Path $evalRoot ('weekly-{0}.md' -f $stamp)
@@ -831,8 +883,8 @@ function Invoke-EvalWeekly {
         $name        = $folder.Name
         $promptFoo   = Join-Path $folder.FullName 'eval\promptfoo.yaml'
         $deepEval    = Join-Path $folder.FullName 'eval\deepeval_suite.py'
-        $hasPromptFoo = Test-Path $promptFoo
-        $hasDeepEval  = Test-Path $deepEval
+        $hasPromptFoo = Test-Path -LiteralPath $promptFoo
+        $hasDeepEval  = Test-Path -LiteralPath $deepEval
 
         Add-Content -Path $outFile -Value ''
         Add-Content -Path $outFile -Value ('## ' + $name)

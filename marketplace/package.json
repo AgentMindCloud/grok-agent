@@ -8,10 +8,12 @@
   "author": "AgentMindCloud (@JanSol0s)",
   "scripts": {
     "dev": "next dev --port 3030",
+    "prebuild": "tsx scripts/build-agents-index.ts",
     "build": "next build",
     "start": "next start --port 3030",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build-agents-index": "tsx scripts/build-agents-index.ts"
   },
   "dependencies": {
     "js-yaml": "4.1.0",
@@ -26,6 +28,7 @@
     "@types/react-dom": "18.3.0",
     "eslint": "8.57.0",
     "eslint-config-next": "14.2.5",
+    "tsx": "4.19.0",
     "typescript": "5.5.3"
   },
   "engines": {

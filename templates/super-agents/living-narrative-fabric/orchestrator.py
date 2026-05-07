@@ -397,7 +397,7 @@ class StubSourceClient:
             subj = rng.choice(self.seeded_subjects)
             stance = rng.choice(["supports", "questions", "neutral on"])
             value = rng.choice(["accelerating adoption", "slowing adoption", "uncertain trajectory"])
-            published = since + timedelta(hours=rng.randint(1, 24 * (datetime.now(timezone.utc) - since).days or 1))
+            published = since + timedelta(hours=rng.randint(1, 24 * ((datetime.now(timezone.utc) - since).days or 1)))
             items.append(
                 SourceItem(
                     source=self.name,

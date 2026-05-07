@@ -154,24 +154,35 @@ def upsert_cashtag(
     cashtag: str,
     *,
     name: str | None = None,
-    asset_class: str = "unknown",
+    asset_class: str | None = None,
     last_quote: dict | None = None,
 ) -> None:
-    """Register or update a cashtag in the master list."""
+    """Register or update a cashtag in the master list.
+
+    ``asset_class`` is now ``None``-by-default. On UPDATE, ``COALESCE`` keeps
+    the existing classification when the caller didn't pass an explicit value
+    — so a later quote refresh that doesn't know the asset class won't
+    silently demote an "equity" row back to "unknown". On INSERT, the
+    cashtags-table default of ``'unknown'`` applies via the schema default
+    when ``asset_class`` is ``None``.
+    """
     with get_connection() as conn:
         existing = conn.execute(
             "SELECT id FROM cashtags WHERE cashtag = ?", (cashtag,)
         ).fetchone()
         if existing:
             conn.execute(
-                "UPDATE cashtags SET name=COALESCE(?, name), asset_class=? "
+                "UPDATE cashtags SET name=COALESCE(?, name), "
+                "asset_class=COALESCE(?, asset_class) "
                 " WHERE cashtag=?",
                 (name, asset_class, cashtag),
             )
         else:
+            # Fall back to the column default ('unknown') when caller passes None.
+            insert_class = asset_class if asset_class is not None else "unknown"
             conn.execute(
                 "INSERT INTO cashtags (cashtag, name, asset_class) VALUES (?, ?, ?)",
-                (cashtag, name, asset_class),
+                (cashtag, name, insert_class),
             )
         if last_quote and last_quote.get("price") is not None:
             conn.execute(

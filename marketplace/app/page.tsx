@@ -9,8 +9,8 @@
 //
 // Landing page for the Grok Agent OS marketplace. Server-rendered hero
 // + dynamic agent grid built from the actual grok-agent.yaml manifests
-// in templates/super-agents/ and templates/finance/. Category filtering
-// is URL-driven (?category=super-agent or ?category=x-money-tool) so
+// in templates/super-agents/, templates/finance/, and templates/creator/.
+// Category filtering is URL-driven (?category=super-agent and similar) so
 // this whole page stays a Server Component.
 
 import Link from 'next/link';
@@ -30,6 +30,7 @@ export default function HomePage() {
   const totals: Record<AgentCategory, number> = {
     'super-agent': allAgents.filter((a) => a.category === 'super-agent').length,
     'x-money-tool': allAgents.filter((a) => a.category === 'x-money-tool').length,
+    'creator-template': allAgents.filter((a) => a.category === 'creator-template').length,
   };
 
   return (
@@ -62,9 +63,9 @@ export default function HomePage() {
         </h2>
         <p className="meta">
           {totals['super-agent']} Super Agents (3 flagship · 4 lighter) +{' '}
-          {totals['x-money-tool']} X Money tools. Each card copies the
-          one-liner you paste on X to install on Windows 11 +
-          PowerShell.
+          {totals['x-money-tool']} X Money tools +{' '}
+          {totals['creator-template']} Creator Templates. Each card copies
+          the one-liner you paste on X to install on Windows 11 + PowerShell.
         </p>
 
         <div className="filter-chips" role="group" aria-label="Filter by category">
@@ -88,6 +89,13 @@ export default function HomePage() {
             aria-pressed={active === 'x-money-tool'}
           >
             {CATEGORY_LABELS['x-money-tool']} ({totals['x-money-tool']})
+          </Link>
+          <Link
+            href={{ pathname: '/', query: { category: 'creator-template' } }}
+            className={active === 'creator-template' ? 'chip chip-active' : 'chip'}
+            aria-pressed={active === 'creator-template'}
+          >
+            {CATEGORY_LABELS['creator-template']} ({totals['creator-template']})
           </Link>
         </div>
 

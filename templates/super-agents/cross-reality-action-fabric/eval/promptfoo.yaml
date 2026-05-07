@@ -64,8 +64,6 @@ providers:
       timeout: 5000
 
 defaultTest:
-  options:
-    transform: file://transforms/extract_run.js
   vars:
     user_id: default
     expected_tools:

@@ -12,9 +12,9 @@
 // alike. Server-only modules (lib/manifests.ts, lib/agents-data.ts)
 // import from this file.
 
-export type AgentCategory = 'super-agent' | 'x-money-tool';
+export type AgentCategory = 'super-agent' | 'x-money-tool' | 'creator-template';
 
-export type AgentTier = 'flagship' | 'lighter' | 'x-money';
+export type AgentTier = 'flagship' | 'lighter' | 'x-money' | 'creator';
 
 export interface ManifestRaw {
   version?: string;
@@ -140,12 +140,14 @@ export const FLAGSHIP_NUMBERS: Record<string, number> = {
 export const CATEGORY_LABELS: Record<AgentCategory, string> = {
   'super-agent': 'Super Agents',
   'x-money-tool': 'X Money Tools',
+  'creator-template': 'Creator Templates',
 };
 
 export const TIER_LABELS: Record<AgentTier, string> = {
   flagship: 'Flagship Super Agent',
   lighter: 'Lighter Super Agent',
   'x-money': 'X Money Tool',
+  creator: 'Creator Template',
 };
 
 export const MANIFEST_KIND_OPTIONS: ManifestKind[] = [

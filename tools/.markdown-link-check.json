@@ -1,0 +1,17 @@
+{
+  "ignorePatterns": [
+    { "pattern": "^mailto:" },
+    { "pattern": "^https?://(localhost|127\\.0\\.0\\.1|\\[::1\\])(:\\d+)?(/|$)" },
+    { "pattern": "^https://img\\.shields\\.io/" },
+    { "pattern": "^https://capsule-render\\.vercel\\.app/" },
+    { "pattern": "^https://readme-typing-svg\\.demolab\\.com" },
+    { "pattern": "^https?://([a-z0-9-]+\\.)*x\\.com(/|$)" },
+    { "pattern": "^https?://([a-z0-9-]+\\.)*x\\.ai(/|$)" },
+    { "pattern": "^https?://grokagents\\.dev(/|$)" },
+    { "pattern": "^https://www\\.jansolos\\.com" }
+  ],
+  "retryOn429": true,
+  "retryCount": 3,
+  "fallbackRetryDelay": "5s",
+  "aliveStatusCodes": [200, 206, 301, 302, 303, 307, 308]
+}

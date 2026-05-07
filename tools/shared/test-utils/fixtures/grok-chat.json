@@ -1,0 +1,21 @@
+{
+  "id": "chatcmpl-fixture-1",
+  "object": "chat.completion",
+  "created": 1712700000,
+  "model": "grok-2-latest",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Hot takes usually age like milk. Ship and let the feed decide."
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 24,
+    "completion_tokens": 16,
+    "total_tokens": 40
+  }
+}

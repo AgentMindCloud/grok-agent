@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pinned Post A/B Rotator — x-platform-toolkit</title>
+<meta name="description" content="Rotate your pinned post on a schedule. Find your best converter.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500&display=swap');
+:root{--bg-pure:#000;--bg-soft:#0a0a0f;--bg-card:#111118;--bg-elevated:#16161f;--border-subtle:#1f1f2e;--border-glow:rgba(34,211,238,0.2);--neon-cyan:#22d3ee;--neon-purple:#a855f7;--neon-magenta:#ec4899;--neon-lime:#a3e635;--text-primary:#fff;--text-secondary:#a1a1aa;--text-muted:#52525b;--gradient-primary:linear-gradient(135deg,#22d3ee 0%,#a855f7 100%);--glow-cyan:0 0 20px rgba(34,211,238,0.15);--glow-lime:0 0 20px rgba(163,230,53,0.15);--font-display:'Space Grotesk',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace;--font-body:'Inter',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg-pure);color:var(--text-primary);font-family:var(--font-body);font-size:15px;line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
+h1{font-family:var(--font-display);font-weight:700;font-size:48px;letter-spacing:-0.02em;line-height:1.2}
+h2{font-family:var(--font-display);font-weight:700;font-size:24px;margin:32px 0 16px}
+.gradient-text{background:var(--gradient-primary);-webkit-background-clip:text;background-clip:text;color:transparent}
+.mono{font-family:var(--font-mono)}
+.text-muted{color:var(--text-muted)}
+.text-secondary{color:var(--text-secondary)}
+.brand-bar{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--border-subtle);background:var(--bg-soft)}
+.brand-mark{display:flex;align-items:center;gap:12px;font-family:var(--font-mono);font-size:14px}
+.brand-mark .icon{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border:1px solid var(--neon-cyan);border-radius:4px;color:var(--neon-cyan);font-weight:700}
+.brand-mark .name{background:var(--gradient-primary);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700}
+.badge{display:inline-flex;padding:4px 10px;background:rgba(34,211,238,0.08);border:1px solid var(--neon-cyan);border-radius:4px;color:var(--neon-cyan);font-family:var(--font-mono);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em}
+.card{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:20px;transition:border-color 200ms ease}
+.card-glow{border-color:var(--neon-cyan);box-shadow:var(--glow-cyan)}
+.input,.textarea,select{width:100%;background:var(--bg-soft);border:1px solid var(--border-subtle);border-radius:6px;padding:10px 12px;color:var(--text-primary);font-family:var(--font-mono);font-size:14px}
+.textarea{font-family:var(--font-body);min-height:80px;resize:vertical}
+.input:focus,.textarea:focus,select:focus{outline:none;border-color:var(--neon-cyan);box-shadow:var(--glow-cyan)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;background:transparent;border:1px solid var(--neon-cyan);border-radius:6px;color:var(--neon-cyan);font-family:var(--font-mono);font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;cursor:pointer;transition:all 150ms ease}
+.btn:hover{background:rgba(34,211,238,0.08);box-shadow:var(--glow-cyan)}
+.btn-magenta{border-color:var(--neon-magenta);color:var(--neon-magenta)}
+.btn-magenta:hover{background:rgba(236,72,153,0.08);box-shadow:0 0 20px rgba(236,72,153,0.15)}
+.btn-lime{border-color:var(--neon-lime);color:var(--neon-lime)}
+.btn-lime:hover{background:rgba(163,230,53,0.08);box-shadow:var(--glow-lime)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:0.06em}
+td{padding:10px 12px;border-bottom:1px solid var(--border-subtle)}
+tr:hover td{background:var(--bg-elevated)}
+.winner td:first-child{border-left:3px solid var(--neon-lime)}
+@media(max-width:768px){h1{font-size:32px}}
+
+.settings-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:16px 20px;margin-bottom:8px}
+.settings-left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.settings-label{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-secondary)}
+.settings-row select{width:auto;min-width:120px}
+.caption{color:var(--text-secondary);font-size:14px;margin-bottom:16px}
+.cand-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:720px){.cand-grid{grid-template-columns:1fr}}
+.cand-card{position:relative;display:flex;flex-direction:column;gap:10px}
+.cand-card .name-input{font-size:16px;font-weight:700;background:var(--bg-soft);border:1px solid var(--border-subtle);border-radius:6px;padding:10px 12px;color:var(--text-primary);font-family:var(--font-body);width:100%}
+.cand-card .name-input:focus{outline:none;border-color:var(--neon-cyan);box-shadow:var(--glow-cyan)}
+.cand-footer{display:flex;justify-content:space-between;gap:8px;margin-top:4px}
+.active-tag{position:absolute;top:12px;right:12px;display:inline-flex;padding:3px 8px;background:rgba(163,230,53,0.08);border:1px solid var(--neon-lime);border-radius:4px;color:var(--neon-lime);font-family:var(--font-mono);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em}
+.add-tile{display:flex;align-items:center;justify-content:center;min-height:180px;border:1px dashed var(--border-subtle);border-radius:8px;color:var(--text-muted);font-family:var(--font-mono);font-size:13px;cursor:pointer;transition:all 150ms ease;background:transparent}
+.add-tile:hover{border-color:var(--neon-cyan);color:var(--neon-cyan);box-shadow:var(--glow-cyan)}
+.active-card{position:relative;min-height:180px}
+.active-header{display:flex;justify-content:flex-end;gap:8px;align-items:flex-start;flex-direction:column;text-align:right}
+.next-label{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-secondary)}
+.countdown{font-family:var(--font-mono);font-size:42px;font-weight:700;color:var(--neon-cyan);letter-spacing:0.04em;line-height:1}
+.countdown.zero{color:var(--neon-magenta)}
+.active-top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start;margin-bottom:16px}
+.active-name{font-family:var(--font-display);font-size:20px;font-weight:700}
+.active-content{background:var(--bg-soft);border:1px solid var(--border-subtle);border-radius:6px;padding:14px;white-space:pre-wrap;font-family:var(--font-body);font-size:14px;color:var(--text-primary);margin-bottom:16px}
+.empty-active{text-align:center;padding:32px 16px;color:var(--text-muted);font-family:var(--font-mono);font-size:13px}
+.empty-row td{text-align:center;color:var(--text-muted);font-family:var(--font-mono);padding:24px 12px}
+.disclaimer{border:1px solid var(--border-subtle);border-radius:8px;padding:16px;color:var(--text-secondary);font-size:13px;margin-top:20px;background:var(--bg-card)}
+.truncate{max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="brand-bar">
+  <div class="brand-mark"><span class="icon">X</span><span class="name">x-platform-toolkit</span></div>
+  <div class="brand-mark"><span class="badge mono">05</span><span class="text-muted mono" style="font-size:11px">grok-install family</span></div>
+</div>
+<main style="max-width:1100px;margin:0 auto;padding:48px 24px">
+  <h1 class="gradient-text">Pinned Post A/B Rotator</h1>
+  <p class="text-secondary" style="font-size:18px;margin-top:8px;margin-bottom:32px">Rotate your pinned post on a schedule. Find your best converter.</p>
+
+  <div class="settings-row">
+    <div class="settings-left">
+      <span class="settings-label">Rotation Interval</span>
+      <select id="intervalSelect">
+        <option value="24h">24h</option>
+        <option value="48h">48h</option>
+        <option value="72h">72h</option>
+        <option value="7d">7d</option>
+      </select>
+    </div>
+    <button class="btn" id="exportBtn">Export JSON</button>
+  </div>
+
+  <h2>Candidates</h2>
+  <p class="caption">Add up to 5 posts to rotate.</p>
+  <div id="candidates" class="cand-grid"></div>
+
+  <h2>Active Rotation</h2>
+  <div id="activeWrap"></div>
+
+  <h2>Results</h2>
+  <div style="overflow-x:auto">
+    <table>
+      <thead>
+        <tr><th>Name</th><th>Content</th><th>Days</th><th>Impressions</th><th>Follows</th><th>Conversion</th></tr>
+      </thead>
+      <tbody id="resultsBody"></tbody>
+    </table>
+  </div>
+  <div class="disclaimer">This tool tracks and recommends. You manually update your pinned post on X each rotation.</div>
+</main>
+<footer style="border-top:1px solid var(--border-subtle);padding:24px;text-align:center;margin-top:64px">
+  <button class="btn btn-magenta" id="clearDataBtn" style="margin-bottom:16px">Clear all data</button>
+  <p class="text-muted mono" style="font-size:12px;letter-spacing:0.1em">APACHE 2.0  ·  PART OF THE GROK-INSTALL FAMILY</p>
+</footer>
+<script>
+const LS_KEY = 'xpt-pinned-rotator-v1';
+const INTERVALS = { '24h':86400000, '48h':172800000, '72h':259200000, '7d':604800000 };
+const DEFAULT_STATE = { interval:'24h', candidates:[], activeId:null, startedAt:0, nextSwapAt:0, history:[] };
+let state = load();
+let saveTimer = null;
+let countdownTimer = null;
+
+function load(){ try { return {...DEFAULT_STATE, ...JSON.parse(localStorage.getItem(LS_KEY) || '{}')}; } catch { return {...DEFAULT_STATE}; } }
+function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+function debouncedSave(){ clearTimeout(saveTimer); saveTimer = setTimeout(save, 250); }
+function uid(){ return Math.random().toString(36).slice(2,10); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function truncate(s, n){ s = s || ''; return s.length > n ? s.slice(0, n) + '…' : s; }
+function fmt(ms){
+  ms = Math.max(0, ms|0);
+  const s = Math.floor(ms/1000);
+  const h = Math.floor(s/3600);
+  const m = Math.floor((s%3600)/60);
+  const sec = s%60;
+  const pad = n => String(n).padStart(2,'0');
+  return pad(h) + ':' + pad(m) + ':' + pad(sec);
+}
+
+function addCandidate(){
+  if (state.candidates.length >= 5) return;
+  state.candidates.push({ id: uid(), name: '', content: '' });
+  save(); render();
+}
+function deleteCandidate(id){
+  if (!confirm('Delete this candidate?')) return;
+  if (state.activeId === id){ state.activeId = null; state.startedAt = 0; state.nextSwapAt = 0; stopCountdown(); }
+  state.candidates = state.candidates.filter(c => c.id !== id);
+  save(); render();
+}
+function setActive(id){
+  state.activeId = id;
+  state.startedAt = Date.now();
+  state.nextSwapAt = Date.now() + INTERVALS[state.interval];
+  save(); render(); startCountdown();
+}
+function rotateNow(){
+  const active = state.candidates.find(c => c.id === state.activeId);
+  if (!active) return;
+  const impStr = prompt('Impressions during this rotation?');
+  if (impStr === null) return;
+  const imp = parseFloat(impStr);
+  if (!(imp > 0)) { alert('Impressions must be greater than 0.'); return; }
+  const folStr = prompt('Follows gained during this rotation?');
+  if (folStr === null) return;
+  const fol = parseFloat(folStr);
+  if (!(fol > 0)) { alert('Follows must be greater than 0.'); return; }
+  const now = Date.now();
+  const days = Math.max(0.01, (now - (state.startedAt || now)) / 86400000);
+  const conv = (fol / imp) * 100;
+  state.history.push({
+    id: uid(),
+    candidateId: active.id,
+    name: active.name || '(unnamed)',
+    content: active.content || '',
+    days: days,
+    impressions: imp,
+    follows: fol,
+    conversion: conv,
+    at: now
+  });
+  const idx = state.candidates.findIndex(c => c.id === active.id);
+  const nextIdx = state.candidates.length ? (idx + 1) % state.candidates.length : -1;
+  state.activeId = nextIdx >= 0 ? state.candidates[nextIdx].id : null;
+  state.startedAt = state.activeId ? now : 0;
+  state.nextSwapAt = state.activeId ? now + INTERVALS[state.interval] : 0;
+  save(); render(); if (state.activeId) startCountdown(); else stopCountdown();
+}
+function doExport(){
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'xpt-pinned-rotator-' + Date.now() + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function changeInterval(val){
+  if (!INTERVALS[val]) return;
+  state.interval = val;
+  if (state.activeId && state.startedAt){
+    state.nextSwapAt = state.startedAt + INTERVALS[val];
+  }
+  save(); render();
+  if (state.activeId) startCountdown();
+}
+
+function startCountdown(){
+  stopCountdown();
+  tickCountdown();
+  countdownTimer = setInterval(tickCountdown, 1000);
+}
+function stopCountdown(){
+  if (countdownTimer){ clearInterval(countdownTimer); countdownTimer = null; }
+}
+function tickCountdown(){
+  const el = document.getElementById('countdown');
+  if (!el) return;
+  const remaining = state.nextSwapAt - Date.now();
+  if (remaining <= 0){
+    el.textContent = '00:00:00';
+    el.classList.add('zero');
+  } else {
+    el.textContent = fmt(remaining);
+    el.classList.remove('zero');
+  }
+}
+
+function renderCandidates(){
+  const wrap = document.getElementById('candidates');
+  wrap.innerHTML = '';
+  state.candidates.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'card cand-card' + (c.id === state.activeId ? ' card-glow' : '');
+    const isActive = c.id === state.activeId;
+    card.innerHTML =
+      (isActive ? '<span class="active-tag">Active</span>' : '') +
+      '<input class="name-input" type="text" placeholder="Candidate name" value="' + esc(c.name) + '">' +
+      '<textarea class="textarea" rows="3" placeholder="Post content...">' + esc(c.content) + '</textarea>' +
+      '<div class="cand-footer">' +
+        (isActive ? '<span></span>' : '<button class="btn setactive-btn">Set Active</button>') +
+        '<button class="btn btn-magenta delete-btn">Delete</button>' +
+      '</div>';
+    const nameEl = card.querySelector('.name-input');
+    const contentEl = card.querySelector('.textarea');
+    nameEl.addEventListener('input', () => { c.name = nameEl.value; debouncedSave(); });
+    contentEl.addEventListener('input', () => { c.content = contentEl.value; debouncedSave(); if (isActive) renderActive(); });
+    const setBtn = card.querySelector('.setactive-btn');
+    if (setBtn) setBtn.addEventListener('click', () => setActive(c.id));
+    card.querySelector('.delete-btn').addEventListener('click', () => deleteCandidate(c.id));
+    wrap.appendChild(card);
+  });
+  if (state.candidates.length < 5){
+    const add = document.createElement('div');
+    add.className = 'add-tile';
+    add.textContent = '+ Add candidate';
+    add.addEventListener('click', addCandidate);
+    wrap.appendChild(add);
+  }
+}
+
+function renderActive(){
+  const wrap = document.getElementById('activeWrap');
+  const active = state.candidates.find(c => c.id === state.activeId);
+  if (!active){
+    wrap.innerHTML = '<div class="card"><div class="empty-active">Mark a candidate active to begin rotation.</div></div>';
+    return;
+  }
+  const remaining = state.nextSwapAt - Date.now();
+  const zero = remaining <= 0 ? ' zero' : '';
+  wrap.innerHTML =
+    '<div class="card card-glow active-card">' +
+      '<div class="active-top">' +
+        '<div><div class="settings-label" style="margin-bottom:6px">Currently Pinned</div>' +
+        '<div class="active-name">' + esc(active.name || '(unnamed)') + '</div></div>' +
+        '<div class="active-header">' +
+          '<span class="next-label">Next Rotation In</span>' +
+          '<span id="countdown" class="countdown' + zero + '">' + fmt(Math.max(0, remaining)) + '</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="active-content">' + esc(active.content || '(no content)') + '</div>' +
+      '<button class="btn btn-magenta" id="rotateBtn">Rotate Now</button>' +
+    '</div>';
+  document.getElementById('rotateBtn').addEventListener('click', rotateNow);
+}
+
+function renderResults(){
+  const body = document.getElementById('resultsBody');
+  body.innerHTML = '';
+  if (!state.history.length){
+    body.innerHTML = '<tr class="empty-row"><td colspan="6">No rotations complete yet.</td></tr>';
+    return;
+  }
+  const sorted = state.history.slice().sort((a,b) => b.conversion - a.conversion);
+  sorted.forEach((h, i) => {
+    const tr = document.createElement('tr');
+    if (i === 0) tr.className = 'winner';
+    tr.innerHTML =
+      '<td><strong>' + esc(h.name) + '</strong></td>' +
+      '<td class="truncate text-secondary">' + esc(truncate(h.content, 60)) + '</td>' +
+      '<td class="mono">' + h.days.toFixed(2) + '</td>' +
+      '<td class="mono">' + Math.round(h.impressions).toLocaleString() + '</td>' +
+      '<td class="mono">' + Math.round(h.follows).toLocaleString() + '</td>' +
+      '<td class="mono" style="color:var(--neon-lime)">' + h.conversion.toFixed(3) + '%</td>';
+    body.appendChild(tr);
+  });
+}
+
+function renderSettings(){
+  const sel = document.getElementById('intervalSelect');
+  sel.value = state.interval;
+}
+
+function render(){
+  renderSettings();
+  renderCandidates();
+  renderActive();
+  renderResults();
+}
+
+document.getElementById('intervalSelect').addEventListener('change', (e) => changeInterval(e.target.value));
+document.getElementById('exportBtn').addEventListener('click', doExport);
+document.getElementById('clearDataBtn').addEventListener('click', () => {
+  if (confirm('Clear all data? This will wipe every candidate, rotation, and result. This cannot be undone.')) {
+    localStorage.clear();
+    location.reload();
+  }
+});
+
+render();
+if (state.activeId && state.nextSwapAt) startCountdown();
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "@x-platform-toolkit/tool-19-grok-thread-composer",
+  "version": "0.1.0",
+  "description": "Tool 19 — Grok Thread Composer. Write threads grounded in what's actually happening on X right now.",
+  "license": "Apache-2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "cd ../.. && npx serve . --listen 5173",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "@x-platform-toolkit/grok-client": "*",
+    "@x-platform-toolkit/ui-kit": "*"
+  },
+  "devDependencies": {
+    "@x-platform-toolkit/test-utils": "*"
+  },
+  "engines": { "node": ">=20" }
+}

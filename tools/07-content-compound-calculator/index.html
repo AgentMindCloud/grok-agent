@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content Compound Calculator — x-platform-toolkit</title>
+  <meta name="description" content="See your true cumulative reach over 12 months. Not just one-day impressions.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ===== tokens.css ===== */
+    :root {
+      --bg-pure: #000000;
+      --bg-soft: #0a0a0f;
+      --bg-card: #111118;
+      --bg-elevated: #16161f;
+      --border-subtle: #1f1f2e;
+      --border-glow: rgba(34, 211, 238, 0.2);
+      --neon-cyan: #22d3ee;
+      --neon-purple: #a855f7;
+      --neon-magenta: #ec4899;
+      --neon-lime: #a3e635;
+      --neon-amber: #fbbf24;
+      --text-primary: #ffffff;
+      --text-secondary: #a1a1aa;
+      --text-muted: #52525b;
+      --gradient-primary: linear-gradient(135deg, #22d3ee 0%, #a855f7 100%);
+      --gradient-magenta: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+      --gradient-warm: linear-gradient(135deg, #ec4899 0%, #fbbf24 100%);
+      --glow-cyan: 0 0 20px rgba(34, 211, 238, 0.15);
+      --glow-purple: 0 0 20px rgba(168, 85, 247, 0.15);
+      --glow-magenta: 0 0 20px rgba(236, 72, 153, 0.15);
+      --glow-lime: 0 0 20px rgba(163, 230, 53, 0.15);
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 8px;
+      --transition-fast: 150ms ease;
+      --transition-base: 250ms ease;
+      --transition-slow: 400ms ease;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-12: 48px;
+      --space-16: 64px;
+    }
+
+    /* ===== components.css ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg-pure);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    .scanlines { position: relative; }
+    .scanlines::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(255,255,255,0.015) 2px, rgba(255,255,255,0.015) 3px);
+      pointer-events: none;
+    }
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+    h1 { font-size: 48px; margin-bottom: var(--space-4); }
+    h2 { font-size: 32px; margin-bottom: var(--space-3); }
+    h3 { font-size: 22px; margin-bottom: var(--space-2); }
+    .gradient-text {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: inline-block;
+    }
+    .brand-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) var(--space-6);
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-soft);
+    }
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .brand-mark .icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--neon-cyan);
+      border-radius: var(--radius-sm);
+      color: var(--neon-cyan);
+      font-weight: 700;
+    }
+    .brand-mark .name {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 700;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 10px 18px;
+      background: transparent;
+      border: 1px solid var(--neon-cyan);
+      border-radius: var(--radius-md);
+      color: var(--neon-cyan);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .btn:hover { background: rgba(34,211,238,0.08); box-shadow: var(--glow-cyan); }
+    .btn-primary { background: var(--neon-cyan); color: var(--bg-pure); }
+    .btn-primary:hover { background: var(--neon-cyan); box-shadow: var(--glow-cyan); filter: brightness(1.1); }
+    .btn-purple { border-color: var(--neon-purple); color: var(--neon-purple); }
+    .btn-purple:hover { background: rgba(168,85,247,0.08); box-shadow: var(--glow-purple); }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      transition: border-color var(--transition-base);
+    }
+    .card:hover { border-color: var(--border-glow); }
+    .card-glow { border-color: var(--neon-cyan); box-shadow: var(--glow-cyan); }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      background: rgba(34,211,238,0.08);
+      border: 1px solid var(--neon-cyan);
+      border-radius: var(--radius-sm);
+      color: var(--neon-cyan);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .badge-purple { background: rgba(168,85,247,0.08); border-color: var(--neon-purple); color: var(--neon-purple); }
+    .badge-magenta { background: rgba(236,72,153,0.08); border-color: var(--neon-magenta); color: var(--neon-magenta); }
+    .badge-lime { background: rgba(163,230,53,0.08); border-color: var(--neon-lime); color: var(--neon-lime); }
+    .input, .textarea {
+      width: 100%;
+      background: var(--bg-soft);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      transition: all var(--transition-fast);
+    }
+    .input:focus, .textarea:focus { outline: none; border-color: var(--neon-cyan); box-shadow: var(--glow-cyan); }
+    .textarea { min-height: 120px; resize: vertical; font-family: var(--font-body); }
+    .table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .table th {
+      text-align: left;
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .table td { padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--border-subtle); }
+    .table tr:hover td { background: var(--bg-elevated); }
+    .text-muted { color: var(--text-muted); }
+    .text-secondary { color: var(--text-secondary); }
+    .mono { font-family: var(--font-mono); }
+    @media (max-width: 768px) {
+      h1 { font-size: 32px; }
+      h2 { font-size: 24px; }
+      h3 { font-size: 18px; }
+      body { font-size: 14px; }
+    }
+
+    /* ===== tool-specific ===== */
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+      margin-bottom: var(--space-8);
+    }
+    @media (max-width: 860px) {
+      .input-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 520px) {
+      .input-grid { grid-template-columns: 1fr; }
+    }
+    .input-label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-3);
+    }
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      flex: 1;
+      height: 4px;
+      background: var(--border-subtle);
+      border-radius: 2px;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--neon-cyan);
+      box-shadow: 0 0 8px rgba(34,211,238,0.6);
+      cursor: pointer;
+      border: none;
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--neon-cyan);
+      box-shadow: 0 0 8px rgba(34,211,238,0.6);
+      cursor: pointer;
+      border: none;
+    }
+    .slider-value {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--neon-cyan);
+      min-width: 44px;
+      text-align: right;
+    }
+    .chart-wrap {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      margin-bottom: var(--space-6);
+    }
+    .chart-canvas-wrap {
+      position: relative;
+      width: 100%;
+      height: 400px;
+    }
+    .error {
+      color: var(--neon-magenta);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      text-align: center;
+      padding: var(--space-8) var(--space-4);
+      margin: 0;
+    }
+    @media (max-width: 520px) {
+      .chart-canvas-wrap { height: 300px; }
+    }
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-8);
+    }
+    .toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: 12px 20px;
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .toggle-btn:hover {
+      border-color: var(--neon-magenta);
+      color: var(--neon-magenta);
+    }
+    .toggle-btn.active {
+      border-color: var(--neon-magenta);
+      color: var(--neon-magenta);
+      background: rgba(236,72,153,0.08);
+      box-shadow: var(--glow-magenta);
+    }
+    .toggle-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border-subtle);
+      transition: all var(--transition-fast);
+    }
+    .toggle-btn.active .toggle-dot {
+      background: var(--neon-magenta);
+      box-shadow: 0 0 8px var(--neon-magenta);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+    }
+    @media (max-width: 860px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      text-align: left;
+    }
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-3);
+    }
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    @media (max-width: 520px) {
+      .stat-value { font-size: 36px; }
+    }
+    .stat-value.gradient {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .stat-value.lime { color: var(--neon-lime); }
+    .stat-value.white { color: var(--text-primary); }
+    .stat-sub {
+      margin-top: var(--space-2);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .number-input {
+      width: 100%;
+      background: var(--bg-soft);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 500;
+      transition: all var(--transition-fast);
+    }
+    .number-input:focus {
+      outline: none;
+      border-color: var(--neon-cyan);
+      box-shadow: var(--glow-cyan);
+    }
+    .number-input::-webkit-outer-spin-button,
+    .number-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="brand-bar">
+    <div class="brand-mark">
+      <span class="icon">X</span>
+      <span class="name">x-platform-toolkit</span>
+    </div>
+    <div class="brand-mark">
+      <span class="badge mono">07</span>
+      <span class="text-muted mono" style="font-size:11px;">grok-install family</span>
+    </div>
+  </div>
+
+  <main style="max-width:1100px; margin:0 auto; padding:48px 24px;">
+    <div style="margin-bottom:48px;">
+      <h1 class="gradient-text">Content Compound Calculator</h1>
+      <p class="text-secondary" style="font-size:18px; margin-top:8px;">See your true cumulative reach over 12 months. Not just one-day impressions.</p>
+    </div>
+
+    <div class="input-grid">
+      <div class="card">
+        <label class="input-label" for="posts-week">Posts per week</label>
+        <input type="number" id="posts-week" class="number-input" value="7" min="1" max="100" step="1">
+      </div>
+      <div class="card">
+        <label class="input-label" for="avg-imp">Avg impressions / post</label>
+        <input type="number" id="avg-imp" class="number-input" value="1000" min="1" max="10000000" step="100">
+      </div>
+      <div class="card">
+        <label class="input-label" for="ret-7">Retention % day 7</label>
+        <div class="slider-row">
+          <input type="range" id="ret-7" min="0" max="100" value="30" step="1">
+          <span class="slider-value" id="ret-7-val">30%</span>
+        </div>
+      </div>
+      <div class="card">
+        <label class="input-label" for="ret-30">Retention % day 30</label>
+        <div class="slider-row">
+          <input type="range" id="ret-30" min="0" max="100" value="10" step="1">
+          <span class="slider-value" id="ret-30-val">10%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <div class="chart-canvas-wrap">
+        <canvas id="reach-chart"></canvas>
+      </div>
+    </div>
+
+    <div class="toggle-row">
+      <button class="toggle-btn" id="compare-toggle" type="button">
+        <span class="toggle-dot"></span>
+        <span>Compare with +1 post per week</span>
+      </button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total 12-month reach</div>
+        <div class="stat-value gradient" id="stat-base">0</div>
+        <div class="stat-sub">Impressions accumulated over 52 weeks</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Reach with +1 post/week</div>
+        <div class="stat-value white" id="stat-plus">0</div>
+        <div class="stat-sub">One extra post each week, same retention</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">% uplift</div>
+        <div class="stat-value lime" id="stat-uplift">0%</div>
+        <div class="stat-sub">Marginal gain from the extra post</div>
+      </div>
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid var(--border-subtle); padding:24px; text-align:center; margin-top:64px;">
+    <p class="text-muted mono" style="font-size:12px; letter-spacing:0.1em;">APACHE 2.0  ·  PART OF THE GROK-INSTALL FAMILY</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"
+          onerror="window.__chartFailed=true"></script>
+  <script>
+    if (window.__chartFailed || typeof Chart === 'undefined') {
+      document.querySelector('.chart-wrap').innerHTML =
+        '<p class="error">Chart library failed to load. Check connection or disable blockers.</p>';
+    }
+  </script>
+  <script>
+    (function(){
+      'use strict';
+
+      if (typeof Chart === 'undefined') return;
+
+      const el = {
+        postsWeek: document.getElementById('posts-week'),
+        avgImp: document.getElementById('avg-imp'),
+        ret7: document.getElementById('ret-7'),
+        ret30: document.getElementById('ret-30'),
+        ret7Val: document.getElementById('ret-7-val'),
+        ret30Val: document.getElementById('ret-30-val'),
+        toggle: document.getElementById('compare-toggle'),
+        statBase: document.getElementById('stat-base'),
+        statPlus: document.getElementById('stat-plus'),
+        statUplift: document.getElementById('stat-uplift'),
+        canvas: document.getElementById('reach-chart')
+      };
+
+      let compareOn = false;
+      let chart = null;
+
+      function fmt(n) {
+        return Math.round(n).toLocaleString('en-US');
+      }
+
+      // Impressions earned on day d (1-indexed) for a single post, expressed
+      // as a fraction of the average-per-post baseline.
+      function dailyFraction(d, r7, r30) {
+        if (d < 1) return 0;
+        if (d === 1) return 1;
+        if (d <= 7) {
+          // Linear from 100% at day 1 down to r7 at day 7
+          const t = (d - 1) / 6;
+          return 1 + (r7 - 1) * t;
+        }
+        if (d <= 30) {
+          // Linear from r7 at day 7 down to r30 at day 30
+          const t = (d - 7) / 23;
+          return r7 + (r30 - r7) * t;
+        }
+        // Residual
+        return r30 * 0.5;
+      }
+
+      // Impressions earned in a 7-day window that starts `ageDays` days after
+      // the post went out (ageDays = 0 means the week the post was made).
+      // Returns fraction of avgImp.
+      function weeklyFraction(ageWeeks, r7, r30) {
+        const startDay = ageWeeks * 7 + 1;
+        let sum = 0;
+        for (let i = 0; i < 7; i++) {
+          sum += dailyFraction(startDay + i, r7, r30);
+        }
+        return sum;
+      }
+
+      // Given postsPerWeek and weekIndex w (1..52), compute total impressions
+      // earned during that week by all posts made in weeks 1..w.
+      function computeSeries(postsPerWeek, avgImp, r7, r30) {
+        const weeks = 52;
+        // Pre-compute weekly fractions for each age 0..51
+        const frac = new Array(weeks);
+        for (let a = 0; a < weeks; a++) {
+          frac[a] = weeklyFraction(a, r7, r30);
+        }
+        const cumulative = [];
+        let running = 0;
+        for (let w = 1; w <= weeks; w++) {
+          // Impressions earned this week = sum over posts from weeks 1..w
+          // of avgImp * weeklyFraction(w - postWeek)
+          let weekly = 0;
+          for (let pw = 1; pw <= w; pw++) {
+            weekly += postsPerWeek * avgImp * frac[w - pw];
+          }
+          running += weekly;
+          cumulative.push(running);
+        }
+        return cumulative;
+      }
+
+      function buildGradient(ctx, area) {
+        const g = ctx.createLinearGradient(0, area.top, 0, area.bottom);
+        g.addColorStop(0, 'rgba(34, 211, 238, 0.35)');
+        g.addColorStop(0.5, 'rgba(168, 85, 247, 0.18)');
+        g.addColorStop(1, 'rgba(168, 85, 247, 0)');
+        return g;
+      }
+
+      function initChart() {
+        const ctx = el.canvas.getContext('2d');
+        const labels = Array.from({length: 52}, (_, i) => 'W' + (i + 1));
+        chart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: 'Cumulative reach',
+                data: new Array(52).fill(0),
+                borderColor: '#22d3ee',
+                borderWidth: 2,
+                pointRadius: 0,
+                pointHoverRadius: 4,
+                pointHoverBackgroundColor: '#22d3ee',
+                pointHoverBorderColor: '#000',
+                tension: 0.25,
+                fill: {
+                  target: 'origin',
+                  above: (context) => {
+                    const {ctx, chartArea} = context.chart;
+                    if (!chartArea) return 'rgba(34,211,238,0.1)';
+                    return buildGradient(ctx, chartArea);
+                  }
+                }
+              },
+              {
+                label: '+1 post / week',
+                data: new Array(52).fill(0),
+                borderColor: '#ec4899',
+                borderWidth: 2,
+                borderDash: [6, 4],
+                pointRadius: 0,
+                pointHoverRadius: 4,
+                pointHoverBackgroundColor: '#ec4899',
+                pointHoverBorderColor: '#000',
+                tension: 0.25,
+                fill: false,
+                hidden: true
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: {
+                display: true,
+                position: 'top',
+                align: 'end',
+                labels: {
+                  color: '#a1a1aa',
+                  font: { family: "'JetBrains Mono', monospace", size: 11 },
+                  boxWidth: 18,
+                  boxHeight: 2,
+                  usePointStyle: false
+                }
+              },
+              tooltip: {
+                backgroundColor: '#0a0a0f',
+                borderColor: '#1f1f2e',
+                borderWidth: 1,
+                titleColor: '#ffffff',
+                titleFont: { family: "'JetBrains Mono', monospace", size: 12 },
+                bodyColor: '#a1a1aa',
+                bodyFont: { family: "'JetBrains Mono', monospace", size: 12 },
+                padding: 12,
+                cornerRadius: 6,
+                displayColors: true,
+                callbacks: {
+                  label: function(ctx) {
+                    return ctx.dataset.label + ': ' + fmt(ctx.parsed.y);
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                grid: { color: 'rgba(31,31,46,0.6)', drawBorder: false },
+                ticks: {
+                  color: '#a1a1aa',
+                  font: { family: "'JetBrains Mono', monospace", size: 10 },
+                  maxRotation: 0,
+                  autoSkipPadding: 16,
+                  callback: function(val, idx) {
+                    const w = idx + 1;
+                    if (w === 1 || w % 13 === 0 || w === 52) return 'W' + w;
+                    return '';
+                  }
+                }
+              },
+              y: {
+                grid: { color: 'rgba(31,31,46,0.6)', drawBorder: false },
+                ticks: {
+                  color: '#a1a1aa',
+                  font: { family: "'JetBrains Mono', monospace", size: 10 },
+                  callback: function(val) {
+                    if (val >= 1e6) return (val / 1e6).toFixed(1) + 'M';
+                    if (val >= 1e3) return (val / 1e3).toFixed(0) + 'K';
+                    return val;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+
+      function recompute() {
+        const postsPerWeek = Math.max(0, parseFloat(el.postsWeek.value) || 0);
+        const avgImp = Math.max(0, parseFloat(el.avgImp.value) || 0);
+        const r7 = Math.max(0, Math.min(100, parseFloat(el.ret7.value) || 0)) / 100;
+        const r30 = Math.max(0, Math.min(100, parseFloat(el.ret30.value) || 0)) / 100;
+
+        el.ret7Val.textContent = Math.round(r7 * 100) + '%';
+        el.ret30Val.textContent = Math.round(r30 * 100) + '%';
+
+        const baseSeries = computeSeries(postsPerWeek, avgImp, r7, r30);
+        const plusSeries = computeSeries(postsPerWeek + 1, avgImp, r7, r30);
+
+        const baseTotal = baseSeries[baseSeries.length - 1] || 0;
+        const plusTotal = plusSeries[plusSeries.length - 1] || 0;
+        const uplift = baseTotal > 0 ? ((plusTotal - baseTotal) / baseTotal) * 100 : 0;
+
+        el.statBase.textContent = fmt(baseTotal);
+        el.statPlus.textContent = fmt(plusTotal);
+        el.statUplift.textContent = (uplift >= 0 ? '+' : '') + uplift.toFixed(1) + '%';
+
+        if (chart) {
+          chart.data.datasets[0].data = baseSeries;
+          chart.data.datasets[1].data = plusSeries;
+          chart.data.datasets[1].hidden = !compareOn;
+          chart.update('none');
+        }
+      }
+
+      let debounceId = null;
+      function scheduleRecompute() {
+        if (debounceId) clearTimeout(debounceId);
+        debounceId = setTimeout(recompute, 150);
+      }
+
+      // Wire up inputs
+      ['input', 'change'].forEach(ev => {
+        el.postsWeek.addEventListener(ev, scheduleRecompute);
+        el.avgImp.addEventListener(ev, scheduleRecompute);
+        el.ret7.addEventListener(ev, scheduleRecompute);
+        el.ret30.addEventListener(ev, scheduleRecompute);
+      });
+
+      el.toggle.addEventListener('click', function() {
+        compareOn = !compareOn;
+        el.toggle.classList.toggle('active', compareOn);
+        recompute();
+      });
+
+      initChart();
+      recompute();
+    })();
+  </script>
+</body>
+</html>

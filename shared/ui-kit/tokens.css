@@ -1,0 +1,63 @@
+/* x-platform-toolkit — Design Tokens
+   Part of the grok-install family
+   Apache 2.0 */
+
+:root {
+  /* Backgrounds */
+  --bg-pure: #000000;
+  --bg-soft: #0a0a0f;
+  --bg-card: #111118;
+  --bg-elevated: #16161f;
+
+  /* Borders */
+  --border-subtle: #1f1f2e;
+  --border-glow: rgba(34, 211, 238, 0.2);
+
+  /* Neon accents */
+  --neon-cyan: #22d3ee;
+  --neon-purple: #a855f7;
+  --neon-magenta: #ec4899;
+  --neon-lime: #a3e635;
+  --neon-amber: #fbbf24;
+
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --text-muted: #52525b;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #22d3ee 0%, #a855f7 100%);
+  --gradient-magenta: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  --gradient-warm: linear-gradient(135deg, #ec4899 0%, #fbbf24 100%);
+
+  /* Shadows / glows */
+  --glow-cyan: 0 0 20px rgba(34, 211, 238, 0.15);
+  --glow-purple: 0 0 20px rgba(168, 85, 247, 0.15);
+  --glow-magenta: 0 0 20px rgba(236, 72, 153, 0.15);
+  --glow-lime: 0 0 20px rgba(163, 230, 53, 0.15);
+
+  /* Typography families */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+}

@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>12 · Controversy Detector — x-platform-toolkit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+/* ===== tokens ===== */
+:root {
+  --bg-pure: #000000;
+  --bg-soft: #0a0a0f;
+  --bg-card: #111118;
+  --bg-elevated: #16161f;
+  --border-subtle: #1f1f2e;
+  --border-glow: rgba(34, 211, 238, 0.2);
+  --neon-cyan: #22d3ee;
+  --neon-purple: #a855f7;
+  --neon-magenta: #ec4899;
+  --neon-lime: #a3e635;
+  --neon-amber: #fbbf24;
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --text-muted: #52525b;
+  --gradient-primary: linear-gradient(135deg, #22d3ee 0%, #a855f7 100%);
+  --glow-cyan: 0 0 20px rgba(34, 211, 238, 0.15);
+  --glow-purple: 0 0 20px rgba(168, 85, 247, 0.15);
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+}
+
+/* ===== base ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg-pure);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+h1 { font-size: 48px; margin-bottom: var(--space-4); }
+h3 { font-size: 22px; margin-bottom: var(--space-2); }
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+.mono { font-family: var(--font-mono); }
+.text-muted { color: var(--text-muted); }
+.text-secondary { color: var(--text-secondary); }
+
+/* ===== brand bar ===== */
+.brand-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-soft);
+}
+.brand-mark {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+}
+.brand-mark .icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--neon-cyan);
+  border-radius: var(--radius-sm);
+  color: var(--neon-cyan);
+  font-weight: 700;
+}
+.brand-mark .name {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background: rgba(34,211,238,0.08);
+  border: 1px solid var(--neon-cyan);
+  border-radius: var(--radius-sm);
+  color: var(--neon-cyan);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ===== mode toggle ===== */
+.mode-tabs {
+  display: inline-flex;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+  padding: 4px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--bg-soft);
+}
+.mode-tab {
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.mode-tab:hover { color: var(--text-primary); }
+.mode-tab.active {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  box-shadow: var(--glow-cyan);
+  background: rgba(34,211,238,0.06);
+}
+
+/* ===== draft area ===== */
+.draft-wrap { margin-top: var(--space-8); }
+.textarea {
+  width: 100%;
+  background: var(--bg-soft);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 200px;
+  resize: vertical;
+  transition: all var(--transition-fast);
+}
+.textarea:focus {
+  outline: none;
+  border-color: var(--neon-cyan);
+  box-shadow: var(--glow-cyan);
+}
+.count-line {
+  margin-top: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+/* ===== risk meter ===== */
+.meter-row {
+  display: grid;
+  grid-template-columns: 1fr 140px;
+  gap: var(--space-6);
+  align-items: center;
+  margin-top: var(--space-6);
+}
+.meter-bar {
+  position: relative;
+  height: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.meter-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0%;
+  background: var(--neon-lime);
+  border-radius: 999px;
+  transition: width var(--transition-base), background var(--transition-base);
+}
+.score-display {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 700;
+  text-align: right;
+  color: var(--neon-lime);
+  transition: color var(--transition-base);
+  letter-spacing: -0.02em;
+}
+.score-display .denom {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* ===== two-column layout ===== */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-6);
+  margin-top: var(--space-8);
+}
+
+.panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+.panel-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-4);
+}
+
+/* ===== highlighted text ===== */
+.highlight-box {
+  background: var(--bg-soft);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  min-height: 180px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: var(--text-primary);
+}
+.highlight-box.empty {
+  color: var(--text-muted);
+  font-style: italic;
+}
+.hl {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+.hl-tribal { text-decoration-color: var(--neon-magenta); }
+.hl-absolutes { text-decoration-color: var(--neon-cyan); }
+.hl-charged { text-decoration-color: var(--neon-amber); }
+.hl-callouts { text-decoration-color: var(--neon-purple); }
+
+/* ===== flag cards ===== */
+.info-note {
+  padding: var(--space-3);
+  margin-bottom: var(--space-4);
+  background: var(--bg-soft);
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+.flag-list { display: flex; flex-direction: column; gap: var(--space-3); }
+.flag-card {
+  background: var(--bg-soft);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  transition: border-color var(--transition-base);
+}
+.flag-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.flag-name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-primary);
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  display: inline-block;
+}
+.dot-tribal { background: var(--neon-magenta); box-shadow: 0 0 8px rgba(236,72,153,0.6); }
+.dot-absolutes { background: var(--neon-cyan); box-shadow: 0 0 8px rgba(34,211,238,0.6); }
+.dot-charged { background: var(--neon-amber); box-shadow: 0 0 8px rgba(251,191,36,0.6); }
+.dot-callouts { background: var(--neon-purple); box-shadow: 0 0 8px rgba(168,85,247,0.6); }
+.flag-count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.flag-count.hit { color: var(--neon-amber); }
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: var(--space-3);
+}
+.chip {
+  display: inline-block;
+  padding: 3px 8px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+.edit-details {
+  margin-top: var(--space-3);
+}
+.edit-summary {
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--neon-cyan);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 0;
+  list-style: none;
+  user-select: none;
+}
+.edit-summary::-webkit-details-marker { display: none; }
+.edit-summary::before { content: "[+] "; }
+details[open] .edit-summary::before { content: "[-] "; }
+.edit-summary:hover { color: var(--neon-purple); }
+.keyword-input {
+  width: 100%;
+  margin-top: var(--space-2);
+  padding: 10px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 60px;
+}
+.keyword-input:focus {
+  outline: none;
+  border-color: var(--neon-cyan);
+  box-shadow: var(--glow-cyan);
+}
+.flag-card.hidden { display: none; }
+.creator-empty {
+  padding: var(--space-4);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ===== suggestions ===== */
+.suggestions {
+  margin-top: var(--space-8);
+  padding: var(--space-6);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+.suggestions h3 {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-4);
+}
+.sugg-list { display: flex; flex-direction: column; gap: var(--space-3); }
+.sugg-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.sugg-row .dot { margin-top: 8px; flex-shrink: 0; }
+.sugg-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-right: var(--space-2);
+}
+.sugg-empty { color: var(--text-muted); font-style: italic; }
+
+/* ===== footer ===== */
+footer {
+  margin-top: var(--space-16);
+  padding: var(--space-6);
+  border-top: 1px solid var(--border-subtle);
+  text-align: center;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid var(--neon-cyan);
+  border-radius: var(--radius-md);
+  color: var(--neon-cyan);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.btn:hover {
+  background: rgba(34, 211, 238, 0.08);
+  box-shadow: var(--glow-cyan);
+}
+.btn-danger {
+  border-color: var(--neon-magenta);
+  color: var(--neon-magenta);
+}
+.btn-danger:hover {
+  background: rgba(236, 72, 153, 0.08);
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.15);
+}
+
+@media (max-width: 860px) {
+  h1 { font-size: 32px; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .meter-row { grid-template-columns: 1fr; }
+  .score-display { text-align: left; }
+  body { font-size: 14px; }
+}
+</style>
+</head>
+<body>
+
+<div class="brand-bar">
+  <div class="brand-mark">
+    <span class="icon">X</span>
+    <span class="name">x-platform-toolkit</span>
+  </div>
+  <div class="brand-mark">
+    <span class="badge">12</span>
+    <span class="text-muted">grok-install family</span>
+  </div>
+</div>
+
+<main style="max-width:1100px; margin:0 auto; padding:48px 24px;">
+  <h1 class="gradient-text">Controversy Detector</h1>
+  <p class="text-secondary" style="font-size:18px; margin-top:8px;">Flag risky phrasing before you post. Choose your battles.</p>
+
+  <div class="mode-tabs" role="tablist">
+    <button class="mode-tab active" data-mode="audit">Audit Mode</button>
+    <button class="mode-tab" data-mode="creator">Creator Mode</button>
+  </div>
+
+  <div class="draft-wrap">
+    <textarea id="draft" class="textarea" placeholder="Paste your draft post..."></textarea>
+    <div class="count-line"><span id="charCount">0</span> chars &middot; <span id="wordCount">0</span> words</div>
+  </div>
+
+  <div class="meter-row">
+    <div class="meter-bar"><div id="meterFill" class="meter-fill"></div></div>
+    <div id="scoreDisplay" class="score-display">0<span class="denom"> / 100</span></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-title">Highlighted Draft</div>
+      <div id="highlightBox" class="highlight-box empty">Your draft will appear here with flagged phrases underlined by category.</div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Flags by Category</div>
+      <div class="info-note">Keyword lists are empty by default. Click "Edit keywords" on any category to customize for your niche. Your lists persist locally.</div>
+      <div id="flagList" class="flag-list"></div>
+      <div id="creatorEmpty" class="creator-empty" style="display:none;">No category exceeds its threshold. You're clear to post.</div>
+    </div>
+  </div>
+
+  <div class="suggestions">
+    <h3>Suggested rephrasings</h3>
+    <div id="suggList" class="sugg-list"></div>
+  </div>
+</main>
+
+<footer>
+  <button class="btn btn-danger" id="clearDataBtn" type="button" style="margin-bottom:16px;">Clear all data</button>
+  <div>APACHE 2.0 &middot; PART OF THE GROK-INSTALL FAMILY</div>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = "xpt-controversy-detector-v1";
+
+  var CATEGORIES = [
+    { key: "TRIBAL",    label: "Tribal",    color: "#ec4899", slug: "tribal",    weight: 15, threshold: 15, advice: "Try framing as an observation about behavior, not group identity." },
+    { key: "CHARGED",   label: "Charged",   color: "#fbbf24", slug: "charged",   weight: 10, threshold: 10, advice: "Consider whether the charged framing is essential to your point." },
+    { key: "ABSOLUTES", label: "Absolutes", color: "#22d3ee", slug: "absolutes", weight: 5,  threshold: 10, advice: "Try 'often' or 'usually' instead of absolute terms." },
+    { key: "CALLOUTS",  label: "Callouts",  color: "#a855f7", slug: "callouts",  weight: 5,  threshold: 10, advice: "Try sharing your own experience instead of telling others what to do." }
+  ];
+
+  var DEFAULT_KEYWORDS = { TRIBAL: [], CHARGED: [], ABSOLUTES: [], CALLOUTS: [] };
+
+  var state = {
+    mode: "audit",
+    keywords: { TRIBAL: [], CHARGED: [], ABSOLUTES: [], CALLOUTS: [] }
+  };
+
+  function loadState() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      var parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === "object") {
+        if (parsed.mode === "audit" || parsed.mode === "creator") state.mode = parsed.mode;
+        if (parsed.keywords && typeof parsed.keywords === "object") {
+          for (var i = 0; i < CATEGORIES.length; i++) {
+            var k = CATEGORIES[i].key;
+            if (Array.isArray(parsed.keywords[k])) {
+              state.keywords[k] = parsed.keywords[k].filter(function(s){ return typeof s === "string" && s.trim().length > 0; });
+            }
+          }
+        }
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) { /* ignore */ }
+  }
+
+  function escapeRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, function(c){
+      return { "&":"&amp;", "<":"&lt;", ">":"&gt;", "\"":"&quot;", "'":"&#39;" }[c];
+    });
+  }
+
+  // Linearly interpolate between two hex colors; t in [0,1]
+  function lerpColor(a, b, t) {
+    var ah = parseInt(a.slice(1),16), bh = parseInt(b.slice(1),16);
+    var ar = (ah>>16)&255, ag = (ah>>8)&255, ab = ah&255;
+    var br = (bh>>16)&255, bg = (bh>>8)&255, bb = bh&255;
+    var r = Math.round(ar + (br-ar)*t);
+    var g = Math.round(ag + (bg-ag)*t);
+    var b2 = Math.round(ab + (bb-ab)*t);
+    return "rgb("+r+","+g+","+b2+")";
+  }
+  function meterColor(score) {
+    var t = Math.max(0, Math.min(100, score)) / 100;
+    if (t <= 0.5) return lerpColor("#a3e635", "#fbbf24", t / 0.5);
+    return lerpColor("#fbbf24", "#ec4899", (t - 0.5) / 0.5);
+  }
+
+  // ---- DOM refs ----
+  var draftEl = document.getElementById("draft");
+  var charCountEl = document.getElementById("charCount");
+  var wordCountEl = document.getElementById("wordCount");
+  var meterFill = document.getElementById("meterFill");
+  var scoreDisplay = document.getElementById("scoreDisplay");
+  var highlightBox = document.getElementById("highlightBox");
+  var flagListEl = document.getElementById("flagList");
+  var creatorEmptyEl = document.getElementById("creatorEmpty");
+  var suggListEl = document.getElementById("suggList");
+  var modeTabs = document.querySelectorAll(".mode-tab");
+
+  // ---- Build flag cards once ----
+  function buildFlagCards() {
+    flagListEl.innerHTML = "";
+    CATEGORIES.forEach(function(cat){
+      var card = document.createElement("div");
+      card.className = "flag-card";
+      card.setAttribute("data-cat", cat.key);
+
+      var kwList = state.keywords[cat.key] || [];
+      var kwText = kwList.join(", ");
+
+      card.innerHTML =
+        '<div class="flag-card-head">' +
+          '<div class="flag-name"><span class="dot dot-'+cat.slug+'"></span>'+cat.label+'</div>' +
+          '<div class="flag-count" id="count-'+cat.slug+'">0 matches</div>' +
+        '</div>' +
+        '<div class="chips" id="chips-'+cat.slug+'"></div>' +
+        '<details class="edit-details">' +
+          '<summary class="edit-summary">Edit keywords</summary>' +
+          '<textarea class="keyword-input" id="kw-'+cat.slug+'" placeholder="Comma-separated terms for your niche...">'+escapeHtml(kwText)+'</textarea>' +
+        '</details>';
+      flagListEl.appendChild(card);
+
+      var input = card.querySelector("#kw-"+cat.slug);
+      input.addEventListener("input", function(){
+        var parts = input.value.split(",").map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; });
+        state.keywords[cat.key] = parts;
+        saveState();
+        scheduleRender();
+      });
+    });
+  }
+
+  // ---- Scan text ----
+  function scan(text) {
+    // returns { results: {CAT: {count, phrases:[], hits:[{start,end,cat}]}}, total }
+    var results = {};
+    var hits = [];
+    CATEGORIES.forEach(function(cat){
+      results[cat.key] = { count: 0, phrases: [], catColor: cat.color };
+    });
+    if (!text) return { results: results, total: 0, hits: [] };
+
+    CATEGORIES.forEach(function(cat){
+      var list = state.keywords[cat.key] || [];
+      for (var i = 0; i < list.length; i++) {
+        var kw = list[i];
+        if (!kw) continue;
+        var re;
+        try {
+          re = new RegExp("\\b" + escapeRegex(kw) + "\\b", "gi");
+        } catch (e) { continue; }
+        var m;
+        while ((m = re.exec(text)) !== null) {
+          if (m[0].length === 0) { re.lastIndex++; continue; }
+          results[cat.key].count++;
+          if (results[cat.key].phrases.length < 3 && results[cat.key].phrases.indexOf(m[0]) === -1) {
+            results[cat.key].phrases.push(m[0]);
+          }
+          hits.push({ start: m.index, end: m.index + m[0].length, cat: cat.key, slug: cat.slug });
+        }
+      }
+    });
+
+    var total = 0;
+    CATEGORIES.forEach(function(cat){
+      total += results[cat.key].count * cat.weight;
+    });
+    if (total > 100) total = 100;
+    if (total < 0) total = 0;
+
+    return { results: results, total: total, hits: hits };
+  }
+
+  // ---- Render highlighted text ----
+  function renderHighlight(text, hits) {
+    if (!text) {
+      highlightBox.className = "highlight-box empty";
+      highlightBox.textContent = "Your draft will appear here with flagged phrases underlined by category.";
+      return;
+    }
+    highlightBox.className = "highlight-box";
+
+    // sort hits by start; if overlap, keep first
+    hits.sort(function(a,b){ return a.start - b.start; });
+    var filtered = [];
+    var lastEnd = -1;
+    for (var i = 0; i < hits.length; i++) {
+      if (hits[i].start >= lastEnd) {
+        filtered.push(hits[i]);
+        lastEnd = hits[i].end;
+      }
+    }
+
+    var out = "";
+    var cursor = 0;
+    for (var j = 0; j < filtered.length; j++) {
+      var h = filtered[j];
+      if (h.start > cursor) out += escapeHtml(text.slice(cursor, h.start));
+      out += '<span class="hl hl-'+h.slug+'">' + escapeHtml(text.slice(h.start, h.end)) + '</span>';
+      cursor = h.end;
+    }
+    if (cursor < text.length) out += escapeHtml(text.slice(cursor));
+    highlightBox.innerHTML = out;
+  }
+
+  // ---- Render flag cards ----
+  function renderCards(results) {
+    var anyVisible = false;
+    CATEGORIES.forEach(function(cat){
+      var r = results[cat.key];
+      var card = flagListEl.querySelector('[data-cat="'+cat.key+'"]');
+      if (!card) return;
+      var countEl = card.querySelector("#count-"+cat.slug);
+      var chipsEl = card.querySelector("#chips-"+cat.slug);
+      countEl.textContent = r.count + (r.count === 1 ? " match" : " matches");
+      if (r.count > 0) countEl.classList.add("hit"); else countEl.classList.remove("hit");
+
+      chipsEl.innerHTML = "";
+      r.phrases.forEach(function(p){
+        var chip = document.createElement("span");
+        chip.className = "chip";
+        chip.textContent = p;
+        chipsEl.appendChild(chip);
+      });
+
+      var categoryScore = r.count * cat.weight;
+      var visibleInCreator = categoryScore >= cat.threshold;
+
+      if (state.mode === "creator" && !visibleInCreator) {
+        card.classList.add("hidden");
+      } else {
+        card.classList.remove("hidden");
+        anyVisible = true;
+      }
+    });
+
+    if (state.mode === "creator" && !anyVisible) {
+      creatorEmptyEl.style.display = "block";
+    } else {
+      creatorEmptyEl.style.display = "none";
+    }
+  }
+
+  // ---- Render suggestions ----
+  function renderSuggestions(results) {
+    suggListEl.innerHTML = "";
+    var anyMatch = false;
+    CATEGORIES.forEach(function(cat){
+      if (results[cat.key].count >= 1) {
+        anyMatch = true;
+        var row = document.createElement("div");
+        row.className = "sugg-row";
+        row.innerHTML =
+          '<span class="dot dot-'+cat.slug+'"></span>' +
+          '<span><span class="sugg-label">'+cat.label+'</span>'+escapeHtml(cat.advice)+'</span>';
+        suggListEl.appendChild(row);
+      }
+    });
+    if (!anyMatch) {
+      var empty = document.createElement("div");
+      empty.className = "sugg-row sugg-empty";
+      empty.textContent = "No high-risk phrasing detected. Ship it.";
+      suggListEl.appendChild(empty);
+    }
+  }
+
+  // ---- Main render ----
+  function render() {
+    var text = draftEl.value || "";
+    charCountEl.textContent = text.length;
+    wordCountEl.textContent = text.trim() ? text.trim().split(/\s+/).length : 0;
+
+    var scanResult = scan(text);
+    var total = scanResult.total;
+
+    var color = meterColor(total);
+    meterFill.style.width = total + "%";
+    meterFill.style.background = color;
+    scoreDisplay.innerHTML = total + '<span class="denom"> / 100</span>';
+    scoreDisplay.style.color = color;
+
+    renderHighlight(text, scanResult.hits);
+    renderCards(scanResult.results);
+    renderSuggestions(scanResult.results);
+  }
+
+  var renderTimer = null;
+  function scheduleRender() {
+    if (renderTimer) clearTimeout(renderTimer);
+    renderTimer = setTimeout(render, 150);
+  }
+
+  // ---- Mode tabs ----
+  function setMode(mode) {
+    state.mode = mode;
+    modeTabs.forEach(function(t){
+      if (t.getAttribute("data-mode") === mode) t.classList.add("active");
+      else t.classList.remove("active");
+    });
+    saveState();
+    render();
+  }
+  modeTabs.forEach(function(t){
+    t.addEventListener("click", function(){ setMode(t.getAttribute("data-mode")); });
+  });
+
+  // ---- Init ----
+  loadState();
+  buildFlagCards();
+  setMode(state.mode);
+  draftEl.addEventListener("input", scheduleRender);
+  var clearDataBtn = document.getElementById("clearDataBtn");
+  if (clearDataBtn) {
+    clearDataBtn.addEventListener("click", function () {
+      if (confirm("Clear all data? This will wipe your draft and every saved keyword list. This cannot be undone.")) {
+        localStorage.clear();
+        location.reload();
+      }
+    });
+  }
+  render();
+})();
+</script>
+</body>
+</html>

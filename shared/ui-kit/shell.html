@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{TOOL_NAME}} — x-platform-toolkit</title>
+  <meta name="description" content="{{TOOL_TAGLINE}}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* INLINE tokens.css and components.css here for portability.
+       Each LIVE tool inlines these so it runs as a single file. */
+  </style>
+</head>
+<body>
+  <div class="brand-bar">
+    <div class="brand-mark">
+      <span class="icon">X</span>
+      <span class="name">x-platform-toolkit</span>
+    </div>
+    <div class="brand-mark">
+      <span class="badge mono">{{TOOL_NUMBER}}</span>
+      <span class="text-muted mono" style="font-size:11px;">grok-install family</span>
+    </div>
+  </div>
+
+  <main style="max-width:1100px; margin:0 auto; padding:48px 24px;">
+    <div style="margin-bottom:48px;">
+      <h1 class="gradient-text">{{TOOL_NAME}}</h1>
+      <p class="text-secondary" style="font-size:18px; margin-top:8px;">{{TOOL_TAGLINE}}</p>
+    </div>
+
+    <!-- TOOL-SPECIFIC UI GOES HERE -->
+
+  </main>
+
+  <footer style="border-top:1px solid var(--border-subtle); padding:24px; text-align:center; margin-top:64px;">
+    <p class="text-muted mono" style="font-size:12px; letter-spacing:0.1em;">APACHE 2.0  ·  PART OF THE GROK-INSTALL FAMILY</p>
+  </footer>
+</body>
+</html>

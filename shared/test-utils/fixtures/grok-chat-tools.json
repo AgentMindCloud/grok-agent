@@ -1,0 +1,31 @@
+{
+  "id": "chatcmpl-fixture-tools-1",
+  "object": "chat.completion",
+  "created": 1712700000,
+  "model": "grok-2-latest",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_fixture_1",
+            "type": "function",
+            "function": {
+              "name": "score_virality",
+              "arguments": "{\"draft\":\"ship fast or die slow\",\"niche\":\"builder\"}"
+            }
+          }
+        ]
+      },
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 48,
+    "completion_tokens": 22,
+    "total_tokens": 70
+  }
+}

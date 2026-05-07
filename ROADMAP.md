@@ -116,8 +116,8 @@ Phase 2 and Phase 3 deliberately overlap (days 35–56) — once at least one X 
 |---|---|---|---|---|
 | 1 | `x-money-companion-dashboard` | `finance-dashboard` | P19–P24 | The anchor: every other tool's data lands here. |
 | 2 | `x-smart-cashtag-alpha-engine` | `alpha-engine` | P25–P30 | Reuses the SQLite + Streamlit patterns from #1. |
-| 3 | `x-money-vision-analyzer` | `vision-analyzer` | P37–P42 | Built before #4 because #4 depends on it via `data/import_receipts.py`. |
-| 4 | `x-creator-payout-optimizer` | `creator-payout-optimizer` | P31–P36 | Pulls from #3 + #1 SQLite. |
+| 3 | `x-creator-payout-optimizer` | `creator-payout-optimizer` | P31–P36 | Pulls from #1 SQLite for tax-band routing. |
+| 4 | `x-money-vision-analyzer` | `vision-analyzer` | P37–P42 | Imports parsed receipts straight into Tool #1 via `data/import_receipts.py`. |
 
 > **Why "Tool 1 → 2 → 4 → 3" build order:** Tool #4 (Vision Analyzer) writes parsed receipts directly into Tool #1's SQLite. Building Tool #4 before Tool #3 means Tool #3 (Payout Optimizer) sees a richer transaction set when it ships.
 

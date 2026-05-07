@@ -469,12 +469,14 @@ class _RealQdrantBackend:
         self._client = QdrantClient(path=str(storage_path))
 
     def ensure_collection(self, name: str, vector_size: int) -> None:
-        from qdrant_client.http import models as qm  # type: ignore
+        # qdrant-client >=1.7 promotes ``qdrant_client.models`` over the older
+        # ``qdrant_client.http`` subpackage and replaces ``recreate_collection``
+        # with the safer ``create_collection`` (after ``collection_exists``).
+        from qdrant_client import models as qm  # type: ignore
 
-        existing = {c.name for c in (self._client.get_collections().collections or [])}
-        if name in existing:
+        if self._client.collection_exists(name):
             return
-        self._client.recreate_collection(
+        self._client.create_collection(
             collection_name=name,
             vectors_config=qm.VectorParams(
                 size=int(vector_size),
@@ -488,7 +490,7 @@ class _RealQdrantBackend:
     def upsert(self, collection: str, points: Sequence[dict]) -> int:
         if not points:
             return 0
-        from qdrant_client.http import models as qm  # type: ignore
+        from qdrant_client import models as qm  # type: ignore
 
         formatted = [
             qm.PointStruct(id=p["id"], vector=list(p["vector"]), payload=dict(p.get("payload") or {}))
@@ -504,7 +506,7 @@ class _RealQdrantBackend:
         limit: int,
         flt: dict | None,
     ) -> list[dict]:
-        from qdrant_client.http import models as qm  # type: ignore
+        from qdrant_client import models as qm  # type: ignore
 
         qfilter = None
         if flt:
@@ -545,7 +547,7 @@ class _RealQdrantBackend:
         ids: Sequence[str] | None = None,
         flt: dict | None = None,
     ) -> int:
-        from qdrant_client.http import models as qm  # type: ignore
+        from qdrant_client import models as qm  # type: ignore
 
         if ids:
             self._client.delete(
@@ -571,7 +573,7 @@ class _RealQdrantBackend:
         return 0
 
     def count(self, collection: str, flt: dict | None = None) -> int:
-        from qdrant_client.http import models as qm  # type: ignore
+        from qdrant_client import models as qm  # type: ignore
         qfilter = None
         if flt and flt.get("source"):
             qfilter = qm.Filter(must=[

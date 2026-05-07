@@ -10,7 +10,7 @@
 # WHAT IT VERIFIES (18 checks)
 # ----------------------------
 # 1.  All 13 expected files exist in the optimizer folder.
-# 2.  A working Python 3.11+ interpreter is on PATH.
+# 2.  A working Python 3.12+ interpreter is on PATH.
 # 3.  `cli/grok-agent.py validate` accepts the manifest (v2.15, kind=creator-payout-optimizer).
 # 4.  `safety/scanner.py scan` returns 0 Constitution findings.
 # 5.  Every code/config/markdown file has an Apache 2.0 license header.
@@ -79,7 +79,9 @@ function Resolve-Python {
         try {
             $verOut = & $c.Cmd @($c.Pre) --version 2>&1 | Out-String
             if ($LASTEXITCODE -eq 0 -and $verOut -match "Python 3\.(\d+)") {
-                if ([int]$Matches[1] -ge 11) {
+                # Smoke test requires 3.12+ to match launcher.ps1 — keeping these
+                # aligned avoids a smoke pass / launcher fail mismatch.
+                if ([int]$Matches[1] -ge 12) {
                     return [PSCustomObject]@{
                         Cmd = $c.Cmd; Pre = $c.Pre; Version = $verOut.Trim()
                     }
@@ -122,7 +124,7 @@ $py = Resolve-Python
 if ($py) {
     Add-Result "Python interpreter found" "PASS" $py.Version
 } else {
-    Add-Result "Python interpreter found" "FAIL" "no python or py -3 (3.11+) on PATH"
+    Add-Result "Python interpreter found" "FAIL" "no python or py -3 (3.12+) on PATH"
 }
 
 # --- Check 3: manifest schema validation --------------------------------

@@ -57,6 +57,14 @@ jobs:
     timeout-minutes: 10
     env:
       PYTHONUNBUFFERED: "1"
+      # Step 25 fix: actions/upload-artifact@v4 does NOT expand ~, so we
+      # redirect LOCALAPPDATA to a known absolute path under RUNNER_TEMP.
+      # The storage code in weekly_curation.py reads
+      # `os.environ.get("LOCALAPPDATA", ...)` and writes under it, which
+      # means the upload step's `path:` can reference the same prefix
+      # deterministically. Behavior on Windows machines is unchanged
+      # (LOCALAPPDATA is set by the OS there).
+      LOCALAPPDATA: ${{ runner.temp }}/grok-agent-state
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
@@ -136,6 +144,6 @@ jobs:
         with:
           name: curation-${{ steps.resolve.outputs.subcommand }}-${{ steps.resolve.outputs.week_iso }}
           path: |
-            ~/AppData/Local/grok-agent/creator-program/curation/**/*.json
+            ${{ runner.temp }}/grok-agent-state/grok-agent/creator-program/curation/**/*.json
           if-no-files-found: ignore
           retention-days: 30

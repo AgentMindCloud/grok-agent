@@ -25,7 +25,7 @@ Today an X user who wants to install a Grok-powered agent copies code from a thr
 | **Windows-first CLI** | `cli/grok-agent.ps1` | PowerShell 5.1+, zero admin, AppData-local install at `$env:LOCALAPPDATA\grok-agent\`. |
 | **Pydantic deep validator** | `cli/grok-agent.py` | Strict v2 schema check; `extra="forbid"` so typos surface instantly. |
 | **Agent Constitution** | `safety/constitution.md` v1.0 | 9 articles: consent gates, hard refusals, provenance, mandatory finance/tax/real-world disclaimers, cost limits + HITL, local-first by default. |
-| **CI scanner** | `safety/scanner.py` + `.github/workflows/validate.yml` | 15 named checks block non-compliant manifests on every PR. |
+| **CI scanner** | `safety/scanner.py` + `.github/workflows/validate.yml` | 33 named checks block non-compliant manifests on every PR. |
 | **`grok install this` primitive** | `install -FromStdin` | Paste a manifest from a Grok post; agent installs locally. No marketplace, no signup. |
 
 ## Five differentiators worth a closer look

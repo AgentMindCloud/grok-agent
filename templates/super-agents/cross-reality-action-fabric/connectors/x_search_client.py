@@ -68,7 +68,7 @@ from . import (
 # --- Section 1. Endpoint + defaults -------------------------------------
 
 XAI_CHAT_COMPLETIONS_URL = "https://api.x.ai/v1/chat/completions"
-DEFAULT_GROK_MODEL = "grok-4-3"
+DEFAULT_GROK_MODEL = "grok-4"
 DEFAULT_LIMIT = 10
 HARD_MAX_LIMIT = 50
 DEFAULT_TIMEOUT_S = 12
@@ -78,7 +78,7 @@ def _select_backend(force_stub: bool) -> str:
     if force_stub:
         return "stub:x-search"
     if os.environ.get("XAI_API_KEY"):
-        return "xai:grok-4-3"
+        return "xai:grok-4"
     return "stub:x-search"
 
 
@@ -310,7 +310,7 @@ class XSearchClient(BaseActionConnector):
         except (json.JSONDecodeError, TypeError, ValueError):
             results = []
         return {
-            "backend":  "xai:grok-4-3",
+            "backend":  "xai:grok-4",
             "query":    query,
             "limit":    limit,
             "results":  results[:limit],

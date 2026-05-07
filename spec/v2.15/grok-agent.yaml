@@ -102,7 +102,17 @@ metadata:
   homepage: "https://example.com"      # OPTIONAL · URL for docs/landing
   repository: "https://github.com/AgentMindCloud/grok-agent"  # OPTIONAL · URL
   docs: "https://example.com/docs"     # OPTIONAL · URL or repo path to the agent's README/docs (P138)
-  demo_video: "DEMO.md"                # OPTIONAL · URL or repo path to the agent's 90-second demo (P138)
+  demo_video:                          # OPTIONAL · structured demo block (P172) — typed as DemoVideo (extra="forbid")
+    status: "planned"                  # REQUIRED inside demo_video · str · e.g. "planned", "available", "draft"
+    url: "https://github.com/AgentMindCloud/grok-agent/releases/download/super-agent-demos-v1/agent-demo.mp4"  # OPTIONAL · str · MP4 / hosted video URL
+    note: "Recording target: 90-180s, 1080p."   # OPTIONAL · str · short description visible in the marketplace
+    storyboard: "DEMO.md"              # OPTIONAL · str · repo path to the storyboard document
+    update_instructions:               # OPTIONAL · list[str] · steps to flip status from planned to available
+      - "Set metadata.demo_video.status to: available"
+    recording_steps:                   # OPTIONAL · list[str] · OBS / capture instructions
+      - "Capture with OBS Studio at 1920x1080, 30fps"
+    upload_steps:                      # OPTIONAL · list[str] · gh release upload instructions
+      - "gh release upload super-agent-demos-v1 agent-demo.mp4 --clobber"
   language: "en"                       # OPTIONAL · IETF tag · default "en"
   created: "2026-05-04"                # OPTIONAL · ISO-8601 date
   updated: "2026-05-04"                # OPTIONAL · ISO-8601 date
@@ -213,6 +223,17 @@ tools:
           query: { type: "string" }
         required: ["query"]
 
+  - name: "fetch_news_headlines"
+    type: "public_api"
+    description: "Fetch headlines via the public_apis-declared NewsAPI entry (api_ref form)."
+    api_ref: "newsapi"                 # OPTIONAL · str · alternative to inline `api:` — references a `public_apis[].name`
+    parameters:
+      schema:
+        type: "object"
+        properties:
+          q: { type: "string" }
+        required: ["q"]
+
 # ----------------------------------------------------------------------------
 # public_apis: — declared free/public API integrations
 # Independent of the `tools:` array — these document which APIs the agent uses
@@ -225,15 +246,19 @@ public_apis:
     auth_env_var: "NEWSAPI_KEY"
     free_tier_quota: "100/day"
     privacy: "no_pii_sent"             # what user data, if any, leaves the machine
+    source_authority: 0.7              # OPTIONAL · float 0.0-1.0 · contradiction-detection weight (Living Narrative Fabric)
+    default_mode: "read-only"          # OPTIONAL · str · operational mode label (read-only | write-on-consent | ...)
   - name: "semantic_scholar"
     base_url: "https://api.semanticscholar.org/graph/v1"
     auth: "none"
     rate_limit: 100                    # per 5 minutes
     privacy: "no_pii_sent"
+    source_authority: 0.9              # academic search ranks high on the source-authority scale
   - name: "data_gov"
     base_url: "https://api.data.gov"
     auth_env_var: "DATA_GOV_KEY"
     privacy: "no_pii_sent"
+    scope: ["read"]                    # OPTIONAL · str | list[str] · OAuth scope (or free-form scope label) when applicable
 
 # ----------------------------------------------------------------------------
 # multi_agent: — coordination between agents (Super Agents and swarms)

@@ -55,3 +55,22 @@ pyyaml>=6.0,<7.0
 streamlit>=1.33,<2.0
 pandas>=2.2,<3.0
 plotly>=5.22,<6.0
+
+# ---- Slot 4 / P112 (connectors) — soft deps imported via try/except --------
+# These power the public-API connectors. The connector layer falls through
+# to a deterministic stub when any of them is missing, so the agent still
+# boots end-to-end without these. Pinning here means the opt-in path uses
+# a tested floor.
+requests>=2.31,<3.0
+crawl4ai>=0.3,<1.0
+
+# ---- Slot 3 / P111 (memory) — Mem0 + Qdrant + embedder --------------------
+mem0ai>=0.1,<1.0
+qdrant-client>=1.9,<2.0
+sentence-transformers>=2.6,<5.0
+
+# ---- Slot 5 / P113 (provenance) — Langfuse cloud tracing -------------------
+langfuse>=2.30,<4.0
+
+# ---- Slot 6 / P114 (eval) — DeepEval LLM-as-judge metrics ------------------
+deepeval>=1.0,<3.0

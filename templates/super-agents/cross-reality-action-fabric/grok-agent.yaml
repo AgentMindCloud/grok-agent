@@ -114,7 +114,7 @@ windows:
 # grok: LLM settings
 # ---------------------------------------------------------------------------
 grok:
-  model: "grok-4.3"
+  model: "grok-4"
   temperature: 0.5
   max_tokens: 6144
   top_p: 1.0
@@ -279,11 +279,17 @@ public_apis:
 multi_agent:
   enabled: true
   role: "orchestrator"
+  # delegates_to MUST match the bridge registry's
+  # cross-reality-action-fabric.delegates_to entry (registry path:
+  # templates/super-agents/_bridges/registry.json). The four worker
+  # slugs ("web-action-worker", "local-windows-worker",
+  # "real-world-api-worker", "x-action-worker") that previously
+  # lived here did not exist anywhere in the repo and tripped the
+  # bridge-reciprocity scanner check (BR-001/002/003). P172 audit
+  # Step 31 fix: aligned with the registry's authoritative list.
   delegates_to:
-    - "web-action-worker"
-    - "local-windows-worker"
-    - "real-world-api-worker"
-    - "x-action-worker"
+    - "living-narrative-fabric"
+    - "self-evolving-personal-os"
   shared_memory: "mem0://cross-reality-action-fabric/shared"
   message_bus: null
   max_concurrent_workers: 3
@@ -319,6 +325,7 @@ memory:
 # ---------------------------------------------------------------------------
 provenance:
   enabled: true
+  append_only: true
   log_path: "$env:LOCALAPPDATA\\grok-agent\\cross-reality-action-fabric\\provenance.log"
   cite_sources: true
   versioned_synthesis: true

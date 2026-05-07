@@ -448,24 +448,104 @@ function Invoke-Install {
     }
     elseif ($Rest -and $Rest.Count -ge 1) {
         $arg = $Rest[0]
-        if (-not (Test-Path -LiteralPath $arg)) {
-            Write-Err2 ("Path not found: {0}" -f $arg)
-            exit 66
-        }
-        $resolved = (Resolve-Path -LiteralPath $arg).Path
-        if ((Get-Item -LiteralPath $resolved).PSIsContainer) {
-            $sourceFolder = $resolved
-            $manifestPath = Join-Path $resolved 'grok-agent.yaml'
-            if (-not (Test-Path -LiteralPath $manifestPath)) {
-                Write-Err2 ("No grok-agent.yaml found in {0}" -f $resolved)
+
+        # Step 3 audit fix — accept URLs and bare slugs.
+        # Resolution order:
+        #   1. http(s)://       -> Invoke-WebRequest into a temp manifest.
+        #   2. bare slug        -> search templates/<category>/<slug>/grok-agent.yaml.
+        #   3. local path       -> existing Test-Path branch (file or folder).
+        if ($arg -match '^https?://') {
+            Write-Step ("Fetching manifest from URL: {0}" -f $arg)
+            $tmpUrlManifest = Join-Path ([System.IO.Path]::GetTempPath()) ("grok-agent-url-{0}.yaml" -f ([Guid]::NewGuid().ToString('N')))
+            try {
+                Invoke-WebRequest -Uri $arg -UseBasicParsing -OutFile $tmpUrlManifest -ErrorAction Stop | Out-Null
+            } catch {
+                Write-Err2 ("Failed to fetch URL: {0} — {1}" -f $arg, $_.Exception.Message)
+                if (Test-Path -LiteralPath $tmpUrlManifest) {
+                    Remove-Item -LiteralPath $tmpUrlManifest -Force -ErrorAction SilentlyContinue
+                }
                 exit 66
             }
-            $manifestText = Get-Content -LiteralPath $manifestPath -Raw -Encoding UTF8
-            $sourceLabel  = $manifestPath
-        } else {
-            $manifestText = Get-Content -LiteralPath $resolved -Raw -Encoding UTF8
-            $sourceLabel  = $resolved
-            $sourceFolder = Split-Path -Parent $resolved
+            $manifestText = Get-Content -LiteralPath $tmpUrlManifest -Raw -Encoding UTF8
+            $sourceLabel  = $arg
+            # Clean up the URL temp file now that we have the text in memory.
+            Remove-Item -LiteralPath $tmpUrlManifest -Force -ErrorAction SilentlyContinue
+            # Leave $sourceFolder $null on URL installs; the manifest body alone is copied.
+        }
+        elseif ($arg -notmatch '[\\/]') {
+            # Looks like a bare slug (no path separators). Search the templates tree.
+            $slug = $arg
+            $templateRoots = @(
+                (Join-Path $Script:RepoRoot 'templates\super-agents'),
+                (Join-Path $Script:RepoRoot 'templates\creator'),
+                (Join-Path $Script:RepoRoot 'templates\finance'),
+                (Join-Path $Script:RepoRoot 'templates\general'),
+                (Join-Path $Script:RepoRoot 'templates\x-native')
+            )
+            $matches = @()
+            foreach ($root in $templateRoots) {
+                if (-not (Test-Path -LiteralPath $root)) { continue }
+                $candidate = Join-Path $root (Join-Path $slug 'grok-agent.yaml')
+                if (Test-Path -LiteralPath $candidate) {
+                    $matches += $candidate
+                }
+            }
+            if ($matches.Count -eq 1) {
+                $resolved = (Resolve-Path -LiteralPath $matches[0]).Path
+                $manifestText = Get-Content -LiteralPath $resolved -Raw -Encoding UTF8
+                $sourceLabel  = $resolved
+                $sourceFolder = Split-Path -Parent $resolved
+                Write-Step ("Resolved slug '{0}' to {1}" -f $slug, $resolved)
+            }
+            elseif ($matches.Count -gt 1) {
+                Write-Err2 ("Slug '{0}' matched multiple templates:" -f $slug)
+                foreach ($m in $matches) { Write-Host ("     - " + $m) -ForegroundColor Red }
+                exit 66
+            }
+            else {
+                # No match — fall through to the local-path branch which will
+                # surface the original "Path not found" error for clarity.
+                if (-not (Test-Path -LiteralPath $arg)) {
+                    Write-Err2 ("Path not found: {0}" -f $arg)
+                    exit 66
+                }
+                $resolved = (Resolve-Path -LiteralPath $arg).Path
+                if ((Get-Item -LiteralPath $resolved).PSIsContainer) {
+                    $sourceFolder = $resolved
+                    $manifestPath = Join-Path $resolved 'grok-agent.yaml'
+                    if (-not (Test-Path -LiteralPath $manifestPath)) {
+                        Write-Err2 ("No grok-agent.yaml found in {0}" -f $resolved)
+                        exit 66
+                    }
+                    $manifestText = Get-Content -LiteralPath $manifestPath -Raw -Encoding UTF8
+                    $sourceLabel  = $manifestPath
+                } else {
+                    $manifestText = Get-Content -LiteralPath $resolved -Raw -Encoding UTF8
+                    $sourceLabel  = $resolved
+                    $sourceFolder = Split-Path -Parent $resolved
+                }
+            }
+        }
+        else {
+            if (-not (Test-Path -LiteralPath $arg)) {
+                Write-Err2 ("Path not found: {0}" -f $arg)
+                exit 66
+            }
+            $resolved = (Resolve-Path -LiteralPath $arg).Path
+            if ((Get-Item -LiteralPath $resolved).PSIsContainer) {
+                $sourceFolder = $resolved
+                $manifestPath = Join-Path $resolved 'grok-agent.yaml'
+                if (-not (Test-Path -LiteralPath $manifestPath)) {
+                    Write-Err2 ("No grok-agent.yaml found in {0}" -f $resolved)
+                    exit 66
+                }
+                $manifestText = Get-Content -LiteralPath $manifestPath -Raw -Encoding UTF8
+                $sourceLabel  = $manifestPath
+            } else {
+                $manifestText = Get-Content -LiteralPath $resolved -Raw -Encoding UTF8
+                $sourceLabel  = $resolved
+                $sourceFolder = Split-Path -Parent $resolved
+            }
         }
     }
     else {

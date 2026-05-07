@@ -927,7 +927,24 @@ def main(argv: list[str] | None = None) -> int:  # noqa: ARG001
         print(json.dumps(report.to_dict(), indent=2, ensure_ascii=False, default=str))
     elif not args.quiet:
         _print_summary(report)
-    return 0 if report.overall_score >= 0.8 else 0  # never break the cron
+    # Surface failures honestly — count any failed promptfoo case or any
+    # below-threshold deepeval metric and return non-zero so CI blocks on
+    # regressions instead of silently green-lighting them.
+    promptfoo_fail_count = sum(
+        1 for r in report.promptfoo if not r.get("passed", False)
+    )
+    deepeval_fail_count = sum(1 for m in report.deepeval if not m.passed)
+    total_fail = promptfoo_fail_count + deepeval_fail_count
+    if total_fail > 0:
+        if not args.quiet:
+            print(
+                f"FAIL: {total_fail} check(s) below threshold "
+                f"(promptfoo={promptfoo_fail_count}, deepeval={deepeval_fail_count}); "
+                f"overall_score={report.overall_score:.3f}.",
+                file=sys.stderr,
+            )
+        return 1
+    return 0
 
 
 if __name__ == "__main__":  # pragma: no cover

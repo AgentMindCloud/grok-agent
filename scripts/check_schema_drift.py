@@ -14,6 +14,21 @@ Validates that the Pydantic models in cli/grok-agent.py stay in sync with
 the documented schema in spec/v2.15/grok-agent.yaml and
 spec/v2.15/windows-extensions.yaml.
 
+P176 fix (Step 34): in addition to the dict-shaped top-level sections
+(metadata, install, grok, multi_agent, ...), the detector now traverses
+nested Pydantic submodels:
+
+  * Tool         → tools[] list-of-dicts in spec
+  * PublicApi    → public_apis[] list-of-dicts in spec
+  * ToolApi      → tools[].api dict in spec
+  * ToolServer   → tools[].server dict in spec
+  * DemoVideo    → metadata.demo_video dict in spec (P172)
+
+For list sections we compute the union of keys present across every example
+entry and compare against the corresponding Pydantic model's `model_fields`.
+This guarantees that adding a new field to Tool / PublicApi / ToolApi /
+ToolServer / DemoVideo without documenting it in the spec triggers DRIFT.
+
 Exit codes:
     0  - no drift detected
     1  - drift found (Pydantic field undocumented OR doc field unimplemented)
@@ -23,7 +38,7 @@ from __future__ import annotations
 import importlib.util
 import sys
 from pathlib import Path
-from typing import Any, Dict, Set
+from typing import Any, Dict, List, Optional, Set
 
 try:
     import yaml  # type: ignore[import-untyped]
@@ -78,6 +93,67 @@ def _section_doc_fields(grok_yaml: Dict[str, Any], section: str) -> Set[str]:
     if not isinstance(block, dict):
         return set()
     return set(block.keys())
+
+
+def _list_section_doc_fields(grok_yaml: Dict[str, Any], section: str) -> Set[str]:
+    """Return the union of keys present across every entry of a list-shaped section.
+
+    Used for `tools:` (Tool model) and `public_apis:` (PublicApi model). The
+    spec YAML documents a list of example entries; each entry illustrates a
+    different shape (one tool may use `api`, another `module`/`function`,
+    another `server`). Taking the union of keys across all entries yields
+    the full surface of fields a user can declare — which is exactly what
+    we must compare to the Pydantic model.
+    """
+    block = grok_yaml.get(section)
+    if not isinstance(block, list):
+        return set()
+    fields: Set[str] = set()
+    for entry in block:
+        if isinstance(entry, dict):
+            fields.update(entry.keys())
+    return fields
+
+
+def _list_section_nested_doc_fields(
+    grok_yaml: Dict[str, Any], section: str, child_key: str
+) -> Set[str]:
+    """Return the union of keys for a nested dict child inside a list section.
+
+    Example: `_list_section_nested_doc_fields(grok_yaml, "tools", "api")`
+    returns the union of keys appearing under any `tools[].api` entry,
+    matching the ToolApi Pydantic model. Likewise for `tools[].server`
+    matching ToolServer.
+    """
+    block = grok_yaml.get(section)
+    if not isinstance(block, list):
+        return set()
+    fields: Set[str] = set()
+    for entry in block:
+        if not isinstance(entry, dict):
+            continue
+        child = entry.get(child_key)
+        if isinstance(child, dict):
+            fields.update(child.keys())
+    return fields
+
+
+def _nested_dict_doc_fields(
+    grok_yaml: Dict[str, Any], parent: str, child: str
+) -> Set[str]:
+    """Return the keys of a nested dict child under a top-level dict section.
+
+    Example: `_nested_dict_doc_fields(grok_yaml, "metadata", "demo_video")`
+    returns the keys of `metadata.demo_video` — which the DemoVideo model
+    must mirror exactly (modulo extra="forbid", required vs optional).
+    """
+    parent_block = grok_yaml.get(parent)
+    if not isinstance(parent_block, dict):
+        return set()
+    child_block = parent_block.get(child)
+    if not isinstance(child_block, dict):
+        return set()
+    return set(child_block.keys())
 
 
 def _compare(label: str, pydantic: Set[str], spec: Set[str]) -> bool:
@@ -137,6 +213,56 @@ def main() -> int:
             continue
         if not _compare(section_name, _pydantic_fields(cls),
                          _section_doc_fields(grok_yaml, section_name)):
+            all_clean = False
+
+    # ------------------------------------------------------------------
+    # P176 (Step 34): nested Pydantic submodels.
+    # Adding a field to one of these without updating the spec yaml must
+    # surface as DRIFT — same way the top-level sections do.
+    # ------------------------------------------------------------------
+    nested_list_sections = [
+        # (label,             pydantic class,  list section in YAML)
+        ("tools[]",           "Tool",          "tools"),
+        ("public_apis[]",     "PublicApi",     "public_apis"),
+    ]
+    for label, class_name, section_name in nested_list_sections:
+        cls = getattr(cli_module, class_name, None)
+        if cls is None:
+            print(f"WARN  Pydantic class '{class_name}' not found")
+            continue
+        if not _compare(label, _pydantic_fields(cls),
+                         _list_section_doc_fields(grok_yaml, section_name)):
+            all_clean = False
+
+    # Nested dicts INSIDE list-shaped sections (e.g. tools[].api, tools[].server).
+    nested_in_list_sections = [
+        # (label,             pydantic class,  list section,  child key)
+        ("tools[].api",       "ToolApi",       "tools",       "api"),
+        ("tools[].server",    "ToolServer",    "tools",       "server"),
+    ]
+    for label, class_name, section_name, child_key in nested_in_list_sections:
+        cls = getattr(cli_module, class_name, None)
+        if cls is None:
+            print(f"WARN  Pydantic class '{class_name}' not found")
+            continue
+        if not _compare(label, _pydantic_fields(cls),
+                         _list_section_nested_doc_fields(grok_yaml, section_name,
+                                                         child_key)):
+            all_clean = False
+
+    # Nested dicts INSIDE dict-shaped sections (metadata.demo_video — P172).
+    nested_in_dict_sections = [
+        # (label,                     pydantic class, parent,    child)
+        ("metadata.demo_video",       "DemoVideo",    "metadata", "demo_video"),
+    ]
+    for label, class_name, parent_section, child_key in nested_in_dict_sections:
+        cls = getattr(cli_module, class_name, None)
+        if cls is None:
+            print(f"WARN  Pydantic class '{class_name}' not found")
+            continue
+        if not _compare(label, _pydantic_fields(cls),
+                         _nested_dict_doc_fields(grok_yaml, parent_section,
+                                                 child_key)):
             all_clean = False
 
     print("=" * 72)

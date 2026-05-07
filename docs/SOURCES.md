@@ -10,8 +10,6 @@
 
 | File | Purpose |
 |------|---------|
-| `Grok Agent Platform – Full Sequential Project Plan.md` | Main project plan and roadmap |
-| `# MASTER PROMPT TEMPLATE — Grok Agent OS Project.md` | Full detailed master prompt template with complete context |
 | `HANDOFF_LOG.md` | State tracker — which prompts have been completed |
 | `SOURCES.md` | This file — reference map |
 
@@ -46,9 +44,3 @@
 - Keep this `SOURCES.md` updated if new reference documents are added.
 
 **This is the single source of truth for where everything lives.**
-
----
-
-You can now create this file in the **root** of your `grok-agent` repo and commit it.
-
-Let me know if you need any adjustments!

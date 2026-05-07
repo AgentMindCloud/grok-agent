@@ -49,9 +49,10 @@ Constitution rules enforced at runtime
 Cross-Super-Agent reuse
 =======================
 
-* ``ConstitutionViolation`` is imported via ``importlib.util.spec_from_file_location``
-  from ``../living-narrative-fabric/orchestrator.py:362`` so the
-  exception class is shared across both Super Agents — never redefined.
+* ``ConstitutionViolation`` is defined locally in ``connectors/__init__.py``
+  so SEPOS stays standalone — even when LNF is absent. The class carries
+  ``.article`` and ``.gate`` attributes so ``graph.py`` can route violations
+  by gate name.
 * The ``Insight`` / ``Pattern`` / ``BriefingVersion`` dataclasses follow
   the same shape conventions as LNF's ``Claim`` / ``Contradiction`` /
   ``SynthesisVersion`` — slot 6's eval suite can score either Super
@@ -72,8 +73,6 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import importlib
-import importlib.util
 import json
 import os
 import sys
@@ -108,42 +107,20 @@ DEFAULT_APPDATA_ROOT = _default_appdata_root()
 
 
 # ---------------------------------------------------------------------------
-# Cross-Super-Agent: re-import ConstitutionViolation from LNF (never redefine)
+# ConstitutionViolation — defined locally in connectors/__init__.py
 # ---------------------------------------------------------------------------
+# SEPOS stays standalone: the exception class lives in this agent's own
+# ``connectors`` package (with ``.article`` / ``.source`` / ``.gate``
+# attributes that ``graph.py`` reads). The previous implementation
+# dynamically imported the class from ``../living-narrative-fabric``
+# which (a) crashed if the LNF folder was absent and (b) returned a
+# different class object that lacked the gate routing attributes.
+# Importing locally fixes both problems and keeps SEPOS independent.
 
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
 
-def _import_lnf_constitution_violation():
-    """Load only ``ConstitutionViolation`` from Living Narrative Fabric's
-    orchestrator without polluting the module namespace.
-
-    Uses ``importlib.util.spec_from_file_location`` rather than
-    ``importlib.import_module("orchestrator")`` so the identically-named
-    sibling file in *this* folder does not conflict on sys.path.
-    """
-
-    lnf_orch_path = SCRIPT_DIR.parent / "living-narrative-fabric" / "orchestrator.py"
-    if not lnf_orch_path.exists():
-        raise ImportError(
-            f"Living Narrative Fabric orchestrator not found at {lnf_orch_path}. "
-            f"Personal OS depends on LNF being present in the same "
-            f"templates/super-agents/ folder so ConstitutionViolation can "
-            f"be shared without redefinition (Article I.6 of the Constitution)."
-        )
-    module_name = "_lnf_orchestrator_for_personal_os"
-    spec = importlib.util.spec_from_file_location(module_name, lnf_orch_path)
-    if spec is None or spec.loader is None:
-        raise ImportError(f"Could not build module spec for {lnf_orch_path}")
-    module = importlib.util.module_from_spec(spec)
-    # Register before exec_module so dataclass processing inside the loaded
-    # module can resolve cls.__module__ via sys.modules. Without this,
-    # @dataclass(frozen=True) on SynthesisVersion / Claim / Contradiction
-    # raises AttributeError during exec.
-    sys.modules[module_name] = module
-    spec.loader.exec_module(module)
-    return module.ConstitutionViolation
-
-
-ConstitutionViolation = _import_lnf_constitution_violation()
+from connectors import ConstitutionViolation  # type: ignore  # noqa: E402
 
 
 # ---------------------------------------------------------------------------

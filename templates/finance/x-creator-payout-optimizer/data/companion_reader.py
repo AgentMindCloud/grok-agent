@@ -31,9 +31,10 @@ Built for xAI, X, Grok and the ecosystem community. ❤️
 from __future__ import annotations
 
 import sqlite3
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 
 from . import companion_db_path
 
@@ -42,11 +43,21 @@ def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def _open_readonly(path: Path) -> sqlite3.Connection:
-    """Open Tool #1's SQLite in true read-only mode (defense-in-depth)."""
+@contextmanager
+def _open_readonly(path: Path) -> Iterator[sqlite3.Connection]:
+    """Open Tool #1's SQLite in true read-only mode (defense-in-depth).
+
+    Implemented as a context manager so the underlying connection is
+    *always* closed when the ``with`` block exits — even if an exception
+    is raised mid-query. ``sqlite3.Connection.__exit__`` on its own only
+    commits/rolls back; it does not close. P172 audit Step 15 fix.
+    """
     conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
-    return conn
+    try:
+        yield conn
+    finally:
+        conn.close()
 
 
 def is_installed() -> bool:

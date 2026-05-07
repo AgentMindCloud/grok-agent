@@ -159,6 +159,11 @@ class Metadata(BaseModel):
     language: str = "en"
     created: Optional[str] = None
     updated: Optional[str] = None
+    # P172 audit Step 32: lighter Super Agent manifests declare this
+    # marker so anyone installing them knows the manifest ships without
+    # a runnable orchestrator.py. Read by tooling + surfaced in READMEs.
+    # Free-form string ("manifest-only", "experimental", "complete", ...).
+    implementation_status: Optional[str] = None
 
     model_config = _strict
 
@@ -615,7 +620,14 @@ class GrokAgentManifest(BaseModel):
             raise ValueError(
                 "kind='super-agent' requires a 'constitution:' section"
             )
-        # vision-analyzer kind should set grok.vision=true if grok is declared
+        # vision-analyzer kind requires a grok: section (vision capability
+        # must be configured) — Step 27 audit fix: previously the validator
+        # silently accepted vision-analyzer manifests with no grok block.
+        if self.kind == "vision-analyzer" and self.grok is None:
+            raise ValueError(
+                "kind='vision-analyzer' requires a 'grok:' section with vision=true"
+            )
+        # vision-analyzer kind must set grok.vision=true when grok is declared
         if (
             self.kind == "vision-analyzer"
             and self.grok is not None
@@ -644,8 +656,46 @@ def _resolve_manifest_path(p: Path) -> Path:
     return p
 
 
-def validate_manifest_file(path: Path) -> GrokAgentManifest:
-    """Load + parse + validate. Raises on error."""
+class StrictGrokAgentManifest(GrokAgentManifest):
+    """Strict variant of the root manifest: rejects unknown top-level keys.
+
+    P172 audit Step 8 fix: the `--strict` CLI flag previously accepted but
+    ignored. The default `GrokAgentManifest` uses `extra="allow"` at the
+    root so kind-specific top-level blocks (synthesis_confidence,
+    briefing_trust, bridges, entry_points, files) survive validation.
+
+    Strict mode tightens BOTH the root model AND the schema_meta block
+    (which normally accepts evolving documentation fields) to
+    `extra="forbid"`. The five documented kind-specific extension blocks
+    are declared as known optional fields so legitimate flagship manifests
+    keep validating cleanly; truly unknown top-level keys (e.g. typos,
+    bogus_key) are rejected.
+    """
+    # Documented kind-specific top-level extension blocks (P138).
+    # These are accepted at the root but not type-checked beyond "is mapping".
+    synthesis_confidence: Optional[Dict[str, Any]] = None
+    briefing_trust: Optional[Dict[str, Any]] = None
+    bridges: Optional[Dict[str, Any]] = None
+    entry_points: Optional[Dict[str, Any]] = None
+    files: Optional[Dict[str, Any]] = None
+
+    model_config = ConfigDict(extra="forbid")
+
+
+class StrictSchemaMeta(SchemaMeta):
+    """Strict variant of SchemaMeta — forbids unknown documentation fields."""
+    model_config = ConfigDict(extra="forbid")
+
+
+def validate_manifest_file(
+    path: Path, strict: bool = False
+) -> GrokAgentManifest:
+    """Load + parse + validate. Raises on error.
+
+    When strict=True, validate against StrictGrokAgentManifest (forbids
+    unknown top-level keys + tightens schema_meta) instead of the default
+    permissive root.
+    """
     if not path.is_file():
         raise FileNotFoundError(f"Manifest not found: {path}")
     text = path.read_text(encoding="utf-8-sig")  # tolerate UTF-8 BOM
@@ -657,6 +707,12 @@ def validate_manifest_file(path: Path) -> GrokAgentManifest:
         raise ValueError(
             f"Manifest must be a YAML mapping at the top level, got {type(data).__name__}"
         )
+    if strict:
+        # In strict mode, also tighten schema_meta if it's present so a typo
+        # there can't slip through under permissive defaults.
+        if isinstance(data.get("schema_meta"), dict):
+            StrictSchemaMeta.model_validate(data["schema_meta"])
+        return StrictGrokAgentManifest.model_validate(data)
     return GrokAgentManifest.model_validate(data)
 
 
@@ -689,7 +745,9 @@ def cmd_validate(args: argparse.Namespace) -> int:
             sys.stdout.write("-> Strict mode (extra=forbid)\n")
 
     try:
-        manifest = validate_manifest_file(path)
+        manifest = validate_manifest_file(
+            path, strict=getattr(args, "strict", False)
+        )
     except FileNotFoundError as e:
         sys.stderr.write(f"X  {e}\n")
         return 66
@@ -760,9 +818,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--strict",
         action="store_true",
         help=(
-            "Run validation in strict mode (extra=forbid on every nested "
-            "section). This is the current default; the flag is accepted "
-            "for forward compatibility with external CI pipelines."
+            "Run validation in strict mode: in addition to the default "
+            "extra=forbid on every nested section, the root manifest and "
+            "schema_meta blocks also reject unknown keys. Use in CI to catch "
+            "typos in top-level kind-specific extension blocks."
         ),
     )
     p_val.set_defaults(func=cmd_validate)

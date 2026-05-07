@@ -128,6 +128,19 @@ st.set_page_config(
 
 ensure_appdata()
 
+# P172 audit Step 26 fix: ensure_appdata() only creates a stub schema_meta
+# table — the real forecasts / pricing / templates tables live in
+# data/store.py::init_db. Call it on import so a direct `streamlit run app.py`
+# (without the launcher) doesn't fail with "no such table: ...". init_db is
+# idempotent and re-runs migrations cheaply.
+try:
+    from data.store import init_db as _init_full_schema  # noqa: WPS433  (runtime import)
+    _init_full_schema(DB_PATH)
+except Exception:
+    # Never block the UI on a schema bootstrap problem; surface it inline
+    # when the first tab queries. Streamlit will render a clean trace.
+    pass
+
 
 # --- Disclaimer + footer ---------------------------------------------------
 

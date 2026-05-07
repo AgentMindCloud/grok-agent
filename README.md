@@ -61,7 +61,7 @@
 
 | Phase | Range | What landed | Status |
 |---|---|---|---|
-| **1** | P1–P18 | Core platform — v2.15 schema, PowerShell + Python CLIs, safety scanner (27 checks), Agent Constitution, CI workflow, 8 starter manifests | ✅ done |
+| **1** | P1–P18 | Core platform — v2.15 schema, PowerShell + Python CLIs, safety scanner (33 checks), Agent Constitution, CI workflow, 8 starter manifests | ✅ done |
 | **2** | P19–P42 | **4 X Money tools** — Companion Dashboard, Smart Cashtag Alpha Engine, Creator Payout Optimizer, Vision Analyzer (Recipe A × 6 prompts each) | ✅ done |
 | **3** | P43–P92 | **22 creator templates** + outreach program — content, replies, analytics, monetization, threads, mentions, DMs, growth, hashtags, content calendars, A/B testing, recycling, brand voice | ✅ done |
 | **4** | P93–P124 | **7 Super Agents** — 3 flagship (Recipe C × 8 prompts) + 4 lighter (manifest + README), self-improvement infra | ✅ done |
@@ -146,7 +146,7 @@ When a Grok post on X contains a `grok-agent.yaml` block, anyone can install it 
 The CLI:
 
 1. Validates the manifest against v2.15 (Pydantic deep schema check).
-2. Runs the Constitution scanner — **27 named checks** blocking non-compliant manifests.
+2. Runs the Constitution scanner — **33 named checks** blocking non-compliant manifests.
 3. Copies the agent into `$env:LOCALAPPDATA\grok-agent\agents\<name>\`.
 
 No admin. No signup. No required marketplace. Just a YAML in a Grok reply.
@@ -179,7 +179,7 @@ flowchart LR
     Y[--Yaml inline] --> C
     M[Marketplace card<br/>Install button] --> A
     C[cli/grok-agent.ps1<br/>install] --> S1
-    S1{Schema v2.15<br/>Pydantic strict} -->|ok| S2{Constitution<br/>27 checks}
+    S1{Schema v2.15<br/>Pydantic strict} -->|ok| S2{Constitution<br/>33 checks}
     S1 -->|fail| X1[Stop · clear error]
     S2 -->|ok| I[Copy to<br/>%LOCALAPPDATA%\grok-agent\agents\&lt;name&gt;\]
     S2 -->|error| X2[Stop · Article + code]
@@ -262,7 +262,7 @@ storyboards as `X_LAUNCH_THREAD.md`.
 - **Author:** [@JanSol0s](https://x.com/JanSol0s) · `AgentMindCloud`
 - **Repo:** `github.com/AgentMindCloud/grok-agent`
 - **Schema:** [`spec/v2.15/grok-agent.yaml`](spec/v2.15/grok-agent.yaml) · [changelog](spec/v2.15/changelog.md) · [windows extensions](spec/v2.15/windows-extensions.yaml)
-- **Constitution:** [`safety/constitution.md`](safety/constitution.md) (27 checks in `safety/scanner.py`)
+- **Constitution:** [`safety/constitution.md`](safety/constitution.md) (33 checks in `safety/scanner.py`)
 - **Roadmap:** [`ROADMAP.md`](ROADMAP.md) · full plan in [`CLAUDE.md`](CLAUDE.md)
 - **Audit:** [`docs/workplan-audit.md`](docs/workplan-audit.md) — what's shipped + what's left.
 

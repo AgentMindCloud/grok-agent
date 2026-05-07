@@ -24,19 +24,26 @@ plotly>=5.20,<7.0
 # --- YAML config (Promptfoo + manifest validation) -----------------------
 PyYAML>=6.0,<7.0
 
-# --- HTTP client used by the connector layer -----------------------------
-# Optional at runtime — the connectors degrade to stub when missing.
+# --- HTTP clients used by the connector + orchestration layers -----------
+# Both are optional at runtime — the connectors and the Mastra HTTP adapter
+# degrade to stub when missing. Pinned here so the opt-in path uses a
+# tested floor.
 requests>=2.31,<3.0
+httpx>=0.27,<1.0
 
-# --- Optional integrations (all have stub fallbacks) --------------------
-# Uncomment to opt into the real backends:
-# qdrant-client>=1.9,<2.0          # P122 vector index
-# sentence-transformers>=2.6,<5.0  # P122 embedder
-# mem0ai>=0.1,<1.0                 # P122 memory
-# langgraph>=0.0.40,<1.0           # P123 orchestrator
-# langfuse>=2.30,<4.0              # P124 cloud tracing (opt-in only)
-# deepeval>=1.0,<3.0               # P125 metrics (real LLM judge)
-# promptfoo>=0.50,<1.0             # P125 YAML eval runner
+# --- Soft-imported integrations (each has a stub fallback) ----------------
+# Pinned floors so the opt-in path is reproducible. Code paths in
+# memory/, provenance/, graph.py, and eval/ probe each import at runtime
+# and emit a stub backend if the package is missing.
+qdrant-client>=1.9,<2.0          # P122 vector index
+sentence-transformers>=2.6,<5.0  # P122 embedder
+mem0ai>=0.1,<1.0                 # P122 memory
+langgraph>=0.2.0,<1.0            # P123 orchestrator
+langfuse>=2.30,<4.0              # P124 cloud tracing (opt-in only)
+deepeval>=1.0,<3.0               # P125 metrics (real LLM judge)
+
+# --- Promptfoo YAML eval runner (no stub — install only when needed) ------
+# promptfoo>=0.50,<1.0           # P125 YAML eval runner
 
 # --- Google integrations (optional, declared for completeness) ----------
 # google-api-python-client>=2.120,<3.0

@@ -1,6 +1,11 @@
 <!-- Apache 2.0 License -->
 <!-- Copyright 2026 AgentMindCloud -->
 
+> ⚠️ **This is a manifest-only template — no runnable code yet.**
+> Use as a structural reference for building your own version of this pattern.
+> The flagship agents (`living-narrative-fabric`, `self-evolving-personal-os`,
+> `cross-reality-action-fabric`) ship complete, runnable implementations.
+
 # Agent Swarm with Shared Memory
 
 **Lighter Super Agent for Grok Agent OS**

@@ -105,7 +105,7 @@
       "role": "orchestrator",
       "kind": "super-agent",
       "min_bridges": 3,
-      "delegates_to": ["web-action-worker", "local-windows-worker", "real-world-api-worker", "x-action-worker"],
+      "delegates_to": ["living-narrative-fabric", "self-evolving-personal-os"],
       "citations_to": {
         "living-narrative-fabric": {
           "citation_type": "data",

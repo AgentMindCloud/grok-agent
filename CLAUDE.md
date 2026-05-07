@@ -497,7 +497,61 @@ Discrepancies (claimed-but-not-changed; or changed-but-not-claimed) must be flag
 
 ---
 
-## 17. Pre-output checklist (run mentally before finishing any file)
+## §17. Repo health is more than the manifest scanner
+
+When the user asks for a "report", "audit", "is it working", "status check",
+or any framing that asks the assistant to characterize repo health, the
+default scope is **all of the following layers**, not just the scanner.
+
+The manifest scanner (`safety/scanner.py`) only validates YAML against the
+v2.15 schema and the Constitution articles. It is **one signal**, not the
+whole truth. Reporting "all green" based on the scanner alone, while
+implementation bugs sit in Python, JS, configs, or CI, is a real failure
+mode of past audits (P165–P172).
+
+A real "is the repo healthy?" report covers, at minimum:
+
+1. **Manifest schema** — `python cli/grok-agent.py validate <each>`
+2. **Constitution rules** — `python safety/scanner.py scan-all <dir>`
+3. **Forbidden phrases** — `python safety/scanner.py forbidden-phrase-scan`
+4. **Python implementation code** — read each agent's `*.py`, run mypy if
+   available, verify imports resolve, verify references to other files
+   actually exist, manually trace happy-path execution
+5. **JS / TS** — `cd marketplace && npm ci && npm run build` if a Next.js
+   app is present, plus any in-repo tests
+6. **Shell scripts** — at minimum parse `cli/*.ps1` with PowerShell;
+   dry-run install/validate where possible
+7. **CI workflows** — `python -c "yaml.safe_load(...)"` AND fetch the
+   latest GitHub Actions run status (local YAML parse cannot detect a
+   workflow that runs but does the wrong thing)
+8. **Tests** — every pytest suite that exists, including
+   `creator-program/v2/tests/`, `creator-program/v2/curation/tests/`,
+   every super-agent's `tests/`, every finance tool's `tests/`
+9. **Docs** — link checks, AI-leak scans (look for "Let me know" /
+   "You can now" / "Hope this helps" sign-offs), header consistency
+10. **Spot-checks** — pick 5 random claims and trace them end-to-end
+
+Status reports **MUST** explicitly enumerate what was checked AND what was
+NOT checked. "All green" is only acceptable if every layer above was
+checked. Otherwise the report explicitly says e.g.:
+
+  - Layer 1–3: green
+  - Layer 4 (Python): NOT CHECKED
+  - Layer 5 (JS): NOT CHECKED
+  - Layer 6 (shell): NOT CHECKED
+  - Layer 7 (CI runs): NOT FETCHED
+  - Layer 8 (tests): green
+  - Layer 9 (docs): NOT CHECKED
+  - Layer 10 (spot-checks): NOT DONE
+
+…so the user knows the exact surface that was audited.
+
+When the user says "give me a report", the default is all 10 layers.
+Doing less requires explicit user instruction, never silent omission.
+
+---
+
+## §18. Pre-output checklist (run mentally before finishing any file)
 
 - [ ] Apache 2.0 header at top (correct format for file type)
 - [ ] If user-facing: "help xAI win" line present (rotated phrasing)

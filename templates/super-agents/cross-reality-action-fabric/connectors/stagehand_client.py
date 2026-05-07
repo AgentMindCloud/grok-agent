@@ -339,8 +339,28 @@ class StagehandClient(BaseActionConnector):
         *, action_plan: str, max_steps: int, target_url: str | None,
     ) -> dict:
         from stagehand import Stagehand  # type: ignore
+        # Default to a Grok model so the Cross-Reality Action Fabric ships
+        # without an OpenAI-specific dependency. Stagehand exposes the
+        # provider via ``modelClientOptions`` (LiteLLM-compatible); when
+        # ``XAI_API_KEY`` is set we point the OpenAI-compatible SDK at the
+        # xAI base URL so Stagehand can talk to ``grok-3`` directly. The
+        # ``STAGEHAND_MODEL`` and ``STAGEHAND_MODEL_PROVIDER`` env vars
+        # override these defaults for non-Grok deployments.
+        model_name = os.environ.get("STAGEHAND_MODEL", "grok-3")
+        model_provider = os.environ.get("STAGEHAND_MODEL_PROVIDER", "xai")
+        xai_key = os.environ.get("XAI_API_KEY", "")
+        xai_base_url = os.environ.get("XAI_BASE_URL", "https://api.x.ai/v1")
+        model_client_options: dict[str, Any] = {
+            "modelProvider": model_provider,
+        }
+        if model_provider == "xai" and xai_key:
+            # Stagehand wraps the OpenAI SDK; setting the base URL + key
+            # routes the request through xAI's OpenAI-compatible endpoint.
+            model_client_options["apiKey"] = xai_key
+            model_client_options["baseURL"] = xai_base_url
         sh = Stagehand(env="LOCAL", verbose=0, headless=False,
-                        modelName=os.environ.get("STAGEHAND_MODEL", "gpt-4o"))
+                       modelName=model_name,
+                       modelClientOptions=model_client_options)
         sh.init()
         try:
             page = sh.page

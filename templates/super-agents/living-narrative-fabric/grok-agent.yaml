@@ -117,7 +117,7 @@ windows:
 # grok: model + system-prompt configuration
 # ----------------------------------------------------------------------------
 grok:
-  model: "grok-4.3"
+  model: "grok-4"
   temperature: 0.5
   max_tokens: 8192
   system_prompt_file: "prompts/system.md"

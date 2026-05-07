@@ -45,12 +45,18 @@ from __future__ import annotations
 import hashlib
 import importlib
 import json
+import os
 import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from random import Random
 from typing import Any, Sequence
+
+#: Default xAI model used for the X-search tool call. Real xAI models include
+#: ``grok-4``, ``grok-4-fast``, and ``grok-3``. Override at runtime via the
+#: ``XAI_MODEL`` environment variable.
+DEFAULT_XAI_MODEL = "grok-4"
 
 try:
     from . import BaseConnector  # type: ignore
@@ -107,8 +113,9 @@ class XGrokConnector(BaseConnector):
     ) -> Sequence[SourceItem]:
         if requests is None:
             return self._stub_fetch(query, since, limit)
+        model = os.environ.get("XAI_MODEL") or DEFAULT_XAI_MODEL
         body = {
-            "model": "grok-4.3",
+            "model": model,
             "messages": [
                 {
                     "role": "system",
@@ -153,11 +160,29 @@ class XGrokConnector(BaseConnector):
         if not self.validate_response(payload):
             return self._stub_fetch(query, since, limit)
 
-        # Extract the model's posts array.
+        # Extract the model's posts array. xAI's chat-completions API places
+        # tool-call results in ``message.tool_calls[*].function.arguments``
+        # (a JSON string) when the model invokes a registered tool. The
+        # ``message.content`` field is typically ``None`` in that case. We
+        # check tool_calls first and fall back to free-form content only
+        # when tool_calls is absent or empty.
         try:
-            content = payload["choices"][0]["message"].get("content") or ""
-            parsed = json.loads(content)
-            posts = parsed.get("posts") or []
+            message = payload["choices"][0]["message"] or {}
+            tool_calls = message.get("tool_calls") or []
+            parsed: dict | None = None
+            if tool_calls:
+                first_call = tool_calls[0] or {}
+                fn = first_call.get("function") or {}
+                args_raw = fn.get("arguments") or ""
+                if isinstance(args_raw, str) and args_raw.strip():
+                    parsed = json.loads(args_raw)
+                elif isinstance(args_raw, dict):
+                    parsed = args_raw
+            if parsed is None:
+                content = message.get("content") or ""
+                if content.strip():
+                    parsed = json.loads(content)
+            posts = (parsed or {}).get("posts") or []
         except Exception:
             return self._stub_fetch(query, since, limit)
 

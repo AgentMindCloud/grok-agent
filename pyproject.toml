@@ -134,6 +134,9 @@ warn_unused_ignores = true
 show_error_codes = true
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = [
+    "tests",
+    "creator-program/v2/curation/tests",
+]
 python_files = ["test_*.py"]
 addopts = "-q --strict-markers"

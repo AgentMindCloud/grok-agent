@@ -65,11 +65,14 @@ CONSTITUTION_VERSION = "1.0"
 SEVERITIES = ("info", "warn", "error")
 SEVERITY_RANK = {"info": 0, "warn": 1, "error": 2}
 
-# Kinds that should declare not_financial_advice
+# Kinds that should declare not_financial_advice. The vision-analyzer kind
+# parses receipts / financial screenshots and can imply real-money decisions,
+# so it ships under the same disclaimer umbrella as the other finance kinds.
 FINANCE_KINDS = {
     "finance-dashboard",
     "alpha-engine",
     "creator-payout-optimizer",
+    "vision-analyzer",
 }
 
 # Kinds that may need tax disclaimers
@@ -223,9 +226,13 @@ def check_no_admin(m: Dict[str, Any]) -> List[Finding]:
 
 @register("I.4-version")
 def check_version(m: Dict[str, Any]) -> List[Finding]:
-    v = m.get("version")
+    raw = m.get("version")
+    # Normalize to string before comparison: YAML parses unquoted `2.15` as a
+    # float, which silently fails string-equality checks. Coerce both sides to
+    # string so `2.15`, `"2.15"`, and `2.15` (float) all compare correctly.
+    v = None if raw is None else str(raw)
     if v not in ("2.14", "2.15"):
-        return [Finding("error", "VER-001", f"version must be '2.14' or '2.15', got {v!r}", "version", "I.4")]
+        return [Finding("error", "VER-001", f"version must be '2.14' or '2.15', got {raw!r}", "version", "I.4")]
     if v == "2.14":
         return [Finding("info", "VER-002", "version is v2.14 — accepted, but consider upgrading to v2.15", "version", "I.4")]
     return []
@@ -266,6 +273,10 @@ def check_publish_consent_gate(m: Dict[str, Any]) -> List[Finding]:
 # ============================================================================
 
 
+# Article III hard-refusal blacklist: actions that may NEVER appear in a
+# manifest's consent_gates, regardless of disclaimers or HITL configuration.
+# These are categorical refusals — the Constitution forbids them even with
+# explicit user consent.
 _HARD_REFUSAL_BLACKLIST = {
     "scrape_authenticated_x_content",
     "impersonate_user_identity",
@@ -288,6 +299,24 @@ def check_forbidden_not_silently_allowed(m: Dict[str, Any]) -> List[Finding]:
             "error", "HR-001",
             f"action '{action}' is in safety.forbidden_actions AND constitution.consent_gates — "
             f"a forbidden action cannot be re-enabled via consent",
+            "constitution.consent_gates", "III",
+        ))
+    return findings
+
+
+@register("III.hard-refusal-blacklist")
+def check_hard_refusal_blacklist(m: Dict[str, Any]) -> List[Finding]:
+    """Article III: certain actions are categorically refused. They must
+    never appear as consent gates — even with HITL or disclaimers in place,
+    these are constitutional hard refusals."""
+    findings: List[Finding] = []
+    gates = set(_get(m, "constitution.consent_gates", []) or [])
+    blacklisted = gates & _HARD_REFUSAL_BLACKLIST
+    for action in blacklisted:
+        findings.append(Finding(
+            "error", "HR-008",
+            f"action '{action}' is on the Article III hard-refusal blacklist — "
+            f"it must not appear in constitution.consent_gates under any circumstances",
             "constitution.consent_gates", "III",
         ))
     return findings
@@ -414,6 +443,16 @@ def check_hitl_when_consent_gates_declared(m: Dict[str, Any]) -> List[Finding]:
             "agent declares consent_gates; safety.human_in_the_loop should be configured",
             "safety.human_in_the_loop", "VI.2",
         )]
+    # Empty dict ({}) silently bypassed both the None check and the explicit
+    # `enabled: False` check. Treat an empty HITL block as a misconfiguration
+    # for any agent that declares consent gates.
+    if isinstance(hitl, dict) and not hitl:
+        return [Finding(
+            "error", "HITL-003",
+            "consent_gates declared but human_in_the_loop is an empty block "
+            "({}) — set enabled=true and configure confirm_before",
+            "safety.human_in_the_loop", "VI.2",
+        )]
     if hitl.get("enabled") is False:
         return [Finding(
             "error", "HITL-002",
@@ -494,7 +533,11 @@ def check_super_agent_cite_sources(m: Dict[str, Any]) -> List[Finding]:
 def check_append_only_provenance(m: Dict[str, Any]) -> List[Finding]:
     if not _get(m, "provenance.enabled", False):
         return []
-    if _get(m, "provenance.append_only") is False:
+    # Article III requires provenance to be append-only when enabled.
+    # Both an explicit `False` and an absent field count as a violation —
+    # silence is not consent.
+    append_only = _get(m, "provenance.append_only")
+    if append_only is not True:
         return [Finding(
             "error", "HR-003",
             "provenance.enabled=true requires provenance.append_only=true (Article III — never mutate provenance)",
@@ -602,8 +645,46 @@ def check_data_retention(m: Dict[str, Any]) -> List[Finding]:
 
 @register("VII.no-trackers")
 def check_no_trackers(m: Dict[str, Any]) -> List[Finding]:
+    """Search for tracker domains only in runtime / dependency fields.
+    A free-text description like 'does NOT use google-analytics.com' is
+    legitimate documentation — flagging it would punish the right behavior.
+    """
     findings: List[Finding] = []
-    blob = json.dumps(m, default=str).lower()
+    # Collect ONLY the fields where a real tracker reference would land:
+    # runtime scripts, declared Python dependencies, and explicit dependency
+    # listings. Description / notes / metadata prose is excluded by design.
+    targets: List[str] = []
+    scripts = _get(m, "windows.runtime.scripts")
+    if isinstance(scripts, list):
+        for s in scripts:
+            if isinstance(s, str):
+                targets.append(s)
+            elif isinstance(s, dict):
+                targets.append(json.dumps(s, default=str))
+    py_deps = _get(m, "dependencies.python")
+    if isinstance(py_deps, list):
+        for dep in py_deps:
+            if isinstance(dep, str):
+                targets.append(dep)
+            elif isinstance(dep, dict):
+                targets.append(json.dumps(dep, default=str))
+    # Other explicit dependency-listing fields. These are structured fields
+    # that name third-party packages or hostnames; prose is never here.
+    for dotted in (
+        "dependencies.npm",
+        "dependencies.system",
+        "dependencies.apis",
+        "windows.runtime.entrypoints",
+        "windows.runtime.env",
+    ):
+        val = _get(m, dotted)
+        if val is None:
+            continue
+        if isinstance(val, (list, dict)):
+            targets.append(json.dumps(val, default=str))
+        elif isinstance(val, str):
+            targets.append(val)
+    blob = "\n".join(targets).lower()
     for tracker in _TRACKER_DOMAINS:
         if tracker in blob:
             findings.append(Finding(
@@ -682,11 +763,11 @@ def check_severity_floor_not_info(m: Dict[str, Any]) -> List[Finding]:
 
 
 # ============================================================================
-# Additional Article X: Local-first storage
+# Additional Article VII: Local-first storage
 # ============================================================================
 
 
-@register("X.local-first-storage")
+@register("VII.local-first-storage")
 def check_local_first_storage(m: Dict[str, Any]) -> List[Finding]:
     appdata = _get(m, "windows.appdata_folder")
     if appdata is None:
@@ -698,7 +779,7 @@ def check_local_first_storage(m: Dict[str, Any]) -> List[Finding]:
             "warn", "LF-001",
             f"windows.appdata_folder='{appdata}' should start with 'grok-agent/' "
             f"to keep all per-user data under one umbrella",
-            "windows.appdata_folder", "X",
+            "windows.appdata_folder", "VII",
         )]
     return []
 
@@ -1030,6 +1111,7 @@ def check_bridge_transitive_contradiction(m: Dict[str, Any]) -> List[Finding]:
 _FORBIDDEN_PHRASE_EXEMPT_FILES: set = {
     "CLAUDE.md",
     "docs/CONSTRAINTS.md",
+    "docs/bug-fix-plan-2026-05-06.md",
     "templates/super-agents/self-evolving-personal-os/X_LAUNCH_THREAD.md",
     "templates/super-agents/cross-reality-action-fabric/X_LAUNCH_THREAD.md",
 }

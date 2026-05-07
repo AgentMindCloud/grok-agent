@@ -82,7 +82,7 @@ repo today.
 | **Open manifest standard** | `spec/v2.15/grok-agent.yaml` | One YAML describes the whole agent (kind, tools, public APIs, multi-agent role, safety, cost limits, HITL gates). 100% backwards-compat with v2.14. |
 | **Windows-first CLI** | `cli/grok-agent.ps1` + `cli/grok-agent.py` | PowerShell 5.1+, zero admin, AppData-local install at `$env:LOCALAPPDATA\grok-agent\`. Pydantic v2 validator. |
 | **Agent Constitution + scanner** | `safety/constitution.md`, `safety/scanner.py` | Six-rule baseline (consent, provenance, rollback, contradiction, Windows-only, privacy-first). CI-enforced on every push. |
-| **34 valid manifests** | `templates/**/grok-agent.yaml` | All 34 currently in the repo pass schema + Constitution scan at the strictest severity floor. |
+| **37 valid manifests** | `templates/**/grok-agent.yaml` | All 37 currently in the repo pass schema + Constitution scan at the strictest severity floor. |
 | **Three flagship Super Agents** | `templates/super-agents/{lnf,sepos,crf}/` | Living Narrative Fabric (synthesis), Self-Evolving Personal OS (personal memory), Cross-Reality Action Fabric (real-world action). All Apache-2.0, all running on Grok 4.3 by default. |
 | **22 creator templates** | `templates/creator/*/` | From `content-idea-generator` to `monetization-optimizer` — each a one-folder template with a v2.15 manifest, system prompt, runner, README, and example outputs. |
 | **Thin marketplace** | `marketplace/` | Next.js 14 + TypeScript. Search, kind filters, per-agent detail routes, manifest generator. Vercel-deployable in three minutes. |
@@ -132,7 +132,7 @@ safety record by association.
 
 ### 4. It's already production-grade
 
-- 34 manifests pass schema + Constitution scan today.
+- 37 manifests pass schema + Constitution scan today.
 - Three Super Agents have full Promptfoo + DeepEval suites and pass
   weekly self-improvement loops.
 - The marketplace generator emits a v2.15-valid manifest for all 8

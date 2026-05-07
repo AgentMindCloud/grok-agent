@@ -80,7 +80,7 @@ The CLI validates against v2.15, runs the Constitution scanner, and on success c
 |---|---|
 | `cli/grok-agent.ps1` | Primary Windows CLI (install / new / validate / list / run) |
 | `cli/grok-agent.py` | Pydantic v2 deep validator (called from the PS CLI) |
-| `safety/scanner.py` | Agent Constitution enforcer (15 named checks) |
+| `safety/scanner.py` | Agent Constitution enforcer (33 named checks) |
 | `safety/constitution.md` | The Agent Constitution v1.0 |
 | `spec/v2.15/grok-agent.yaml` | official schema (v2.15 unified) |
 | `spec/v2.14/` | Reference-only snapshot of the prior schema |
@@ -99,11 +99,11 @@ For the full official tree see [`PROJECT_DNA.md`](PROJECT_DNA.md).
 
 | Phase | Range | Goal | Status |
 |---|---|---|---|
-| 1 | P1–P18 | Core platform foundation | in progress |
-| 2 | P19–P42 | X Money tools suite (4 tools × 6 prompts) | upcoming |
-| 3 | P43–P92 | Creator distribution flywheel (20 templates) | upcoming |
-| 4 | P93–P124 | 7 Super Agents + self-improvement loop | upcoming |
-| 5 | P125+ | Marketplace + xAI partnership | upcoming |
+| 1 | P1–P18 | Core platform foundation | complete |
+| 2 | P19–P42 | X Money tools suite (4 tools × 6 prompts) | complete |
+| 3 | P43–P92 | Creator distribution flywheel (20 templates) | complete |
+| 4 | P93–P124 | 7 Super Agents + self-improvement loop | complete |
+| 5 | P125+ | Marketplace + xAI partnership | active |
 
 Each prompt is self-contained, atomic, and adds one row to `HANDOFF_LOG.md`. The full sequence is documented in [`CLAUDE.md`](../CLAUDE.md).
 

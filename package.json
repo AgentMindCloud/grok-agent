@@ -1,0 +1,57 @@
+{
+  "name": "grok-pulse-mcp-server",
+  "version": "0.1.0",
+  "description": "MCP server that uses Grok to tell builders in the xAI/X/Grok ecosystem what needs their attention today across their GitHub repos.",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "grok-pulse-mcp-server": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    ".env.example"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "grok",
+    "xai",
+    "github",
+    "developer-tools",
+    "productivity",
+    "ai-agents"
+  ],
+  "author": "AgentMindCloud (@JanSol0s)",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AgentMindCloud/grok-pulse-mcp-server.git"
+  },
+  "homepage": "https://github.com/AgentMindCloud/grok-pulse-mcp-server#readme",
+  "bugs": {
+    "url": "https://github.com/AgentMindCloud/grok-pulse-mcp-server/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.6.1",
+    "@octokit/rest": "^21.0.2",
+    "axios": "^1.7.9",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

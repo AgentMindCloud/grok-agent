@@ -45,3 +45,7 @@ The swarm returns a synthesized answer that includes the full debate trace, diss
 ## License
 
 Apache 2.0
+
+---
+
+> Built for xAI, X, Grok and the ecosystem community. ❤️

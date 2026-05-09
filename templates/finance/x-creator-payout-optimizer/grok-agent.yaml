@@ -146,6 +146,7 @@ tools:
 
 provenance:
   enabled: true
+  append_only: true                # Article III — provenance entries are never mutated or deleted
   cite_sources: true
   contradiction_detection: false   # this tool is forecast/synthesis, not truth-checking like Tool #2
 

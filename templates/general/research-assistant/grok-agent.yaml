@@ -64,6 +64,7 @@ memory:
 
 provenance:
   enabled: true
+  append_only: true               # Article III — provenance entries are never mutated or deleted
   cite_sources: true
   contradiction_detection: true
 

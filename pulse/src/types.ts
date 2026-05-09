@@ -21,7 +21,7 @@ export interface PulseItem {
   updated_at: string;
   /** Optional priority hint set by the server before Grok sees it (1=highest). */
   priority?: number;
-  /** Free-form extra context (issue number, run id, conclusion, etc.) — passed to Grok verbatim. */
+  /** Free-form extra context like issue number, run id, or conclusion — passed to Grok verbatim. */
   meta?: Record<string, string | number | boolean | null>;
 }
 

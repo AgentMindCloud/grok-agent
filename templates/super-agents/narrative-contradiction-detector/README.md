@@ -45,3 +45,7 @@ The agent returns a clear map of contradictions, evidence for each side, and an 
 ## License
 
 Apache 2.0
+
+---
+
+> Built for xAI, X, Grok and the ecosystem community. ❤️

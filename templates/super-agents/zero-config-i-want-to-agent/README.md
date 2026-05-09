@@ -46,3 +46,7 @@ The agent confirms understanding, shows the proposed plan, assembles everything,
 ## License
 
 Apache 2.0
+
+---
+
+> Built for xAI, X, Grok and the ecosystem community. ❤️

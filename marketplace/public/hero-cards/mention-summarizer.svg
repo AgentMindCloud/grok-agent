@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640"
+     viewBox="0 0 1280 640" role="img"
+     aria-label="Grok Agent OS hero card — Mention Summarizer">
+  <title>Grok Agent OS — Mention Summarizer</title>
+  <desc>Mention Summarizer: Know what your mentions mean — before you decide what to say back.. Built on Grok Agent OS.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0A0A0A"/>
+      <stop offset="65%" stop-color="#0A0A0A"/>
+      <stop offset="100%" stop-color="#FF1E70"/>
+    </linearGradient>
+    <linearGradient id="kindBar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00E0D5"/>
+      <stop offset="100%" stop-color="#FF1E70"/>
+    </linearGradient>
+  </defs>
+
+  <!-- background -->
+  <rect width="1280" height="640" fill="url(#bg)"/>
+
+  <!-- subtle scanline overlay (Spectral v1 retro CRT cue) -->
+  <g opacity="0.06" fill="#F4ECDA">
+    <rect x="0" y="40"  width="1280" height="1"/>
+    <rect x="0" y="120" width="1280" height="1"/>
+    <rect x="0" y="200" width="1280" height="1"/>
+    <rect x="0" y="280" width="1280" height="1"/>
+    <rect x="0" y="360" width="1280" height="1"/>
+    <rect x="0" y="440" width="1280" height="1"/>
+    <rect x="0" y="520" width="1280" height="1"/>
+  </g>
+
+  <!-- accent bar above the kind label -->
+  <rect x="80" y="80" width="120" height="6" fill="url(#kindBar)" rx="3"/>
+
+  <!-- kind label (top-left) -->
+  <text x="80" y="130"
+        font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif"
+        font-size="22" font-weight="700"
+        fill="#00E0D5" letter-spacing="2">CREATOR TEMPLATE</text>
+
+  <!-- display name (large) -->
+    <text x="80" y="240" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="68" font-weight="800" fill="#F4ECDA">Mention Summarizer</text>
+
+  <!-- tagline -->
+    <text x="80" y="346" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="28" font-weight="400" fill="#F4ECDA" opacity="0.92">Know what your mentions mean — before you decide what to say back.</text>
+
+  <!-- footer separator -->
+  <rect x="80" y="552" width="1120" height="1" fill="#F4ECDA" opacity="0.25"/>
+
+  <!-- footer left: built on Grok Agent OS -->
+  <text x="80" y="600"
+        font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif"
+        font-size="22" font-weight="600" fill="#F4ECDA">
+    built on <tspan fill="#FF1E70">Grok Agent OS</tspan>
+  </text>
+
+  <!-- footer right: slug pill -->
+  <g>
+    <rect x="900" y="572" width="300" height="40" rx="20" fill="#0A0A0A"
+          stroke="#F4ECDA" stroke-opacity="0.35" stroke-width="1"/>
+    <text x="1050" y="599" text-anchor="middle"
+          font-family="JetBrains Mono, Consolas, Menlo, monospace"
+          font-size="18" fill="#F4ECDA">mention-summarizer</text>
+  </g>
+
+  <g transform="translate(1280 0)">
+    <polygon points="-180,0 0,0 0,180" fill="#0A0A0A"/>
+    <text x="-50" y="56" text-anchor="middle"
+          font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif"
+          font-size="22" font-weight="700" fill="#F4ECDA"
+          transform="rotate(45 -50 56)">TRUST D</text>
+  </g>
+</svg>

@@ -80,6 +80,7 @@ export default defineConfig({
           { text: 'Parameterized Recipes', link: '/PARAMETERIZED_RECIPES' },
           { text: 'Prompt Template', link: '/PROMPT_TEMPLATE' },
           { text: 'Sources Map', link: '/SOURCES' },
+          { text: 'Schema Explorer', link: '/schema-explorer' },
         ],
       },
       {

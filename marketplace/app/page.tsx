@@ -15,9 +15,14 @@
 
 import Link from 'next/link';
 import AgentCard from '../components/AgentCard';
+import TrendingThisWeek from '../components/TrendingThisWeek';
 import { loadAllAgents } from '../lib/manifests';
 import type { AgentCategory } from '../lib/types';
 import { CATEGORY_LABELS } from '../lib/types';
+
+// TrendingThisWeek reads marketplace/data/install-counts.json at build
+// time. Seed data today; analytics-layer rollup in production. See the
+// marketplace README section "Install counter API".
 
 // NOTE: with output:'export', searchParams are not available at build time.
 // Category filtering is deferred to the upcoming CommandPalette / client UI.
@@ -56,6 +61,8 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
+
+      <TrendingThisWeek agents={allAgents} />
 
       <section aria-labelledby="catalogue">
         <h2 id="catalogue" className="section">

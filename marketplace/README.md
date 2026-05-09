@@ -116,6 +116,54 @@ slug renders without truncation. Apache 2.0 — embed freely.
 
 ---
 
+## Install counter API
+
+Every shipped agent gets a static redirect at `GET /api/install/<slug>`
+that issues a `307` to the canonical `grok-agent.yaml` on GitHub. The
+route is pre-baked at build time via `generateStaticParams`, so the
+GitHub Pages deploy serves one tiny redirect file per slug — partners
+can wire it directly into their "Install on Windows" call-to-action and
+keep working even if the manifest folder is moved later. The static
+deploy itself cannot count requests; per-request install counting
+requires an analytics layer downstream of the redirect (Plausible,
+Vercel Web Analytics, or a self-hosted endpoint that proxies the hop).
+The "Trending this week" panel on the landing page reads
+[`marketplace/data/install-counts.json`](./data/install-counts.json) —
+seed data today, analytics-layer rollup in production. Smoke-test the
+redirect from PowerShell:
+
+```powershell
+# Windows 11 + PowerShell — peek at the redirect target without following it.
+Invoke-WebRequest -Uri "https://agentmindcloud.github.io/grok-agent/api/install/x-money-companion-dashboard/" -MaximumRedirection 0 -ErrorAction SilentlyContinue | Select-Object StatusCode, Headers
+```
+
+---
+
+## Hero cards
+
+Every shipped agent also gets a 1280x640 hero card SVG under
+[`marketplace/public/hero-cards/<slug>.svg`](./public/hero-cards/) —
+pure SVG with the Spectral v1 charcoal-to-cinnabar diagonal gradient,
+the agent's display name, tagline, kind label, the trust-tier corner
+ribbon (sourced from `docs/agent-trust-scores.json`), and a parchment
+"built on Grok Agent OS" footer. No external image, font, or CSS
+reference, so the same file works as an Open Graph / Twitter card image
+on any deploy. Regenerate from the repo root after touching any
+manifest:
+
+```powershell
+# Windows 11 + PowerShell — rebuild every hero card.
+python scripts/generate-hero-card.py
+
+# Optional: rebuild a single card by slug.
+python scripts/generate-hero-card.py --slug x-money-companion-dashboard
+
+# Drift check (used by CI).
+python scripts/generate-hero-card.py --check
+```
+
+---
+
 ## How dynamic discovery works
 
 `lib/manifests.ts` runs at build time inside the Server Component

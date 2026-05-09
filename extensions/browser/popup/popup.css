@@ -1,0 +1,178 @@
+/* Copyright 2026 AgentMindCloud */
+/* Licensed under the Apache License, Version 2.0 */
+/* http://www.apache.org/licenses/LICENSE-2.0 */
+/* Built for xAI, X, Grok and the ecosystem community. */
+
+:root {
+  --spectral-charcoal: #0a0a0a;
+  --spectral-cinnabar: #ff1e70;
+  --spectral-parchment: #f4ecda;
+  --spectral-teal: #00e0d5;
+  --g-border: 1px solid rgba(244, 236, 218, 0.18);
+  --g-mono: "JetBrains Mono", "Cascadia Mono", "Consolas", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--spectral-charcoal);
+  color: var(--spectral-parchment);
+  font-family: var(--g-mono);
+  font-size: 12px;
+  line-height: 1.4;
+  width: 320px;
+  min-height: 360px;
+  max-height: 480px;
+  overflow-y: auto;
+}
+
+.g-header {
+  padding: 12px 14px 10px;
+  border-bottom: var(--g-border);
+}
+
+.g-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.g-wordmark {
+  color: var(--spectral-cinnabar);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+}
+
+.g-version {
+  color: var(--spectral-teal);
+  font-size: 10px;
+}
+
+.g-tagline {
+  margin: 6px 0 0;
+  font-size: 10px;
+  color: rgba(244, 236, 218, 0.72);
+}
+
+.g-main {
+  padding: 10px 14px;
+}
+
+.g-section-title {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--spectral-teal);
+}
+
+.g-history {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.g-history-item {
+  border: var(--g-border);
+  padding: 6px 8px;
+  background: rgba(244, 236, 218, 0.04);
+}
+
+.g-history-time {
+  color: var(--spectral-teal);
+  font-size: 10px;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.g-history-snippet {
+  color: var(--spectral-parchment);
+  font-size: 11px;
+  word-break: break-all;
+  margin: 0 0 6px;
+}
+
+.g-history-empty {
+  color: rgba(244, 236, 218, 0.55);
+  padding: 8px;
+  text-align: center;
+}
+
+.g-reopen-btn {
+  background: transparent;
+  color: var(--spectral-cinnabar);
+  border: 1px solid var(--spectral-cinnabar);
+  font-family: inherit;
+  font-size: 10px;
+  padding: 3px 6px;
+  cursor: pointer;
+}
+
+.g-reopen-btn:hover,
+.g-reopen-btn:focus {
+  background: var(--spectral-cinnabar);
+  color: var(--spectral-charcoal);
+  outline: none;
+}
+
+.g-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: var(--g-border);
+}
+
+.g-btn {
+  font-family: inherit;
+  font-size: 12px;
+  padding: 8px 10px;
+  cursor: pointer;
+  border: 1px solid var(--spectral-cinnabar);
+}
+
+.g-btn-primary {
+  background: var(--spectral-cinnabar);
+  color: var(--spectral-charcoal);
+}
+
+.g-btn-secondary {
+  background: transparent;
+  color: var(--spectral-parchment);
+  border-color: rgba(244, 236, 218, 0.4);
+}
+
+.g-btn:hover,
+.g-btn:focus {
+  outline: 2px solid var(--spectral-teal);
+  outline-offset: 1px;
+}
+
+.g-footer {
+  padding: 8px 14px;
+  border-top: var(--g-border);
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: rgba(244, 236, 218, 0.6);
+}
+
+.g-gh-link {
+  color: var(--spectral-teal);
+  text-decoration: none;
+}
+
+.g-gh-link:hover,
+.g-gh-link:focus {
+  text-decoration: underline;
+}

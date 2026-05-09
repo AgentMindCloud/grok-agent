@@ -188,6 +188,27 @@ jobs:
           fi
           echo "::endgroup::"
 
+      - name: Verify docs/eval-history.json is in sync with super-agent eval data
+        if: ${{ steps.discover.outputs.count != '0' }}
+        run: |
+          set -euo pipefail
+          echo "::group::Eval history drift check"
+          # The marketplace's eval dashboard reads docs/eval-history.json
+          # at build time. If a Super Agent's eval/history/*.jsonl changes
+          # (or the manifest's declared metrics list shifts) but the
+          # aggregated history JSON is not regenerated, the dashboard
+          # serves stale numbers. `--check` re-runs the aggregator in
+          # memory and exits 1 on diff (computed_at excluded), so CI
+          # fails loudly.
+          if python scripts/build-eval-history.py --check; then
+            echo "OK eval-history.json in sync"
+          else
+            echo "::error file=docs/eval-history.json::Eval history drift detected. Re-run \`python scripts/build-eval-history.py --seed\` and commit the result."
+            echo "::endgroup::"
+            exit 1
+          fi
+          echo "::endgroup::"
+
       - name: Validation summary
         if: ${{ steps.discover.outputs.count != '0' }}
         run: |

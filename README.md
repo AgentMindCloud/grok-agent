@@ -320,6 +320,27 @@ full API and runnable examples.
 
 ---
 
+## Tier 3 surfaces
+
+The Tier 3 sweep ships six moonshot surfaces that turn this repo into a
+multi-surface platform — see [`docs/tier-3-summary.md`](docs/tier-3-summary.md)
+for the full single-page rundown (what shipped, where it lives, how to use
+it, v0.2 roadmap).
+
+- **Marketplace routes** — [`/audit-dashboard`](marketplace/app/audit-dashboard/)
+  (Constitution audit log explorer), [`/eval`](marketplace/app/eval/)
+  (Promptfoo + DeepEval results portal), and [`/generate`](marketplace/app/generate/)
+  (no-code v2.15 manifest builder).
+- **Editor + browser extensions** — [`extensions/vscode/`](extensions/vscode/)
+  (manifest IntelliSense + lint) and [`extensions/browser/`](extensions/browser/)
+  (one-click `grok install this` from a post on X).
+- **Spinoff package** — [`packages/grok-paradoxes/`](packages/grok-paradoxes/)
+  on PyPI (contradiction detection lifted from the Living Narrative Fabric).
+
+CI: PR-scoped offline smoke runs in [`.github/workflows/tier-3-smoke.yml`](.github/workflows/tier-3-smoke.yml).
+
+---
+
 ## License + author
 
 - **License:** Apache 2.0 (see [`LICENSE`](LICENSE)). Every code file carries the standard header. Every shipped agent must declare `license: "Apache-2.0"` in its manifest.

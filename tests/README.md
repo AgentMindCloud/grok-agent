@@ -23,7 +23,7 @@ on a developer's local machine.
 
 ## Test layout
 
-```
+```text
 tests/
 ├── __init__.py
 ├── README.md                         (this file)

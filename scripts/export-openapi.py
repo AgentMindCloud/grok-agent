@@ -57,6 +57,9 @@ TAGLINE = _module.TAGLINE
 
 SCHEMA_OUT = _REPO_ROOT / "spec" / "v2.15" / "schema.json"
 OPENAPI_OUT = _REPO_ROOT / "spec" / "v2.15" / "openapi.yaml"
+# P179: VS Code extension also bundles the JSON Schema so the .vsix is
+# self-contained. Same source of truth — written from the same export run.
+VSCODE_SCHEMA_OUT = _REPO_ROOT / "extensions" / "vscode" / "schemas" / "grok-manifest.json"
 
 LICENSE_HEADER_JSON_NOTE = (
     "JSON does not support comments. License + provenance metadata are "
@@ -249,6 +252,9 @@ def main(argv: list[str] | None = None) -> int:
             drift.append(str(SCHEMA_OUT.relative_to(_REPO_ROOT)))
         if not OPENAPI_OUT.is_file() or OPENAPI_OUT.read_text(encoding="utf-8") != yaml_text:
             drift.append(str(OPENAPI_OUT.relative_to(_REPO_ROOT)))
+        if VSCODE_SCHEMA_OUT.parent.is_dir():
+            if not VSCODE_SCHEMA_OUT.is_file() or VSCODE_SCHEMA_OUT.read_text(encoding="utf-8") != json_text:
+                drift.append(str(VSCODE_SCHEMA_OUT.relative_to(_REPO_ROOT)))
         if drift:
             sys.stderr.write(
                 "X  Schema drift detected. Re-run scripts/export-openapi.py:\n"
@@ -270,6 +276,14 @@ def main(argv: list[str] | None = None) -> int:
         f"OK Wrote {OPENAPI_OUT.relative_to(_REPO_ROOT)} "
         f"({len(yaml_text)} bytes)\n"
     )
+    # P179: keep the VS Code extension's bundled schema in sync. Skipped
+    # silently if the extension dir hasn't been scaffolded yet.
+    if VSCODE_SCHEMA_OUT.parent.is_dir():
+        VSCODE_SCHEMA_OUT.write_text(json_text, encoding="utf-8")
+        sys.stdout.write(
+            f"OK Wrote {VSCODE_SCHEMA_OUT.relative_to(_REPO_ROOT)} "
+            f"({len(json_text)} bytes, in sync with spec/v2.15/schema.json)\n"
+        )
     return 0
 
 

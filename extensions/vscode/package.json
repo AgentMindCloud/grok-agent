@@ -1,0 +1,77 @@
+{
+  "name": "vscode-grok-agent",
+  "displayName": "Grok Agent OS",
+  "description": "Inline schema validation + autocomplete for grok-agent.yaml v2.15 manifests. Built for xAI, X, Grok and the ecosystem community.",
+  "version": "0.1.0",
+  "publisher": "AgentMindCloud",
+  "license": "Apache-2.0",
+  "icon": "icon.png",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Linters",
+    "Other"
+  ],
+  "keywords": [
+    "grok",
+    "grok-agent",
+    "x",
+    "xai",
+    "yaml",
+    "manifest",
+    "agent",
+    "schema"
+  ],
+  "homepage": "https://github.com/AgentMindCloud/grok-agent",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AgentMindCloud/grok-agent.git",
+    "directory": "extensions/vscode"
+  },
+  "bugs": {
+    "url": "https://github.com/AgentMindCloud/grok-agent/issues"
+  },
+  "extensionDependencies": [
+    "redhat.vscode-yaml"
+  ],
+  "activationEvents": [
+    "onLanguage:yaml"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "yaml",
+        "filenamePatterns": [
+          "grok-agent.yaml"
+        ]
+      }
+    ],
+    "yamlValidation": [
+      {
+        "fileMatch": [
+          "**/grok-agent.yaml",
+          "grok-agent.yaml"
+        ],
+        "url": "./schemas/grok-manifest.json"
+      }
+    ],
+    "configuration": {
+      "title": "Grok Agent OS",
+      "properties": {
+        "grokAgent.spec.version": {
+          "type": "string",
+          "default": "2.15",
+          "description": "Manifest spec version this extension validates against. Update when a newer schema ships."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "node ./extension.js --selfcheck",
+    "package": "npx vsce package",
+    "publish": "npx vsce publish"
+  },
+  "devDependencies": {}
+}

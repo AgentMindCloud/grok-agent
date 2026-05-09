@@ -238,3 +238,10 @@ xai_api_key.txt
 logs/
 tmp/
 temp/
+
+# Node-ecosystem surfaces (P179 — VitePress docs, VS Code extension, marketplace)
+node_modules/
+*.vsix
+docs/.vitepress/cache/
+docs/.vitepress/dist/
+extensions/vscode/node_modules/

@@ -1,0 +1,100 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Built for xAI, X, Grok and the ecosystem community — extracted contradiction
+# detection and multi-authority reconciliation core, originally part of the
+# Living Narrative Fabric Super Agent.
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+# ---------------------------------------------------------------------------
+# Project metadata (PEP 621)
+# ---------------------------------------------------------------------------
+[project]
+name = "grok-paradoxes"
+version = "0.1.0"
+description = "Built for xAI, X, Grok and the ecosystem community. Contradiction detection and multi-authority reconciliation primitives extracted from the Living Narrative Fabric Super Agent."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [
+    {name = "AgentMindCloud"},
+]
+maintainers = [
+    {name = "JanSol0s"},
+]
+keywords = [
+    "grok",
+    "xai",
+    "contradiction-detection",
+    "reconciliation",
+    "provenance",
+    "multi-source",
+    "synthesis",
+    "authority-weighting",
+    "living-narrative-fabric",
+    "agents",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+dependencies = [
+    "pydantic>=2.7,<3",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.4",
+]
+
+[project.urls]
+Homepage = "https://github.com/AgentMindCloud/grok-agent"
+Repository = "https://github.com/AgentMindCloud/grok-agent"
+Issues = "https://github.com/AgentMindCloud/grok-agent/issues"
+Source = "https://github.com/AgentMindCloud/grok-agent/tree/main/packages/grok-paradoxes"
+"Living Narrative Fabric agent" = "https://github.com/AgentMindCloud/grok-agent/tree/main/templates/super-agents/living-narrative-fabric"
+
+# ---------------------------------------------------------------------------
+# Setuptools configuration (src layout)
+# ---------------------------------------------------------------------------
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["grok_paradoxes*"]
+
+[tool.setuptools.package-data]
+grok_paradoxes = ["py.typed"]
+
+# ---------------------------------------------------------------------------
+# Tooling
+# ---------------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"

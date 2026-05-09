@@ -1,0 +1,29 @@
+// Copyright 2026 AgentMindCloud — Apache-2.0
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// markdownlint-cli2 config — Lenient profile.
+// Surfaces real bugs (broken headings, bad indentation) without
+// bikeshedding line length or trailing punctuation.
+{
+  "config": {
+    "default": true,
+    "MD013": false,
+    "MD024": false,
+    "MD033": false,
+    "MD034": false,
+    "MD041": false,
+    "MD046": false
+  },
+  "globs": [
+    "**/*.md"
+  ],
+  "ignores": [
+    "node_modules",
+    "marketplace/node_modules",
+    "**/.git",
+    "docs/.vitepress/cache",
+    "docs/.vitepress/dist",
+    "extensions/vscode/node_modules",
+    "extensions/browser/node_modules"
+  ]
+}

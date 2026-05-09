@@ -72,7 +72,12 @@ jobs:
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
-          python -m pip install 'pydantic>=2.7,<3' 'pyyaml>=6.0' 'pytest>=8.0'
+          # P181 added hypothesis + syrupy as test deps for property +
+          # snapshot suites. Without them pytest fails at collection
+          # because tests/{property,snapshot}/test_*.py import these
+          # at module level.
+          python -m pip install 'pydantic>=2.7,<3' 'pyyaml>=6.0' \
+            'pytest>=8.0' 'hypothesis>=6.100,<7' 'syrupy>=4.6,<5'
 
       - name: Run pytest
         run: |

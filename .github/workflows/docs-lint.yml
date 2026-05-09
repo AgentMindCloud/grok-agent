@@ -55,19 +55,9 @@ jobs:
       - name: Run markdownlint-cli2
         uses: DavidAnson/markdownlint-cli2-action@v16
         with:
-          # Lenient profile — surfaces real bugs (broken headings, bad
-          # indentation) without bikeshedding line length or trailing
-          # punctuation. Tighten later as the docs surface stabilises.
-          config: |
-            {
-              "default": true,
-              "MD013": false,
-              "MD024": false,
-              "MD033": false,
-              "MD034": false,
-              "MD041": false,
-              "MD046": false
-            }
+          # Config + globs read from .markdownlint-cli2.jsonc at repo root
+          # (the action does not accept inline JSON via `config:` — it
+          # requires a file matching its supported naming convention).
           globs: |
             **/*.md
             !node_modules/**

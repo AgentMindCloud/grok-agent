@@ -1,0 +1,136 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# ============================================================================
+# Markdown lint + relative-link checker. Built for xAI, X, Grok and the
+# ecosystem community — docs are a product, not a side-effect.
+#
+# Two jobs:
+#
+#   1. markdownlint  — markdownlint-cli2 against repo-wide .md files using a
+#                      lenient config (line-length disabled; emphasis-style and
+#                      heading-style enforced; trailing whitespace forbidden).
+#   2. link-check    — markdown-link-check on every README + every doc, using
+#                      a config that whitelists localhost / placeholder URLs
+#                      we use intentionally (e.g. capsule-render badges,
+#                      future docs.grok-agent-os.dev links pre-launch).
+#
+# This workflow only triggers on PRs and pushes that touch .md files, so it
+# stays cheap. It is deliberately separate from validate.yml + tests.yml so
+# a doc-only PR doesn't have to wait for the full schema sweep.
+# ============================================================================
+
+name: Docs Lint
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.md'
+      - '.github/workflows/docs-lint.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - '**/*.md'
+      - '.github/workflows/docs-lint.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-lint-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  markdownlint:
+    name: markdownlint-cli2 (style + structure)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run markdownlint-cli2
+        uses: DavidAnson/markdownlint-cli2-action@v16
+        with:
+          # Lenient profile — surfaces real bugs (broken headings, bad
+          # indentation) without bikeshedding line length or trailing
+          # punctuation. Tighten later as the docs surface stabilises.
+          config: |
+            {
+              "default": true,
+              "MD013": false,
+              "MD024": false,
+              "MD033": false,
+              "MD034": false,
+              "MD041": false,
+              "MD046": false
+            }
+          globs: |
+            **/*.md
+            !node_modules/**
+            !marketplace/node_modules/**
+            !**/.git/**
+
+  link-check:
+    name: markdown-link-check (relative + http links)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install markdown-link-check
+        run: |
+          set -euo pipefail
+          npm install -g markdown-link-check@3.13
+
+      - name: Write link-check config
+        run: |
+          set -euo pipefail
+          cat > .mlc.config.json <<'JSON'
+          {
+            "ignorePatterns": [
+              { "pattern": "^https?://localhost" },
+              { "pattern": "^https?://127\\.0\\.0\\.1" },
+              { "pattern": "^https?://docs\\.grok-agent-os\\.dev" },
+              { "pattern": "^https?://eval\\.grok-agent-os\\.dev" },
+              { "pattern": "^https?://capsule-render\\.vercel\\.app" },
+              { "pattern": "^https?://readme-typing-svg\\.demolab\\.com" },
+              { "pattern": "^https?://img\\.shields\\.io" },
+              { "pattern": "^https?://github\\.com/AgentMindCloud/grok-agent/releases/download" }
+            ],
+            "retryOn429": true,
+            "retryCount": 2,
+            "fallbackRetryDelay": "30s",
+            "aliveStatusCodes": [200, 206, 301, 302, 308, 999]
+          }
+          JSON
+
+      - name: Run markdown-link-check on every .md
+        run: |
+          set -euo pipefail
+          FAIL=0
+          while IFS= read -r f; do
+            echo "::group::link-check $f"
+            if ! markdown-link-check -q -c .mlc.config.json "$f"; then
+              echo "::error file=$f::Dead link(s) found"
+              FAIL=$((FAIL + 1))
+            fi
+            echo "::endgroup::"
+          done < <(find . -name '*.md' \
+            -not -path './node_modules/*' \
+            -not -path './marketplace/node_modules/*' \
+            -not -path './.git/*')
+          if [ "$FAIL" -ne 0 ]; then
+            echo "::error::${FAIL} markdown file(s) had dead links."
+            exit 1
+          fi
+          echo "::notice::All markdown links resolve cleanly."

@@ -1,0 +1,2050 @@
+{
+  "$defs": {
+    "Constitution": {
+      "additionalProperties": false,
+      "properties": {
+        "rules": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Rules",
+          "type": "array"
+        },
+        "consent_gates": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Consent Gates",
+          "type": "array"
+        },
+        "hard_refusals": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Hard Refusals",
+          "type": "array"
+        },
+        "file": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "File"
+        }
+      },
+      "required": [
+        "rules"
+      ],
+      "title": "Constitution",
+      "type": "object"
+    },
+    "CostLimits": {
+      "additionalProperties": false,
+      "properties": {
+        "usd_per_session_max": {
+          "default": 1.0,
+          "minimum": 0.0,
+          "title": "Usd Per Session Max",
+          "type": "number"
+        },
+        "usd_per_day_max": {
+          "default": 5.0,
+          "minimum": 0.0,
+          "title": "Usd Per Day Max",
+          "type": "number"
+        },
+        "tokens_per_session_max": {
+          "default": 200000,
+          "minimum": 0,
+          "title": "Tokens Per Session Max",
+          "type": "integer"
+        },
+        "api_calls_per_session_max": {
+          "default": 500,
+          "minimum": 0,
+          "title": "Api Calls Per Session Max",
+          "type": "integer"
+        }
+      },
+      "title": "CostLimits",
+      "type": "object"
+    },
+    "DeepEvalConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "suite": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Suite"
+        },
+        "metrics": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Metrics",
+          "type": "array"
+        },
+        "formula_weights": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "number"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Formula Weights"
+        }
+      },
+      "title": "DeepEvalConfig",
+      "type": "object"
+    },
+    "DemoVideo": {
+      "additionalProperties": false,
+      "description": "Structured demo_video block carried by Super Agent manifests.\n\nP172: replaces the prior hand-rolled field_validator with a typed model.\nThe 7 fields below are the full set used across the three flagship Super\nAgent manifests (P169 work). `status` is required; the rest are optional.\n`extra=\"forbid\"` keeps typo surfaces immediate.",
+      "properties": {
+        "status": {
+          "title": "Status",
+          "type": "string"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        },
+        "storyboard": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Storyboard"
+        },
+        "update_instructions": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Update Instructions"
+        },
+        "recording_steps": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Recording Steps"
+        },
+        "upload_steps": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Upload Steps"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "title": "DemoVideo",
+      "type": "object"
+    },
+    "Dependencies": {
+      "additionalProperties": false,
+      "properties": {
+        "python": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PythonDeps"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "system": {
+          "items": {
+            "type": "string"
+          },
+          "title": "System",
+          "type": "array"
+        },
+        "apis_required": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Apis Required",
+          "type": "array"
+        },
+        "optional_packages": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Optional Packages",
+          "type": "array"
+        }
+      },
+      "title": "Dependencies",
+      "type": "object"
+    },
+    "Disclaimers": {
+      "additionalProperties": false,
+      "properties": {
+        "not_financial_advice": {
+          "default": false,
+          "title": "Not Financial Advice",
+          "type": "boolean"
+        },
+        "not_tax_advice": {
+          "default": false,
+          "title": "Not Tax Advice",
+          "type": "boolean"
+        },
+        "real_world_action_consent": {
+          "default": false,
+          "title": "Real World Action Consent",
+          "type": "boolean"
+        },
+        "not_medical_advice": {
+          "default": false,
+          "title": "Not Medical Advice",
+          "type": "boolean"
+        }
+      },
+      "title": "Disclaimers",
+      "type": "object"
+    },
+    "Evaluation": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "promptfoo": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PromptfooConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "deepeval": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DeepEvalConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "langfuse_traces": {
+          "default": false,
+          "title": "Langfuse Traces",
+          "type": "boolean"
+        },
+        "weekly_loop": {
+          "default": false,
+          "title": "Weekly Loop",
+          "type": "boolean"
+        },
+        "history_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "History Path"
+        }
+      },
+      "title": "Evaluation",
+      "type": "object"
+    },
+    "Grok": {
+      "additionalProperties": false,
+      "properties": {
+        "model": {
+          "default": "grok-4.3",
+          "title": "Model",
+          "type": "string"
+        },
+        "temperature": {
+          "default": 0.7,
+          "maximum": 2.0,
+          "minimum": 0.0,
+          "title": "Temperature",
+          "type": "number"
+        },
+        "max_tokens": {
+          "default": 4096,
+          "exclusiveMinimum": 0,
+          "title": "Max Tokens",
+          "type": "integer"
+        },
+        "top_p": {
+          "default": 1.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Top P",
+          "type": "number"
+        },
+        "system_prompt_file": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "System Prompt File"
+        },
+        "user_template_file": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "User Template File"
+        },
+        "tool_calling": {
+          "default": true,
+          "title": "Tool Calling",
+          "type": "boolean"
+        },
+        "vision": {
+          "default": false,
+          "title": "Vision",
+          "type": "boolean"
+        },
+        "streaming": {
+          "default": true,
+          "title": "Streaming",
+          "type": "boolean"
+        },
+        "fallback_model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fallback Model"
+        },
+        "personalisation": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Personalisation"
+        }
+      },
+      "title": "Grok",
+      "type": "object"
+    },
+    "HumanInTheLoop": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "confirm_before": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Confirm Before",
+          "type": "array"
+        },
+        "timeout_seconds": {
+          "default": 60,
+          "minimum": 0,
+          "title": "Timeout Seconds",
+          "type": "integer"
+        }
+      },
+      "title": "HumanInTheLoop",
+      "type": "object"
+    },
+    "Install": {
+      "additionalProperties": false,
+      "properties": {
+        "one_click": {
+          "default": false,
+          "title": "One Click",
+          "type": "boolean"
+        },
+        "install_command": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Install Command"
+        },
+        "post_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Post Url"
+        },
+        "prerequisites": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Prerequisites",
+          "type": "array"
+        },
+        "optional_prerequisites": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Optional Prerequisites",
+          "type": "array"
+        },
+        "one_command_install": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "One Command Install"
+        }
+      },
+      "title": "Install",
+      "type": "object"
+    },
+    "LangfuseConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "public_key_env_var": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Public Key Env Var"
+        },
+        "secret_key_env_var": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Secret Key Env Var"
+        },
+        "host": {
+          "default": "https://cloud.langfuse.com",
+          "title": "Host",
+          "type": "string"
+        }
+      },
+      "title": "LangfuseConfig",
+      "type": "object"
+    },
+    "Memory": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "provider": {
+          "default": "in_memory",
+          "enum": [
+            "mem0",
+            "qdrant",
+            "sqlite",
+            "in_memory"
+          ],
+          "title": "Provider",
+          "type": "string"
+        },
+        "vector_store": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VectorStore"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "episodic": {
+          "default": true,
+          "title": "Episodic",
+          "type": "boolean"
+        },
+        "semantic": {
+          "default": true,
+          "title": "Semantic",
+          "type": "boolean"
+        },
+        "procedural": {
+          "default": false,
+          "title": "Procedural",
+          "type": "boolean"
+        },
+        "retention_days": {
+          "default": 365,
+          "minimum": 0,
+          "title": "Retention Days",
+          "type": "integer"
+        },
+        "encryption_at_rest": {
+          "default": true,
+          "title": "Encryption At Rest",
+          "type": "boolean"
+        },
+        "fallback": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fallback"
+        },
+        "personal_collections": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Personal Collections",
+          "type": "array"
+        }
+      },
+      "title": "Memory",
+      "type": "object"
+    },
+    "Metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "display_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Display Name"
+        },
+        "tagline": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tagline"
+        },
+        "categories": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Categories",
+          "type": "array"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        },
+        "icon": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Icon"
+        },
+        "homepage": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Homepage"
+        },
+        "repository": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Repository"
+        },
+        "docs": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Docs"
+        },
+        "demo_video": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DemoVideo"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "language": {
+          "default": "en",
+          "title": "Language",
+          "type": "string"
+        },
+        "created": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Created"
+        },
+        "updated": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Updated"
+        },
+        "implementation_status": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Implementation Status"
+        }
+      },
+      "title": "Metadata",
+      "type": "object"
+    },
+    "MultiAgent": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "role": {
+          "default": "worker",
+          "enum": [
+            "orchestrator",
+            "worker",
+            "observer"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "delegates_to": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Delegates To",
+          "type": "array"
+        },
+        "shared_memory": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Shared Memory"
+        },
+        "message_bus": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message Bus"
+        },
+        "max_concurrent_workers": {
+          "default": 4,
+          "minimum": 1,
+          "title": "Max Concurrent Workers",
+          "type": "integer"
+        }
+      },
+      "title": "MultiAgent",
+      "type": "object"
+    },
+    "PromptfooConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "config": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Config"
+        },
+        "test_count": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Test Count"
+        },
+        "categories": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Categories",
+          "type": "array"
+        }
+      },
+      "title": "PromptfooConfig",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "log_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Log Path"
+        },
+        "langfuse": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LangfuseConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "cite_sources": {
+          "default": true,
+          "title": "Cite Sources",
+          "type": "boolean"
+        },
+        "versioned_synthesis": {
+          "default": false,
+          "title": "Versioned Synthesis",
+          "type": "boolean"
+        },
+        "contradiction_detection": {
+          "default": false,
+          "title": "Contradiction Detection",
+          "type": "boolean"
+        },
+        "append_only": {
+          "default": true,
+          "title": "Append Only",
+          "type": "boolean"
+        },
+        "redact_pii_before_langfuse": {
+          "default": true,
+          "title": "Redact Pii Before Langfuse",
+          "type": "boolean"
+        }
+      },
+      "title": "Provenance",
+      "type": "object"
+    },
+    "PublicApi": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "base_url": {
+          "title": "Base Url",
+          "type": "string"
+        },
+        "auth_env_var": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Auth Env Var"
+        },
+        "auth": {
+          "anyOf": [
+            {
+              "enum": [
+                "none",
+                "bearer",
+                "basic",
+                "api_key",
+                "oauth2",
+                "optional"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Auth"
+        },
+        "free_tier_quota": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Free Tier Quota"
+        },
+        "rate_limit": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rate Limit"
+        },
+        "privacy": {
+          "default": "no_pii_sent",
+          "title": "Privacy",
+          "type": "string"
+        },
+        "source_authority": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Authority"
+        },
+        "scope": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scope"
+        },
+        "default_mode": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default Mode"
+        }
+      },
+      "required": [
+        "name",
+        "base_url"
+      ],
+      "title": "PublicApi",
+      "type": "object"
+    },
+    "PythonDeps": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "default": "^3.12",
+          "title": "Version",
+          "type": "string"
+        },
+        "packages": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Packages",
+          "type": "array"
+        }
+      },
+      "title": "PythonDeps",
+      "type": "object"
+    },
+    "RealTimeX": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "consent_required": {
+          "default": true,
+          "title": "Consent Required",
+          "type": "boolean"
+        },
+        "triggers": {
+          "items": {
+            "enum": [
+              "mention",
+              "dm",
+              "schedule",
+              "cashtag_change"
+            ],
+            "type": "string"
+          },
+          "title": "Triggers",
+          "type": "array"
+        },
+        "schedule_cron": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Schedule Cron"
+        },
+        "cashtag_threshold_pct": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cashtag Threshold Pct"
+        },
+        "watched_cashtags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Watched Cashtags",
+          "type": "array"
+        },
+        "posts": {
+          "default": false,
+          "title": "Posts",
+          "type": "boolean"
+        },
+        "reply_only": {
+          "default": true,
+          "title": "Reply Only",
+          "type": "boolean"
+        },
+        "max_posts_per_day": {
+          "default": 10,
+          "minimum": 0,
+          "title": "Max Posts Per Day",
+          "type": "integer"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        }
+      },
+      "title": "RealTimeX",
+      "type": "object"
+    },
+    "Safety": {
+      "additionalProperties": false,
+      "properties": {
+        "pii_handling": {
+          "default": "local-only",
+          "enum": [
+            "local-only",
+            "redacted-cloud",
+            "none"
+          ],
+          "title": "Pii Handling",
+          "type": "string"
+        },
+        "data_retention_days": {
+          "default": 365,
+          "minimum": 0,
+          "title": "Data Retention Days",
+          "type": "integer"
+        },
+        "scanner_severity_floor": {
+          "default": "warn",
+          "enum": [
+            "info",
+            "warn",
+            "error"
+          ],
+          "title": "Scanner Severity Floor",
+          "type": "string"
+        },
+        "forbidden_actions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Forbidden Actions",
+          "type": "array"
+        },
+        "cost_limits": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CostLimits"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "human_in_the_loop": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/HumanInTheLoop"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "disclaimers": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Disclaimers"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "Safety",
+      "type": "object"
+    },
+    "SchemaMeta": {
+      "additionalProperties": true,
+      "description": "Optional documentation header — only the official spec file declares this.\nUser manifests typically omit it. Tolerant of evolving fields.",
+      "properties": {
+        "spec_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Spec Version"
+        },
+        "spec_release_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Spec Release Date"
+        },
+        "backwards_compatible_with": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Backwards Compatible With",
+          "type": "array"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source"
+        },
+        "positioning": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Positioning"
+        },
+        "license": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "License"
+        },
+        "pydantic_module": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pydantic Module"
+        }
+      },
+      "title": "SchemaMeta",
+      "type": "object"
+    },
+    "Tool": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "title": "Name",
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "public_api",
+            "local_function",
+            "mcp_server"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "parameters": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ToolParameters"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "api": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ToolApi"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "api_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Api Ref"
+        },
+        "module": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Module"
+        },
+        "function": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Function"
+        },
+        "server": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ToolServer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "type",
+        "description"
+      ],
+      "title": "Tool",
+      "type": "object"
+    },
+    "ToolApi": {
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "method": {
+          "default": "GET",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE"
+          ],
+          "title": "Method",
+          "type": "string"
+        },
+        "auth": {
+          "default": "none",
+          "enum": [
+            "none",
+            "bearer",
+            "basic",
+            "api_key",
+            "oauth2"
+          ],
+          "title": "Auth",
+          "type": "string"
+        },
+        "env_var": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Env Var"
+        },
+        "headers": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Headers",
+          "type": "object"
+        },
+        "query": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Query",
+          "type": "object"
+        },
+        "rate_limit": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rate Limit"
+        },
+        "cache_ttl_seconds": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Cache Ttl Seconds",
+          "type": "integer"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Retry"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "title": "ToolApi",
+      "type": "object"
+    },
+    "ToolParameters": {
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "additionalProperties": true,
+          "title": "Schema",
+          "type": "object"
+        }
+      },
+      "title": "ToolParameters",
+      "type": "object"
+    },
+    "ToolServer": {
+      "additionalProperties": false,
+      "properties": {
+        "command": {
+          "title": "Command",
+          "type": "string"
+        },
+        "args": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Args",
+          "type": "array"
+        },
+        "env": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Env",
+          "type": "object"
+        },
+        "transport": {
+          "default": "stdio",
+          "enum": [
+            "stdio",
+            "http"
+          ],
+          "title": "Transport",
+          "type": "string"
+        }
+      },
+      "required": [
+        "command"
+      ],
+      "title": "ToolServer",
+      "type": "object"
+    },
+    "VectorStore": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {
+          "default": "qdrant",
+          "enum": [
+            "qdrant",
+            "chroma",
+            "pgvector"
+          ],
+          "title": "Backend",
+          "type": "string"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        },
+        "collection": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Collection"
+        },
+        "collection_prefix": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Collection Prefix"
+        }
+      },
+      "title": "VectorStore",
+      "type": "object"
+    },
+    "Windows": {
+      "additionalProperties": false,
+      "properties": {
+        "launcher": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Launcher"
+        },
+        "launch_command": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Launch Command"
+        },
+        "appdata_folder": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Appdata Folder"
+        },
+        "config_folder": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Config Folder"
+        },
+        "cache_folder": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cache Folder"
+        },
+        "log_folder": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Log Folder"
+        },
+        "provenance_folder": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provenance Folder"
+        },
+        "eval_folder": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Eval Folder"
+        },
+        "workflows_folder": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Workflows Folder"
+        },
+        "briefings_folder": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Briefings Folder"
+        },
+        "defender_exclusion_recommended": {
+          "default": false,
+          "title": "Defender Exclusion Recommended",
+          "type": "boolean"
+        },
+        "registry_keys": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Registry Keys",
+          "type": "array"
+        },
+        "min_powershell_version": {
+          "default": "5.1",
+          "title": "Min Powershell Version",
+          "type": "string"
+        },
+        "requires_admin": {
+          "default": false,
+          "title": "Requires Admin",
+          "type": "boolean"
+        },
+        "chrome_only": {
+          "default": true,
+          "title": "Chrome Only",
+          "type": "boolean"
+        },
+        "no_install_dependencies": {
+          "items": {
+            "type": "string"
+          },
+          "title": "No Install Dependencies",
+          "type": "array"
+        },
+        "default_port": {
+          "anyOf": [
+            {
+              "maximum": 65535,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default Port"
+        },
+        "scheduled_task": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scheduled Task"
+        },
+        "env_vars_optional": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Env Vars Optional",
+          "type": "array"
+        }
+      },
+      "title": "Windows",
+      "type": "object"
+    }
+  },
+  "additionalProperties": true,
+  "description": "Schema for grok-agent.yaml v2.15 manifests — the open Windows-first distribution layer for deploying Grok agents on X. Built for xAI, X, Grok and the ecosystem community. ❤️",
+  "properties": {
+    "schema_meta": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SchemaMeta"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "version": {
+      "title": "Version",
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "agent",
+        "finance-dashboard",
+        "alpha-engine",
+        "creator-payout-optimizer",
+        "vision-analyzer",
+        "super-agent",
+        "x-native",
+        "creator-template"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "name": {
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "title": "Name",
+      "type": "string"
+    },
+    "description": {
+      "minLength": 10,
+      "title": "Description",
+      "type": "string"
+    },
+    "author": {
+      "minLength": 1,
+      "title": "Author",
+      "type": "string"
+    },
+    "license": {
+      "const": "Apache-2.0",
+      "title": "License",
+      "type": "string"
+    },
+    "metadata": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Metadata"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "install": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Install"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "windows": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Windows"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "grok": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Grok"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "tools": {
+      "items": {
+        "$ref": "#/$defs/Tool"
+      },
+      "title": "Tools",
+      "type": "array"
+    },
+    "public_apis": {
+      "items": {
+        "$ref": "#/$defs/PublicApi"
+      },
+      "title": "Public Apis",
+      "type": "array"
+    },
+    "multi_agent": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/MultiAgent"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "real_time_x": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RealTimeX"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "memory": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Memory"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "provenance": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Provenance"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "constitution": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Constitution"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "safety": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Safety"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "dependencies": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Dependencies"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "evaluation": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Evaluation"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "version",
+    "kind",
+    "name",
+    "description",
+    "author",
+    "license"
+  ],
+  "title": "Grok Agent OS Manifest (v2.15)",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/AgentMindCloud/grok-agent/blob/main/spec/v2.15/schema.json",
+  "x-license": "Apache-2.0",
+  "x-spec-version": "2.15",
+  "x-accepted-versions": [
+    "2.14",
+    "2.15"
+  ],
+  "x-source": "https://github.com/AgentMindCloud/grok-agent/blob/main/cli/grok-agent.py",
+  "x-note": "JSON does not support comments. License + provenance metadata are carried in the $schema and info blocks below; the canonical license is Apache-2.0, the canonical source is https://github.com/AgentMindCloud/grok-agent/blob/main/spec/v2.15/openapi.yaml"
+}

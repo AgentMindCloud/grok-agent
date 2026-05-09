@@ -87,6 +87,35 @@ npx serve marketplace/out
 
 ---
 
+## Embed badge — `Built on Grok Agent OS`
+
+Every shipped agent gets a static SVG badge at build time. Partners,
+template authors, and integrating repos can drop one line into their
+own README to advertise the install. The route is `GET /api/badge/<slug>`
+(static-exported, served from `marketplace/out/api/badge/<slug>/...` on
+GitHub Pages).
+
+Markdown:
+
+```markdown
+![Built on Grok Agent OS](https://agentmindcloud.github.io/grok-agent/api/badge/x-money-companion-dashboard)
+```
+
+HTML:
+
+```html
+<a href="https://agentmindcloud.github.io/grok-agent/agents/x-money-companion-dashboard">
+  <img alt="Built on Grok Agent OS"
+       src="https://agentmindcloud.github.io/grok-agent/api/badge/x-money-companion-dashboard">
+</a>
+```
+
+The badge is two-tone (charcoal + cinnabar) matching the Spectral v1
+visual system. Width is computed from the slug length so any agent
+slug renders without truncation. Apache 2.0 — embed freely.
+
+---
+
 ## How dynamic discovery works
 
 `lib/manifests.ts` runs at build time inside the Server Component

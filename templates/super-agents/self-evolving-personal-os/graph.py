@@ -500,9 +500,16 @@ def output_with_provenance(state: PersonalOSState) -> dict:
 # --- Section 4. Conditional routing --------------------------------------
 
 def should_loop_back_to_ingest(state: PersonalOSState) -> str:
-    """LangGraph conditional edge — route after ``evolve_workflows``."""
+    """LangGraph conditional edge — route after ``evolve_workflows``.
+
+    The cap check uses ``<=`` not ``<`` because ``evolve_workflows``
+    increments ``loop_count`` BEFORE this router runs (P178 fix).
+    With ``MAX_EVOLUTION_LOOPS = 1``, that means after the first evolve
+    the state is ``loop_count == 1`` and we still want to allow ONE
+    loop-back. Only when ``loop_count`` exceeds the cap do we refuse.
+    """
     evo = state.get("evolution") or {}
-    if evo.get("should_loop") and int(state.get("loop_count") or 0) < MAX_EVOLUTION_LOOPS:
+    if evo.get("should_loop") and int(state.get("loop_count") or 0) <= MAX_EVOLUTION_LOOPS:
         return NODE_INGEST
     return NODE_BRIEF
 

@@ -1,0 +1,93 @@
+# Grok Agent OS
+
+> The open Windows-first distribution layer for deploying Grok agents on X. One YAML manifest (`grok-agent.yaml` v2.15) → one install command (`grok install this`) → instant, safe, local-first deployment with full provenance, public-API power, and a Constitution-enforced safety gate. Apache 2.0. Built for xAI, X, Grok and the ecosystem community.
+
+This file follows the [llmstxt.org](https://llmstxt.org) convention so AI agents browsing the repo can grok the platform in 30 seconds. For humans, start with the [README](README.md).
+
+## What this repo is
+
+`AgentMindCloud/grok-agent` is the missing **OS layer** for Grok agents on X. The bet: every team building on Grok keeps reinventing the same plumbing (install paths, safety, distribution, manifests). We built the standard so they don't have to.
+
+- **Manifest standard** — `grok-agent.yaml` v2.15, Pydantic-validated, backwards-compatible with v2.14. Every agent declares its model, tools, public APIs, multi-agent role, safety, cost limits, and HITL gates in one file. See [`spec/v2.15/grok-agent.yaml`](spec/v2.15/grok-agent.yaml).
+- **Windows-first CLI** — [`cli/grok-agent.ps1`](cli/grok-agent.ps1) (PowerShell) plus [`cli/grok-agent.py`](cli/grok-agent.py) (Python validator fallback). Five verbs: `install`, `validate`, `new`, `list`, `run`. The signature move is `install -FromStdin`: paste a YAML on X, anyone reading it types `grok install this`, and the agent lands on their Windows box in seconds.
+- **Agent Constitution** — 7 articles + 34 named scanner checks at [`safety/scanner.py`](safety/scanner.py) and [`safety/constitution.md`](safety/constitution.md). Mandatory disclaimers (`Not financial advice`, `Not tax advice`, `real-world actions require explicit consent`) on every relevant agent. Append-only provenance. Hard refusals (no impersonation, no authenticated scraping, no data exfiltration, no scanner bypass).
+- **Marketplace** — [`marketplace/`](marketplace/) is a Next.js static export deployed to GitHub Pages. 33 agents indexed at build time. Every card has a "Copy install command" button that pastes `grok install this` + the manifest URL.
+- **Self-improvement infrastructure** — Promptfoo + DeepEval suites under each super-agent's `eval/` folder, traced via Langfuse hooks under `provenance/`. Runs from `.\cli\grok-agent.ps1 eval-weekly` and (currently local; CI wiring is a follow-up).
+
+Status (May 2026): Phases 1–4 complete (all 4 X Money tools, all 7 Super Agents, full self-improvement infra, 22 creator templates). Phase 5 active — marketplace + xAI partnership pitch.
+
+## What ships today (the agents)
+
+- **4 X Money tools** (`templates/finance/`):
+  - [`x-money-companion-dashboard`](templates/finance/x-money-companion-dashboard/) — your X Money command centre on Windows; 6 tabs, local SQLite.
+  - [`x-smart-cashtag-alpha-engine`](templates/finance/x-smart-cashtag-alpha-engine/) — real-time cashtag intelligence with cross-source contradiction surfacing.
+  - [`x-creator-payout-optimizer`](templates/finance/x-creator-payout-optimizer/) — 30/60/90-day earnings forecasts; reads from Tool #1 + Tool #4.
+  - [`x-money-vision-analyzer`](templates/finance/x-money-vision-analyzer/) — drag-receipt → Grok-4.3 vision → one-click import into Tool #1.
+- **7 Super Agents** (`templates/super-agents/`):
+  - 3 flagships with full implementations: [`living-narrative-fabric`](templates/super-agents/living-narrative-fabric/), [`self-evolving-personal-os`](templates/super-agents/self-evolving-personal-os/), [`cross-reality-action-fabric`](templates/super-agents/cross-reality-action-fabric/).
+  - 4 lighter manifest-only patterns: `agent-swarm-with-shared-memory`, `provenance-first-trust-engine`, `narrative-contradiction-detector`, `zero-config-i-want-to-agent`.
+- **22 creator templates** (`templates/creator/`) — content generation, analytics, engagement triage, growth experiments, distribution, monetization, brand voice, research.
+- **2 general-purpose templates** (`templates/general/`) — `daily-briefing-agent`, `research-assistant`.
+- **2 X-native templates** (`templates/x-native/`) — `mention-summarizer`, `trend-aligned-poster`.
+
+## Where to look for what
+
+- [`README.md`](README.md) — public face of the project. Hero, scoreboard, tool list, install instructions, links.
+- [`CLAUDE.md`](CLAUDE.md) — ground-truth instruction file for any AI assistant or human contributor. Hard Six rules, Soft Rules, file naming, PowerShell-first cheat sheet, mandatory disclaimer wording, the 5-phase roadmap, the §17 ten-layer health-check definition.
+- [`ROADMAP.md`](ROADMAP.md) — phase summary + scoreboard targets.
+- [`HANDOFF_LOG.md`](HANDOFF_LOG.md) — the single source of truth for what's done. One row per numbered prompt (P1 through current). Always check this before claiming something exists.
+- [`spec/v2.15/`](spec/v2.15/) — the manifest standard. `grok-agent.yaml` is the spec; `changelog.md` documents the v2.14 → v2.15 delta.
+- [`safety/scanner.py`](safety/scanner.py) + [`safety/constitution.md`](safety/constitution.md) — the safety gate.
+- [`marketing.md`](marketing.md) — 110 ready-to-paste X posts covering every shipped surface (hero/launch, X Money tools, Super Agents, creator templates, CLI, marketplace, safety, roadmap, reply templates, image captions). Voice: light-emoji X-native.
+- [`docs/`](docs/) — Windows install guide, xAI adoption pitch, project DNA, parameterized recipes, prompt template, sources, constraints.
+
+## How to build a new agent
+
+1. `.\cli\grok-agent.ps1 new my-first-agent` scaffolds a v2.15 manifest, README, folder structure.
+2. Edit `grok-agent.yaml` to declare: kind, model, tools, public APIs, safety rules, cost limits, HITL gates.
+3. `.\cli\grok-agent.ps1 validate my-first-agent` runs the v2.15 schema check (Pydantic) and surface validation.
+4. `python safety/scanner.py scan my-first-agent/grok-agent.yaml` runs the 34-check Constitution scan.
+5. `.\cli\grok-agent.ps1 install my-first-agent` copies to `$env:LOCALAPPDATA\grok-agent\agents\<name>\`.
+6. `.\cli\grok-agent.ps1 run my-first-agent` resolves a launcher (PowerShell `launcher.ps1` → Streamlit `app.py` → plain Python `main.py`/`run.py`) and starts it.
+
+For a new X Money tool, follow [Recipe A](docs/PARAMETERIZED_RECIPES.md) (6 prompts). For a new creator template, [Recipe B](docs/PARAMETERIZED_RECIPES.md) (2 prompts). For a new flagship Super Agent, [Recipe C](docs/PARAMETERIZED_RECIPES.md) (8 prompts).
+
+## Hard rules (non-negotiable)
+
+These are excerpted verbatim from CLAUDE.md §2 and apply to every contribution.
+
+1. Apache 2.0 license header at the top of every code/config file.
+2. Ecosystem-ally tagline (`Built for xAI, X, Grok and the ecosystem community. ❤️`) in every README and user-facing markdown.
+3. Windows 11 + PowerShell only in every shell command, install instruction, README example, launcher script, and CI script that the end user runs. Bash inside `.github/workflows/*.yml` running on `ubuntu-latest` is OK (CI runner choice).
+4. Every agent declares `grok-agent.yaml` v2.15.
+5. Strong disclaimers on every finance, tax, or real-world-action tool. Wording is verbatim from CLAUDE.md §12.
+6. Local-first + privacy-first. User data lives under `$env:LOCALAPPDATA\grok-agent\` by default. Cloud sync, telemetry, and external API calls beyond what the agent declares in its manifest are opt-in only.
+
+## Forbidden phrases
+
+Never write these in generated code, manifests, prompts, or docs (the Article VIII scanner enforces): `etc.`, `and so on`, `anything related to`, `as you see fit`, `use your judgment`, `boilerplate as needed`. If you're tempted to use one, the spec is too vague to act on safely — split it into a smaller, testable piece.
+
+## Common tasks (for AI assistants reading this file)
+
+- **Validate every manifest in the repo:** `find templates -name grok-agent.yaml -exec python cli/grok-agent.py validate {} \;`
+- **Scan every manifest against the Constitution:** `python safety/scanner.py scan-all templates --severity-floor warn`
+- **Run the full pytest suite:** `python -m pytest -q --strict-markers` (collects from `tests/` + `creator-program/v2/curation/tests/` + `templates/super-agents/self-evolving-personal-os/tests/`).
+- **Run a super-agent smoke test:** `cd templates/super-agents/<slug> && python smoke_test.py`.
+- **Re-run the forbidden-phrase scan repo-wide:** `python safety/scanner.py forbidden-phrase-scan --repo-root .`
+- **List every file an agent ships:** `find templates/<category>/<slug> -type f -not -path '*/__pycache__/*'`.
+- **Find the latest prompt completed:** `tail -1 HANDOFF_LOG.md` (or grep for `✅ done`).
+
+## Repo layout (top level)
+
+- `cli/` — PowerShell + Python CLI entry points
+- `safety/` — Constitution scanner + governing markdown
+- `spec/v2.15/` — the manifest standard
+- `templates/` — every shipped agent, organized by category (`finance/`, `super-agents/`, `creator/`, `general/`, `x-native/`)
+- `marketplace/` — Next.js static export of the catalogue
+- `creator-program/v2/curation/` — Mon/Wed/Fri curation engine
+- `pulse/` — standalone MCP-server skeleton (separate deploy target)
+- `docs/` — windows guide, xAI pitch, recipes, constraints, sources, prompt template
+- `scripts/` — autonomous tooling (template generator, sub-agent report validator)
+- `.github/workflows/` — CI: `validate.yml` (manifest + Constitution scan), `tests.yml` (pytest + super-agent smokes + x-money integration), `pages.yml` (marketplace deploy), `curation-cadence.yml` (Mon/Wed/Fri creator program), `schema-drift.yml`
+
+Built for xAI, X, Grok and the ecosystem community. ❤️

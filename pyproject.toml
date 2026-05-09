@@ -137,6 +137,17 @@ show_error_codes = true
 testpaths = [
     "tests",
     "creator-program/v2/curation/tests",
+    "templates/super-agents/self-evolving-personal-os/tests",
 ]
 python_files = ["test_*.py"]
 addopts = "-q --strict-markers"
+# P178: declare every marker so `--strict-markers` rejects typos at collection
+# time. New markers MUST be added here before they can be applied with
+# @pytest.mark.<name> on a test.
+markers = [
+    "smoke: hermetic smoke tests (no secrets, no network, no GUI)",
+    "integration: end-to-end tests across multiple agents or tools",
+    "slow: tests that take longer than 5 seconds",
+    "requires_network: tests that contact a real external API",
+    "windows: tests that only pass on Windows 11 + PowerShell",
+]

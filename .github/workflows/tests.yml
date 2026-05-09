@@ -30,13 +30,9 @@
 #   - The pip cache key is pinned to this workflow file so refreshes track
 #     dependency-string changes deterministically.
 #
-# Known exclusion:
-#   templates/super-agents/self-evolving-personal-os/smoke_test.py (main)
-#   has a real assertion failure at line 355 (the conditional router
-#   expects `NODE_INGEST` but receives `'generate_brief'`). Tracked as a
-#   separate follow-up (HANDOFF_LOG.md P177 → P178). The other 5 SEPOS
-#   smokes (dashboard + connectors + memory + provenance + eval) are wired
-#   here and pass.
+# P178: SEPOS main smoke is now wired in. The conditional-router off-by-one
+# (`<` vs `<=`) at templates/super-agents/self-evolving-personal-os/graph.py
+# was fixed and locked by tests/test_router.py.
 # ============================================================================
 
 name: Tests
@@ -57,7 +53,7 @@ concurrency:
 
 jobs:
   pytest:
-    name: pytest (creator-program curation suite — 11 tests)
+    name: pytest (curation + SEPOS router — 15 tests)
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -84,7 +80,7 @@ jobs:
           python -m pytest -q --strict-markers
 
   super-agent-smoke:
-    name: super-agent smoke tests (CRF + SEPOS — 11 invocations)
+    name: super-agent smoke tests (CRF + SEPOS — 12 invocations)
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -124,14 +120,14 @@ jobs:
             echo "::endgroup::"
           done
 
-      - name: Self-Evolving Personal OS smoke suite (5 invocations)
+      - name: Self-Evolving Personal OS smoke suite (6 invocations)
         run: |
           set -euo pipefail
           cd templates/super-agents/self-evolving-personal-os
 
-          # NOTE: smoke_test.py (main) is INTENTIONALLY skipped — known
-          # assertion failure at line 355 (conditional router: expected
-          # NODE_INGEST, got 'generate_brief'). Tracked as P178 follow-up.
+          echo "::group::SEPOS main smoke_test.py"
+          python smoke_test.py
+          echo "::endgroup::"
 
           echo "::group::SEPOS dashboard_smoke_test.py"
           python dashboard_smoke_test.py

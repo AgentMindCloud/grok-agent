@@ -76,6 +76,16 @@ _SUPER_AGENTS_ROOT = _REPO_ROOT / "templates" / "super-agents"
 _OUTPUT = _REPO_ROOT / "docs" / "eval-history.json"
 _NOW = datetime.now(timezone.utc)
 
+# Stub-run timestamps anchor here, NOT to wall-clock UTC midnight. The
+# previous behaviour (`anchor = _NOW.replace(...)`) re-stamped the seed
+# runs on every UTC midnight, so the on-disk JSON drifted by one day per
+# day and `--check` failed every PR opened on a different calendar day
+# from the last regen — even when the PR didn't touch any eval data.
+# Pin to a fixed date so the seed output is byte-identical across runs;
+# bump only when the dashboard's preview window legitimately needs to
+# move forward.
+_SEED_ANCHOR = datetime(2026, 5, 10, tzinfo=timezone.utc)
+
 _SCHEMA_VERSION = "0.1"
 _TIMESTAMP_FIELD = "computed_at"
 
@@ -169,15 +179,16 @@ def _seed_runs(slug: str, metrics: list[str]) -> list[dict[str, Any]]:
     preview data looks plausible. The same slug + metrics will always
     produce the same stub output, so `--seed` is safe under `--check`.
 
-    Timestamp determinism: stub `ts` values anchor to UTC midnight of the
-    current day rather than the wall-clock `_NOW`. Two invocations within
-    the same UTC day therefore produce byte-identical output, so a
-    `--seed` write followed by a `--check` rebuild does not chase a
-    second-by-second drift.
+    Timestamp determinism: stub `ts` values anchor to a fixed
+    `_SEED_ANCHOR` constant, NOT to wall-clock UTC midnight. Anchoring to
+    `datetime.now()` re-stamped the seed runs on every UTC midnight, so
+    the on-disk JSON drifted daily and `--check` failed every PR opened
+    on a different calendar day from the last regen. With a fixed
+    anchor, `--seed` produces byte-identical output across days.
     """
     if not metrics:
         return []
-    anchor = _NOW.replace(hour=0, minute=0, second=0, microsecond=0)
+    anchor = _SEED_ANCHOR.replace(hour=0, minute=0, second=0, microsecond=0)
     runs: list[dict[str, Any]] = []
     # Three runs at days -14, -7, -0 from the UTC-midnight anchor.
     for run_index, days_ago in enumerate([14, 7, 0]):

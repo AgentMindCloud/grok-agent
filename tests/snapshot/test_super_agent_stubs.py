@@ -41,11 +41,21 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from freezegun import freeze_time
 
 
 syrupy = pytest.importorskip("syrupy")
 pytest.importorskip("yaml")
 pytest.importorskip("pydantic")
+
+
+# Freeze every snapshot test to the date the on-disk snapshots were
+# recorded. Without this, SEPOS's ``for_date`` field (not scrubbed by
+# ``deterministic_serializer`` because it's a deliberate user-facing
+# value, not a volatile timestamp) drifts every midnight and the
+# assertion breaks. Locking the clock here also keeps any other
+# timestamp-derived field stable across the suite.
+_FROZEN_DAY = "2026-05-09T12:00:00"
 
 
 pytestmark = pytest.mark.snapshot
@@ -122,6 +132,7 @@ def _load_module_from_path(module_name: str, file_path: Path) -> Any:
 # Test 1 — cross-reality-action-fabric
 # --------------------------------------------------------------------------
 
+@freeze_time(_FROZEN_DAY)
 def test_cross_reality_daily_plan_snapshot(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -155,6 +166,7 @@ def test_cross_reality_daily_plan_snapshot(
 # Test 2 — living-narrative-fabric
 # --------------------------------------------------------------------------
 
+@freeze_time(_FROZEN_DAY)
 def test_living_narrative_synthesize_snapshot(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -201,6 +213,7 @@ def test_living_narrative_synthesize_snapshot(
 # Test 3 — self-evolving-personal-os
 # --------------------------------------------------------------------------
 
+@freeze_time(_FROZEN_DAY)
 def test_self_evolving_personal_os_daily_brief_snapshot(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

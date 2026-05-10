@@ -1,5 +1,5 @@
 {
-  "computed_at": "2026-05-09T16:57:02.717387+00:00",
+  "computed_at": "2026-05-10T12:11:40.015799+00:00",
   "schema_version": "0.1",
   "agent_count": 7,
   "metric_count": 7,
@@ -37,7 +37,7 @@
       "runs": [
         {
           "run_id": "stub-living-narrative-fabric-00",
-          "ts": "2026-04-25T00:00:00+00:00",
+          "ts": "2026-04-26T00:00:00+00:00",
           "metrics": {
             "ConstitutionCompliance": 0.6914,
             "ContradictionDetection": 0.892,
@@ -48,7 +48,7 @@
         },
         {
           "run_id": "stub-living-narrative-fabric-01",
-          "ts": "2026-05-02T00:00:00+00:00",
+          "ts": "2026-05-03T00:00:00+00:00",
           "metrics": {
             "ConstitutionCompliance": 0.585,
             "ContradictionDetection": 0.7407,
@@ -59,7 +59,7 @@
         },
         {
           "run_id": "stub-living-narrative-fabric-02",
-          "ts": "2026-05-09T00:00:00+00:00",
+          "ts": "2026-05-10T00:00:00+00:00",
           "metrics": {
             "ConstitutionCompliance": 0.7025,
             "ContradictionDetection": 0.9209,
@@ -110,7 +110,7 @@
       "runs": [
         {
           "run_id": "stub-self-evolving-personal-os-00",
-          "ts": "2026-04-25T00:00:00+00:00",
+          "ts": "2026-04-26T00:00:00+00:00",
           "metrics": {
             "BriefingTrustScore": 0.8723,
             "ConstitutionCompliance": 0.594,
@@ -121,7 +121,7 @@
         },
         {
           "run_id": "stub-self-evolving-personal-os-01",
-          "ts": "2026-05-02T00:00:00+00:00",
+          "ts": "2026-05-03T00:00:00+00:00",
           "metrics": {
             "BriefingTrustScore": 0.6479,
             "ConstitutionCompliance": 0.745,
@@ -132,7 +132,7 @@
         },
         {
           "run_id": "stub-self-evolving-personal-os-02",
-          "ts": "2026-05-09T00:00:00+00:00",
+          "ts": "2026-05-10T00:00:00+00:00",
           "metrics": {
             "BriefingTrustScore": 0.5733,
             "ConstitutionCompliance": 0.8167,

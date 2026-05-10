@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://readme-typing-svg.demolab.com">
-    <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=20&pause=1200&color=FF1E70&center=true&width=720&lines=One+YAML+%E2%80%A2+One+install+command+%E2%80%A2+One+safety+scanner.;Windows-first+%E2%80%A2+PowerShell+CLI+%E2%80%A2+Apache+2.0.;%22grok+install+this%22+is+the+install+command.;11+production+agents+live+%E2%80%A2+marketplace+shipping." alt="typing tagline" />
+    <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=20&pause=1200&color=FF1E70&center=true&width=720&lines=One+YAML+%E2%80%A2+One+install+command+%E2%80%A2+One+safety+scanner.;Windows-first+%E2%80%A2+PowerShell+CLI+%E2%80%A2+Apache+2.0.;%22grok+install+this%22+is+the+install+command.;37+production+agents+live+%E2%80%A2+marketplace+shipping." alt="typing tagline" />
   </a>
 </p>
 
@@ -17,7 +17,7 @@
   <img src="https://img.shields.io/badge/manifest-v2.15-0A0A0A.svg?labelColor=FF1E70" alt="v2.15" />
   <img src="https://img.shields.io/badge/platform-Windows_11-00E0D5.svg?labelColor=0A0A0A" alt="Windows 11" />
   <img src="https://img.shields.io/badge/python-3.12+-00E0D5.svg?labelColor=0A0A0A" alt="Python 3.12+" />
-  <img src="https://img.shields.io/badge/agents%20live-11-FF1E70.svg?labelColor=0A0A0A" alt="11 agents live" />
+  <img src="https://img.shields.io/badge/agents%20live-37-FF1E70.svg?labelColor=0A0A0A" alt="37 agents live" />
   <img src="https://img.shields.io/badge/status-Phase_5_active-00E0D5.svg?labelColor=0A0A0A" alt="Phase 5 active" />
   <img src="https://img.shields.io/badge/spectral-v1-FF1E70.svg?labelColor=00E0D5" alt="Spectral v1 visual system" />
 </p>
@@ -31,17 +31,13 @@
 </p>
 
 <p align="center">
-  <a href="marketplace/index.html"><b>🛒 Marketplace (GitHub Pages)</b></a>
+  <a href="https://agentmindcloud.github.io/grok-agent/"><b>🛒 Marketplace (GitHub Pages)</b></a>
   &nbsp;·&nbsp;
   <a href="marketplace/"><b>Next.js dynamic marketplace</b></a>
   &nbsp;·&nbsp;
   <a href="docs/"><b>Docs</b></a>
   &nbsp;·&nbsp;
   <a href="CONTRIBUTING.md"><b>Contribute</b></a>
-</p>
-
-<p align="center">
-  <i>The static <code>marketplace/index.html</code> is a zero-build, GitHub-Pages-ready landing page that lists the 7 Super Agents and the 22 Creator Templates teaser. Open it in a browser, or serve it with <code>python -m http.server</code>.</i>
 </p>
 
 <p align="center">
@@ -58,7 +54,7 @@
 - **One PowerShell command** installs it locally on Windows 11 with no admin rights, no surprises.
 - **One Agent Constitution** governs every shipped agent: mandatory disclaimers on finance/tax/real-world tools, machine-checkable consent gates, hard refusals enforced in CI.
 
-**11 production agents** ship today — 4 X Money tools, 3 flagship Super Agents, 4 lighter Super Agents — all discoverable through the dynamic Next.js [marketplace](marketplace/).
+**37 manifests** ship today across `templates/` — 7 super-agents, 4 X Money tools, 22 creator templates, 2 general, 2 x-native — with 11 production-grade agents (4 X Money tools + 7 Super Agents) featured below. All discoverable through the dynamic Next.js [marketplace](marketplace/).
 
 ---
 
@@ -72,7 +68,7 @@
 
 | Phase | Range | What landed | Status |
 |---|---|---|---|
-| **1** | P1–P18 | Core platform — v2.15 schema, PowerShell + Python CLIs, safety scanner (33 checks), Agent Constitution, CI workflow, 8 starter manifests | ✅ done |
+| **1** | P1–P18 | Core platform — v2.15 schema, PowerShell + Python CLIs, safety scanner (33 checks), Agent Constitution, CI workflow, starter manifests | ✅ done |
 | **2** | P19–P42 | **4 X Money tools** — Companion Dashboard, Smart Cashtag Alpha Engine, Creator Payout Optimizer, Vision Analyzer (Recipe A × 6 prompts each) | ✅ done |
 | **3** | P43–P92 | **22 creator templates** + outreach program — content, replies, analytics, monetization, threads, mentions, DMs, growth, hashtags, content calendars, A/B testing, recycling, brand voice | ✅ done |
 | **4** | P93–P124 | **7 Super Agents** — 3 flagship (Recipe C × 8 prompts) + 4 lighter (manifest + README), self-improvement infra | ✅ done |
@@ -83,10 +79,10 @@ Track every prompt in [`HANDOFF_LOG.md`](HANDOFF_LOG.md). The latest gap analysi
 ---
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=transparent&fontColor=FF1E70&height=70&section=header&text=%E2%97%87%20Tools%20%E2%80%94%20The%2011%20Agents&fontSize=30&fontAlign=50&fontAlignY=50" alt="Tools — The 11 Agents" />
+  <img src="https://capsule-render.vercel.app/api?type=transparent&fontColor=FF1E70&height=70&section=header&text=%E2%97%87%20Tools%20%E2%80%94%20The%2011%20Curated%20Agents&fontSize=30&fontAlign=50&fontAlignY=50" alt="Tools — The 11 Curated Agents" />
 </p>
 
-## The 11 agents
+## The 11 curated agents
 
 > ◆ **Tools tab** of the consumer cathedral. Each agent ships with a v2.15 manifest, Apache 2.0 license, and Constitution-enforced disclaimers.
 
@@ -187,6 +183,17 @@ Each card includes a one-click "Install — copy 'grok install this'" button (wr
 
 ---
 
+## Folded sub-projects
+
+Two sibling repos were folded in via `git subtree --squash` (see [`MERGE_PLAN.md`](MERGE_PLAN.md) for source SHAs). Each carries its own `README.md` and `AUDIT-REPORT.md`:
+
+- [`tools/`](tools/) — `x-platform-toolkit`. 12 X-native productivity tools (4 LIVE single-file HTML demos, 8 SPEC-only). Pre-merge audit: [`tools/AUDIT-REPORT.md`](tools/AUDIT-REPORT.md).
+- [`pulse/`](pulse/) — `grok-pulse-mcp-server`. MCP server that prioritizes a builder's GitHub work via Grok. Currently scaffold + `pulse_today` wired; 4 more tools planned for v0.2. Pre-merge audit: [`pulse/AUDIT-REPORT.md`](pulse/AUDIT-REPORT.md).
+
+Neither subtree is wired into the OS CLI yet — they ship as drop-in surfaces with their own build configs.
+
+---
+
 ## Architecture (install + run flow)
 
 ```mermaid
@@ -284,24 +291,6 @@ storyboards as `X_LAUNCH_THREAD.md`.
 
 ---
 
-## Folded sub-projects (Phase 16)
-
-Beyond the 11 production agents above, this repo folds in two sister
-projects via `git subtree --squash` so the whole ecosystem ships from
-one source of truth:
-
-| Path | Origin repo | What it is |
-|---|---|---|
-| [`tools/`](tools/) | [`AgentMindCloud/x-platform-toolkit`](https://github.com/AgentMindCloud/x-platform-toolkit) | 20-tool monorepo for X creators, builders, and analysts — analytics, AI writing, automation. Single-HTML-file tools, self-hostable, ToS-respecting. |
-| [`pulse/`](pulse/) | [`AgentMindCloud/grok-pulse-mcp-server`](https://github.com/AgentMindCloud/grok-pulse-mcp-server) | First-party MCP server for the xAI / X / Grok ecosystem. One tool call returns today's Grok-prioritized attention list across your GitHub repos. Works inside any MCP-compatible agent (Claude Code, Cursor, custom). |
-
-Both retain their original Apache 2.0 license, READMEs, and tip-commit
-provenance (recorded in [`MERGE_PLAN.md`](MERGE_PLAN.md)). They're
-independent packages — `tools/` and `pulse/` each carry their own
-`package.json` and build config and stay buildable in isolation.
-
----
-
 ## Spinoff packages
 
 Standalone Python libraries extracted from this monorepo so downstream
@@ -329,7 +318,7 @@ it, v0.2 roadmap).
 
 - **Marketplace routes** — [`/audit-dashboard`](marketplace/app/audit-dashboard/)
   (Constitution audit log explorer), [`/eval`](marketplace/app/eval/)
-  (Promptfoo + DeepEval results portal), and [`/generate`](marketplace/app/generate/)
+  (Promptfoo + DeepEval results portal), and [`/deploy`](marketplace/app/deploy/)
   (no-code v2.15 manifest builder).
 - **Editor + browser extensions** — [`extensions/vscode/`](extensions/vscode/)
   (manifest IntelliSense + lint) and [`extensions/browser/`](extensions/browser/)

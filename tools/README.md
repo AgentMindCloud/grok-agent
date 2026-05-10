@@ -107,8 +107,6 @@ This toolkit fills the gap. Every tool here works with public X data, the offici
 
 | # | Tool | Category | Status | Badge | Stack |
 |---|---|---|---|---|---|
-| 01 | 
-| 02 | [Follower Intent Classifier](tools/02-follower-intent-classifier/) | Analytics | `Spec'd` | `Grok-Compatible` | Node + X API + Grok |
 | 03 | [Contextual Reply Suggester](tools/03-contextual-reply-suggester/) | AI Writing | `Spec'd` | `Grok-Compatible` | Grok |
 | 04 | [Pre-Post Virality Scorer](tools/04-pre-post-virality-scorer/) | AI Analytics | `Live` | `Heuristic Live` | Vanilla JS |
 | 05 | [Pinned Post A/B Rotator](tools/05-pinned-post-ab-rotator/) | Automation | `Live` | `Heuristic Live` | Vanilla JS |

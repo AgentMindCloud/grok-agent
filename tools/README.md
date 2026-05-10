@@ -16,12 +16,12 @@
 </p>
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Space+Grotesk&weight=700&size=22&pause=1000&color=00E5FF&center=true&vCenter=true&width=900&lines=20+Tools+%E2%80%94+Analytics+%C2%B7+AI+Writing+%C2%B7+Automation;6+Live%2C+14+Spec'd+%E2%80%94+Shipping+Continuously;Every+Live+Tool+Is+a+Single+HTML+File;X+API+v2+%2B+xAI+Grok+%E2%80%94+Fully+Self-Hostable" alt="typing" />
+  <img src="https://readme-typing-svg.demolab.com?font=Space+Grotesk&weight=700&size=22&pause=1000&color=00E5FF&center=true&vCenter=true&width=900&lines=12+Tools+%E2%80%94+Analytics+%C2%B7+AI+Writing+%C2%B7+Automation;5+Live%2C+7+Spec'd+%E2%80%94+Shipping+Continuously;Every+Live+Tool+Is+a+Single+HTML+File;X+API+v2+%2B+xAI+Grok+%E2%80%94+Fully+Self-Hostable" alt="typing" />
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Apache%202.0-00E5FF?style=for-the-badge&logoColor=001018&labelColor=0A0D14" />
-  <img src="https://img.shields.io/badge/20%20Tools-7C3AED?style=for-the-badge&logoColor=FFFFFF&labelColor=0A0D14" />
+  <img src="https://img.shields.io/badge/12%20Tools-7C3AED?style=for-the-badge&logoColor=FFFFFF&labelColor=0A0D14" />
   <img src="https://img.shields.io/badge/Status%20Active-FF4FD8?style=for-the-badge&logoColor=FFFFFF&labelColor=0A0D14" />
   <img src="https://img.shields.io/badge/X%20Compatible-00D5FF?style=for-the-badge&logo=x&logoColor=001018&labelColor=0A0D14" />
   <img src="https://img.shields.io/badge/Heuristic%20Live-A3E635?style=for-the-badge&logoColor=001018&labelColor=0A0D14" />
@@ -30,7 +30,7 @@
 </p>
 
 <p align="center">
-  <a href="#-the-20-tools"><b>Tools</b></a> ·
+  <a href="#-the-12-tools"><b>Tools</b></a> ·
   <a href="docs/PHILOSOPHY.md"><b>Philosophy</b></a> ·
   <a href="docs/ARCHITECTURE.md"><b>Architecture</b></a> ·
   <a href="docs/BRAND.md"><b>Brand</b></a> ·
@@ -52,7 +52,7 @@ This toolkit fills the gap. Every tool here works with public X data, the offici
 <table>
   <tr>
     <td width="25%" align="center">
-      <h1 style="color:#00E5FF">20</h1>
+      <h1 style="color:#00E5FF">12</h1>
       <p><b>Tools</b><br/><sub>across 6 categories</sub></p>
     </td>
     <td width="25%" align="center">
@@ -103,7 +103,7 @@ This toolkit fills the gap. Every tool here works with public X data, the offici
   </tr>
 </table>
 
-## ✦ The 20 Tools
+## ✦ The 12 Tools
 
 | # | Tool | Category | Status | Badge | Stack |
 |---|---|---|---|---|---|

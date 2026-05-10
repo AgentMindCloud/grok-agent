@@ -33,7 +33,7 @@
 
 ## v1.0.0 — Complete toolkit
 
-- [ ] All 20 tools LIVE
+- [ ] All 12 tools LIVE
 - [ ] Hosted demo site
 - [ ] Per-tool documentation videos
 

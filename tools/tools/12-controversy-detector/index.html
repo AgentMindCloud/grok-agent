@@ -831,7 +831,7 @@ footer {
   if (clearDataBtn) {
     clearDataBtn.addEventListener("click", function () {
       if (confirm("Clear all data? This will wipe your draft and every saved keyword list. This cannot be undone.")) {
-        localStorage.clear();
+        localStorage.removeItem(STORAGE_KEY);
         location.reload();
       }
     });

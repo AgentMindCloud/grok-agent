@@ -324,7 +324,7 @@ document.getElementById('intervalSelect').addEventListener('change', (e) => chan
 document.getElementById('exportBtn').addEventListener('click', doExport);
 document.getElementById('clearDataBtn').addEventListener('click', () => {
   if (confirm('Clear all data? This will wipe every candidate, rotation, and result. This cannot be undone.')) {
-    localStorage.clear();
+    localStorage.removeItem(LS_KEY);
     location.reload();
   }
 });

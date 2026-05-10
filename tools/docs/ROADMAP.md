@@ -10,15 +10,8 @@
 
 ## v0.2.0 — Backend tools batch 1
 
-- [ ] 01 Thread Decay Tracker → LIVE
 - [ ] 19 Grok Thread Composer → LIVE
 - [ ] 20 X Articles Optimizer → LIVE
-
-## v0.3.0 — Analytics depth
-
-- [ ] 02 Follower Intent Classifier → LIVE
-- [ ] 08 Follow/Unfollow Velocity Map → LIVE
-- [ ] 10 Cross-Account Niche Benchmarker → LIVE
 
 ## v0.4.0 — AI writing suite
 
@@ -33,7 +26,7 @@
 
 ## v1.0.0 — Complete toolkit
 
-- [ ] All 20 tools LIVE
+- [ ] All 12 tools LIVE
 - [ ] Hosted demo site
 - [ ] Per-tool documentation videos
 

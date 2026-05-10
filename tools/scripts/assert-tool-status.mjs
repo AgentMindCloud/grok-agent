@@ -18,24 +18,16 @@ const TOOLS_DIR = join(ROOT, 'tools');
 
 // ---- Source of truth: tool status map ----
 const TOOL_STATUS = {
-  '01-thread-decay-tracker': 'spec',
-  '02-follower-intent-classifier': 'spec',
   '03-contextual-reply-suggester': 'spec',
   '04-pre-post-virality-scorer': 'live',
   '05-pinned-post-ab-rotator': 'live',
   '06-digital-product-storefront': 'spec',
   '07-content-compound-calculator': 'live',
-  '08-follow-unfollow-velocity-map': 'spec',
-  '09-engagement-quality-score': 'live',
-  '10-cross-account-niche-benchmarker': 'spec',
   '11-ghostwriter-mode-with-memory': 'spec',
   '12-controversy-detector': 'live',
   '13-thread-to-newsletter-converter': 'spec',
-  '14-warm-introduction-mapper': 'spec',
-  '15-spaces-recorder-clips': 'spec',
   '16-follower-migration-assistant': 'spec',
   '17-post-necromancer': 'spec',
-  '18-emotional-tone-trend-tracker': 'live',
   '19-grok-thread-composer': 'spec',
   '20-x-articles-optimizer': 'spec',
 };

@@ -2,7 +2,7 @@
   "name": "@x-platform-toolkit/root",
   "version": "0.1.0",
   "private": true,
-  "description": "Monorepo root for x-platform-toolkit — 20 tools, shared UI kit, X + Grok clients.",
+  "description": "Monorepo root for x-platform-toolkit — 12 tools, shared UI kit, X + Grok clients.",
   "license": "Apache-2.0",
   "workspaces": [
     "shared/*",

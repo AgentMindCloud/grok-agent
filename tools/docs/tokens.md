@@ -100,24 +100,16 @@ const client = new XApiClient({ bearerToken: process.env.X_BEARER_TOKEN });
 
 | # | Tool | Status | `XAI_API_KEY` | `X_BEARER_TOKEN` | Notes |
 |---|---|---|---|---|---|
-| 01 | Thread Decay Tracker | Spec'd | — | Required | Basic tier fine for one account |
-| 02 | Follower Intent Classifier | Spec'd | Required | Required | Grok classifies, X API fetches |
 | 03 | Contextual Reply Suggester | Spec'd | Required | — | Grok only |
 | 04 | Pre-Post Virality Scorer | Live | — | — | Heuristic, no network |
 | 05 | Pinned Post A/B Rotator | Live | — | — | Local storage only |
 | 06 | Digital Product Storefront | Spec'd | — | — | Firebase; no X / Grok |
 | 07 | Content Compound Calculator | Live | — | — | Heuristic, no network |
-| 08 | Follow/Unfollow Velocity Map | Spec'd | — | Required | Pro tier recommended |
-| 09 | Engagement Quality Score | Live | — | — | Heuristic, no network |
-| 10 | Cross-Account Niche Benchmarker | Spec'd | — | Required | Pro tier recommended |
 | 11 | Ghostwriter Mode with Memory | Spec'd | Required | — | Grok only |
 | 12 | Controversy Detector | Live | — | — | Heuristic, no network |
 | 13 | Thread-to-Newsletter Converter | Spec'd | Required | — | Grok only |
-| 14 | Warm Introduction Mapper | Spec'd | — | Required | Basic tier fine |
-| 15 | Spaces Recorder + Clips | Spec'd | — | — | FFmpeg; audio capture |
 | 16 | Follower Migration Assistant | Spec'd | Required | — | Grok only |
 | 17 | Post Necromancer | Spec'd | Required | — | Grok only |
-| 18 | Emotional Tone Trend Tracker | Live | — | — | Heuristic, no network |
 | 19 | Grok Thread Composer | Spec'd | Required | — | Proxy required for browser use |
 | 20 | X Articles Optimizer | Spec'd | Required | — | Proxy required for browser use |
 

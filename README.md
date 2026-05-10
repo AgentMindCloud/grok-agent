@@ -74,7 +74,7 @@
 | **4** | P93–P124 | **7 Super Agents** — 3 flagship (Recipe C × 8 prompts) + 4 lighter (manifest + README), self-improvement infra | ✅ done |
 | **5** | P125+ | Marketplace (Next.js on Vercel) + "Deploy to X" + xAI partnership pitch + 60-second demo | 🚧 active |
 
-Track every prompt in [`HANDOFF_LOG.md`](HANDOFF_LOG.md). The latest gap analysis lives in [`docs/workplan-audit.md`](docs/workplan-audit.md).
+Track every prompt in [`docs/internal/HANDOFF_LOG.md`](docs/internal/HANDOFF_LOG.md). The latest gap analysis lives in [`docs/workplan-audit.md`](docs/workplan-audit.md).
 
 ---
 
@@ -185,7 +185,7 @@ Each card includes a one-click "Install — copy 'grok install this'" button (wr
 
 ## Folded sub-projects
 
-Two sibling repos were folded in via `git subtree --squash` (see [`MERGE_PLAN.md`](MERGE_PLAN.md) for source SHAs). Each carries its own `README.md` and `AUDIT-REPORT.md`:
+Two sibling repos were folded in via `git subtree --squash` (see [`docs/internal/MERGE_PLAN.md`](docs/internal/MERGE_PLAN.md) for source SHAs). Each carries its own `README.md` and `AUDIT-REPORT.md`:
 
 - [`tools/`](tools/) — `x-platform-toolkit`. 12 X-native productivity tools (4 LIVE single-file HTML demos, 8 SPEC-only). Pre-merge audit: [`tools/AUDIT-REPORT.md`](tools/AUDIT-REPORT.md).
 - [`pulse/`](pulse/) — `grok-pulse-mcp-server`. MCP server that prioritizes a builder's GitHub work via Grok. Currently scaffold + `pulse_today` wired; 4 more tools planned for v0.2. Pre-merge audit: [`pulse/AUDIT-REPORT.md`](pulse/AUDIT-REPORT.md).
@@ -337,7 +337,7 @@ CI: PR-scoped offline smoke runs in [`.github/workflows/tier-3-smoke.yml`](.gith
 - **Repo:** `github.com/AgentMindCloud/grok-agent`
 - **Schema:** [`spec/v2.15/grok-agent.yaml`](spec/v2.15/grok-agent.yaml) · [changelog](spec/v2.15/changelog.md) · [windows extensions](spec/v2.15/windows-extensions.yaml)
 - **Constitution:** [`safety/constitution.md`](safety/constitution.md) (33 checks in `safety/scanner.py`)
-- **Roadmap:** [`ROADMAP.md`](ROADMAP.md) · full plan in [`CLAUDE.md`](CLAUDE.md)
+- **Roadmap:** [`docs/internal/ROADMAP.md`](docs/internal/ROADMAP.md) · full plan in [`docs/internal/CLAUDE.md`](docs/internal/CLAUDE.md)
 - **Audit:** [`docs/workplan-audit.md`](docs/workplan-audit.md) — what's shipped + what's left.
 
 ---

@@ -4,7 +4,7 @@ This project takes security seriously. If you find a vulnerability — in the to
 
 ## Reporting a vulnerability
 
-Email **security@agentmindcloud.dev** with:
+Email **security@agentmindcloud.com** with:
 
 - A clear description of the issue and its impact
 - Steps or a minimal proof-of-concept to reproduce

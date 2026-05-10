@@ -18,7 +18,7 @@ We follow it as written. Read it before contributing.
 
 Reports of abusive, harassing, or otherwise unacceptable behavior can be sent to:
 
-**conduct@AgentMindCloud.com**
+**conduct@agentmindcloud.com**
 
 Reports are reviewed privately. Confidentiality is respected. Responses range from a clarifying conversation to a permanent ban, following the escalation ladder defined in the Covenant.
 

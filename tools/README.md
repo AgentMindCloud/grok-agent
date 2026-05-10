@@ -160,8 +160,8 @@ A monorepo of numbered tool folders, a shared UI kit, and thin API clients for X
 | Package | Purpose | Env |
 |---|---|---|
 | [`shared/ui-kit`](shared/ui-kit/) | Design tokens, components, shell template | — |
-| [`shared/x-api-client`](shared/x-api-client/) | X API v2 wrapper (Node ≥18) | `X_BEARER_TOKEN` |
-| [`shared/grok-client`](shared/grok-client/) | xAI Grok API wrapper (Node ≥18), defaults to `grok-2-latest` | `XAI_API_KEY` |
+| [`shared/x-api-client`](shared/x-api-client/) | X API v2 wrapper (Node ≥20) | `X_BEARER_TOKEN` |
+| [`shared/grok-client`](shared/grok-client/) | xAI Grok API wrapper (Node ≥20), defaults to `grok-2-latest` | `XAI_API_KEY` |
 
 Visual system lives in [`docs/BRAND.md`](docs/BRAND.md).
 

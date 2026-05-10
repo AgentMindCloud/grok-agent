@@ -1,0 +1,163 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Reusable GitHub Action — Validate Grok Agent OS manifest.
+# Built for xAI, X, Grok and the ecosystem community.
+#
+# Drop into any downstream repo's CI to validate one or many
+# grok-agent.yaml files against the v2.15 schema (Pydantic) plus the
+# Constitution scanner — without having to vendor either.
+
+name: 'Validate Grok Agent Manifest'
+description: 'Validate a grok-agent.yaml v2.15 manifest against the Pydantic schema and the Constitution scanner. Built for xAI, X, Grok and the ecosystem community.'
+author: 'AgentMindCloud'
+
+branding:
+  icon: 'check-circle'
+  color: 'red'
+
+inputs:
+  path:
+    description: |
+      Path to a grok-agent.yaml file, OR a folder containing one, OR a glob
+      pattern matching multiple manifests (e.g. "agents/**/grok-agent.yaml").
+      When a glob matches multiple files, every match is validated and the
+      action fails if ANY file fails.
+    required: true
+
+  strict:
+    description: |
+      Run validation in strict mode (extra=forbid at the root manifest +
+      schema_meta blocks, on top of the default extra=forbid for nested
+      sections). Catches typos in top-level kind-specific extension blocks.
+      Set to "true" or "false". Default: "false".
+    required: false
+    default: 'false'
+
+  scanner:
+    description: |
+      Also run the Constitution scanner (safety/scanner.py) against every
+      matched manifest. Set to "true" or "false". Default: "true".
+    required: false
+    default: 'true'
+
+  severity-floor:
+    description: |
+      When the scanner runs, hide findings below this severity level. One
+      of "info", "warn", "error". The action exits non-zero only when the
+      scanner reports an "error". Default: "warn".
+    required: false
+    default: 'warn'
+
+  python-version:
+    description: |
+      Python version to use for validation. Default: "3.12". The CLI
+      requires Python 3.10+ (uses match statements + the | union syntax).
+    required: false
+    default: '3.12'
+
+outputs:
+  manifest-count:
+    description: 'Number of manifests validated this run.'
+    value: ${{ steps.validate.outputs.manifest-count }}
+
+  status:
+    description: 'Final status — "passed" if all manifests validated, "failed" otherwise.'
+    value: ${{ steps.validate.outputs.status }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python ${{ inputs.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Install validators (pydantic + pyyaml)
+      shell: bash
+      run: |
+        set -euo pipefail
+        python -m pip install --upgrade pip
+        python -m pip install 'pydantic>=2.7,<3' 'pyyaml>=6.0'
+
+    - name: Validate manifest(s)
+      id: validate
+      shell: bash
+      env:
+        # ${{ github.action_path }} is the directory the cloned action repo
+        # lives in. Because this action lives at actions/validate-manifest/
+        # inside AgentMindCloud/grok-agent, the validator + scanner are at
+        # ../../cli/grok-agent.py and ../../safety/scanner.py respectively.
+        ACTION_REPO_ROOT: ${{ github.action_path }}/../..
+        STRICT: ${{ inputs.strict }}
+        RUN_SCANNER: ${{ inputs.scanner }}
+        SEVERITY_FLOOR: ${{ inputs.severity-floor }}
+        TARGET: ${{ inputs.path }}
+      run: |
+        set -euo pipefail
+
+        VALIDATOR="$ACTION_REPO_ROOT/cli/grok-agent.py"
+        SCANNER="$ACTION_REPO_ROOT/safety/scanner.py"
+
+        if [ ! -f "$VALIDATOR" ]; then
+          echo "::error::Validator not found at $VALIDATOR. The action's own clone is incomplete." >&2
+          exit 70
+        fi
+
+        STRICT_FLAG=""
+        if [ "$STRICT" = "true" ]; then STRICT_FLAG="--strict"; fi
+
+        # Resolve target into a list of files. Three shapes accepted:
+        #   1. Single .yaml file.
+        #   2. Folder — pick up <folder>/grok-agent.yaml.
+        #   3. Glob   — expand via shopt -s globstar.
+        shopt -s globstar nullglob
+        FILES=()
+        if [ -f "$TARGET" ]; then
+          FILES+=("$TARGET")
+        elif [ -d "$TARGET" ]; then
+          if [ -f "$TARGET/grok-agent.yaml" ]; then
+            FILES+=("$TARGET/grok-agent.yaml")
+          else
+            echo "::error::No grok-agent.yaml in folder $TARGET" >&2
+            exit 66
+          fi
+        else
+          # Treat as glob.
+          for match in $TARGET; do
+            if [ -f "$match" ]; then FILES+=("$match"); fi
+          done
+        fi
+
+        if [ "${#FILES[@]}" -eq 0 ]; then
+          echo "::error::No manifests resolved from input '$TARGET'" >&2
+          exit 66
+        fi
+
+        echo "manifest-count=${#FILES[@]}" >> "$GITHUB_OUTPUT"
+        echo "::notice::Validating ${#FILES[@]} manifest(s)"
+
+        FAIL=0
+        for f in "${FILES[@]}"; do
+          echo "::group::validate $f"
+          if ! python "$VALIDATOR" validate "$f" $STRICT_FLAG; then
+            echo "::error file=$f::Schema validation failed"
+            FAIL=$((FAIL + 1))
+          fi
+          if [ "$RUN_SCANNER" = "true" ] && [ -f "$SCANNER" ]; then
+            if ! python "$SCANNER" scan "$f" --severity-floor "$SEVERITY_FLOOR"; then
+              echo "::error file=$f::Constitution scanner reported errors"
+              FAIL=$((FAIL + 1))
+            fi
+          fi
+          echo "::endgroup::"
+        done
+
+        if [ "$FAIL" -ne 0 ]; then
+          echo "status=failed" >> "$GITHUB_OUTPUT"
+          echo "::error::${FAIL} manifest(s) failed validation."
+          exit 1
+        fi
+        echo "status=passed" >> "$GITHUB_OUTPUT"
+        echo "::notice::All manifests passed validation + Constitution scan."

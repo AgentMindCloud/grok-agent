@@ -1,0 +1,615 @@
+{
+  "computed_at": "2026-05-09T16:03:53.916538+00:00",
+  "constitution_version": "1.0",
+  "scanner_version": "0.1.0",
+  "formula": "0.4*scanner + 0.3*eval + 0.2*provenance + 0.1*stability",
+  "weights": {
+    "scanner": 0.4,
+    "eval": 0.3,
+    "provenance": 0.2,
+    "stability": 0.1
+  },
+  "tier_thresholds": {
+    "A": 90,
+    "B": 75,
+    "C": 60,
+    "D": 0
+  },
+  "manifest_count": 33,
+  "agents": {
+    "ab-test-suggester": {
+      "slug": "ab-test-suggester",
+      "category": "creator",
+      "kind": "creator-template",
+      "score": 40,
+      "tier": "D",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 0.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/creator/ab-test-suggester/grok-agent.yaml"
+    },
+    "agent-swarm-with-shared-memory": {
+      "slug": "agent-swarm-with-shared-memory",
+      "category": "super-agents",
+      "kind": "super-agent",
+      "score": 60,
+      "tier": "C",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 1.0,
+        "stability": 0.0333
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 3
+      },
+      "manifest_path": "templates/super-agents/agent-swarm-with-shared-memory/grok-agent.yaml"
+    },
+    "analytics-summarizer": {
+      "slug": "analytics-summarizer",
+      "category": "creator",
+      "kind": "creator-template",
+      "score": 40,
+      "tier": "D",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 0.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/creator/analytics-summarizer/grok-agent.yaml"
+    },
+    "brand-voice-trainer": {
+      "slug": "brand-voice-trainer",
+      "category": "creator",
+      "kind": "creator-template",
+      "score": 40,
+      "tier": "D",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 0.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/creator/brand-voice-trainer/grok-agent.yaml"
+    },
+    "comment-engagement-booster": {
+      "slug": "comment-engagement-booster",
+      "category": "creator",
+      "kind": "creator-template",
+      "score": 40,
+      "tier": "D",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 0.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/creator/comment-engagement-booster/grok-agent.yaml"
+    },
+    "competitor-watch": {
+      "slug": "competitor-watch",
+      "category": "creator",
+      "kind": "creator-template",
+      "score": 40,
+      "tier": "D",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 0.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/creator/competitor-watch/grok-agent.yaml"
+    },
+    "content-calendar-builder": {
+      "slug": "content-calendar-builder",
+      "category": "creator",
+      "kind": "creator-template",
+      "score": 40,
+      "tier": "D",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 0.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/creator/content-calendar-builder/grok-agent.yaml"
+    },
+    "content-idea-generator": {
+      "slug": "content-idea-generator",
+      "category": "creator",
+      "kind": "creator-template",
+      "score": 41,
+      "tier": "D",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 0.0,
+        "stability": 0.0556
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 5
+      },
+      "manifest_path": "templates/creator/content-idea-generator/grok-agent.yaml"
+    },
+    "content-recycler": {
+      "slug": "content-recycler",
+      "category": "creator",
+      "kind": "creator-template",
+      "score": 40,
+      "tier": "D",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 0.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/creator/content-recycler/grok-agent.yaml"
+    },
+    "cross-platform-reposter": {
+      "slug": "cross-platform-reposter",
+      "category": "creator",
+      "kind": "creator-template",
+      "score": 40,
+      "tier": "D",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 0.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/creator/cross-platform-reposter/grok-agent.yaml"
+    },
+    "cross-reality-action-fabric": {
+      "slug": "cross-reality-action-fabric",
+      "category": "super-agents",
+      "kind": "super-agent",
+      "score": 90,
+      "tier": "A",
+      "components": {
+        "scanner": 1.0,
+        "eval": 1.0,
+        "provenance": 1.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/super-agents/cross-reality-action-fabric/grok-agent.yaml"
+    },
+    "daily-briefing-agent": {
+      "slug": "daily-briefing-agent",
+      "category": "general",
+      "kind": "agent",
+      "score": 60,
+      "tier": "C",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 1.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/general/daily-briefing-agent/grok-agent.yaml"
+    },
+    "dm-triager": {
+      "slug": "dm-triager",
+      "category": "creator",
+      "kind": "creator-template",
+      "score": 40,
+      "tier": "D",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 0.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/creator/dm-triager/grok-agent.yaml"
+    },
+    "follower-quality-analyzer": {
+      "slug": "follower-quality-analyzer",
+      "category": "creator",
+      "kind": "creator-template",
+      "score": 40,
+      "tier": "D",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 0.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/creator/follower-quality-analyzer/grok-agent.yaml"
+    },
+    "growth-experiment-runner": {
+      "slug": "growth-experiment-runner",
+      "category": "creator",
+      "kind": "creator-template",
+      "score": 40,
+      "tier": "D",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 0.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/creator/growth-experiment-runner/grok-agent.yaml"
+    },
+    "hashtag-strategy-advisor": {
+      "slug": "hashtag-strategy-advisor",
+      "category": "creator",
+      "kind": "creator-template",
+      "score": 40,
+      "tier": "D",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 0.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/creator/hashtag-strategy-advisor/grok-agent.yaml"
+    },
+    "living-narrative-fabric": {
+      "slug": "living-narrative-fabric",
+      "category": "super-agents",
+      "kind": "super-agent",
+      "score": 90,
+      "tier": "A",
+      "components": {
+        "scanner": 1.0,
+        "eval": 1.0,
+        "provenance": 1.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/super-agents/living-narrative-fabric/grok-agent.yaml"
+    },
+    "mention-summarizer": {
+      "slug": "mention-summarizer",
+      "category": "x-native",
+      "kind": "x-native",
+      "score": 40,
+      "tier": "D",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 0.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/x-native/mention-summarizer/grok-agent.yaml"
+    },
+    "monetization-optimizer": {
+      "slug": "monetization-optimizer",
+      "category": "creator",
+      "kind": "creator-template",
+      "score": 40,
+      "tier": "D",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 0.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/creator/monetization-optimizer/grok-agent.yaml"
+    },
+    "narrative-contradiction-detector": {
+      "slug": "narrative-contradiction-detector",
+      "category": "super-agents",
+      "kind": "super-agent",
+      "score": 60,
+      "tier": "C",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 1.0,
+        "stability": 0.0333
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 3
+      },
+      "manifest_path": "templates/super-agents/narrative-contradiction-detector/grok-agent.yaml"
+    },
+    "niche-influencer-finder": {
+      "slug": "niche-influencer-finder",
+      "category": "creator",
+      "kind": "creator-template",
+      "score": 40,
+      "tier": "D",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 0.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/creator/niche-influencer-finder/grok-agent.yaml"
+    },
+    "provenance-first-trust-engine": {
+      "slug": "provenance-first-trust-engine",
+      "category": "super-agents",
+      "kind": "super-agent",
+      "score": 60,
+      "tier": "C",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 1.0,
+        "stability": 0.0333
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 3
+      },
+      "manifest_path": "templates/super-agents/provenance-first-trust-engine/grok-agent.yaml"
+    },
+    "quote-tweet-suggestor": {
+      "slug": "quote-tweet-suggestor",
+      "category": "creator",
+      "kind": "creator-template",
+      "score": 41,
+      "tier": "D",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 0.0,
+        "stability": 0.0556
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 5
+      },
+      "manifest_path": "templates/creator/quote-tweet-suggestor/grok-agent.yaml"
+    },
+    "reply-drafter": {
+      "slug": "reply-drafter",
+      "category": "creator",
+      "kind": "creator-template",
+      "score": 41,
+      "tier": "D",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 0.0,
+        "stability": 0.0556
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 5
+      },
+      "manifest_path": "templates/creator/reply-drafter/grok-agent.yaml"
+    },
+    "research-assistant": {
+      "slug": "research-assistant",
+      "category": "general",
+      "kind": "agent",
+      "score": 60,
+      "tier": "C",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 1.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/general/research-assistant/grok-agent.yaml"
+    },
+    "self-evolving-personal-os": {
+      "slug": "self-evolving-personal-os",
+      "category": "super-agents",
+      "kind": "super-agent",
+      "score": 90,
+      "tier": "A",
+      "components": {
+        "scanner": 1.0,
+        "eval": 1.0,
+        "provenance": 1.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/super-agents/self-evolving-personal-os/grok-agent.yaml"
+    },
+    "thread-builder": {
+      "slug": "thread-builder",
+      "category": "creator",
+      "kind": "creator-template",
+      "score": 40,
+      "tier": "D",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 0.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/creator/thread-builder/grok-agent.yaml"
+    },
+    "trend-aligned-poster": {
+      "slug": "trend-aligned-poster",
+      "category": "x-native",
+      "kind": "x-native",
+      "score": 40,
+      "tier": "D",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 0.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/x-native/trend-aligned-poster/grok-agent.yaml"
+    },
+    "x-creator-payout-optimizer": {
+      "slug": "x-creator-payout-optimizer",
+      "category": "finance",
+      "kind": "creator-payout-optimizer",
+      "score": 60,
+      "tier": "C",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 1.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/finance/x-creator-payout-optimizer/grok-agent.yaml"
+    },
+    "x-money-companion-dashboard": {
+      "slug": "x-money-companion-dashboard",
+      "category": "finance",
+      "kind": "finance-dashboard",
+      "score": 60,
+      "tier": "C",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 1.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/finance/x-money-companion-dashboard/grok-agent.yaml"
+    },
+    "x-money-vision-analyzer": {
+      "slug": "x-money-vision-analyzer",
+      "category": "finance",
+      "kind": "vision-analyzer",
+      "score": 60,
+      "tier": "C",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 1.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/finance/x-money-vision-analyzer/grok-agent.yaml"
+    },
+    "x-smart-cashtag-alpha-engine": {
+      "slug": "x-smart-cashtag-alpha-engine",
+      "category": "finance",
+      "kind": "alpha-engine",
+      "score": 60,
+      "tier": "C",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 1.0,
+        "stability": 0.0444
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 4
+      },
+      "manifest_path": "templates/finance/x-smart-cashtag-alpha-engine/grok-agent.yaml"
+    },
+    "zero-config-i-want-to-agent": {
+      "slug": "zero-config-i-want-to-agent",
+      "category": "super-agents",
+      "kind": "super-agent",
+      "score": 60,
+      "tier": "C",
+      "components": {
+        "scanner": 1.0,
+        "eval": 0.0,
+        "provenance": 1.0,
+        "stability": 0.0333
+      },
+      "details": {
+        "scanner_error_count": 0,
+        "manifest_age_days": 3
+      },
+      "manifest_path": "templates/super-agents/zero-config-i-want-to-agent/grok-agent.yaml"
+    }
+  }
+}

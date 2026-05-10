@@ -1,0 +1,22 @@
+{
+  "name": "grok-agent-docs",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "VitePress documentation site for Grok Agent OS. Built for xAI, X, Grok and the ecosystem community.",
+  "homepage": "https://github.com/AgentMindCloud/grok-agent",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AgentMindCloud/grok-agent.git",
+    "directory": "docs"
+  },
+  "scripts": {
+    "docs:dev": "vitepress dev .",
+    "docs:build": "vitepress build .",
+    "docs:preview": "vitepress preview ."
+  },
+  "devDependencies": {
+    "vitepress": "^1.5.0",
+    "vue": "^3.5.0"
+  }
+}

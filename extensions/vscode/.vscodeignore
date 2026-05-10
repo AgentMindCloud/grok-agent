@@ -1,0 +1,16 @@
+# Copyright 2026 AgentMindCloud — Apache-2.0
+#
+# Files NOT to ship inside the .vsix bundle. Keeps the package small.
+
+.vscode/**
+node_modules/**
+*.vsix
+
+# Source-control noise
+.git/**
+.gitignore
+.eslintrc.*
+
+# Generation tooling — the schema is bundled (schemas/) but we don't
+# need to ship the script that produced it.
+scripts/**

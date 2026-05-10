@@ -1,0 +1,593 @@
+{
+  "computed_at": "2026-05-09T16:44:57.916732+00:00",
+  "scanner_version": "0.1.0",
+  "constitution_version": "1.0",
+  "manifest_count": 33,
+  "checks_per_manifest": 34,
+  "summary": {
+    "total_findings": 18,
+    "by_severity": {
+      "error": 0,
+      "warn": 0,
+      "info": 18
+    },
+    "by_article": {
+      "VII": 10,
+      "VIII": 8
+    },
+    "by_check": {
+      "AUD-001": 8,
+      "BR-003b": 10
+    },
+    "manifests_clean": 27,
+    "manifests_with_findings": 10
+  },
+  "by_manifest": {
+    "ab-test-suggester": {
+      "manifest_path": "templates/creator/ab-test-suggester/grok-agent.yaml",
+      "category": "creator",
+      "kind": "creator-template",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "agent-swarm-with-shared-memory": {
+      "manifest_path": "templates/super-agents/agent-swarm-with-shared-memory/grok-agent.yaml",
+      "category": "super-agents",
+      "kind": "super-agent",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "analytics-summarizer": {
+      "manifest_path": "templates/creator/analytics-summarizer/grok-agent.yaml",
+      "category": "creator",
+      "kind": "creator-template",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "brand-voice-trainer": {
+      "manifest_path": "templates/creator/brand-voice-trainer/grok-agent.yaml",
+      "category": "creator",
+      "kind": "creator-template",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "comment-engagement-booster": {
+      "manifest_path": "templates/creator/comment-engagement-booster/grok-agent.yaml",
+      "category": "creator",
+      "kind": "creator-template",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "competitor-watch": {
+      "manifest_path": "templates/creator/competitor-watch/grok-agent.yaml",
+      "category": "creator",
+      "kind": "creator-template",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "content-calendar-builder": {
+      "manifest_path": "templates/creator/content-calendar-builder/grok-agent.yaml",
+      "category": "creator",
+      "kind": "creator-template",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "content-idea-generator": {
+      "manifest_path": "templates/creator/content-idea-generator/grok-agent.yaml",
+      "category": "creator",
+      "kind": "creator-template",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": [
+        {
+          "check": "AUD-001",
+          "severity": "info",
+          "message": "safety.scanner_severity_floor is not declared; defaulting to 'warn' is recommended",
+          "article": "VIII",
+          "location": "safety.scanner_severity_floor"
+        }
+      ]
+    },
+    "content-recycler": {
+      "manifest_path": "templates/creator/content-recycler/grok-agent.yaml",
+      "category": "creator",
+      "kind": "creator-template",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "cross-platform-reposter": {
+      "manifest_path": "templates/creator/cross-platform-reposter/grok-agent.yaml",
+      "category": "creator",
+      "kind": "creator-template",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "cross-reality-action-fabric": {
+      "manifest_path": "templates/super-agents/cross-reality-action-fabric/grok-agent.yaml",
+      "category": "super-agents",
+      "kind": "super-agent",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "daily-briefing-agent": {
+      "manifest_path": "templates/general/daily-briefing-agent/grok-agent.yaml",
+      "category": "general",
+      "kind": "agent",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": [
+        {
+          "check": "AUD-001",
+          "severity": "info",
+          "message": "safety.scanner_severity_floor is not declared; defaulting to 'warn' is recommended",
+          "article": "VIII",
+          "location": "safety.scanner_severity_floor"
+        }
+      ]
+    },
+    "dm-triager": {
+      "manifest_path": "templates/creator/dm-triager/grok-agent.yaml",
+      "category": "creator",
+      "kind": "creator-template",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "follower-quality-analyzer": {
+      "manifest_path": "templates/creator/follower-quality-analyzer/grok-agent.yaml",
+      "category": "creator",
+      "kind": "creator-template",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "growth-experiment-runner": {
+      "manifest_path": "templates/creator/growth-experiment-runner/grok-agent.yaml",
+      "category": "creator",
+      "kind": "creator-template",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "hashtag-strategy-advisor": {
+      "manifest_path": "templates/creator/hashtag-strategy-advisor/grok-agent.yaml",
+      "category": "creator",
+      "kind": "creator-template",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "living-narrative-fabric": {
+      "manifest_path": "templates/super-agents/living-narrative-fabric/grok-agent.yaml",
+      "category": "super-agents",
+      "kind": "super-agent",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": [
+        {
+          "check": "BR-003b",
+          "severity": "info",
+          "message": "bridges.links contains 'analytics-summarizer' which is not a super-agent; registry tracks only super-agent citations, so this is informational",
+          "article": "VII",
+          "location": "bridges.links"
+        },
+        {
+          "check": "BR-003b",
+          "severity": "info",
+          "message": "bridges.links contains 'competitor-watch' which is not a super-agent; registry tracks only super-agent citations, so this is informational",
+          "article": "VII",
+          "location": "bridges.links"
+        },
+        {
+          "check": "BR-003b",
+          "severity": "info",
+          "message": "bridges.links contains 'content-idea-generator' which is not a super-agent; registry tracks only super-agent citations, so this is informational",
+          "article": "VII",
+          "location": "bridges.links"
+        },
+        {
+          "check": "BR-003b",
+          "severity": "info",
+          "message": "bridges.links contains 'research-assistant' which is not a super-agent; registry tracks only super-agent citations, so this is informational",
+          "article": "VII",
+          "location": "bridges.links"
+        },
+        {
+          "check": "BR-003b",
+          "severity": "info",
+          "message": "bridges.links contains 'x-money-companion-dashboard' which is not a super-agent; registry tracks only super-agent citations, so this is informational",
+          "article": "VII",
+          "location": "bridges.links"
+        }
+      ]
+    },
+    "mention-summarizer": {
+      "manifest_path": "templates/x-native/mention-summarizer/grok-agent.yaml",
+      "category": "x-native",
+      "kind": "x-native",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": [
+        {
+          "check": "AUD-001",
+          "severity": "info",
+          "message": "safety.scanner_severity_floor is not declared; defaulting to 'warn' is recommended",
+          "article": "VIII",
+          "location": "safety.scanner_severity_floor"
+        }
+      ]
+    },
+    "monetization-optimizer": {
+      "manifest_path": "templates/creator/monetization-optimizer/grok-agent.yaml",
+      "category": "creator",
+      "kind": "creator-template",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "narrative-contradiction-detector": {
+      "manifest_path": "templates/super-agents/narrative-contradiction-detector/grok-agent.yaml",
+      "category": "super-agents",
+      "kind": "super-agent",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "niche-influencer-finder": {
+      "manifest_path": "templates/creator/niche-influencer-finder/grok-agent.yaml",
+      "category": "creator",
+      "kind": "creator-template",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "provenance-first-trust-engine": {
+      "manifest_path": "templates/super-agents/provenance-first-trust-engine/grok-agent.yaml",
+      "category": "super-agents",
+      "kind": "super-agent",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "quote-tweet-suggestor": {
+      "manifest_path": "templates/creator/quote-tweet-suggestor/grok-agent.yaml",
+      "category": "creator",
+      "kind": "creator-template",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": [
+        {
+          "check": "AUD-001",
+          "severity": "info",
+          "message": "safety.scanner_severity_floor is not declared; defaulting to 'warn' is recommended",
+          "article": "VIII",
+          "location": "safety.scanner_severity_floor"
+        }
+      ]
+    },
+    "reply-drafter": {
+      "manifest_path": "templates/creator/reply-drafter/grok-agent.yaml",
+      "category": "creator",
+      "kind": "creator-template",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "research-assistant": {
+      "manifest_path": "templates/general/research-assistant/grok-agent.yaml",
+      "category": "general",
+      "kind": "agent",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": [
+        {
+          "check": "AUD-001",
+          "severity": "info",
+          "message": "safety.scanner_severity_floor is not declared; defaulting to 'warn' is recommended",
+          "article": "VIII",
+          "location": "safety.scanner_severity_floor"
+        }
+      ]
+    },
+    "self-evolving-personal-os": {
+      "manifest_path": "templates/super-agents/self-evolving-personal-os/grok-agent.yaml",
+      "category": "super-agents",
+      "kind": "super-agent",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": [
+        {
+          "check": "BR-003b",
+          "severity": "info",
+          "message": "bridges.links contains 'content-idea-generator' which is not a super-agent; registry tracks only super-agent citations, so this is informational",
+          "article": "VII",
+          "location": "bridges.links"
+        },
+        {
+          "check": "BR-003b",
+          "severity": "info",
+          "message": "bridges.links contains 'dm-triager' which is not a super-agent; registry tracks only super-agent citations, so this is informational",
+          "article": "VII",
+          "location": "bridges.links"
+        },
+        {
+          "check": "BR-003b",
+          "severity": "info",
+          "message": "bridges.links contains 'follower-quality-analyzer' which is not a super-agent; registry tracks only super-agent citations, so this is informational",
+          "article": "VII",
+          "location": "bridges.links"
+        },
+        {
+          "check": "BR-003b",
+          "severity": "info",
+          "message": "bridges.links contains 'mention-summarizer' which is not a super-agent; registry tracks only super-agent citations, so this is informational",
+          "article": "VII",
+          "location": "bridges.links"
+        },
+        {
+          "check": "BR-003b",
+          "severity": "info",
+          "message": "bridges.links contains 'reply-drafter' which is not a super-agent; registry tracks only super-agent citations, so this is informational",
+          "article": "VII",
+          "location": "bridges.links"
+        }
+      ]
+    },
+    "thread-builder": {
+      "manifest_path": "templates/creator/thread-builder/grok-agent.yaml",
+      "category": "creator",
+      "kind": "creator-template",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "trend-aligned-poster": {
+      "manifest_path": "templates/x-native/trend-aligned-poster/grok-agent.yaml",
+      "category": "x-native",
+      "kind": "x-native",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": [
+        {
+          "check": "AUD-001",
+          "severity": "info",
+          "message": "safety.scanner_severity_floor is not declared; defaulting to 'warn' is recommended",
+          "article": "VIII",
+          "location": "safety.scanner_severity_floor"
+        }
+      ]
+    },
+    "x-creator-payout-optimizer": {
+      "manifest_path": "templates/finance/x-creator-payout-optimizer/grok-agent.yaml",
+      "category": "finance",
+      "kind": "creator-payout-optimizer",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "x-money-companion-dashboard": {
+      "manifest_path": "templates/finance/x-money-companion-dashboard/grok-agent.yaml",
+      "category": "finance",
+      "kind": "finance-dashboard",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "x-money-vision-analyzer": {
+      "manifest_path": "templates/finance/x-money-vision-analyzer/grok-agent.yaml",
+      "category": "finance",
+      "kind": "vision-analyzer",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "x-smart-cashtag-alpha-engine": {
+      "manifest_path": "templates/finance/x-smart-cashtag-alpha-engine/grok-agent.yaml",
+      "category": "finance",
+      "kind": "alpha-engine",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    },
+    "zero-config-i-want-to-agent": {
+      "manifest_path": "templates/super-agents/zero-config-i-want-to-agent/grok-agent.yaml",
+      "category": "super-agents",
+      "kind": "super-agent",
+      "max_severity": "info",
+      "has_errors": false,
+      "findings": []
+    }
+  },
+  "findings": [
+    {
+      "slug": "content-idea-generator",
+      "category": "creator",
+      "manifest_path": "templates/creator/content-idea-generator/grok-agent.yaml",
+      "check": "AUD-001",
+      "severity": "info",
+      "message": "safety.scanner_severity_floor is not declared; defaulting to 'warn' is recommended",
+      "article": "VIII",
+      "location": "safety.scanner_severity_floor"
+    },
+    {
+      "slug": "daily-briefing-agent",
+      "category": "creator",
+      "manifest_path": "templates/creator/daily-briefing-agent/grok-agent.yaml",
+      "check": "AUD-001",
+      "severity": "info",
+      "message": "safety.scanner_severity_floor is not declared; defaulting to 'warn' is recommended",
+      "article": "VIII",
+      "location": "safety.scanner_severity_floor"
+    },
+    {
+      "slug": "daily-briefing-agent",
+      "category": "general",
+      "manifest_path": "templates/general/daily-briefing-agent/grok-agent.yaml",
+      "check": "AUD-001",
+      "severity": "info",
+      "message": "safety.scanner_severity_floor is not declared; defaulting to 'warn' is recommended",
+      "article": "VIII",
+      "location": "safety.scanner_severity_floor"
+    },
+    {
+      "slug": "living-narrative-fabric",
+      "category": "super-agents",
+      "manifest_path": "templates/super-agents/living-narrative-fabric/grok-agent.yaml",
+      "check": "BR-003b",
+      "severity": "info",
+      "message": "bridges.links contains 'analytics-summarizer' which is not a super-agent; registry tracks only super-agent citations, so this is informational",
+      "article": "VII",
+      "location": "bridges.links"
+    },
+    {
+      "slug": "living-narrative-fabric",
+      "category": "super-agents",
+      "manifest_path": "templates/super-agents/living-narrative-fabric/grok-agent.yaml",
+      "check": "BR-003b",
+      "severity": "info",
+      "message": "bridges.links contains 'competitor-watch' which is not a super-agent; registry tracks only super-agent citations, so this is informational",
+      "article": "VII",
+      "location": "bridges.links"
+    },
+    {
+      "slug": "living-narrative-fabric",
+      "category": "super-agents",
+      "manifest_path": "templates/super-agents/living-narrative-fabric/grok-agent.yaml",
+      "check": "BR-003b",
+      "severity": "info",
+      "message": "bridges.links contains 'content-idea-generator' which is not a super-agent; registry tracks only super-agent citations, so this is informational",
+      "article": "VII",
+      "location": "bridges.links"
+    },
+    {
+      "slug": "living-narrative-fabric",
+      "category": "super-agents",
+      "manifest_path": "templates/super-agents/living-narrative-fabric/grok-agent.yaml",
+      "check": "BR-003b",
+      "severity": "info",
+      "message": "bridges.links contains 'research-assistant' which is not a super-agent; registry tracks only super-agent citations, so this is informational",
+      "article": "VII",
+      "location": "bridges.links"
+    },
+    {
+      "slug": "living-narrative-fabric",
+      "category": "super-agents",
+      "manifest_path": "templates/super-agents/living-narrative-fabric/grok-agent.yaml",
+      "check": "BR-003b",
+      "severity": "info",
+      "message": "bridges.links contains 'x-money-companion-dashboard' which is not a super-agent; registry tracks only super-agent citations, so this is informational",
+      "article": "VII",
+      "location": "bridges.links"
+    },
+    {
+      "slug": "mention-summarizer",
+      "category": "x-native",
+      "manifest_path": "templates/x-native/mention-summarizer/grok-agent.yaml",
+      "check": "AUD-001",
+      "severity": "info",
+      "message": "safety.scanner_severity_floor is not declared; defaulting to 'warn' is recommended",
+      "article": "VIII",
+      "location": "safety.scanner_severity_floor"
+    },
+    {
+      "slug": "quote-tweet-suggestor",
+      "category": "creator",
+      "manifest_path": "templates/creator/quote-tweet-suggestor/grok-agent.yaml",
+      "check": "AUD-001",
+      "severity": "info",
+      "message": "safety.scanner_severity_floor is not declared; defaulting to 'warn' is recommended",
+      "article": "VIII",
+      "location": "safety.scanner_severity_floor"
+    },
+    {
+      "slug": "research-assistant",
+      "category": "creator",
+      "manifest_path": "templates/creator/research-assistant/grok-agent.yaml",
+      "check": "AUD-001",
+      "severity": "info",
+      "message": "safety.scanner_severity_floor is not declared; defaulting to 'warn' is recommended",
+      "article": "VIII",
+      "location": "safety.scanner_severity_floor"
+    },
+    {
+      "slug": "research-assistant",
+      "category": "general",
+      "manifest_path": "templates/general/research-assistant/grok-agent.yaml",
+      "check": "AUD-001",
+      "severity": "info",
+      "message": "safety.scanner_severity_floor is not declared; defaulting to 'warn' is recommended",
+      "article": "VIII",
+      "location": "safety.scanner_severity_floor"
+    },
+    {
+      "slug": "self-evolving-personal-os",
+      "category": "super-agents",
+      "manifest_path": "templates/super-agents/self-evolving-personal-os/grok-agent.yaml",
+      "check": "BR-003b",
+      "severity": "info",
+      "message": "bridges.links contains 'content-idea-generator' which is not a super-agent; registry tracks only super-agent citations, so this is informational",
+      "article": "VII",
+      "location": "bridges.links"
+    },
+    {
+      "slug": "self-evolving-personal-os",
+      "category": "super-agents",
+      "manifest_path": "templates/super-agents/self-evolving-personal-os/grok-agent.yaml",
+      "check": "BR-003b",
+      "severity": "info",
+      "message": "bridges.links contains 'dm-triager' which is not a super-agent; registry tracks only super-agent citations, so this is informational",
+      "article": "VII",
+      "location": "bridges.links"
+    },
+    {
+      "slug": "self-evolving-personal-os",
+      "category": "super-agents",
+      "manifest_path": "templates/super-agents/self-evolving-personal-os/grok-agent.yaml",
+      "check": "BR-003b",
+      "severity": "info",
+      "message": "bridges.links contains 'follower-quality-analyzer' which is not a super-agent; registry tracks only super-agent citations, so this is informational",
+      "article": "VII",
+      "location": "bridges.links"
+    },
+    {
+      "slug": "self-evolving-personal-os",
+      "category": "super-agents",
+      "manifest_path": "templates/super-agents/self-evolving-personal-os/grok-agent.yaml",
+      "check": "BR-003b",
+      "severity": "info",
+      "message": "bridges.links contains 'mention-summarizer' which is not a super-agent; registry tracks only super-agent citations, so this is informational",
+      "article": "VII",
+      "location": "bridges.links"
+    },
+    {
+      "slug": "self-evolving-personal-os",
+      "category": "super-agents",
+      "manifest_path": "templates/super-agents/self-evolving-personal-os/grok-agent.yaml",
+      "check": "BR-003b",
+      "severity": "info",
+      "message": "bridges.links contains 'reply-drafter' which is not a super-agent; registry tracks only super-agent citations, so this is informational",
+      "article": "VII",
+      "location": "bridges.links"
+    },
+    {
+      "slug": "trend-aligned-poster",
+      "category": "x-native",
+      "manifest_path": "templates/x-native/trend-aligned-poster/grok-agent.yaml",
+      "check": "AUD-001",
+      "severity": "info",
+      "message": "safety.scanner_severity_floor is not declared; defaulting to 'warn' is recommended",
+      "article": "VIII",
+      "location": "safety.scanner_severity_floor"
+    }
+  ]
+}

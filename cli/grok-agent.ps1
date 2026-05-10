@@ -61,7 +61,11 @@ param(
     [switch]$FromStdin,
     [switch]$Force,
     [switch]$Quiet,
-    [switch]$NoBanner
+    [switch]$NoBanner,
+    # P178: -Explain <code> prints the cli/error-codes.md entry for the
+    # given E-XXXX-NNN code without running any other command. Useful when
+    # a previous run printed an error code and the user wants the fix.
+    [string]$Explain
 )
 
 $ErrorActionPreference = 'Stop'
@@ -337,6 +341,10 @@ function Show-Help {
     Write-Host '    validate <path>                   Validate a manifest against v2.15'
     Write-Host '    list                              List installed agents'
     Write-Host '    run <name>                        Launch an installed agent'
+    Write-Host '    doctor                            Run environment health check'
+    Write-Host ''
+    Write-Host '  FLAGS' -ForegroundColor White
+    Write-Host '    -Explain <E-XXXX-NNN>             Print fix for an error code (cli/error-codes.md)'
     Write-Host ''
     Write-Host '  EXAMPLES' -ForegroundColor White
     Write-Host '    .\cli\grok-agent.ps1 new my-first-agent'
@@ -676,6 +684,27 @@ function Invoke-Install {
 
     Write-Ok ("Installed '{0}' at {1}" -f $name, $dest)
     Write-Info ("Run it with: .\cli\grok-agent.ps1 run {0}" -f $name)
+
+    # P178: ASCII install-flow recap. Visual confirmation of every gate
+    # the manifest just passed through. Pure delight, zero side-effects.
+    if (-not $Quiet) {
+        Write-Host ''
+        Write-Host '  +------------------------------------------------------------+' -ForegroundColor DarkGreen
+        Write-Host '  |   Install flow                                             |' -ForegroundColor DarkGreen
+        Write-Host '  +------------------------------------------------------------+' -ForegroundColor DarkGreen
+        Write-Host ('  |   [v]  v2.15 surface check                                 |' ) -ForegroundColor Green
+        if ($py.Available -and $py.ExitCode -eq 0) {
+            Write-Host  '  |   [v]  Pydantic deep schema validation                     |' -ForegroundColor Green
+        } else {
+            Write-Host  '  |   [-]  Pydantic deep schema validation (skipped)           |' -ForegroundColor DarkGray
+        }
+        Write-Host  '  |   [v]  Copied to AppData                                   |' -ForegroundColor Green
+        Write-Host  '  |   [v]  Launcher resolution: ready                          |' -ForegroundColor Green
+        Write-Host  '  +------------------------------------------------------------+' -ForegroundColor DarkGreen
+        Write-Host ('  |   {0,-58} |' -f $Script:Tagline) -ForegroundColor Yellow
+        Write-Host  '  +------------------------------------------------------------+' -ForegroundColor DarkGreen
+        Write-Host ''
+    }
 }
 
 function Invoke-Validate {
@@ -847,6 +876,169 @@ function Invoke-Run {
 }
 
 # ============================================================================
+# P178: Invoke-Explain — print the error-codes.md entry for one code.
+# ============================================================================
+
+function Invoke-Explain {
+    param([Parameter(Mandatory)][string]$Code)
+
+    $codePattern = '^E-[A-Z]+-[0-9]{3}$'
+    if ($Code -notmatch $codePattern) {
+        Write-Err2 ("Not an error code: '{0}'. Format: E-XXXX-NNN (e.g. E-INSTALL-002)." -f $Code)
+        Write-Info 'Run: .\cli\grok-agent.ps1 -Explain E-CLI-001 (or any code from a recent failure).'
+        exit 64
+    }
+
+    $errorsDoc = Join-Path $Script:ScriptRoot 'error-codes.md'
+    if (-not (Test-Path -LiteralPath $errorsDoc)) {
+        Write-Err2 ("error-codes.md not found at {0}" -f $errorsDoc)
+        exit 66
+    }
+
+    Write-Banner
+    $lines = Get-Content -LiteralPath $errorsDoc -Encoding UTF8
+    $heading = '## ' + $Code + ' '
+    $startIdx = -1
+    for ($i = 0; $i -lt $lines.Count; $i++) {
+        if ($lines[$i].StartsWith($heading)) { $startIdx = $i; break }
+    }
+    if ($startIdx -eq -1) {
+        Write-Err2 ("Unknown error code: {0}" -f $Code)
+        Write-Info 'See cli/error-codes.md for the full list.'
+        exit 66
+    }
+
+    # Print from $startIdx until the next `## ` or end of file.
+    Write-Host ''
+    for ($i = $startIdx; $i -lt $lines.Count; $i++) {
+        if ($i -gt $startIdx -and $lines[$i].StartsWith('## ')) { break }
+        if ($lines[$i].StartsWith('---')) { break }
+        Write-Host $lines[$i]
+    }
+    Write-Host ''
+    Write-Info 'Full reference: cli/error-codes.md'
+}
+
+# ============================================================================
+# P178: Invoke-Doctor — first-run + ongoing health-check.
+#   Checks Python, pydantic/pyyaml, pwsh version, AppData writability, repo
+#   layout (cli/grok-agent.py + safety/scanner.py + spec/v2.15/grok-agent.yaml).
+#   Each check is independent; the worst-severity finding determines the exit.
+# ============================================================================
+
+function Invoke-Doctor {
+    Initialize-AppDataLayout
+    Write-Banner
+    Write-Host '  doctor — environment health check' -ForegroundColor White
+    Write-Host '  ----------------------------------' -ForegroundColor DarkGray
+
+    $failures = New-Object System.Collections.Generic.List[string]
+    $warnings = New-Object System.Collections.Generic.List[string]
+
+    function _Doctor-Pass { param([string]$Msg) Write-Host ('  [v] ' + $Msg) -ForegroundColor Green }
+    function _Doctor-Warn { param([string]$Msg) Write-Host ('  [!] ' + $Msg) -ForegroundColor Yellow; $warnings.Add($Msg) | Out-Null }
+    function _Doctor-Fail { param([string]$Msg, [string]$Fix) Write-Host ('  [x] ' + $Msg) -ForegroundColor Red; Write-Host ('      fix: ' + $Fix) -ForegroundColor DarkGray; $failures.Add($Msg) | Out-Null }
+
+    # --- 1. PowerShell version --------------------------------------------
+    $psVersion = $PSVersionTable.PSVersion
+    if ($psVersion.Major -ge 5) {
+        _Doctor-Pass ("PowerShell {0} (>= 5.1 required)" -f $psVersion)
+    } else {
+        _Doctor-Fail ("PowerShell {0} is older than 5.1" -f $psVersion) 'Upgrade to Windows PowerShell 5.1 or PowerShell 7+.'
+    }
+
+    # --- 2. Python on PATH -------------------------------------------------
+    if (Test-PythonAvailable) {
+        $py = Get-Command python -ErrorAction SilentlyContinue
+        if (-not $py) { $py = Get-Command python3 -ErrorAction SilentlyContinue }
+        $pyVer = & $py.Source --version 2>&1
+        _Doctor-Pass ("Python found: {0} ({1})" -f $pyVer, $py.Source)
+    } else {
+        _Doctor-Fail 'Python not on PATH' 'Install Python 3.12+ from https://www.python.org/downloads/ and re-open PowerShell.'
+    }
+
+    # --- 3. pydantic + pyyaml importable ----------------------------------
+    if (Test-PythonAvailable) {
+        $py = Get-Command python -ErrorAction SilentlyContinue
+        if (-not $py) { $py = Get-Command python3 -ErrorAction SilentlyContinue }
+        $probe = '
+import importlib, sys
+missing = []
+for mod in ("pydantic", "yaml"):
+    try:
+        importlib.import_module(mod)
+    except ImportError:
+        missing.append(mod)
+if missing:
+    sys.stderr.write("MISSING:" + ",".join(missing))
+    sys.exit(1)
+print("OK")
+'
+        $probeOut = & $py.Source -c $probe 2>&1
+        if ($LASTEXITCODE -eq 0) {
+            _Doctor-Pass 'Python deps importable: pydantic + pyyaml'
+        } else {
+            _Doctor-Fail ("Python deps missing: {0}" -f $probeOut) "python -m pip install 'pydantic>=2.7,<3' 'pyyaml>=6.0'"
+        }
+    } else {
+        _Doctor-Warn 'Skipping Python deps probe (Python not on PATH).'
+    }
+
+    # --- 4. AppData layout writable ---------------------------------------
+    try {
+        $probeFile = Join-Path $Script:AppDataRoot ('.doctor-probe-{0}' -f ([Guid]::NewGuid().ToString('N')))
+        Set-Content -LiteralPath $probeFile -Value 'ok' -Encoding UTF8
+        Remove-Item -LiteralPath $probeFile -Force -ErrorAction SilentlyContinue
+        _Doctor-Pass ("AppData writable: {0}" -f $Script:AppDataRoot)
+    } catch {
+        _Doctor-Fail ("AppData not writable: {0}" -f $Script:AppDataRoot) ("Grant write access to {0} for the current user." -f $Script:AppDataRoot)
+    }
+
+    # --- 5. ExecutionPolicy permits scripts -------------------------------
+    try {
+        $policy = Get-ExecutionPolicy -Scope CurrentUser
+        if ($policy -in @('Restricted', 'AllSigned', 'Default')) {
+            _Doctor-Warn ("ExecutionPolicy CurrentUser='{0}' may block .ps1 launchers" -f $policy)
+        } else {
+            _Doctor-Pass ("ExecutionPolicy CurrentUser='{0}'" -f $policy)
+        }
+    } catch {
+        _Doctor-Warn 'Could not read ExecutionPolicy on this platform.'
+    }
+
+    # --- 6. Repo layout sanity --------------------------------------------
+    $expected = @{
+        'cli/grok-agent.py'              = 'Python validator'
+        'safety/scanner.py'              = 'Constitution scanner'
+        'spec/v2.15/grok-agent.yaml'     = 'v2.15 spec'
+        'spec/v2.15/schema.json'         = 'JSON Schema export'
+        'spec/v2.15/openapi.yaml'        = 'OpenAPI export'
+    }
+    foreach ($rel in $expected.Keys) {
+        $abs = Join-Path $Script:RepoRoot $rel
+        if (Test-Path -LiteralPath $abs) {
+            _Doctor-Pass ("{0} ({1})" -f $rel, $expected[$rel])
+        } else {
+            _Doctor-Warn ("Missing: {0} ({1})" -f $rel, $expected[$rel])
+        }
+    }
+
+    # --- Summary -----------------------------------------------------------
+    Write-Host ''
+    if ($failures.Count -eq 0 -and $warnings.Count -eq 0) {
+        Write-Ok 'doctor: all checks passed.'
+        exit 0
+    }
+    if ($failures.Count -eq 0) {
+        Write-Warn2 ('doctor: {0} warning(s). Repo is usable; fix when convenient.' -f $warnings.Count)
+        exit 0
+    }
+    Write-Err2 ('doctor: {0} failure(s) and {1} warning(s).' -f $failures.Count, $warnings.Count)
+    Write-Info 'Re-run after fixing each [x] line above.'
+    exit 65
+}
+
+# ============================================================================
 # Dispatcher
 # ============================================================================
 
@@ -947,6 +1139,13 @@ function Invoke-EvalWeekly {
 }
 
 try {
+    # P178: -Explain short-circuits everything. The user is asking for the
+    # error-codes.md entry, not running a verb. Process before $Command.
+    if ($Explain) {
+        Invoke-Explain -Code $Explain
+        exit 0
+    }
+
     $cmd = $Command.ToLowerInvariant()
     switch ($cmd) {
         '-h'      { Show-Help; exit 0 }
@@ -958,11 +1157,12 @@ try {
         'validate' { Invoke-Validate -Rest $Arguments; exit 0 }
         'list'     { Invoke-List;                       exit 0 }
         'run'      { Invoke-Run      -Rest $Arguments; exit 0 }
+        'doctor'   { Invoke-Doctor; exit 0 }
         'eval-weekly' { Invoke-EvalWeekly;               exit 0 }
         ''         { Show-Help; exit 0 }
         default {
-            Write-Err2 ("Unknown command: '{0}'" -f $Command)
-            Write-Info 'Run: grok-agent.ps1 help'
+            Write-Err2 ("[E-CLI-001] Unknown command: '{0}'" -f $Command)
+            Write-Info 'Run: grok-agent.ps1 help  (or .\cli\grok-agent.ps1 -Explain E-CLI-001)'
             exit 64
         }
     }

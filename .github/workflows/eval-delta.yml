@@ -1,0 +1,82 @@
+# Copyright 2026 AgentMindCloud
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Built for xAI, X, Grok and the ecosystem community.
+# ---------------------------------------------------------------------------
+# Per-PR Super Agent eval delta.
+#
+# Triggered when a pull request touches any super-agent eval suite or
+# prompt set. Runs scripts/compute-eval-delta.py, which executes the
+# affected eval suites on both the merge base and the head, computes the
+# per-metric delta, and posts a sticky markdown comment back to the PR.
+#
+# fetch-depth: 0 is required so the script can git-checkout the merge
+# base SHA and re-run the suite there. The job degrades gracefully when
+# promptfoo or deepeval are not installed — see the script's docstring.
+#
+# Bash inside this YAML is permitted because the runner is ubuntu-latest;
+# every end-user instruction outside CI remains PowerShell-only per
+# CLAUDE.md.
+# ---------------------------------------------------------------------------
+
+name: Super Agent Eval Delta
+
+"on":
+  pull_request:
+    paths:
+      - "templates/super-agents/*/eval/**"
+      - "templates/super-agents/*/prompts/**"
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  eval-delta:
+    name: Compute base-vs-head eval delta and post sticky PR comment
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONUNBUFFERED: "1"
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_REPOSITORY: ${{ github.repository }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - name: Check out the PR with full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "::group::pip install"
+          python -m pip install --upgrade pip
+          python -m pip install pydantic pyyaml
+          echo "::endgroup::"
+
+      - name: Compute eval delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "::group::compute-eval-delta.py"
+          python scripts/compute-eval-delta.py
+          echo "::endgroup::"

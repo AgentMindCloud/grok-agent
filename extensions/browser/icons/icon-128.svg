@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2026 AgentMindCloud
+  Licensed under the Apache License, Version 2.0
+  http://www.apache.org/licenses/LICENSE-2.0
+  Built for xAI, X, Grok and the ecosystem community.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Grok Agent OS">
+  <rect width="128" height="128" rx="22" ry="22" fill="#1A1A1A"/>
+  <g transform="translate(64 64)" fill="#F4E9D8" opacity="0.18">
+    <circle r="44"/>
+    <circle r="18" fill="#1A1A1A"/>
+  </g>
+  <g fill="none" stroke="#E34234" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 92 44 A 32 32 0 1 0 92 84 L 70 84 L 70 66 L 92 66"/>
+  </g>
+</svg>

@@ -302,6 +302,45 @@ independent packages — `tools/` and `pulse/` each carry their own
 
 ---
 
+## Spinoff packages
+
+Standalone Python libraries extracted from this monorepo so downstream
+projects can pick up one capability without inheriting the full agent
+runtime. Each spinoff lives under [`packages/`](packages/), ships its
+own `pyproject.toml`, README, CHANGELOG, examples, and tests, and is
+publishable to PyPI under its own version line.
+
+| Package | What it is | Source path |
+|---|---|---|
+| [`grok-paradoxes`](packages/grok-paradoxes/) | Contradiction detection + authority-weighted reconciliation. Lifted from the Living Narrative Fabric Super Agent so any Python codebase can keep multi-source disagreements visible instead of silently resolving them. | [`packages/grok-paradoxes/`](packages/grok-paradoxes/) |
+
+Install a spinoff in isolation with `python -m pip install -e packages/<name>/`
+or, once published, from PyPI directly. See each package README for the
+full API and runnable examples.
+
+---
+
+## Tier 3 surfaces
+
+The Tier 3 sweep ships six moonshot surfaces that turn this repo into a
+multi-surface platform — see [`docs/tier-3-summary.md`](docs/tier-3-summary.md)
+for the full single-page rundown (what shipped, where it lives, how to use
+it, v0.2 roadmap).
+
+- **Marketplace routes** — [`/audit-dashboard`](marketplace/app/audit-dashboard/)
+  (Constitution audit log explorer), [`/eval`](marketplace/app/eval/)
+  (Promptfoo + DeepEval results portal), and [`/generate`](marketplace/app/generate/)
+  (no-code v2.15 manifest builder).
+- **Editor + browser extensions** — [`extensions/vscode/`](extensions/vscode/)
+  (manifest IntelliSense + lint) and [`extensions/browser/`](extensions/browser/)
+  (one-click `grok install this` from a post on X).
+- **Spinoff package** — [`packages/grok-paradoxes/`](packages/grok-paradoxes/)
+  on PyPI (contradiction detection lifted from the Living Narrative Fabric).
+
+CI: PR-scoped offline smoke runs in [`.github/workflows/tier-3-smoke.yml`](.github/workflows/tier-3-smoke.yml).
+
+---
+
 ## License + author
 
 - **License:** Apache 2.0 (see [`LICENSE`](LICENSE)). Every code file carries the standard header. Every shipped agent must declare `license: "Apache-2.0"` in its manifest.

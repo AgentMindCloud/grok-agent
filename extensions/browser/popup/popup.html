@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!-- Copyright 2026 AgentMindCloud -->
+<!-- Licensed under the Apache License, Version 2.0 -->
+<!-- http://www.apache.org/licenses/LICENSE-2.0 -->
+<!-- Built for xAI, X, Grok and the ecosystem community. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Grok Agent OS</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="g-header" role="banner">
+      <div class="g-title">
+        <span class="g-wordmark">Grok Agent OS</span>
+        <span class="g-version" aria-label="extension version">v0.1.0</span>
+      </div>
+      <p class="g-tagline">
+        Built for xAI, X, Grok and the ecosystem community.
+      </p>
+    </header>
+
+    <main class="g-main" role="main">
+      <section class="g-section" aria-labelledby="recent-heading">
+        <h2 id="recent-heading" class="g-section-title">
+          Recent install requests
+        </h2>
+        <ul
+          id="g-history-list"
+          class="g-history"
+          aria-live="polite"
+          aria-busy="true"
+        >
+          <li class="g-history-empty" id="g-history-loading">
+            Loading recent activity&hellip;
+          </li>
+        </ul>
+      </section>
+
+      <section class="g-actions" aria-label="Primary actions">
+        <button
+          type="button"
+          id="g-open-marketplace"
+          class="g-btn g-btn-primary"
+          aria-label="Open the Grok Agent OS marketplace in a new tab"
+        >
+          Open marketplace
+        </button>
+        <button
+          type="button"
+          id="g-open-settings"
+          class="g-btn g-btn-secondary"
+          aria-label="Open extension settings"
+        >
+          Settings
+        </button>
+      </section>
+    </main>
+
+    <footer class="g-footer" role="contentinfo">
+      <span class="g-license">Apache-2.0</span>
+      <a
+        class="g-gh-link"
+        id="g-open-github"
+        href="https://github.com/AgentMindCloud/grok-agent"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Grok Agent OS on GitHub (opens in new tab)"
+        >GitHub</a
+      >
+    </footer>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

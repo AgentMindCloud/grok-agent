@@ -19,6 +19,7 @@ The convention enforcer for the entire grok-agent repo. Every file you create or
 ## License headers (use exact format per file type)
 
 ### Python (`.py`)
+
 ```python
 # Copyright 2026 AgentMindCloud
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,6 +34,7 @@ The convention enforcer for the entire grok-agent repo. Every file you create or
 ```
 
 ### PowerShell (`.ps1`)
+
 ```powershell
 # Copyright 2026 AgentMindCloud
 # Licensed under the Apache License, Version 2.0
@@ -40,6 +42,7 @@ The convention enforcer for the entire grok-agent repo. Every file you create or
 ```
 
 ### YAML (`.yaml`, `.yml`)
+
 ```yaml
 # Copyright 2026 AgentMindCloud
 # Licensed under the Apache License, Version 2.0
@@ -47,6 +50,7 @@ The convention enforcer for the entire grok-agent repo. Every file you create or
 ```
 
 ### Markdown (`.md`)
+
 ```markdown
 <!-- Copyright 2026 AgentMindCloud -->
 <!-- Licensed under the Apache License, Version 2.0 -->
@@ -54,12 +58,14 @@ The convention enforcer for the entire grok-agent repo. Every file you create or
 ```
 
 ### TOML (`.toml`)
+
 ```toml
 # Copyright 2026 AgentMindCloud
 # Licensed under the Apache License, Version 2.0
 ```
 
 ### TypeScript / JavaScript (`.ts`, `.tsx`, `.js`, `.jsx`)
+
 ```typescript
 /**
  * Copyright 2026 AgentMindCloud

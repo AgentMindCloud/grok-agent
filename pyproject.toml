@@ -74,6 +74,8 @@ dev = [
     "pytest-cov>=5.0",
     "ruff>=0.4",
     "mypy>=1.10",
+    "hypothesis>=6.100,<7",
+    "syrupy>=4.6,<5",
 ]
 agents = [
     "streamlit>=1.33",
@@ -136,7 +138,22 @@ show_error_codes = true
 [tool.pytest.ini_options]
 testpaths = [
     "tests",
+    "tests/property",
+    "tests/snapshot",
     "creator-program/v2/curation/tests",
+    "templates/super-agents/self-evolving-personal-os/tests",
 ]
 python_files = ["test_*.py"]
 addopts = "-q --strict-markers"
+# P178: declare every marker so `--strict-markers` rejects typos at collection
+# time. New markers MUST be added here before they can be applied with
+# @pytest.mark.<name> on a test.
+markers = [
+    "smoke: hermetic smoke tests (no secrets, no network, no GUI)",
+    "integration: end-to-end tests across multiple agents or tools",
+    "slow: tests that take longer than 5 seconds",
+    "requires_network: tests that contact a real external API",
+    "windows: tests that only pass on Windows 11 + PowerShell",
+    "property: hypothesis property-based tests",
+    "snapshot: syrupy-based snapshot tests",
+]

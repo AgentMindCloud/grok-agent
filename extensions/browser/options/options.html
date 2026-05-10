@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<!-- Copyright 2026 AgentMindCloud -->
+<!-- Licensed under the Apache License, Version 2.0 -->
+<!-- http://www.apache.org/licenses/LICENSE-2.0 -->
+<!-- Built for xAI, X, Grok and the ecosystem community. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Grok Agent OS — Browser Extension Options</title>
+    <style>
+      :root {
+        --spectral-charcoal: #0a0a0a;
+        --spectral-cinnabar: #ff1e70;
+        --spectral-parchment: #f4ecda;
+        --spectral-teal: #00e0d5;
+        --g-mono: "JetBrains Mono", "Cascadia Mono", "Consolas", monospace;
+      }
+      html,
+      body {
+        background: var(--spectral-charcoal);
+        color: var(--spectral-parchment);
+        font-family: var(--g-mono);
+        font-size: 13px;
+        margin: 0;
+        padding: 24px;
+        line-height: 1.5;
+      }
+      h1 {
+        color: var(--spectral-cinnabar);
+        font-size: 18px;
+        margin: 0 0 4px;
+      }
+      .g-tagline {
+        color: rgba(244, 236, 218, 0.72);
+        font-size: 11px;
+        margin: 0 0 24px;
+      }
+      .g-form {
+        max-width: 640px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      fieldset {
+        border: 1px solid rgba(244, 236, 218, 0.18);
+        padding: 12px 14px;
+      }
+      legend {
+        color: var(--spectral-teal);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 0 6px;
+      }
+      label {
+        display: block;
+        margin-top: 6px;
+        font-size: 12px;
+      }
+      input[type="text"] {
+        width: 100%;
+        background: rgba(244, 236, 218, 0.06);
+        color: var(--spectral-parchment);
+        border: 1px solid rgba(244, 236, 218, 0.3);
+        padding: 6px 8px;
+        font-family: inherit;
+        font-size: 12px;
+      }
+      input[type="text"]:focus {
+        outline: 2px solid var(--spectral-teal);
+        outline-offset: 1px;
+      }
+      .g-radio,
+      .g-check {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        margin-top: 6px;
+      }
+      .g-radio input,
+      .g-check input {
+        margin-top: 3px;
+      }
+      .g-actions {
+        display: flex;
+        gap: 10px;
+      }
+      .g-btn {
+        font-family: inherit;
+        font-size: 13px;
+        padding: 8px 16px;
+        cursor: pointer;
+        border: 1px solid var(--spectral-cinnabar);
+      }
+      .g-btn-primary {
+        background: var(--spectral-cinnabar);
+        color: var(--spectral-charcoal);
+      }
+      .g-btn-secondary {
+        background: transparent;
+        color: var(--spectral-parchment);
+        border-color: rgba(244, 236, 218, 0.4);
+      }
+      .g-status {
+        font-size: 11px;
+        color: var(--spectral-teal);
+        min-height: 1.4em;
+      }
+      .g-status.error {
+        color: var(--spectral-cinnabar);
+      }
+      footer {
+        margin-top: 32px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(244, 236, 218, 0.18);
+        font-size: 10px;
+        color: rgba(244, 236, 218, 0.6);
+      }
+      a {
+        color: var(--spectral-teal);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Grok Agent OS — Browser Extension Options</h1>
+      <p class="g-tagline">
+        Built for xAI, X, Grok and the ecosystem community.
+      </p>
+    </header>
+
+    <form id="g-options-form" class="g-form" novalidate>
+      <fieldset>
+        <legend>Install path</legend>
+        <label for="g-install-path">
+          Default install location for new agents
+        </label>
+        <input
+          type="text"
+          id="g-install-path"
+          name="install_path"
+          autocomplete="off"
+          spellcheck="false"
+          aria-describedby="g-install-path-help"
+        />
+        <small id="g-install-path-help">
+          Default: <code>$env:LOCALAPPDATA\grok-agent\agents</code>
+        </small>
+      </fieldset>
+
+      <fieldset>
+        <legend>Notifications</legend>
+        <div class="g-check">
+          <input type="checkbox" id="g-notifications" name="notifications" />
+          <label for="g-notifications">
+            Show desktop notifications when an install completes
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Preferred install method</legend>
+        <div class="g-radio">
+          <input
+            type="radio"
+            id="g-method-stdin"
+            name="install_method"
+            value="powershell-stdin"
+          />
+          <label for="g-method-stdin">
+            PowerShell stdin pipe (paste manifest into a running shell)
+          </label>
+        </div>
+        <div class="g-radio">
+          <input
+            type="radio"
+            id="g-method-oneliner"
+            name="install_method"
+            value="one-liner"
+          />
+          <label for="g-method-oneliner">
+            Copy a one-liner PowerShell command to the clipboard
+          </label>
+        </div>
+        <div class="g-radio">
+          <input
+            type="radio"
+            id="g-method-url"
+            name="install_method"
+            value="manifest-url"
+          />
+          <label for="g-method-url">
+            Open a manifest URL in <code>grok-agent install &lt;url&gt;</code>
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="g-actions">
+        <button
+          type="button"
+          id="g-save-btn"
+          class="g-btn g-btn-primary"
+          aria-label="Save options"
+        >
+          Save
+        </button>
+        <button
+          type="button"
+          id="g-reset-btn"
+          class="g-btn g-btn-secondary"
+          aria-label="Reset to defaults"
+        >
+          Reset
+        </button>
+      </div>
+      <p
+        id="g-status"
+        class="g-status"
+        role="status"
+        aria-live="polite"
+      ></p>
+    </form>
+
+    <footer>
+      <p>
+        Apache-2.0. Built for xAI, X, Grok and the ecosystem community.
+        <a
+          href="https://github.com/AgentMindCloud/grok-agent"
+          target="_blank"
+          rel="noopener noreferrer"
+          >GitHub</a
+        >
+      </p>
+    </footer>
+
+    <script src="options.js"></script>
+  </body>
+</html>

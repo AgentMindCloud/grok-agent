@@ -45,3 +45,7 @@ The agent returns the synthesized answer plus a full provenance panel with verif
 ## License
 
 Apache 2.0
+
+---
+
+> Built for xAI, X, Grok and the ecosystem community. ❤️

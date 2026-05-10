@@ -1,0 +1,167 @@
+{
+  "computed_at": "2026-05-09T16:57:02.717387+00:00",
+  "schema_version": "0.1",
+  "agent_count": 7,
+  "metric_count": 7,
+  "summary": {
+    "total_runs": 6,
+    "agents_with_history": 0,
+    "agents_no_history": 7
+  },
+  "agents": {
+    "agent-swarm-with-shared-memory": {
+      "category": "super-agent",
+      "kind": "super-agent",
+      "metrics_declared": [],
+      "runs": [],
+      "latest_metrics": {},
+      "trend_7d": {}
+    },
+    "cross-reality-action-fabric": {
+      "category": "super-agent",
+      "kind": "super-agent",
+      "metrics_declared": [],
+      "runs": [],
+      "latest_metrics": {},
+      "trend_7d": {}
+    },
+    "living-narrative-fabric": {
+      "category": "super-agent",
+      "kind": "super-agent",
+      "metrics_declared": [
+        "ConstitutionCompliance",
+        "ContradictionDetection",
+        "FourMetricFormula",
+        "ProvenanceCompleteness"
+      ],
+      "runs": [
+        {
+          "run_id": "stub-living-narrative-fabric-00",
+          "ts": "2026-04-25T00:00:00+00:00",
+          "metrics": {
+            "ConstitutionCompliance": 0.6914,
+            "ContradictionDetection": 0.892,
+            "FourMetricFormula": 0.7667,
+            "ProvenanceCompleteness": 0.9368
+          },
+          "stub": true
+        },
+        {
+          "run_id": "stub-living-narrative-fabric-01",
+          "ts": "2026-05-02T00:00:00+00:00",
+          "metrics": {
+            "ConstitutionCompliance": 0.585,
+            "ContradictionDetection": 0.7407,
+            "FourMetricFormula": 0.796,
+            "ProvenanceCompleteness": 0.8798
+          },
+          "stub": true
+        },
+        {
+          "run_id": "stub-living-narrative-fabric-02",
+          "ts": "2026-05-09T00:00:00+00:00",
+          "metrics": {
+            "ConstitutionCompliance": 0.7025,
+            "ContradictionDetection": 0.9209,
+            "FourMetricFormula": 0.8726,
+            "ProvenanceCompleteness": 0.7099
+          },
+          "stub": true
+        }
+      ],
+      "latest_metrics": {
+        "ConstitutionCompliance": 0.7025,
+        "ContradictionDetection": 0.9209,
+        "FourMetricFormula": 0.8726,
+        "ProvenanceCompleteness": 0.7099
+      },
+      "trend_7d": {
+        "ConstitutionCompliance": 0.1175,
+        "ContradictionDetection": 0.1802,
+        "FourMetricFormula": 0.0766,
+        "ProvenanceCompleteness": -0.1699
+      }
+    },
+    "narrative-contradiction-detector": {
+      "category": "super-agent",
+      "kind": "super-agent",
+      "metrics_declared": [],
+      "runs": [],
+      "latest_metrics": {},
+      "trend_7d": {}
+    },
+    "provenance-first-trust-engine": {
+      "category": "super-agent",
+      "kind": "super-agent",
+      "metrics_declared": [],
+      "runs": [],
+      "latest_metrics": {},
+      "trend_7d": {}
+    },
+    "self-evolving-personal-os": {
+      "category": "super-agent",
+      "kind": "super-agent",
+      "metrics_declared": [
+        "BriefingTrustScore",
+        "ConstitutionCompliance",
+        "PersonalRecallAccuracy",
+        "WorkflowEvolutionSafety"
+      ],
+      "runs": [
+        {
+          "run_id": "stub-self-evolving-personal-os-00",
+          "ts": "2026-04-25T00:00:00+00:00",
+          "metrics": {
+            "BriefingTrustScore": 0.8723,
+            "ConstitutionCompliance": 0.594,
+            "PersonalRecallAccuracy": 0.9269,
+            "WorkflowEvolutionSafety": 0.798
+          },
+          "stub": true
+        },
+        {
+          "run_id": "stub-self-evolving-personal-os-01",
+          "ts": "2026-05-02T00:00:00+00:00",
+          "metrics": {
+            "BriefingTrustScore": 0.6479,
+            "ConstitutionCompliance": 0.745,
+            "PersonalRecallAccuracy": 0.8336,
+            "WorkflowEvolutionSafety": 0.8374
+          },
+          "stub": true
+        },
+        {
+          "run_id": "stub-self-evolving-personal-os-02",
+          "ts": "2026-05-09T00:00:00+00:00",
+          "metrics": {
+            "BriefingTrustScore": 0.5733,
+            "ConstitutionCompliance": 0.8167,
+            "PersonalRecallAccuracy": 0.8562,
+            "WorkflowEvolutionSafety": 0.7207
+          },
+          "stub": true
+        }
+      ],
+      "latest_metrics": {
+        "BriefingTrustScore": 0.5733,
+        "ConstitutionCompliance": 0.8167,
+        "PersonalRecallAccuracy": 0.8562,
+        "WorkflowEvolutionSafety": 0.7207
+      },
+      "trend_7d": {
+        "BriefingTrustScore": -0.0746,
+        "ConstitutionCompliance": 0.0717,
+        "PersonalRecallAccuracy": 0.0226,
+        "WorkflowEvolutionSafety": -0.1167
+      }
+    },
+    "zero-config-i-want-to-agent": {
+      "category": "super-agent",
+      "kind": "super-agent",
+      "metrics_declared": [],
+      "runs": [],
+      "latest_metrics": {},
+      "trend_7d": {}
+    }
+  }
+}

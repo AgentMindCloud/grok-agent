@@ -11,6 +11,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { SERVER_NAME, SERVER_VERSION } from "./constants.js";
 import { registerPulseToday } from "./tools/pulse-today.js";
+import { buildGrokAgentTools } from "./grok-agent-tools.js";
 
 /**
  * Validate required environment up-front. Fast-fail with clear stderr messages
@@ -43,6 +44,21 @@ async function main(): Promise<void> {
 
   // ---- Tool registration --------------------------------------------------
   registerPulseToday(server);
+
+  // Dynamic registration: every Grok Agent OS template under `templates/`
+  // becomes one MCP tool named `grok-agent-<slug>`. Failures inside
+  // buildGrokAgentTools are caught and logged to stderr so the core pulse
+  // tools still come up if the templates directory is missing.
+  try {
+    const grokAgentToolCount = buildGrokAgentTools(server);
+    if (grokAgentToolCount > 0) {
+      console.error(
+        "[" + SERVER_NAME + "] grok-agent-tools: " + grokAgentToolCount + " agent tools registered."
+      );
+    }
+  } catch (err) {
+    console.error("[" + SERVER_NAME + "] grok-agent-tools registration failed:", err);
+  }
   // (additional tools land here as they ship)
   // -------------------------------------------------------------------------
 

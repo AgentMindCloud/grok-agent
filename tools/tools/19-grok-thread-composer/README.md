@@ -17,12 +17,14 @@ Takes a topic or angle, asks Grok to read the current X discourse on that topic,
 
 Grok has native X access — that's xAI's unique advantage. No other LLM knows what is trending on X this hour, which arguments are ascendant, or whose take is getting traction. Threads written with that context feel native to the conversation; threads written without it feel like they were drafted yesterday. This tool puts Grok's live-context advantage directly into the composer.
 
-## Tech stack
+## Tech stack (current scaffold)
 
-- Single-page web app (Vite + React)
-- Grok API (xAI) with X-context enabled
-- Thin Node proxy on Render to keep API keys server-side
-- Tailwind UI with tweet-by-tweet editor
+- Static HTML + vanilla JS, served via the `serve` package for local dev.
+- Grok API (xAI) with X-context enabled (planned, not yet wired).
+
+## Future plan
+
+A future revision may move to Vite + React with a Tailwind UI and a thin Node proxy on Render holding the xAI API key. See [SPEC.md](./SPEC.md) for the full forward-looking design.
 
 ## Install
 

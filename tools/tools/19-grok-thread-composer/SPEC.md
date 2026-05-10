@@ -24,7 +24,9 @@ This tool is designed specifically around that capability. It is not a generic A
 - Grok API (xAI) — default model `grok-4` or current production model, with X-context tool enabled
 - No direct X API calls; Grok handles the live-context lookup internally
 
-## Tech stack
+## Tech stack — planned (forward-looking)
+
+> Current scaffold: static HTML + vanilla JS, served via the `serve` package. The bullets below describe the planned production port; nothing in this list is implemented yet.
 
 - Vite + React single-page frontend
 - Node.js 20 proxy (minimal Express) to hold the xAI API key, hosted on Render

@@ -491,11 +491,6 @@ footer {
       var t = lines[i].trim();
       if (t.indexOf("-") === 0 || t.indexOf("→") === 0) return 15;
     }
-    if (lines.length > 1) {
-      for (var j = 0; j < lines.length; j++) {
-        if (lines[j].length < 60 && lines[j].length > 0) return 15;
-      }
-    }
     return 0;
   }
 

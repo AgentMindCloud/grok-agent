@@ -74,31 +74,23 @@ This toolkit fills the gap. Every tool here works with public X data, the offici
 
 <table>
   <tr>
-    <td width="33%">
-      <h3>📊 Analytics · 7</h3>
-      <p>Thread decay, follower intent, engagement quality, niche benchmarking, velocity maps.</p>
-    </td>
-    <td width="33%">
+    <td width="50%">
       <h3>✍️ AI Writing · 5</h3>
-      <p>Contextual replies, ghostwriter with memory, thread composer, article optimizer, newsletter converter.</p>
+      <p>Contextual reply suggester, ghostwriter with memory, controversy detector, grok thread composer, X articles optimizer.</p>
     </td>
-    <td width="33%">
-      <h3>🤖 AI Analytics · 3</h3>
-      <p>Pre-post virality, controversy detection, emotional tone trends.</p>
+    <td width="50%">
+      <h3>📊 Analytics · 4</h3>
+      <p>Pre-post virality scorer, pinned-post A/B rotator, content compound calculator, follower migration assistant.</p>
     </td>
   </tr>
   <tr>
-    <td>
+    <td width="50%">
       <h3>⚙️ Automation · 2</h3>
-      <p>Pinned-post A/B rotator, post necromancer for dormant content.</p>
+      <p>Thread-to-newsletter converter, post necromancer for dormant content.</p>
     </td>
-    <td>
+    <td width="50%">
       <h3>💰 Monetization · 1</h3>
       <p>Digital product storefront — bypass X's payment bottleneck.</p>
-    </td>
-    <td>
-      <h3>🌐 Network + Media · 2</h3>
-      <p>Warm-introduction mapper, Spaces recorder with auto-clips.</p>
     </td>
   </tr>
 </table>
@@ -108,13 +100,13 @@ This toolkit fills the gap. Every tool here works with public X data, the offici
 | # | Tool | Category | Status | Badge | Stack |
 |---|---|---|---|---|---|
 | 03 | [Contextual Reply Suggester](tools/03-contextual-reply-suggester/) | AI Writing | `Spec'd` | `Grok-Compatible` | Grok |
-| 04 | [Pre-Post Virality Scorer](tools/04-pre-post-virality-scorer/) | AI Analytics | `Live` | `Heuristic Live` | Vanilla JS |
-| 05 | [Pinned Post A/B Rotator](tools/05-pinned-post-ab-rotator/) | Automation | `Live` | `Heuristic Live` | Vanilla JS |
+| 04 | [Pre-Post Virality Scorer](tools/04-pre-post-virality-scorer/) | Analytics | `Live` | `Heuristic Live` | Vanilla JS |
+| 05 | [Pinned Post A/B Rotator](tools/05-pinned-post-ab-rotator/) | Analytics | `Live` | `Heuristic Live` | Vanilla JS |
 | 06 | [Digital Product Storefront](tools/06-digital-product-storefront/) | Monetization | `Spec'd` | `Grok-Compatible` | Next.js + Firebase |
 | 07 | [Content Compound Calculator](tools/07-content-compound-calculator/) | Analytics | `Live` | `Heuristic Live` | Vanilla JS + Chart.js |
 
 | 11 | [Ghostwriter Mode with Memory](tools/11-ghostwriter-mode-with-memory/) | AI Writing | `Spec'd` | `Grok-Compatible` | Node + Grok |
-| 12 | [Controversy Detector](tools/12-controversy-detector/) | AI Analytics | `Live` | `Heuristic Live` | Vanilla JS |
+| 12 | [Controversy Detector](tools/12-controversy-detector/) | AI Writing | `Live` | `Heuristic Live` | Vanilla JS |
 | 13 | [Thread-to-Newsletter Converter](tools/13-thread-to-newsletter-converter/) | Automation | `Spec'd` | `Grok-Compatible` | Node + Grok |
 
 | 16 | [Follower Migration Assistant](tools/16-follower-migration-assistant/) | Analytics | `Spec'd` | `Grok-Compatible` | Node + Grok |
@@ -160,8 +152,8 @@ A monorepo of numbered tool folders, a shared UI kit, and thin API clients for X
 | Package | Purpose | Env |
 |---|---|---|
 | [`shared/ui-kit`](shared/ui-kit/) | Design tokens, components, shell template | — |
-| [`shared/x-api-client`](shared/x-api-client/) | X API v2 wrapper (Node ≥18) | `X_BEARER_TOKEN` |
-| [`shared/grok-client`](shared/grok-client/) | xAI Grok API wrapper (Node ≥18), defaults to `grok-2-latest` | `XAI_API_KEY` |
+| [`shared/x-api-client`](shared/x-api-client/) | X API v2 wrapper (Node ≥20) | `X_BEARER_TOKEN` |
+| [`shared/grok-client`](shared/grok-client/) | xAI Grok API wrapper (Node ≥20), defaults to `grok-2-latest` | `XAI_API_KEY` |
 
 Visual system lives in [`docs/BRAND.md`](docs/BRAND.md).
 

@@ -14,7 +14,8 @@
     "@x-platform-toolkit/ui-kit": "*"
   },
   "devDependencies": {
-    "@x-platform-toolkit/test-utils": "*"
+    "@x-platform-toolkit/test-utils": "*",
+    "serve": "^14.2.0"
   },
   "engines": { "node": ">=20" }
 }

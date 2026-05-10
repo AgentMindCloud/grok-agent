@@ -32,7 +32,7 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npx html-validate "tools/*/index.html"
+      - run: npx html-validate "tools/**/index.html"
 
   validate-css:
     name: Validate CSS
